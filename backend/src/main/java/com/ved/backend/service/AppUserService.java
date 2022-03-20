@@ -1,0 +1,9 @@
+package com.ved.backend.service;
+
+import com.ved.backend.model.AppUser;
+
+public interface AppUserService {
+  AppUser registerStudent(AppUser appUser);
+  AppUser getAppUser(String username);
+  void changeRoleFromStudentIntoInstructor(String username);
+}
