@@ -8,6 +8,7 @@ import Layout from './Layout';
 import RequireAuth from './RequireAuth';
 
 import { Routes, Route } from 'react-router-dom';
+import Unauthorized from './Unauthorized';
 function App() {
   return (
     <Routes>
@@ -16,6 +17,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='login' element={<Login />} />
         <Route path='register' element={<Register />} />
+        <Route path='unauthorized' element={<Unauthorized />} />
 
         {/* private routes */}
         <Route element={<RequireAuth />}>
