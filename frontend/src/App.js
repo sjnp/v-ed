@@ -20,9 +20,13 @@ function App() {
         <Route path='unauthorized' element={<Unauthorized />} />
 
         {/* private routes */}
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
           <Route path='student' element={<Student />} />
+        </Route>
+        <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
           <Route path='instructor' element={<Instructor />} />
+        </Route>
+        <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
           <Route path='admin' element={<Admin />} />
         </Route>
       </Route>
