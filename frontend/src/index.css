@@ -3,3 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.hide {
+  display: none;
+}
+
+.offscreen {
+  position: absolute;
+  left: -99999px;
+}
