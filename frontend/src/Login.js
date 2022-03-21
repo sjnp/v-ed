@@ -72,7 +72,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">Username:</label>
           <input 
-            type="text" 
+            type="email" 
             id="username"
             ref={userRef}
             autoComplete="off"
