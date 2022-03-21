@@ -1,16 +1,20 @@
-import { useState, useEffect, useContext } from 'react';
-import AuthContext from './context/AuthProvider';
+import { useState, useEffect } from 'react';
+import useAuth from './hooks/useAuth';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import axios from './api/axios';
 const LOGIN_URL = '/api/login';
 
 const Login = () => {
-  const { setAuth } = useContext(AuthContext);
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/student";
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     setErrMsg('');
@@ -32,7 +36,7 @@ const Login = () => {
       setAuth({ username, password, roles, accessToken });
       setUsername('');
       setPassword('');
-      setSuccess(true);
+      navigate(from, { replace: true });
     } catch (err) {
       if (!err?.response) {
         setErrMsg('No Server Response');
@@ -49,45 +53,36 @@ const Login = () => {
 
   }
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>You are logged in!</h1>
-        </section>
-      ) : (
-        <section>
-          <p
-            className={errMsg ? "errmsg" : "offscreen"}
-          >{errMsg}</p>
-          <h1>Sign In</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Username:</label>
-            <input
-              type="email"
-              id="username"
-              autoComplete="off"
-              onChange={(e) => setUsername(e.target.value)}
-              value={username}
-              required
-            />
-            <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              onChange={(e) => setPassword(e.target.value)}
-              value={password}
-              required
-            />
-            <button>Sign In</button>
-          </form>
-          <p>
-            Need an Account?<br />
-            <a href="#">Sign Up</a>
-          </p>
-        </section>
-      )}
-
-    </>
+    <section>
+      <p
+        className={errMsg ? "errmsg" : "offscreen"}
+      >{errMsg}</p>
+      <h1>Sign In</h1>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="email"
+          id="username"
+          autoComplete="off"
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
+          required
+        />
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          required
+        />
+        <button>Sign In</button>
+      </form>
+      <p>
+        Need an Account?<br />
+        <a href="#">Sign Up</a>
+      </p>
+    </section>
   )
 }
 
