@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,8 +41,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     } catch (IOException exception) {
       throw new AuthenticationServiceException(exception.getMessage(), exception);
     }
-//    String username = request.getParameter("username");
-//    String password = request.getParameter("password");
     log.info("Username is: {}", username);
     log.info("Password is: {}", password);
     UsernamePasswordAuthenticationToken authenticationToken =
@@ -72,12 +71,21 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 3))
         .withIssuer(request.getRequestURL().toString())
         .sign(algorithm);
-    response.setHeader("access_token", access_token);
-    response.setHeader("refresh_token", refresh_token);
-    Map<String, String> jsonMessage = new HashMap<>();
-    jsonMessage.put("greeting", user.getAuthorities().toString());
+//    response.setHeader("access_token", access_token);
+//    response.setHeader("refresh_token", refresh_token);
+    Cookie refreshTokenCookie = new Cookie("refresh_token", refresh_token);
+    refreshTokenCookie.setHttpOnly(true);
+    refreshTokenCookie.setSecure(false);
+    refreshTokenCookie.setPath("/");
+    response.addCookie(refreshTokenCookie);
+    Map<String, Object> jsonMessage = new HashMap<>();
+    jsonMessage.put("roles",
+        user.getAuthorities()
+            .stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.toList()));
     jsonMessage.put("access_token", access_token);
-    jsonMessage.put("refresh_token", refresh_token);
+//    jsonMessage.put("refresh_token", refresh_token);
     response.setContentType(APPLICATION_JSON_VALUE);
     new ObjectMapper().writeValue(response.getOutputStream(), jsonMessage);
   }

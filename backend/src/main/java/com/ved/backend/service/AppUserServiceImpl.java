@@ -12,9 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,7 +35,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     } else {
       log.info("User: {} found in the database", username);
       Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-      authorities.add(new SimpleGrantedAuthority(appUser.getAppRole().getName()));
+      appUser.getAppRoles().forEach(appRole -> authorities.add(new SimpleGrantedAuthority(appRole.getName())));
       return new User(appUser.getUsername(), appUser.getPassword(), authorities);
     }
   }
@@ -46,7 +45,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     log.info("Register new student: {} to the database", appUser.getUsername());
     appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
     AppRole studentRole = appRoleRepo.findByName("STUDENT");
-    appUser.setAppRole(studentRole);
+    appUser.getAppRoles().add(studentRole);
     return appUserRepo.save(appUser);
   }
 
@@ -60,9 +59,14 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
   public void changeRoleFromStudentIntoInstructor(String username) {
     log.info("Changing role to user: {}", username);
     AppUser appUser = appUserRepo.findByUsername(username);
-    if (appUser.getAppRole().getName().equals("STUDENT")) {
+    List<String> appUserRoles = appUser.getAppRoles().stream()
+        .map(AppRole::getName)
+        .collect(Collectors.toList());
+    if (appUserRoles.contains("INSTRUCTOR")) {
+      log.info("Fail, user: {} already is INSTRUCTOR", username);
+    } else if (appUserRoles.contains("STUDENT")) {
       AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
-      appUser.setAppRole(instructorRole);
+      appUser.getAppRoles().add(instructorRole);
       appUserRepo.save(appUser);
       log.info("Success, user: {} is now INSTRUCTOR", username);
     }

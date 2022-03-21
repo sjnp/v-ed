@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.service.AppUserService;
 import org.springframework.http.MediaType;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -43,15 +46,27 @@ public class TokenController {
             // Access token will expire within 40 seconds.
             .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 40))
             .withIssuer(request.getRequestURL().toString())
-            .withClaim("roles", List.of(appUser.getAppRole().getName()))
+            .withClaim("roles", appUser.getAppRoles()
+                .stream()
+                .map(AppRole::getName)
+                .collect(Collectors.toList()))
             .sign(algorithm);
-        response.setHeader("access_token", access_token);
-        response.setHeader("refresh_token", refresh_token);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+//        response.setHeader("access_token", access_token);
+//        response.setHeader("refresh_token", refresh_token);
+        Cookie refreshTokenCookie = new Cookie("refresh_token", refresh_token);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(false);
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
+        Map<String, Object> jsonMessage = new HashMap<>();
+        jsonMessage.put("roles",
+            appUser.getAppRoles()
+                .stream()
+                .map(AppRole::getName)
+                .collect(Collectors.toList()));
+        jsonMessage.put("access_token", access_token);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), jsonMessage);
       } catch (Exception exception) {
         response.setHeader("error", exception.getMessage());
         response.setStatus(FORBIDDEN.value());
