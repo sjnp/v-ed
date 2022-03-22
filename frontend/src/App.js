@@ -1,15 +1,14 @@
-import Login from './Login';
-import MuiLogin from './MuiLogin';
-import Register from './Register';
-import Home from './Home';
-import Student from './Student';
-import Instructor from './Instructor';
-import Admin from './Admin';
-import Layout from './Layout';
-import RequireAuth from './RequireAuth';
+import MuiLogin from './components/MuiLogin';
+import Register from './components/Register';
+import Home from './components/Home';
+import Student from './components/Student';
+import Instructor from './components/Instructor';
+import Admin from './components/Admin';
+import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
 
 import { Routes, Route } from 'react-router-dom';
-import Unauthorized from './Unauthorized';
+import Unauthorized from './components/Unauthorized';
 function App() {
   return (
     <Routes>

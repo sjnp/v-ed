@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import useAuth from './hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 
-import axios from './api/axios';
+import axios from '../api/axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, TextField, Typography } from '@mui/material';
@@ -132,9 +132,9 @@ const MuiLogin = () => {
           }
         );
         console.log(JSON.stringify(response?.data));
-        const accessToken = response?.data?.accessToken;
+        const access_token = response?.data?.access_token;
         const roles = response?.data?.roles;
-        setAuth({ username, password, roles, accessToken });
+        setAuth({ username, password, roles, access_token });
         setUsername('');
         setPassword('');
         navigate(from, { replace: true });
