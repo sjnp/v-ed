@@ -1,4 +1,5 @@
 import Login from './Login';
+import MuiLogin from './MuiLogin';
 import Register from './Register';
 import Home from './Home';
 import Student from './Student';
@@ -15,7 +16,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         {/* public routes */}
         <Route path='/' element={<Home />} />
-        <Route path='login' element={<Login />} />
+        <Route path='login' element={<MuiLogin />} />
         <Route path='register' element={<Register />} />
         <Route path='unauthorized' element={<Unauthorized />} />
 
