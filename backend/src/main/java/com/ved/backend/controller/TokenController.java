@@ -11,6 +11,7 @@ import com.ved.backend.model.AppUser;
 import com.ved.backend.service.AppUserService;
 import org.springframework.http.MediaType;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,11 +32,16 @@ public class TokenController {
   private final AppUserService appUserService;
 
   @GetMapping("/refresh")
-  public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void refreshToken(@CookieValue(name = "refresh_token", defaultValue = "") String authorizationCookie,
+                           HttpServletRequest request,
+                           HttpServletResponse response)
+      throws IOException {
     String authorizationHeader = request.getHeader(AUTHORIZATION);
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+//    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+    if (!authorizationCookie.equals("")) {
       try {
-        String refresh_token = authorizationHeader.substring("Bearer ".length());
+//        String refresh_token = authorizationHeader.substring("Bearer ".length());
+        String refresh_token = authorizationCookie;
         Algorithm algorithm = Algorithm.HMAC256("TODO: Need to put this somewhere safe".getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(refresh_token);
