@@ -6,6 +6,7 @@ import Instructor from './components/Instructor';
 import Admin from './components/Admin';
 import Layout from './components/Layout';
 import RequireAuth from './components/RequireAuth';
+import PersistLogin from './components/PersistLogin';
 
 import { Routes, Route } from 'react-router-dom';
 import Unauthorized from './components/Unauthorized';
@@ -20,14 +21,16 @@ function App() {
         <Route path='unauthorized' element={<Unauthorized />} />
 
         {/* private routes */}
-        <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
-          <Route path='student' element={<Student />} />
-        </Route>
-        <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
-          <Route path='instructor' element={<Instructor />} />
-        </Route>
-        <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
-          <Route path='admin' element={<Admin />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
+            <Route path='student' element={<Student />} />
+          </Route>
+          <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
+            <Route path='instructor' element={<Instructor />} />
+          </Route>
+          <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
+            <Route path='admin' element={<Admin />} />
+          </Route>
         </Route>
       </Route>
 
