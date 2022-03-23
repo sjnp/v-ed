@@ -1,19 +1,17 @@
 import MuiLogin from './components/MuiLogin';
 import Register from './components/Register';
-import Home from './components/Home';
-import Student from './components/Student';
-import Instructor from './components/Instructor';
-import Admin from './components/Admin';
-import Layout from './components/Layout';
+import Home from './pages/Home';
+import Student from './pages/Student';
+import Instructor from './pages/Instructor';
+import Admin from './pages/Admin';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 
 import { Routes, Route } from 'react-router-dom';
-import Unauthorized from './components/Unauthorized';
+import Unauthorized from './pages/Unauthorized';
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
         {/* public routes */}
         <Route path='/' element={<Home />} />
         <Route path='login' element={<MuiLogin />} />
@@ -32,7 +30,6 @@ function App() {
             <Route path='admin' element={<Admin />} />
           </Route>
         </Route>
-      </Route>
 
     </Routes>
   );

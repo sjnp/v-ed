@@ -1,7 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useLogout from "../hooks/useLogout";
-import useRefreshToken from "../hooks/useRefreshToken";
 
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
