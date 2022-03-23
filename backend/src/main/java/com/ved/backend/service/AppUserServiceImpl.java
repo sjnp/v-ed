@@ -19,11 +19,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class AppUserServiceImpl implements AppUserService, UserDetailsService {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppUserServiceImpl.class);
+
   private final AppUserRepo appUserRepo;
   private final AppRoleRepo appRoleRepo;
   private final PasswordEncoder passwordEncoder;
-
-
 
   @Override
   public User loadUserByUsername(String username) throws UsernameNotFoundException {
