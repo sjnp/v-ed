@@ -43,6 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers("/api/login/**",
             "/api/token/refresh/**",
+            "/api/token/clear/**",
             "/api/users/register-new-student/**")
         .permitAll();
     http.authorizeRequests()

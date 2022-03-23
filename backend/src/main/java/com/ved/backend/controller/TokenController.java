@@ -23,8 +23,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+//import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequestMapping("/api/token")
@@ -32,16 +33,15 @@ public class TokenController {
   private final AppUserService appUserService;
 
   @GetMapping("/refresh")
-  public void refreshToken(@CookieValue(name = "refresh_token", defaultValue = "") String authorizationCookie,
+  public void refreshToken(@CookieValue(name = "refresh_token", defaultValue = "") String refresh_token,
                            HttpServletRequest request,
                            HttpServletResponse response)
       throws IOException {
-    String authorizationHeader = request.getHeader(AUTHORIZATION);
+//    String authorizationHeader = request.getHeader(AUTHORIZATION);
 //    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-    if (!authorizationCookie.equals("")) {
+    if (!refresh_token.equals("")) {
       try {
 //        String refresh_token = authorizationHeader.substring("Bearer ".length());
-        String refresh_token = authorizationCookie;
         Algorithm algorithm = Algorithm.HMAC256("TODO: Need to put this somewhere safe".getBytes());
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(refresh_token);
@@ -86,6 +86,21 @@ public class TokenController {
     }
   }
 
+  @GetMapping("/clear")
+  public void clearToken(@CookieValue(name = "refresh_token", defaultValue = "") String refresh_token,
+                           HttpServletResponse response)
+//      throws IOException {
+  {
+    if (!refresh_token.equals("")) {
+      Cookie emptyRefreshToken = new Cookie("refresh_token", "");
+      emptyRefreshToken.setHttpOnly(true);
+      emptyRefreshToken.setSecure(false);
+      emptyRefreshToken.setPath("/");
+      response.addCookie(emptyRefreshToken);
+
+    }
+    response.setStatus(NO_CONTENT.value());
+  }
   public TokenController(final AppUserService appUserService) {
     this.appUserService = appUserService;
   }

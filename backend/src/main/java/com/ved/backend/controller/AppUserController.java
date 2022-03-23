@@ -3,7 +3,6 @@ package com.ved.backend.controller;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.service.AppUserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
