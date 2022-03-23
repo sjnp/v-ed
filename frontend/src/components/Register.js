@@ -53,7 +53,6 @@ const Register = () => {
         }
       );
 
-      console.log(JSON.stringify(response?.data));
 
       setSuccess(true);
       setUsername('');

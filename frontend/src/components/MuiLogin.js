@@ -5,7 +5,7 @@ import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
-import { Alert, Box, Button, CssBaseline, Grid, Link, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Checkbox, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
 import { Login } from '@mui/icons-material';
 const theme = createTheme();
 
@@ -13,7 +13,7 @@ const LOGIN_URL = '/api/login';
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const MuiLogin = () => {
-  const { setAuth } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -110,6 +110,14 @@ const MuiLogin = () => {
     setPasswordDidBlur(true);
   }
 
+  const togglePersist = () => {
+    setPersist(prev => !prev);
+  }
+
+  useEffect(() => {
+    localStorage.setItem("persist", persist)
+  }, [persist])
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!username || !password || usernameHelperText) {
@@ -131,7 +139,6 @@ const MuiLogin = () => {
             withCredentials: true
           }
         );
-        console.log(JSON.stringify(response?.data));
         const access_token = response?.data?.access_token;
         const roles = response?.data?.roles;
         setAuth({ username, password, roles, access_token });
@@ -217,6 +224,20 @@ const MuiLogin = () => {
                 onChange={handlePasswordChange}
                 onBlur={handlePasswordBlur}
               />
+              <FormControlLabel
+                sx={{
+                  marginTop: 2
+                }}
+                control={
+                  <Checkbox
+                    value="persist"
+                    id='persist'
+                    onChange={togglePersist}
+                    checked={persist}
+                  />
+                }
+                label="Remember this device"
+              />
               {loginErrorMsg
                 ? (
                   <Alert sx={{ marginTop: 3 }} severity='error'>
@@ -249,7 +270,7 @@ const MuiLogin = () => {
                 Not have an account yet?&ensp;
               </Typography>
               <Link component={RouterLink} to="/register">
-                Sign up 
+                Sign up
               </Link>
             </Grid>
           </Box>
