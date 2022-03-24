@@ -5,9 +5,8 @@ import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
-import { Alert, Box, Button, Checkbox, CssBaseline, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
 import { Login } from '@mui/icons-material';
-const theme = createTheme();
 
 const LOGIN_URL = '/api/login';
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -162,9 +161,6 @@ const MuiLogin = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
         <Paper elevation={3}>
           <Box
             sx={{
@@ -277,8 +273,6 @@ const MuiLogin = () => {
 
 
         </Paper>
-      </Container>
-    </ThemeProvider>
 
 
   )

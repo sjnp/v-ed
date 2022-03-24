@@ -14,8 +14,8 @@ function App() {
     <Routes>
         {/* public routes */}
         <Route path='/' element={<Home />} />
-        <Route path='login' element={<MuiLogin />} />
-        <Route path='register' element={<Register />} />
+        {/* <Route path='login' element={<MuiLogin />} /> */}
+        {/* <Route path='register' element={<Register />} /> */}
         <Route path='unauthorized' element={<Unauthorized />} />
 
         {/* private routes */}
