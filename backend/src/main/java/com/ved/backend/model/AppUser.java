@@ -4,9 +4,9 @@ import javax.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Locale;
 
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -25,6 +25,12 @@ public class AppUser {
   @ManyToMany(fetch = EAGER)
   private Collection<AppRole> appRoles = new ArrayList<>();
 
+  @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
+  @JoinTable(name = "app_user_personal_info",
+      joinColumns = { @JoinColumn(name = "app_user_id", referencedColumnName = "id") },
+      inverseJoinColumns = { @JoinColumn(name = "personal_info_id", referencedColumnName = "id")})
+  private PersonalInfo personalInfo;
+
   public Long getId() {
     return id;
   }
@@ -41,6 +47,10 @@ public class AppUser {
     return appRoles;
   }
 
+  public PersonalInfo getPersonalInfo() {
+    return personalInfo;
+  }
+
   public void setId(Long id) {
     this.id = id;
   }
@@ -53,17 +63,22 @@ public class AppUser {
     this.password = password;
   }
 
-  public void setAppRole(Collection<AppRole> appRoles) {
+  public void setAppRoles(Collection<AppRole> appRoles) {
     this.appRoles = appRoles;
+  }
+
+  public void setPersonalInfo(PersonalInfo personalInfo) {
+    this.personalInfo = personalInfo;
   }
 
   public AppUser() {
   }
 
-  public AppUser(Long id, String username, String password, Collection<AppRole> appRoles) {
+  public AppUser(Long id, String username, String password, Collection<AppRole> appRoles, PersonalInfo personalInfo) {
     this.id = id;
-    this.username = username.toLowerCase();
+    this.username = username;
     this.password = password;
     this.appRoles = appRoles;
+    this.personalInfo = personalInfo;
   }
 }
