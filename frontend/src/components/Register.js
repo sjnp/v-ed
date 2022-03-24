@@ -1,156 +1,207 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Container from '@mui/material/Container';
+import { Box, Button, CssBaseline, Paper, TextField, Typography } from '@mui/material';
+import { URL_REGISTER } from '../utils/url'
+import { validation } from '../utils/validation'
 import axios from "../api/axios";
-
-const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/;
-const REGISTER_URL = '/api/users/register-new-student';
 
 const Register = () => {
 
-  const [username, setUsername] = useState('');
-  const [validUsername, setValidUsername] = useState(false);
+  const theme = createTheme();
 
-  const [password, setPassword] = useState('');
-  const [validPassword, setValidPassword] = useState(false);
+  const initRegister = {
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstname: '',
+    lastname: ''
+  }
+  
+  const initRegister2 = {
+    email: false,
+    password: false,
+    confirmPassword: false,
+    firstname: false,
+    lastname: false
+  }
 
-  const [matchPassword, setMatchPassword] = useState('');
-  const [validMatch, setValidMatch] = useState(false);
+  const [ register, setRegister ] = useState(initRegister)
+  const [ error, setError ] = useState(initRegister2)
+  const [ messageError, setMessageError ] = useState(initRegister)
 
-  const [errMsg, setErrMsg] = useState('');
-  const [success, setSuccess] = useState(false);
+  const onChange = async (event) => {
+    handleChange(event.target.name, event.target.value)
+  }
 
-  useEffect(() => {
-    const result = USERNAME_REGEX.test(username);
-    setValidUsername(result);
-  }, [username])
+  const handleChange = (name, value) => {
+    setRegister({ ...register, [name]: value })
+    const message = verify(name, value)
+    console.log(message)
 
-  useEffect(() => {
-    const result = PASSWORD_REGEX.test(password);
-    setValidPassword(result);
-    const match = password === matchPassword;
-    setValidMatch(match);
-  }, [password, matchPassword])
+    const isError = message === '' ? false : true
+    setError({ ...error, [name]: isError })
+    setMessageError({ ...messageError, [name]: message })
+    console.log('error => ', error)
+  }
 
-  useEffect(() => {
-    setErrMsg('');
-  }, [username, password, matchPassword])
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const v1 = USERNAME_REGEX.test(username);
-    const v2 = PASSWORD_REGEX.test(password);
-    if (!v1 || !v2) {
-      setErrMsg("Invalid Entry");
-      return;
-    }
-    try {
-      const response = await axios.post(REGISTER_URL,
-        JSON.stringify({ username, password }),
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
-      );
-
-
-      setSuccess(true);
-      setUsername('');
-      setPassword('');
-      setMatchPassword('');
-    } catch (err) {
-      if (!err?.response) {
-        setErrMsg('No Server Response');
-      } else if (err.response?.status === 409) {
-        setErrMsg('Username Taken');
-      } else {
-        setErrMsg('Registration Failed')
-      }
+  const verify = (name, value) => {
+    if (name === 'firstname') {
+      return validation.validateFirstname(value)
+    } else if (name === 'lastname') {
+      return validation.validateLastname(value)
+    } else if (name === 'email') {
+      return validation.validateEmail(value)
+    } else if (name === 'password') {
+      return validation.validatePassword(value)
+    } else if (name === 'confirmPassword') {
+      return validation.validateConfirmPassword(register.password, value)
     }
   }
+
+  const onRegister = (event) => {
+    event.preventDefault()
+
+    if (checkErrorBeforeRegister('firstname')) {
+      handleChange('firstname', register.firstname)
+      return
+    } else if (checkErrorBeforeRegister('lastname')) {
+      handleChange('lastname', register.lastname)
+      return
+    } else if (checkErrorBeforeRegister('email')) {
+      handleChange('email', register.email)
+      return
+    } else if (checkErrorBeforeRegister('password')) {
+      handleChange('password', register.password)
+      return
+    } else if (checkErrorBeforeRegister('confirmPassword')) {
+      handleChange('confirmPassword', register.confirmPassword)
+      return
+    }
+
+    const payLoad = {
+      username: register.email,
+      password: register.password,
+      personalInfo: {
+        firstName: register.firstname,
+        lastName: register.lastname,
+      }
+    }
+
+    axios.post(URL_REGISTER, payLoad)
+  }
+
+  const checkErrorBeforeRegister = (name) => {
+    return register[name] === '' || messageError[name] !== '' ? true : false
+  }
+
+  const sxBox = {
+    marginTop: 3,
+    marginLeft: 3,
+    marginRight: 3,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }
+
+  const sxButton = { 
+    marginTop: 6,
+    marginBottom: 2
+  }
+
   return (
-    <>
-      {success ? (
-        <section>
-          <h1>Success!</h1>
-          <p>
-            <a href="#">Sign In</a>
-          </p>
-        </section>
-      ) : (
-        <section>
-          <p
-            className={errMsg ? "errmsg" : "offscreen"}
-          >{errMsg}</p>
-          <h1>Register</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username">
-              Username:
-              <span className={validUsername ? "valid" : "hide"}>
-                Right!
-              </span>
-              <span className={validUsername || !username ? "hide" : "invalid"}>
-                Wrong!
-              </span>
-            </label>
-            <input
-              type="email"
-              id="username"
-              autoComplete="off"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-            <p className={username && !validUsername ? "instructions" : "offscreen"}>
-              Must be in email form.<br />
-              ie. user@example.com
-            </p>
-            <label htmlFor="password">
-              Password:
-              <span className={validPassword ? "valid" : "hide"}>
-                Right!
-              </span>
-              <span className={validPassword || !password ? "hide" : "invalid"}>
-                Wrong!
-              </span>
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <p className={password && !validPassword ? "instructions" : "offscreen"}>
-              Must include at least one uppercase letter, lowercase letter and number. <br />
-              8 - 24 characters.
-            </p>
-            <label htmlFor="confirm_password">
-              Confirm Password:
-              <span className={validMatch && matchPassword ? "valid" : "hide"}>
-                Right!
-              </span>
-              <span className={validMatch || !matchPassword ? "hide" : "invalid"}>
-                Wrong!
-              </span>
-            </label>
-            <input
-              type="password"
-              id="confirm_password"
-              value={matchPassword}
-              onChange={(e) => setMatchPassword(e.target.value)}
-              required
-            />
-            <p className={!validMatch ? "instructions" : "offscreen"}>
-              Password must be matched.
-            </p>
-            <button
-              disabled={!validUsername || !validPassword || !validMatch ? true : false}
-            >Sign Up</button>
-          </form>
-        </section>
-      )}
-    </>
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Paper elevation={3}>
+          <Box sx={sxBox}>
+            <Typography marginTop={3} component='h1' variant='h5'>
+              Register
+            </Typography>
+            <Box component="form" onSubmit={onRegister} noValidate sx={{ marginTop: 1 }}>
+              <TextField
+                margin='normal'
+                autoComplete='off'
+                autoFocus
+                required
+                fullWidth
+                id='firstname'
+                label='First name'
+                name='firstname'
+                type='text'
+                error={error.firstname}
+                helperText={messageError.firstname}
+                value={register.firstname}
+                onChange={onChange}
+              />
+              <TextField
+                margin='normal'
+                autoComplete='off'
+                autoFocus
+                required
+                fullWidth
+                id='lastname'
+                label='Last name'
+                name='lastname'
+                type='text'
+                error={error.lastname}
+                helperText={messageError.lastname}
+                value={register.lastname}
+                onChange={onChange}
+              />
+              <TextField
+                margin='normal'
+                autoComplete='off'
+                autoFocus
+                required
+                fullWidth
+                id='email'
+                label='E-Mail Address'
+                name='email'
+                type='email'
+                error={error.email}
+                helperText={messageError.email}
+                value={register.email}
+                onChange={onChange}
+              />
+              <TextField
+                margin='normal'
+                autoComplete='off'
+                autoFocus
+                required
+                fullWidth
+                id='password'
+                label='Password'
+                name='password'
+                type='password'
+                error={error.password}
+                helperText={messageError.password}
+                value={register.password}
+                onChange={onChange}
+              />
+              <TextField
+                margin='normal'
+                autoComplete='off'
+                autoFocus
+                required
+                fullWidth
+                id='password'
+                label='Confrim Password'
+                name='confirmPassword'
+                type='password'
+                error={error.confirmPassword}
+                helperText={messageError.confirmPassword}
+                value={register.confirmPassword}
+                onChange={onChange}
+              />
+              <Button type='submit' fullWidth variant='contained'  sx={sxButton}>
+                Register
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+      </Container>
+    </ThemeProvider>
   )
 }
 
