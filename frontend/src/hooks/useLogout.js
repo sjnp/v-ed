@@ -6,17 +6,16 @@ import axios from "../api/axios";
 const useLogout = () => {
   // const { setAuth } = useAuth();
   const dispatch = useDispatch();
-  const username = useSelector((state) => state.auth.username);
 
   const logout = async () => {
     // setAuth({});
-    dispatch(reset());
-    console.log(username);
     try {
+      console.log("sending logout api...")
       const response = await axios.get('/api/token/clear', {
         withCredentials: true
       });
 
+      dispatch(reset());
     } catch (err) {
       console.error(err);
     }

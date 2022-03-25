@@ -9,11 +9,12 @@ import PersistLogin from './components/PersistLogin';
 
 import { Routes, Route } from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
+import Logout from './pages/Logout';
 function App() {
   return (
     <Routes>
 
-          <Route path='/' element={<Home />} />
+      <Route path='/' element={<Home />} />
       {/* public routes */}
       {/* <Route path='login' element={<MuiLogin />} /> */}
       {/* <Route path='register' element={<Register />} /> */}
@@ -22,8 +23,11 @@ function App() {
       {/* private routes */}
       <Route element={<PersistLogin />}>
 
+        <Route element={<RequireAuth allowRoles={["STUDENT", "INSTRUCTOR", "ADMIN"]} />}>
+          <Route path='logout' element={<Logout />} />
+        </Route>
         <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
-          <Route path='home' element={<Home />} />
+          {/* <Route path='home' element={<Home />} /> */}
           <Route path='student' element={<Student />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>

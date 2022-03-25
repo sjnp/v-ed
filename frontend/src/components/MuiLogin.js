@@ -20,8 +20,7 @@ const MuiLogin = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  // const from = location.state?.from?.pathname || "/home";
-  const from = "/home";
+  const from = location.state?.from?.pathname || "/";
 
   const [username, setUsername] = useState('');
   const [errorUsername, setErrorUsername] = useState(false);
