@@ -1,48 +1,61 @@
 import React, { useState } from "react";
+
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import { Box, Button, CssBaseline, Paper, TextField, Typography } from '@mui/material';
-import { URL_REGISTER } from '../utils/url'
+
 import { validation } from '../utils/validation'
-import axios from "../api/axios";
+import service from '../services/service'
 
-const Register = () => {
+const Register = ({ success }) => {
 
-  const theme = createTheme();
+  const theme = createTheme()
 
-  const initRegister = {
+  const [ register, setRegister ] = useState({
     email: '',
     password: '',
     confirmPassword: '',
     firstname: '',
     lastname: ''
-  }
-  
-  const initRegister2 = {
+  })
+
+  const [ messageError, setMessageError ] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstname: '',
+    lastname: ''
+  })
+
+  const [ error, setError ] = useState({
     email: false,
     password: false,
     confirmPassword: false,
     firstname: false,
     lastname: false
-  }
-
-  const [ register, setRegister ] = useState(initRegister)
-  const [ error, setError ] = useState(initRegister2)
-  const [ messageError, setMessageError ] = useState(initRegister)
+  })
 
   const onChange = async (event) => {
     handleChange(event.target.name, event.target.value)
   }
 
   const handleChange = (name, value) => {
-    setRegister({ ...register, [name]: value })
-    const message = verify(name, value)
-    console.log(message)
+    setRegister({
+      ...register, 
+      [name]: value
+    })
 
-    const isError = message === '' ? false : true
-    setError({ ...error, [name]: isError })
-    setMessageError({ ...messageError, [name]: message })
-    console.log('error => ', error)
+    const errMsg = verify(name, value) // verify ok errMsg = '', verify fail errMsg = '...'
+    
+    setError({
+      ...error, 
+      [name]: errMsg ? true : false
+    })
+    
+    setMessageError({ 
+      ...messageError,
+      [name]: errMsg
+    })
   }
 
   const verify = (name, value) => {
@@ -59,54 +72,55 @@ const Register = () => {
     }
   }
 
-  const onRegister = (event) => {
+  const onRegister = async (event) => {
     event.preventDefault()
 
-    if (checkErrorBeforeRegister('firstname')) {
-      handleChange('firstname', register.firstname)
-      return
-    } else if (checkErrorBeforeRegister('lastname')) {
-      handleChange('lastname', register.lastname)
-      return
-    } else if (checkErrorBeforeRegister('email')) {
-      handleChange('email', register.email)
-      return
-    } else if (checkErrorBeforeRegister('password')) {
-      handleChange('password', register.password)
-      return
-    } else if (checkErrorBeforeRegister('confirmPassword')) {
-      handleChange('confirmPassword', register.confirmPassword)
-      return
-    }
+    // if (checkErrorBeforeRegister('firstname')) {
+    //   handleChange('firstname', register.firstname)
+    //   return
+    // } else if (checkErrorBeforeRegister('lastname')) {
+    //   handleChange('lastname', register.lastname)
+    //   return
+    // } else if (checkErrorBeforeRegister('email')) {
+    //   handleChange('email', register.email)
+    //   return
+    // } else if (checkErrorBeforeRegister('password')) {
+    //   handleChange('password', register.password)
+    //   return
+    // } else if (checkErrorBeforeRegister('confirmPassword')) {
+    //   handleChange('confirmPassword', register.confirmPassword)
+    //   return
+    // }
 
-    const payLoad = {
-      username: register.email,
-      password: register.password,
-      personalInfo: {
-        firstName: register.firstname,
-        lastName: register.lastname,
-      }
-    }
+    // const payLoad = {
+    //   username: register.email,
+    //   password: register.password,
+    //   personalInfo: {
+    //     firstName: register.firstname,
+    //     lastName: register.lastname,
+    //   }
+    // }
 
-    axios.post(URL_REGISTER, payLoad)
+    // const result = await service.register(payLoad)
+    const result = true
+
+    if (result) {
+      success()
+    } else {
+      setMessageError({
+        ...messageError,
+        email: `${register.email} duplicate`
+      })
+
+      setError({
+        ...error,
+        email: true
+      })
+    }
   }
 
   const checkErrorBeforeRegister = (name) => {
     return register[name] === '' || messageError[name] !== '' ? true : false
-  }
-
-  const sxBox = {
-    marginTop: 3,
-    marginLeft: 3,
-    marginRight: 3,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  }
-
-  const sxButton = { 
-    marginTop: 6,
-    marginBottom: 2
   }
 
   return (
@@ -114,7 +128,7 @@ const Register = () => {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Paper elevation={3}>
-          <Box sx={sxBox}>
+          <Box sx={{marginTop: 3, marginLeft: 3, marginRight: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography marginTop={3} component='h1' variant='h5'>
               Register
             </Typography>
@@ -137,7 +151,6 @@ const Register = () => {
               <TextField
                 margin='normal'
                 autoComplete='off'
-                autoFocus
                 required
                 fullWidth
                 id='lastname'
@@ -152,7 +165,6 @@ const Register = () => {
               <TextField
                 margin='normal'
                 autoComplete='off'
-                autoFocus
                 required
                 fullWidth
                 id='email'
@@ -167,7 +179,6 @@ const Register = () => {
               <TextField
                 margin='normal'
                 autoComplete='off'
-                autoFocus
                 required
                 fullWidth
                 id='password'
@@ -182,7 +193,6 @@ const Register = () => {
               <TextField
                 margin='normal'
                 autoComplete='off'
-                autoFocus
                 required
                 fullWidth
                 id='password'
@@ -194,7 +204,7 @@ const Register = () => {
                 value={register.confirmPassword}
                 onChange={onChange}
               />
-              <Button type='submit' fullWidth variant='contained'  sx={sxButton}>
+              <Button type='submit' fullWidth variant='contained'  sx={{ marginTop: 6, marginBottom: 2 }}>
                 Register
               </Button>
             </Box>

@@ -1,12 +1,23 @@
 import { AppBar, Button, ClickAwayListener, Container, Grid, Modal, Toolbar, Typography } from "@mui/material"
 import { useState } from "react";
 import MuiLogin from "./MuiLogin";
+import Register from "./Register";
+import AlertSuccess from "./AlertSuccess";
+
 
 const MuiAppbar = () => {
-  const [openSignIn, setOpenSignIn] = useState(false);
-  const handleOpenSignIn = () => setOpenSignIn(true);
-  const handleCloseSignIn = () => {
-    setOpenSignIn(false);
+
+  const [ openSignIn, setOpenSignIn ] = useState(false)
+  const [ openSignUp, setOpenSignUp ] = useState(false)
+  const [ registerSuccess, setRegisterSuccess ] = useState(false)
+
+  const handleToggleOpenSignIn = () => setOpenSignIn(!openSignIn)
+  const handleToggleOpenSignUp = () => setOpenSignUp(!openSignUp)
+  const toggleRegisterSuccess = () => setRegisterSuccess(!registerSuccess)
+
+  const onRegisterSuccess = () => {
+    handleToggleOpenSignUp()
+    toggleRegisterSuccess()
   }
 
   return (
@@ -38,13 +49,13 @@ const MuiAppbar = () => {
                   spacing={2}
                 >
                   <Grid item>
-                    <Button onClick={handleOpenSignIn}>Sign In</Button>
+                    <Button onClick={handleToggleOpenSignIn}>Sign In</Button>
                     <Modal
                       open={openSignIn}
-                      onClose={handleCloseSignIn}
+                      onClose={handleToggleOpenSignIn}
                     >
                       <div>
-                        <ClickAwayListener onClickAway={handleCloseSignIn}>
+                        <ClickAwayListener onClickAway={handleToggleOpenSignIn}>
                           <Container component="main" maxWidth="xs">
                             <MuiLogin />
                           </Container>
@@ -52,15 +63,43 @@ const MuiAppbar = () => {
                       </div>
                     </Modal>
                   </Grid>
+
                   <Grid item>
-                    <Button variant="contained">Sign Up</Button>
+                    <Button onClick={handleToggleOpenSignUp} variant="contained">
+                      Sign Up
+                    </Button>
+                    <Modal open={openSignUp} onClose={handleToggleOpenSignUp}>
+                      <div>
+                        <ClickAwayListener onClickAway={handleToggleOpenSignUp}>
+                          <Container component="main" maxWidth="xs">
+                            <Register success={onRegisterSuccess} />
+                          </Container>
+                        </ClickAwayListener>
+                      </div>
+                    </Modal>
                   </Grid>
+
+                  <Modal open={registerSuccess} onClose={toggleRegisterSuccess}>
+                    <div>
+                      <ClickAwayListener onClickAway={toggleRegisterSuccess}>
+                        <Container component="main" maxWidth="xs">
+                          <AlertSuccess 
+                            handleClick={toggleRegisterSuccess} 
+                            text={"Register successful."} 
+                            labelButton="Done"
+                          />
+                        </Container>
+                      </ClickAwayListener>
+                    </div>
+                  </Modal>
 
                 </Grid>
               </Grid>
             </Grid>
 
           </Toolbar>
+
+          
 
         </Container>
       </AppBar>
