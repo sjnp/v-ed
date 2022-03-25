@@ -12,7 +12,6 @@ import AlertSuccess from "../components/AlertSuccess";
 import { useState } from "react";
 import { register } from "../services/register";
 
-
 const Home = () => {
 
   return (
