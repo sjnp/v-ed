@@ -14,8 +14,6 @@ import { register } from "../services/register";
 
 
 const Home = () => {
-  const user = useSelector((state) => state.user.value)
-  const dispatch = useDispatch()
 
   return (
     <Container maxWidth="lg">

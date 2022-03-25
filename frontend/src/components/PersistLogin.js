@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
 import useRefreshToken from "../hooks/useRefreshToken";
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
-  const { auth, persist } = useAuth();
+  // const { auth, persist } = useAuth();
+  const access_token = useSelector((state) => state.auth.access_token);
+  const persist = useSelector((state) => state.auth.persist);
 
   useEffect(() => {
     let isMounted = true;
@@ -19,9 +22,10 @@ const PersistLogin = () => {
         isMounted && setIsLoading(false);
       }
     }
-    !auth?.access_token ? verifyRefreshToken() : setIsLoading(false);
+    !access_token ? verifyRefreshToken() : setIsLoading(false);
 
     return () => isMounted = false;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // useEffect(() => {

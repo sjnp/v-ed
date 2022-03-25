@@ -13,13 +13,14 @@ const Student = () => {
       const response = await axiosPrivate.put('/api/users/u/change-to-instructor');
     } catch (err) {
       console.error(err);
-      navigate('/login', { state: { from: location }, replace: true });
+      navigate('/', { state: { from: location }, replace: true });
     }
   }
 
   const signOut = async () => {
     await logout();
-    navigate('/student');
+    console.log("Hey Logout now")
+    navigate('/');
   }
 
   return (
