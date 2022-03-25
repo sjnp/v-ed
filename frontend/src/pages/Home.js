@@ -6,8 +6,6 @@ import MuiAppbar from "../components/MuiAppbar";
 import MuiLogin from "../components/MuiLogin";
 
 const Home = () => {
-  const user = useSelector((state) => state.user.value)
-  const dispatch = useDispatch()
 
   return (
     <Container maxWidth="lg">

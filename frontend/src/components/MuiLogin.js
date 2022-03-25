@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
-import useAuth from '../hooks/useAuth';
+// import useAuth from '../hooks/useAuth';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 
 import axios from '../api/axios';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Container from '@mui/material/Container';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import Container from '@mui/material/Container';
 import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
 import { Login } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuth, setPersist } from '../features/authSlice';
 
 const LOGIN_URL = '/api/login';
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const MuiLogin = () => {
-  const { setAuth, persist, setPersist } = useAuth();
+  // const { setAuth, persist, setPersist } = useAuth();
+  const persist = useSelector((state) => state.auth.persist);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/student";
+  // const from = location.state?.from?.pathname || "/home";
+  const from = "/home";
 
   const [username, setUsername] = useState('');
   const [errorUsername, setErrorUsername] = useState(false);
@@ -31,7 +36,10 @@ const MuiLogin = () => {
   const [loginErrorMsg, setLoginErrorMsg] = useState('');
 
   useEffect(() => {
-    setLoginErrorMsg('');
+    let isMounted = true;
+    isMounted && setLoginErrorMsg('');
+
+    return () => isMounted = false;
   }, [username, password])
 
   const setRequiredUsernameMsg = () => {
@@ -110,12 +118,14 @@ const MuiLogin = () => {
   }
 
   const togglePersist = () => {
-    setPersist(prev => !prev);
+    // setPersist(prev => !prev);
+    dispatch(setPersist(!persist));
+
   }
 
-  useEffect(() => {
-    localStorage.setItem("persist", persist)
-  }, [persist])
+  // useEffect(() => {
+  //   localStorage.setItem("persist", persist)
+  // }, [persist])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -140,7 +150,8 @@ const MuiLogin = () => {
         );
         const access_token = response?.data?.access_token;
         const roles = response?.data?.roles;
-        setAuth({ username, password, roles, access_token });
+        // setAuth({ username, password, roles, access_token });
+        dispatch(setAuth({ username, roles, access_token}))
         setUsername('');
         setPassword('');
         navigate(from, { replace: true });

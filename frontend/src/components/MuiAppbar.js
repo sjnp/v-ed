@@ -1,5 +1,6 @@
 import { AppBar, Button, ClickAwayListener, Container, Grid, Modal, Toolbar, Typography } from "@mui/material"
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import MuiLogin from "./MuiLogin";
 
 const MuiAppbar = () => {
@@ -8,6 +9,8 @@ const MuiAppbar = () => {
   const handleCloseSignIn = () => {
     setOpenSignIn(false);
   }
+
+  const username = useSelector((state) => state.auth.username);
 
   return (
     <>
@@ -30,35 +33,50 @@ const MuiAppbar = () => {
                   V-Ed
                 </Typography>
               </Grid>
-              <Grid item xs={9}>
-                <Grid
-                  container
-                  alignItems='center'
-                  justifyContent='flex-end'
-                  spacing={2}
-                >
-                  <Grid item>
-                    <Button onClick={handleOpenSignIn}>Sign In</Button>
-                    <Modal
-                      open={openSignIn}
-                      onClose={handleCloseSignIn}
-                    >
-                      <div>
-                        <ClickAwayListener onClickAway={handleCloseSignIn}>
-                          <Container component="main" maxWidth="xs">
-                            <MuiLogin />
-                          </Container>
-                        </ClickAwayListener>
-                      </div>
-                    </Modal>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained">Sign Up</Button>
+              {username
+                ? <Grid item xs={9}>
+                  <Grid
+                    container
+                    alignItems='center'
+                    justifyContent='flex-end'
+                    spacing={2}
+                  >
+                    <Grid item>
+                  <Typography>{username}</Typography>
+                    </Grid>
+                    </Grid>
                   </Grid>
 
+
+                  : (<Grid item xs={9}>
+                    <Grid
+                      container
+                      alignItems='center'
+                      justifyContent='flex-end'
+                      spacing={2}
+                    >
+                      <Grid item>
+                        <Button onClick={handleOpenSignIn}>Sign In</Button>
+                        <Modal
+                          open={openSignIn}
+                          onClose={handleCloseSignIn}
+                        >
+                          <div>
+                            <ClickAwayListener onClickAway={handleCloseSignIn}>
+                              <Container component="main" maxWidth="xs">
+                                <MuiLogin />
+                              </Container>
+                            </ClickAwayListener>
+                          </div>
+                        </Modal>
+                      </Grid>
+                      <Grid item>
+                        <Button variant="contained">Sign Up</Button>
+                      </Grid>
+
+                    </Grid>
+                  </Grid>)}
                 </Grid>
-              </Grid>
-            </Grid>
 
           </Toolbar>
 

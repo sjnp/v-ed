@@ -12,24 +12,27 @@ import Unauthorized from './pages/Unauthorized';
 function App() {
   return (
     <Routes>
-        {/* public routes */}
-        <Route path='/' element={<Home />} />
-        {/* <Route path='login' element={<MuiLogin />} /> */}
-        {/* <Route path='register' element={<Register />} /> */}
-        <Route path='unauthorized' element={<Unauthorized />} />
 
-        {/* private routes */}
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
-            <Route path='student' element={<Student />} />
-          </Route>
-          <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
-            <Route path='instructor' element={<Instructor />} />
-          </Route>
-          <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
-            <Route path='admin' element={<Admin />} />
-          </Route>
+          <Route path='/' element={<Home />} />
+      {/* public routes */}
+      {/* <Route path='login' element={<MuiLogin />} /> */}
+      {/* <Route path='register' element={<Register />} /> */}
+      <Route path='unauthorized' element={<Unauthorized />} />
+
+      {/* private routes */}
+      <Route element={<PersistLogin />}>
+
+        <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
+          <Route path='home' element={<Home />} />
+          <Route path='student' element={<Student />} />
         </Route>
+        <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
+          <Route path='instructor' element={<Instructor />} />
+        </Route>
+        <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
+          <Route path='admin' element={<Admin />} />
+        </Route>
+      </Route>
 
     </Routes>
   );

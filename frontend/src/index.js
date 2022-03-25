@@ -1,18 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { AuthProvider } from './context/AuthProvider';
+// import { AuthProvider } from './context/AuthProvider';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from "react-redux"
-import { configureStore } from "@reduxjs/toolkit"
-import userReducer from "./redux/user"
+import { store } from './app/store';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-
-const store = configureStore({
-  reducer: {
-    user: userReducer,
-  }
-})
 
 const theme = createTheme();
 
@@ -25,13 +18,13 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <AuthProvider>
+        {/* <AuthProvider> */}
           <Provider store={store}>
             <Routes>
               <Route path="/*" element={<App />} />
             </Routes>
           </Provider>
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </BrowserRouter>
     </ThemeProvider>
 
