@@ -2,6 +2,9 @@ import { AppBar, Button, ClickAwayListener, Container, Grid, Modal, Toolbar, Typ
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import MuiLogin from "./MuiLogin";
+import Register from "./Register";
+import AlertSuccess from "./AlertSuccess";
+
 import useRefreshToken from "../hooks/useRefreshToken"
 import useLogout from "../hooks/useLogout";
 import { useNavigate } from "react-router-dom";
@@ -88,6 +91,17 @@ const SignInSignUp = () => {
   const handleCloseSignIn = () => {
     setOpenSignIn(false);
   }
+
+  const [openSignUp, setOpenSignUp] = useState(false)
+  const [registerSuccess, setRegisterSuccess] = useState(false)
+
+  const handleToggleOpenSignUp = () => setOpenSignUp(!openSignUp)
+  const toggleRegisterSuccess = () => setRegisterSuccess(!registerSuccess)
+
+  const onRegisterSuccess = () => {
+    handleToggleOpenSignUp()
+    toggleRegisterSuccess()
+  }
   return (
     <Grid item xs={9}>
       <Grid
@@ -112,8 +126,32 @@ const SignInSignUp = () => {
           </Modal>
         </Grid>
         <Grid item>
-          <Button variant="contained">Sign Up</Button>
+          <Button onClick={handleToggleOpenSignUp} variant="contained">
+            Sign Up
+          </Button>
+          <Modal open={openSignUp} onClose={handleToggleOpenSignUp}>
+            <div>
+              <ClickAwayListener onClickAway={handleToggleOpenSignUp}>
+                <Container component="main" maxWidth="xs">
+                  <Register success={onRegisterSuccess} />
+                </Container>
+              </ClickAwayListener>
+            </div>
+          </Modal>
         </Grid>
+        <Modal open={registerSuccess} onClose={toggleRegisterSuccess}>
+          <div>
+            <ClickAwayListener onClickAway={toggleRegisterSuccess}>
+              <Container component="main" maxWidth="xs">
+                <AlertSuccess
+                  handleClick={toggleRegisterSuccess}
+                  text={"Register successful."}
+                  labelButton="Done"
+                />
+              </Container>
+            </ClickAwayListener>
+          </div>
+        </Modal>
       </Grid>
     </Grid>
   )
@@ -151,22 +189,12 @@ const MuiAppbar = () => {
 
   return (
     <>
-      <AppBar
-        color="inherit"
-        elevation={1}
-      >
+      <AppBar color="inherit" elevation={1}>
         <Container maxWidth="lg">
           <Toolbar>
-
-            <Grid
-              container
-              alignItems='center'
-              spacing={2}
-            >
+            <Grid container alignItems='center' spacing={2}>
               <Grid item xs={3}>
-                <Typography
-                  variant="h6"
-                >
+                <Typography variant="h6">
                   V-Ed
                 </Typography>
               </Grid>
