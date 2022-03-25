@@ -1,4 +1,4 @@
-import { AppBar, Button, ClickAwayListener, Container, Grid, Modal, Toolbar, Typography } from "@mui/material"
+import { AppBar, Button, ClickAwayListener, Container, Grid, Modal, Toolbar, Typography, MenuItem, Tooltip, IconButton, Avatar, Menu } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import MuiLogin from "./MuiLogin";
@@ -10,10 +10,34 @@ const UserInfo = () => {
   const logout = useLogout();
   const navigate = useNavigate();
 
+  const username = useSelector((state) => state.auth.value.username);
+  const roles = useSelector((state) => state.auth.value.roles);
+  const settings = roles.includes('INSTRUCTOR') ? ['Student', 'Instructor', 'Account Settings', 'Logout'] : ['Student', 'Account Settings', 'Logout'];
+
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
   const signOut = async (e) => {
     await logout();
-    navigate('/logout');
+    navigate('/');
   }
+
+  const handleCloseUserMenu = (event) => {
+    setAnchorElUser(null);
+    switch (event.currentTarget.dataset.myValue) {
+      case 'Student': navigate('/student');
+        break;
+      case 'Instructor': navigate('/instructor');
+        break;
+      case 'Account Settings': navigate('/account-manage');
+        break;
+      case 'Logout': signOut();
+        break;
+      default: break;
+    }
+  };
 
   return (
     <Grid item xs={9}>
@@ -24,20 +48,41 @@ const UserInfo = () => {
         spacing={2}
       >
         <Grid item>
-          <Typography>Hello!</Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            onClick={signOut}
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar alt={username} src="/static/images/avatar/2.jpg" />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
           >
-            Sign Out
-          </Button>
+            {settings.map((setting) => (
+              <MenuItem key={setting} data-my-value={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
         </Grid>
       </Grid>
     </Grid>
   )
 }
-const SignInSignOut = () => {
+
+const SignInSignUp = () => {
+
   const [openSignIn, setOpenSignIn] = useState(false);
   const handleOpenSignIn = () => setOpenSignIn(true);
   const handleCloseSignIn = () => {
@@ -69,11 +114,11 @@ const SignInSignOut = () => {
         <Grid item>
           <Button variant="contained">Sign Up</Button>
         </Grid>
-
       </Grid>
     </Grid>
   )
 }
+
 const MuiAppbar = () => {
 
   const [isLoading, setIsLoading] = useState(true);
@@ -81,8 +126,8 @@ const MuiAppbar = () => {
 
   const refresh = useRefreshToken();
 
-  const username = useSelector((state) => state.auth.username);
-  const persist = useSelector((state) => state.auth.persist);
+  const username = useSelector((state) => state.auth.value.username);
+  const persist = useSelector((state) => state.auth.value.persist);
 
   useEffect(() => {
     console.log("hey use effect on mui appbar")
@@ -103,8 +148,6 @@ const MuiAppbar = () => {
 
     return () => isMounted = false;
   }, [])
-
-
 
   return (
     <>
@@ -131,23 +174,20 @@ const MuiAppbar = () => {
                 !persist
                   ? username
                     ? <UserInfo />
-                    : <SignInSignOut />
+                    : <SignInSignUp />
                   : isLoading
                     ? <p>Loading...</p>
                     : username
                       ? <UserInfo />
-                      : <SignInSignOut />
-
+                      : <SignInSignUp />
               }
-            </Grid>
-
-          </Toolbar>
-
-        </Container>
-      </AppBar>
+            </Grid >
+          </Toolbar >
+        </Container >
+      </AppBar >
 
       {/* Fixd Replacement see: https://mui.com/components/app-bar/#fixed-placement */}
-      <Toolbar />
+      < Toolbar />
     </>
   )
 }

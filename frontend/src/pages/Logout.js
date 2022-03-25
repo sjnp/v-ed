@@ -6,7 +6,7 @@ import useLogout from "../hooks/useLogout";
 const Logout = () => {
 
   const navigate = useNavigate();
-  const username = useSelector((state) => state.auth.username);
+  const username = useSelector((state) => state.auth.value.username);
 
   useEffect(() => {
     console.log(username);
