@@ -75,34 +75,33 @@ const Register = ({ success }) => {
   const onRegister = async (event) => {
     event.preventDefault()
 
-    // if (checkErrorBeforeRegister('firstname')) {
-    //   handleChange('firstname', register.firstname)
-    //   return
-    // } else if (checkErrorBeforeRegister('lastname')) {
-    //   handleChange('lastname', register.lastname)
-    //   return
-    // } else if (checkErrorBeforeRegister('email')) {
-    //   handleChange('email', register.email)
-    //   return
-    // } else if (checkErrorBeforeRegister('password')) {
-    //   handleChange('password', register.password)
-    //   return
-    // } else if (checkErrorBeforeRegister('confirmPassword')) {
-    //   handleChange('confirmPassword', register.confirmPassword)
-    //   return
-    // }
+    if (checkErrorBeforeRegister('firstname')) {
+      handleChange('firstname', register.firstname)
+      return
+    } else if (checkErrorBeforeRegister('lastname')) {
+      handleChange('lastname', register.lastname)
+      return
+    } else if (checkErrorBeforeRegister('email')) {
+      handleChange('email', register.email)
+      return
+    } else if (checkErrorBeforeRegister('password')) {
+      handleChange('password', register.password)
+      return
+    } else if (checkErrorBeforeRegister('confirmPassword')) {
+      handleChange('confirmPassword', register.confirmPassword)
+      return
+    }
 
-    // const payLoad = {
-    //   username: register.email,
-    //   password: register.password,
-    //   personalInfo: {
-    //     firstName: register.firstname,
-    //     lastName: register.lastname,
-    //   }
-    // }
+    const payLoad = {
+      username: register.email,
+      password: register.password,
+      personalInfo: {
+        firstName: register.firstname,
+        lastName: register.lastname,
+      }
+    }
 
-    // const result = await service.register(payLoad)
-    const result = true
+    const result = await service.register(payLoad)
 
     if (result) {
       success()
