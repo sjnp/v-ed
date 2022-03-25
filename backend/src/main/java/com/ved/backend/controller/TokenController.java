@@ -71,6 +71,7 @@ public class TokenController {
                 .map(AppRole::getName)
                 .collect(Collectors.toList()));
         jsonMessage.put("access_token", access_token);
+        jsonMessage.put("username", username);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), jsonMessage);
       } catch (Exception exception) {

@@ -1,16 +1,24 @@
+import { useDispatch, useSelector } from "react-redux";
+import { reset } from "../features/authSlice";
 import axios from "../api/axios";
-import useAuth from "./useAuth"
+// import useAuth from "./useAuth"
 
 const useLogout = () => {
-  const { setAuth } = useAuth();
+  // const { setAuth } = useAuth();
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.auth.value.username);
 
   const logout = async () => {
-    setAuth({});
+    // setAuth({});
+    dispatch(reset());
+    console.log(username,"logout");
     try {
-      const response = await axios('/api/token/clear', {
+      console.log("sending logout api...")
+      const response = await axios.get('/api/token/clear', {
         withCredentials: true
       });
 
+      dispatch(reset());
     } catch (err) {
       console.error(err);
     }
