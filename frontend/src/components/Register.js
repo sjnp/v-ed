@@ -194,7 +194,7 @@ const Register = ({ success }) => {
                 autoComplete='off'
                 required
                 fullWidth
-                id='password'
+                id='confirmPassword'
                 label='Confrim Password'
                 name='confirmPassword'
                 type='password'

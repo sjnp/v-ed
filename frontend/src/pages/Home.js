@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux"; // ใช้ดึงข้อมูลออกจาก Store
 import { useDispatch } from "react-redux"; // ใช้เรียก Method ที่เขียนไว้ใน Reducer
-import { setUser } from "../redux/user"; // import Method ที่เขียนไว้ใน Reducer มาเรียกใช้
 import { AppBar, Box, Container, ThemeProvider, Toolbar, Typography } from "@mui/material";
 import { Button, Modal, ClickAwayListener } from '@mui/material'
 import MuiAppbar from "../components/MuiAppbar";

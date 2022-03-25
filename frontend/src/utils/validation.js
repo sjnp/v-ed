@@ -1,8 +1,8 @@
 const REGEX_EMAIL = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const REGEX_NAME = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+[^-\s]*)*$/
+const REGEX_NAME = /^(?=.{1,50}$)[a-zA-Z]+(?:['_.\s][a-z]+[^-\s]*)*$/
 const REGEX_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,24}$/
 const REGEX_NUMBER = /[0-9]+/
-const REGEX_SYMBOL = /^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+[^-\s]*)*$/
+const REGEX_SYMBOL = /^(?=.{1,50}$)[a-zA-Z]+(?:['_.\s][a-z]+[^-\s]*)*$/
 
 const isLength = (data) => data.length > 0
 

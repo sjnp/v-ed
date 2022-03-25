@@ -8,8 +8,8 @@ const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true);
   const refresh = useRefreshToken();
   // const { auth, persist } = useAuth();
-  const access_token = useSelector((state) => state.auth.access_token);
-  const persist = useSelector((state) => state.auth.persist);
+  const access_token = useSelector((state) => state.auth.value.access_token);
+  const persist = useSelector((state) => state.auth.value.persist);
 
   useEffect(() => {
     let isMounted = true;

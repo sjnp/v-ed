@@ -4,8 +4,8 @@ import { useLocation, Navigate, Outlet } from "react-router-dom";
 
 const RequireAuth = ({ allowRoles }) => {
   // const { auth } = useAuth();
-  const roles = useSelector((state) => state.auth.roles);
-  const username = useSelector((state) => state.auth.username);
+  const roles = useSelector((state) => state.auth.value.roles);
+  const username = useSelector((state) => state.auth.value.username);
 
   const location = useLocation();
 

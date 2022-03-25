@@ -15,13 +15,12 @@ const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+
 
 const MuiLogin = () => {
   // const { setAuth, persist, setPersist } = useAuth();
-  const persist = useSelector((state) => state.auth.persist);
+  const persist = useSelector((state) => state.auth.value.persist);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const location = useLocation();
-  // const from = location.state?.from?.pathname || "/home";
-  const from = "/home";
+  const from = location.state?.from?.pathname || "/";
 
   const [username, setUsername] = useState('');
   const [errorUsername, setErrorUsername] = useState(false);
