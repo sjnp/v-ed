@@ -1,5 +1,7 @@
 import { register } from './register'
 
-export default {
+const service = {
     register
 }
+
+export default service;
