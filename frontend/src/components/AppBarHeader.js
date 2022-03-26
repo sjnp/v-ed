@@ -15,10 +15,6 @@ const AppBarHeader = () => {
   const persist = useSelector((state) => state.auth.value.persist);
 
   useEffect(() => {
-    console.log("hey use effect on mui appbar")
-  }, [username])
-
-  useEffect(() => {
     let isMounted = true;
     const verifyRefreshToken = async () => {
       try {
