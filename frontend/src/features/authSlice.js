@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialStateValue = {
+const initialState = {
   username: '',
   roles: [],
   access_token: '',
@@ -9,7 +9,7 @@ const initialStateValue = {
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState : {value: initialStateValue},
+  initialState : {value: initialState},
   reducers: {
     setAuth: (state, action) => {
       state.value.username = action.payload.username;
@@ -25,8 +25,7 @@ export const authSlice = createSlice({
       localStorage.setItem("v_ed_persist", action.payload);
     },
     reset: (state) => {
-      state.value = initialStateValue;
-      console.log(`This redux ${state.value.username}`)
+      state.value = initialState;
     },
   }
 });

@@ -1,6 +1,6 @@
 import axios from "../api/axios";
 // import useAuth from "./useAuth";
-import { setAuth, setTokenAndRoles } from "../features/authSlice";
+import { setAuth } from "../features/authSlice";
 import { useDispatch } from "react-redux";
 
 const useRefreshToken = () => {
