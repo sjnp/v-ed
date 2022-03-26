@@ -26,7 +26,6 @@ export const authSlice = createSlice({
     },
     reset: (state) => {
       state.value = initialState;
-      console.log(`This redux reset username: ${state.value.username}`)
     },
   }
 });
