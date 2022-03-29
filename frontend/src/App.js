@@ -18,6 +18,8 @@ function App() {
       {/* <Route path='register' element={<Register />} /> */}
       <Route path='unauthorized' element={<Unauthorized />} />
 
+      <Route path='instructor' element={<Instructor />} />
+
       {/* private routes */}
       <Route element={<PersistLogin />}>
 
@@ -29,7 +31,6 @@ function App() {
           <Route path='student' element={<Student />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
-          <Route path='instructor' element={<Instructor />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
           <Route path='admin' element={<Admin />} />
