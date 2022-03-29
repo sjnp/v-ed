@@ -7,6 +7,7 @@ import PersistLogin from './components/PersistLogin';
 
 import { Routes, Route } from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
+import CreateCourse from './pages/CreateCourse';
 // import Logout from './pages/Logout';
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
       {/* <Route path='register' element={<Register />} /> */}
       <Route path='unauthorized' element={<Unauthorized />} />
 
+      {/* public testing routes */}
       <Route path='instructor' element={<Instructor />} />
+      <Route path='instructor/create-course' element={<CreateCourse />} />
 
       {/* private routes */}
       <Route element={<PersistLogin />}>
