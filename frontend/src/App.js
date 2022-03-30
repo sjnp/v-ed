@@ -2,6 +2,7 @@ import Home from './pages/Home';
 import Student from './pages/Student';
 import Instructor from './pages/Instructor';
 import Admin from './pages/Admin';
+import AccountManage from './pages/AccountManage';
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 
@@ -27,6 +28,7 @@ function App() {
         <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
           {/* <Route path='home' element={<Home />} /> */}
           <Route path='student' element={<Student />} />
+          <Route path='account-manage' element={<AccountManage />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
           <Route path='instructor' element={<Instructor />} />
