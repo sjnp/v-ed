@@ -1,13 +1,13 @@
-import {Box, Button, Container, Typography} from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import AppBarHeader from "../components/AppBarHeader";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import CreateCourseForm from "../components/CreateCourseForm";
 
 const CreateCourse = () => {
-  const navigate = useNavigate();
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader/>
+      <AppBarHeader />
       <Box
         component='main'
         sx={{
@@ -17,7 +17,7 @@ const CreateCourse = () => {
           alignItems: 'center'
         }}
       >
-        
+        <CreateCourseForm />
 
       </Box>
     </Container>
