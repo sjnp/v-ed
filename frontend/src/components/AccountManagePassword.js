@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const drawerWidth = 720;
 
-const AccountManageProfile = () => {
+const AccountManagePassword = () => {
   const username = useSelector((state) => state.auth.value.username);
 
   return (
@@ -20,7 +20,7 @@ const AccountManageProfile = () => {
           component='h1' 
           variant='h5'
         >
-          Profile Detail
+          Change Password
         </Typography>
         <TextField
           margin='normal'
@@ -29,9 +29,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='First Name'
-          label='First Name'
-          name='First Name'
+          id='Current Password'
+          label='Current Password'
+          name='Current Password'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -46,9 +46,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='Last Name'
-          label='Last Name'
-          name='Last Name'
+          id='New Password'
+          label='New Password'
+          name='New Password'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -63,26 +63,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='Occupation'
-          label='Occupation'
-          name='Occupation'
-          type='text'
-          // error={errorPassword}
-          // helperText={passwordHelperText}
-          // value={password}
-          // onChange={handlePasswordChange}
-          // onBlur={handlePasswordBlur}
-        />
-        <TextField
-          margin='normal'
-          sx={{
-            marginTop: 3
-          }}
-          // required
-          fullWidth
-          id='Biography'
-          label='Biography'
-          name='Biography'
+          id='Re-Enter New Password'
+          label='Re-Enter New Password'
+          name='Re-Enter New Password'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -101,7 +84,7 @@ const AccountManageProfile = () => {
       }}
       // startIcon={<Login />}
     >
-      Save
+      Change Password
     </Button>
       </Box>
 
@@ -110,4 +93,4 @@ const AccountManageProfile = () => {
   );
 }
 
-export default AccountManageProfile;
+export default AccountManagePassword;

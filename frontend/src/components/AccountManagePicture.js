@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const drawerWidth = 720;
 
-const AccountManageProfile = () => {
+const AccountManagePicture = () => {
   const username = useSelector((state) => state.auth.value.username);
 
   return (
@@ -20,9 +20,9 @@ const AccountManageProfile = () => {
           component='h1' 
           variant='h5'
         >
-          Profile Detail
+          Profile Picture
         </Typography>
-        <TextField
+        {/* <TextField
           margin='normal'
           sx={{
             marginTop: 3
@@ -89,7 +89,7 @@ const AccountManageProfile = () => {
           // value={password}
           // onChange={handlePasswordChange}
           // onBlur={handlePasswordBlur}
-        />
+        /> */}
     <Button
       type='submit'
       fullWidth
@@ -101,7 +101,7 @@ const AccountManageProfile = () => {
       }}
       // startIcon={<Login />}
     >
-      Save
+      Upload Picture
     </Button>
       </Box>
 
@@ -110,4 +110,4 @@ const AccountManageProfile = () => {
   );
 }
 
-export default AccountManageProfile;
+export default AccountManagePicture;

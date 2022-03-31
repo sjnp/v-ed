@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const drawerWidth = 720;
 
-const AccountManageProfile = () => {
+const AccountManageInstructor = () => {
   const username = useSelector((state) => state.auth.value.username);
 
   return (
@@ -20,7 +20,7 @@ const AccountManageProfile = () => {
           component='h1' 
           variant='h5'
         >
-          Profile Detail
+          Instructor
         </Typography>
         <TextField
           margin='normal'
@@ -29,9 +29,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='First Name'
-          label='First Name'
-          name='First Name'
+          id='Bank Account Name'
+          label='Bank Account Name'
+          name='Bank Account Name'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -46,9 +46,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='Last Name'
-          label='Last Name'
-          name='Last Name'
+          id='Bank Account Number'
+          label='Bank Account Number'
+          name='Bank Account Number'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -63,9 +63,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='Occupation'
-          label='Occupation'
-          name='Occupation'
+          id='Recipient Name'
+          label='Recipient Name'
+          name='Recipient Name'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -80,9 +80,9 @@ const AccountManageProfile = () => {
           }}
           // required
           fullWidth
-          id='Biography'
-          label='Biography'
-          name='Biography'
+          id='Recipient Tax ID'
+          label='Recipient Tax ID'
+          name='Recipient Tax ID'
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
@@ -101,7 +101,7 @@ const AccountManageProfile = () => {
       }}
       // startIcon={<Login />}
     >
-      Save
+      Verify and Activate Instructor
     </Button>
       </Box>
 
@@ -110,4 +110,4 @@ const AccountManageProfile = () => {
   );
 }
 
-export default AccountManageProfile;
+export default AccountManageInstructor;
