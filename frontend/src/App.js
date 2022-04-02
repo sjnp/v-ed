@@ -8,7 +8,7 @@ import PersistLogin from './components/PersistLogin';
 import { Routes, Route } from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
 import CreateCourse from './pages/CreateCourse';
-// import Logout from './pages/Logout';
+
 function App() {
   return (
     <Routes>
