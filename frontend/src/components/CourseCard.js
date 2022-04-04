@@ -1,38 +1,52 @@
 import React, { useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 // Material UI
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import StarIcon from '@mui/icons-material/Star';
+import CardActions from '@mui/material/CardActions';
+import CardContent from "@mui/material/CardContent";
 
-const CourseCard = (props) => {
-
-    const starIcon = <StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />
+const CourseCard = ({ image, courseName, instructorName, rating, reviewTotal, pathOnClick }) => {
 
     const [ shadow, setShadow ] = useState(1)
+    const handleMouseOver = () => setShadow(8)
+    const handleMouseOut = () => setShadow(1)
 
-    const onMouseOver = () => setShadow(10)
-    const onMouseOut = () => setShadow(1)
-
-    const { courseName, instructorName, value, image } = props
-
+    const navigate = useNavigate()
+    const handleClickCourseCard = () => navigate(pathOnClick)
+    
     return (
-        <Card sx={{ maxWidth: 250, boxShadow: shadow, margin: 3 }} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
-            <CardMedia component="img" height="170" image={image} alt="green iguana" />
-            <CardContent sx={{ marginBottom: -2 }}>
-                <Typography gutterBottom variant="h5" component="div">
+        <Card
+            sx={{ boxShadow: shadow, cursor: 'pointer' }} 
+            onMouseOver={handleMouseOver} 
+            onMouseOut={handleMouseOut}
+            onClick={handleClickCourseCard}
+        >
+            <CardMedia component="img" height="130" image={image} />
+            <CardContent >
+                <Typography variant="body1" color="text.primary" title={courseName}>
                     {courseName}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="caption" color="text.secondary" title={instructorName}>
                     {instructorName}
                 </Typography>
-                <Typography sx={{ marginTop: 2 }}>
-                    <Rating name="text-feedback" value={value} size="small" readOnly precision={0.1} emptyIcon={starIcon}/>
-                </Typography>
             </CardContent>
+            <CardActions sx={{ marginTop: -2 }}>
+                <Rating
+                    value={rating} 
+                    size="small" 
+                    readOnly 
+                    precision={0.1} 
+                    emptyIcon={<StarIcon fontSize="inherit" />}
+                />
+                <Typography variant="caption">
+                    {rating} ({reviewTotal})
+                </Typography>
+            </CardActions>
         </Card>
     )
 }

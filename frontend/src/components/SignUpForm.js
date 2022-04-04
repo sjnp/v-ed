@@ -99,9 +99,9 @@ const SignUpForm = ({ success }) => {
 
     const result = await service.register(payLoad)
 
-    if (result) {
+    if (result.status === 201) {
       success()
-    } else {
+    } else if (result.status === 409) {
       setMessageError({
         ...messageError,
         email: `${register.email} duplicate`

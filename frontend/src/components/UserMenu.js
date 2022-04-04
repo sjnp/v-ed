@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
+import stringToColor from './stringToColor';
 
 const UserMenu = () => {
   const logout = useLogout();
@@ -47,7 +48,7 @@ const UserMenu = () => {
       >
         <Grid item>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt={username} src="/static/images/avatar/2.jpg" />
+            <Avatar alt={username} src="/static/images/avatar/2.jpg" sx={{bgcolor: stringToColor(username)}}/>
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
