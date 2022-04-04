@@ -1,7 +1,15 @@
-import { Container, Typography } from "@mui/material";
+// import { Container, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppBarHeader from "../components/AppBarHeader";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
+// component
+import CourseCard from "../components/CourseCard";
+
+// Material UI
+import Typography from "@mui/material/Typography"
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -17,22 +25,145 @@ const Student = () => {
     }
   }
 
+  let index = 0
+  const data = [
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    },
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+    {
+      image: `https://picsum.photos/200/300?random=${index++}`,
+      courseName: `Java programming ${index}`,
+      instructorName: `pradinan benjanavee ${index}`,
+      rating: 4.7,
+      reviewTotal: 125,
+      pathOnClick: '/student/course'
+    }, 
+  ]
+
+  const handleData = (data) => {
+    let key = 0
+    let column = 0
+    let result = []
+    for (const element of data) {
+      
+      if (column === 0) result.push(<Grid item xs={1} key={++key}></Grid>)
+
+      result.push(
+        <Grid item xs={2} key={++key}>
+          <CourseCard 
+            key={index}
+            image={element.image}
+            courseName={element.courseName}
+            instructorName={element.instructorName}
+            rating={element.rating}
+            reviewTotal={element.reviewTotal}
+            pathOnClick={element.pathOnClick}
+          />
+        </Grid>
+      )
+      ++column
+
+      if (column === 5) {
+        result.push(<Grid item xs={1} key={++key}></Grid>)
+        column = 0
+      }
+    }
+    return result
+  }
+
   return (
     <Container maxWidth="lg">
       <AppBarHeader />
-      <div>
-        <h1>Welcome :D</h1>
-        <h3>Student</h3>
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In congue placerat risus. Proin at volutpat ligula. Curabitur diam urna, dapibus ut auctor ut, ullamcorper in urna. Aenean in nulla dui. Sed feugiat tortor sed lorem gravida elementum. Nunc rutrum ornare porta. Vestibulum imperdiet lorem eu lacus fermentum, id hendrerit ante auctor. Praesent in velit semper, tempor mi ac, dictum neque. Aenean interdum fringilla magna. Ut feugiat ultrices mi at gravida. Cras elit ligula, tempus in malesuada et, dictum a eros. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed quis condimentum nisi, ac vehicula lacus. Curabitur magna diam, malesuada et elit quis, aliquam ultricies dolor. Morbi fringilla vitae arcu nec posuere.
-        </Typography>
-        <button onClick={() => upgradeToInstructor()}>
-          to be instructor
-        </button>
+      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+        Student home
+      </Typography>
+      <button onClick={() => upgradeToInstructor()}>
+        to be instructor
+      </button>
+      <hr/>
+      <br/>
+      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+        My Course
+      </Typography>
+      <br/>
 
-      </div>
+      <Grid container spacing={1} >
+      {
+        handleData(data).map(item => item)
+      }
+      </Grid>
+
+      <br/><br/><br/><br/>
     </Container>
-
   )
 }
 

@@ -1,25 +1,36 @@
 import { useSelector } from "react-redux"; // ใช้ดึงข้อมูลออกจาก Store
 import { useDispatch } from "react-redux"; // ใช้เรียก Method ที่เขียนไว้ใน Reducer
-import { AppBar, Box, Container, ThemeProvider, Toolbar, Typography } from "@mui/material";
-import { Button, Modal, ClickAwayListener } from '@mui/material'
+// import { AppBar, Box, Container, ThemeProvider, Toolbar, Typography } from "@mui/material";
+// import { Button, Modal, ClickAwayListener } from '@mui/material'
 import AppBarHeader from "../components/AppBarHeader";
+import CourseCard from "../components/CourseCard"
+import CaroueselCourse from "../components/CarouselCourse";
 
-import { Alert, AlertTitle } from "@mui/material";
+// import { Alert, AlertTitle } from "@mui/material";
+
+import Container from '@mui/material/Container'
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 
 
-const Home = () => {
+const Home = (props) => {
 
   return (
     <Container maxWidth="lg">
       <AppBarHeader />
-      <div>
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In congue placerat risus. Proin at volutpat ligula. Curabitur diam urna, dapibus ut auctor ut, ullamcorper in urna. Aenean in nulla dui. Sed feugiat tortor sed lorem gravida elementum. Nunc rutrum ornare porta. Vestibulum imperdiet lorem eu lacus fermentum, id hendrerit ante auctor. Praesent in velit semper, tempor mi ac, dictum neque. Aenean interdum fringilla magna. Ut feugiat ultrices mi at gravida. Cras elit ligula, tempus in malesuada et, dictum a eros. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed quis condimentum nisi, ac vehicula lacus. Curabitur magna diam, malesuada et elit quis, aliquam ultricies dolor. Morbi fringilla vitae arcu nec posuere.
-        </Typography>
-
-      </div>
+      <br/>
+      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+        Home
+      </Typography>
+      <br/>
+      <CaroueselCourse labelCorousel="My Course" startIndex={0} />
+      <CaroueselCourse labelCorousel="Programming" startIndex={5} />
+      
     </Container>
-
   )
 }
 
