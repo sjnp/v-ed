@@ -1,9 +1,13 @@
 import { AppBar, Container, Grid, Toolbar, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useRefreshToken from "../hooks/useRefreshToken"
 import SignInSignUpModals from "./SignInSignUpModals";
 import UserMenu from "./UserMenu";
+
+import { Box, Button, Link } from "@mui/material";
 
 const AppBarHeader = () => {
 
@@ -13,6 +17,9 @@ const AppBarHeader = () => {
 
   const username = useSelector((state) => state.auth.value.username);
   const persist = useSelector((state) => state.auth.value.persist);
+
+  const navigate = useNavigate()
+  const handleClickLogoVEd = () => navigate('/')
 
   useEffect(() => {
     let isMounted = true;
@@ -46,11 +53,11 @@ const AppBarHeader = () => {
               spacing={2}
             >
               <Grid item xs={3}>
-                <Typography
-                  variant="h6"
-                >
-                  V-Ed
-                </Typography>
+                <Button varient="text" onClick={handleClickLogoVEd}>
+                  <Typography variant="h6" color="text.primary">
+                      V-Ed
+                  </Typography>
+                </Button>
               </Grid>
               {
                 !persist
