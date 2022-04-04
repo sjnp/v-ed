@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4bc0c05d-f4f7-40e8-ac49-1f9dd77510e8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Instructor.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Instructor.js" afterDir="false" />
-    </list>
+    <list default="true" id="4bc0c05d-f4f7-40e8-ac49-1f9dd77510e8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,7 +87,7 @@
       <updated>1648444941743</updated>
       <workItem from="1648444944111" duration="319000" />
       <workItem from="1648445277719" duration="13713000" />
-      <workItem from="1648544768385" duration="14796000" />
+      <workItem from="1648544768385" duration="15243000" />
     </task>
     <servers />
   </component>
