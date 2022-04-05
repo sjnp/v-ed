@@ -6,7 +6,7 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Table
-public class PersonalInfo {
+public class Student {
   @Id
   @GeneratedValue(strategy = AUTO)
   private Long id;
@@ -22,16 +22,8 @@ public class PersonalInfo {
   @Column(length = 1024)
   private String biography;
 
-  @OneToOne(mappedBy = "personalInfo")
+  @OneToOne(mappedBy = "student")
   private AppUser appUser;
-
-  public AppUser getAppUser() {
-    return appUser;
-  }
-
-  public void setAppUser(AppUser appUser) {
-    this.appUser = appUser;
-  }
 
   public Long getId() {
     return id;
@@ -51,6 +43,10 @@ public class PersonalInfo {
 
   public String getBiography() {
     return biography;
+  }
+
+  public AppUser getAppUser() {
+    return appUser;
   }
 
   public void setId(Long id) {
@@ -73,10 +69,14 @@ public class PersonalInfo {
     this.biography = biography;
   }
 
-  public PersonalInfo() {
+  public void setAppUser(AppUser appUser) {
+    this.appUser = appUser;
   }
 
-  public PersonalInfo(Long id, String firstName, String lastName, String occupation, String biography, AppUser appUser) {
+  public Student() {
+  }
+
+  public Student(Long id, String firstName, String lastName, String occupation, String biography, AppUser appUser) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;

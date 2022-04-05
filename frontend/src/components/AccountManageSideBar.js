@@ -3,7 +3,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import ImageIcon from '@mui/icons-material/Image';
 import KeyIcon from '@mui/icons-material/Key';
 import SchoolIcon from '@mui/icons-material/School';
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import { setAccountManagePage } from "../features/pagesControlSlice";
 import stringToColor from './stringToColor';
 
 const drawerWidth = 240;
@@ -12,6 +13,10 @@ const sideBarIconList = [<PersonIcon />, <ImageIcon />, <KeyIcon />, <SchoolIcon
 
 const AccountManageSideBar = () => {
   const username = useSelector((state) => state.auth.value.username);
+  const dispatch = useDispatch();
+  const handleClick = (event) => {
+    dispatch(setAccountManagePage({ page : parseInt(event.currentTarget.dataset.myValue)}))
+  }
 
   const avatar = (
       <Box
@@ -44,7 +49,7 @@ const AccountManageSideBar = () => {
   const drawer = (
       <List>
         {sideBarList.map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem button key={text} data-my-value={index} onClick={handleClick}>
             <ListItemIcon>
               {sideBarIconList[index]}
             </ListItemIcon>

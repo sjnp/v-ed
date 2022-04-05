@@ -91,7 +91,7 @@ const SignUpForm = ({ success }) => {
     const payLoad = {
       username: register.email,
       password: register.password,
-      personalInfo: {
+      student: {
         firstName: register.firstname,
         lastName: register.lastname,
       }
