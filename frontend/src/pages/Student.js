@@ -99,14 +99,14 @@ const Student = () => {
       reviewTotal: 125,
       pathOnClick: '/student/course'
     }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
+    // {
+    //   image: `https://picsum.photos/200/300?random=${index++}`,
+    //   courseName: `Java programming ${index}`,
+    //   instructorName: `pradinan benjanavee ${index}`,
+    //   rating: 4.7,
+    //   reviewTotal: 125,
+    //   pathOnClick: '/student/course'
+    // },
   ]
 
   const handleData = (data) => {
