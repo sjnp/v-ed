@@ -22,6 +22,8 @@ public class Student {
   @Column(length = 1024)
   private String biography;
 
+  private String profilePicUri;
+
   @OneToOne(mappedBy = "student")
   private AppUser appUser;
 
@@ -43,6 +45,10 @@ public class Student {
 
   public String getBiography() {
     return biography;
+  }
+
+  public String getProfilePicUri() {
+    return profilePicUri;
   }
 
   public AppUser getAppUser() {
@@ -69,6 +75,10 @@ public class Student {
     this.biography = biography;
   }
 
+  public void setProfilePicUri(String profilePicUri) {
+    this.profilePicUri = profilePicUri;
+  }
+
   public void setAppUser(AppUser appUser) {
     this.appUser = appUser;
   }
@@ -76,12 +86,13 @@ public class Student {
   public Student() {
   }
 
-  public Student(Long id, String firstName, String lastName, String occupation, String biography, AppUser appUser) {
+  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.occupation = occupation;
     this.biography = biography;
+    this.profilePicUri = profilePicUri;
     this.appUser = appUser;
   }
 
