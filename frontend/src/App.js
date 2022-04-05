@@ -28,7 +28,7 @@ function App() {
       <Route path='overview' element={<Overview />} />
 
       <Route path='search' element={<Search />} />
-      <Route path='account' element={<AccountManage />} />
+      <Route path='account-manage' element={<AccountManage />} />
       
       {/* public routes */}
       {/* <Route path='login' element={<MuiLogin />} /> */}
