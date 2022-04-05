@@ -26,10 +26,10 @@ public class AppUser {
   private Collection<AppRole> appRoles = new ArrayList<>();
 
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
-  @JoinTable(name = "app_user_personal_info",
+  @JoinTable(name = "app_user_student",
       joinColumns = { @JoinColumn(name = "app_user_id", referencedColumnName = "id") },
-      inverseJoinColumns = { @JoinColumn(name = "personal_info_id", referencedColumnName = "id")})
-  private PersonalInfo personalInfo;
+      inverseJoinColumns = { @JoinColumn(name = "student_id", referencedColumnName = "id")})
+  private Student student;
 
   public Long getId() {
     return id;
@@ -47,8 +47,8 @@ public class AppUser {
     return appRoles;
   }
 
-  public PersonalInfo getPersonalInfo() {
-    return personalInfo;
+  public Student getStudent() {
+    return student;
   }
 
   public void setId(Long id) {
@@ -67,18 +67,18 @@ public class AppUser {
     this.appRoles = appRoles;
   }
 
-  public void setPersonalInfo(PersonalInfo personalInfo) {
-    this.personalInfo = personalInfo;
+  public void setStudent(Student student) {
+    this.student = student;
   }
 
   public AppUser() {
   }
 
-  public AppUser(Long id, String username, String password, Collection<AppRole> appRoles, PersonalInfo personalInfo) {
+  public AppUser(Long id, String username, String password, Collection<AppRole> appRoles, Student student) {
     this.id = id;
     this.username = username;
     this.password = password;
     this.appRoles = appRoles;
-    this.personalInfo = personalInfo;
+    this.student = student;
   }
 }
