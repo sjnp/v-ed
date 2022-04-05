@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8937846d-4098-42ba-b3a0-3d83d392f54a" name="Changes" comment="" />
+    <list default="true" id="8937846d-4098-42ba-b3a0-3d83d392f54a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Category.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Course.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Instructor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CategoryRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CourseRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/InstructorRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,7 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1649083438058</updated>
       <workItem from="1649083440067" duration="1320000" />
-      <workItem from="1649159858515" duration="5053000" />
+      <workItem from="1649159858515" duration="7352000" />
     </task>
     <servers />
   </component>

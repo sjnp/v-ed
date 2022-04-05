@@ -3,6 +3,7 @@ package com.ved.backend.model;
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table
@@ -26,6 +27,12 @@ public class Student {
 
   @OneToOne(mappedBy = "student")
   private AppUser appUser;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
+  @JoinTable(name = "student_instructor",
+      joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")})
+  private Instructor instructor;
 
   public Long getId() {
     return id;
@@ -53,6 +60,10 @@ public class Student {
 
   public AppUser getAppUser() {
     return appUser;
+  }
+
+  public Instructor getInstructor() {
+    return instructor;
   }
 
   public void setId(Long id) {
@@ -83,10 +94,14 @@ public class Student {
     this.appUser = appUser;
   }
 
+  public void setInstructor(Instructor instructor) {
+    this.instructor = instructor;
+  }
+
   public Student() {
   }
 
-  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser) {
+  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser, Instructor instructor) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -94,6 +109,7 @@ public class Student {
     this.biography = biography;
     this.profilePicUri = profilePicUri;
     this.appUser = appUser;
+    this.instructor = instructor;
   }
 
 }
