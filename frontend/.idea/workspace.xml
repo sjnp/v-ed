@@ -2,14 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8937846d-4098-42ba-b3a0-3d83d392f54a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Category.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Course.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Instructor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CategoryRepo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CourseRepo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/InstructorRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Student.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/controller/StudentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/StudentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/StudentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/utility/ListConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/controller/AppUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/controller/AppUserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Chapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Chapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/model/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CategoryRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/repo/CategoryRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/AppUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/AppUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/AppUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/src/main/java/com/ved/backend/service/AppUserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Student.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Student.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +69,7 @@
       <updated>1649083438058</updated>
       <workItem from="1649083440067" duration="1320000" />
       <workItem from="1649159858515" duration="7352000" />
+      <workItem from="1649252148122" duration="4884000" />
     </task>
     <servers />
   </component>

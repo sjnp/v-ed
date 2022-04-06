@@ -18,7 +18,7 @@ const Student = () => {
 
   const upgradeToInstructor = async () => {
     try {
-      const response = await axiosPrivate.put('/api/users/u/change-to-instructor');
+      const response = await axiosPrivate.put('/api/students/instructor-feature', { recipientId: 'placeholder-omise-recipient-id'});
     } catch (err) {
       console.error(err);
       navigate('/', { state: { from: location }, replace: true });
