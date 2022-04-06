@@ -24,12 +24,6 @@ public class AppUserController {
     return ResponseEntity.created(uri).body(null);
   }
 
-  @PutMapping(path = "/u/change-to-instructor")
-  public ResponseEntity<?> changeStudentIntoInstructor(Principal principal) {
-    appUserService.changeRoleFromStudentIntoInstructor(principal.getName());
-    return ResponseEntity.ok().build();
-  }
-
   public AppUserController(final AppUserService appUserService) {
     this.appUserService = appUserService;
   }

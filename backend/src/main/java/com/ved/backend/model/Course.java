@@ -1,6 +1,10 @@
 package com.ved.backend.model;
 
+import com.ved.backend.utility.ListConverter;
+
 import javax.persistence.*;
+
+import java.util.List;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -9,15 +13,10 @@ import static javax.persistence.GenerationType.AUTO;
 @Entity
 @Table
 public class Course {
+
   @Id
   @GeneratedValue(strategy = AUTO)
   private Long id;
-
-//  name: '',
-//  price: '',
-//  category: null,
-//  overview: '',
-//  requirement: '',
 
   @Column(nullable = false)
   private String name;
@@ -31,6 +30,10 @@ public class Course {
   @Column(length = 1024, nullable = false)
   private String requirement;
 
+  @Convert(converter = ListConverter.class)
+  @Column(columnDefinition = "jsonb")
+  private List<Chapter> chapters;
+
   @ManyToOne(fetch = EAGER)
   @JoinTable(name = "course_category",
       joinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id")},
@@ -40,8 +43,7 @@ public class Course {
   @ManyToOne(fetch = LAZY)
   @JoinTable(name = "instructor_course",
       joinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id")},
-      inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")}
-  )
+      inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")})
   private Instructor instructor;
 
   public Long getId() {
