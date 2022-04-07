@@ -1,21 +1,21 @@
 package com.ved.backend.service;
 
+import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Instructor;
-import com.ved.backend.repo.AppUserRepo;
-import com.ved.backend.repo.CategoryRepo;
-import com.ved.backend.repo.CourseStateRepo;
-import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.model.Student;
+import com.ved.backend.repo.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 public class InstructorServiceImpl implements InstructorService {
 
   private final AppUserRepo appUserRepo;
-  private final CategoryRepo categoryRepo;
+  private final CourseRepo courseRepo;
   private final CourseStateRepo courseStateRepo;
   private final InstructorRepo instructorRepo;
 
@@ -26,13 +26,15 @@ public class InstructorServiceImpl implements InstructorService {
     log.info("Creating class from instructor: {}", username);
     Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
     course.setCourseState(courseStateRepo.findByName("Incomplete"));
+    course.setInstructor(instructor);
     instructor.getCourses().add(course);
+    courseRepo.save(course);
     instructorRepo.save(instructor);
   }
 
-  public InstructorServiceImpl(AppUserRepo appUserRepo, CategoryRepo categoryRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo) {
+  public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo) {
     this.appUserRepo = appUserRepo;
-    this.categoryRepo = categoryRepo;
+    this.courseRepo = courseRepo;
     this.courseStateRepo = courseStateRepo;
     this.instructorRepo = instructorRepo;
   }
