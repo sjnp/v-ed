@@ -7,7 +7,7 @@ public class Chapter {
 
   private String name;
 
-  private List<HashMap<String, String>> sections;
+  private List<HashMap<String, Object>> sections;
 
   private List<HashMap<String, String>> assignments;
 
@@ -19,11 +19,11 @@ public class Chapter {
     this.name = name;
   }
 
-  public List<HashMap<String, String>> getSections() {
+  public List<HashMap<String, Object>> getSections() {
     return sections;
   }
 
-  public void setSections(List<HashMap<String, String>> sections) {
+  public void setSections(List<HashMap<String, Object>> sections) {
     this.sections = sections;
   }
 
@@ -38,7 +38,7 @@ public class Chapter {
   public Chapter() {
   }
 
-  public Chapter(String name, List<HashMap<String, String>> sections, List<HashMap<String, String>> assignments) {
+  public Chapter(String name, List<HashMap<String, Object>> sections, List<HashMap<String, String>> assignments) {
     this.name = name;
     this.sections = sections;
     this.assignments = assignments;
