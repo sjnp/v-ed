@@ -18,15 +18,15 @@ const CourseAssignmentForm = (props) => {
 
   const dispatch = useDispatch();
 
-  const createdCourseSections = useSelector((state) => state.createdCourse.value.contents);
+  const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters);
 
   useEffect(() => {
-    if (createdCourseSections.find(section => section.assignments.length !== 0)) {
+    if (createdCourseChapters.find(chapter => chapter.assignments.length !== 0)) {
       setSkippable(false);
     } else {
       setSkippable(true);
     }
-  }, [createdCourseSections])
+  }, [createdCourseChapters])
 
   const handleExpandChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -39,11 +39,11 @@ const CourseAssignmentForm = (props) => {
     setNewAssignmentDetail(assignmentDetailInput);
   }
 
-  const handleAdd = (sectionIndex) => {
+  const handleAdd = (chapterIndex) => {
     if (newAssignementDetail) {
       dispatch(addAssignment(
         {
-          sectionIndex: `${sectionIndex}`,
+          chapterIndex: `${chapterIndex}`,
           assignment: { detail: newAssignementDetail }
         }
       ))
@@ -53,17 +53,17 @@ const CourseAssignmentForm = (props) => {
     }
   }
 
-  const handleRemove = (sectionIndex, assignmentIndex) => {
+  const handleRemove = (chapterIndex, assignmentIndex) => {
     dispatch(removeAssignment(
       {
-        sectionIndex: `${sectionIndex}`,
+        chapterIndex: `${chapterIndex}`,
         assignmentIndex: `${assignmentIndex}`
       }
     ))
   }
 
   const handleSubmit = () => {
-    console.log(createdCourseSections);
+    console.log(createdCourseChapters);
 
     //TODO: save course structure to the database
   }
@@ -71,19 +71,19 @@ const CourseAssignmentForm = (props) => {
 
   return (
     <>
-      {createdCourseSections.map((section, sectionIndex) => (
+      {createdCourseChapters.map((chapter, chapterIndex) => (
         <Accordion
-          key={sectionIndex}
-          expanded={expanded === sectionIndex}
-          onChange={handleExpandChange(sectionIndex)}
+          key={chapterIndex}
+          expanded={expanded === chapterIndex}
+          onChange={handleExpandChange(chapterIndex)}
         >
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
             <Typography component='h3' variant='h6'>
-              Section {sectionIndex + 1} : {section.name}
+              Chapter {chapterIndex + 1} : {chapter.name}
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {section.assignments.map((assignment, assignmentIndex) => (
+            {chapter.assignments.map((assignment, assignmentIndex) => (
               <Paper
                 key={assignmentIndex}
                 sx={{ mt: 1, mb: 2, padding: 2, pl: 3, bgcolor: 'grey.200' }}
@@ -103,7 +103,7 @@ const CourseAssignmentForm = (props) => {
                     />
                   </Grid>
                   <Grid item xs='auto'>
-                    <IconButton onClick={() => handleRemove(sectionIndex, assignmentIndex)}>
+                    <IconButton onClick={() => handleRemove(chapterIndex, assignmentIndex)}>
                       <DeleteIcon />
                     </IconButton>
                   </Grid>
@@ -117,7 +117,7 @@ const CourseAssignmentForm = (props) => {
               <Grid container alignItems='center' spacing={2}>
                 <Grid item xs='auto'>
                   <Typography component='h3' variant='h6'>
-                    Assignment {createdCourseSections[sectionIndex].assignments.length + 1} :
+                    Assignment {createdCourseChapters[chapterIndex].assignments.length + 1} :
                   </Typography>
                 </Grid>
                 <Grid item xs={9}>
@@ -130,7 +130,7 @@ const CourseAssignmentForm = (props) => {
                   />
                 </Grid>
                 <Grid item xs='auto'>
-                  <IconButton onClick={() => handleAdd(sectionIndex)}>
+                  <IconButton onClick={() => handleAdd(chapterIndex)}>
                     <AddCircleIcon />
                   </IconButton>
                 </Grid>
