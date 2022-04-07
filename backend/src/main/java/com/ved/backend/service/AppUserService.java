@@ -8,5 +8,4 @@ import org.hibernate.exception.ConstraintViolationException;
 public interface AppUserService {
   AppUser registerStudent(AppUser appUser) throws ConstraintViolationException;
   AppUser getAppUser(String username);
-  void changeRoleFromStudentIntoInstructor(String username);
 }

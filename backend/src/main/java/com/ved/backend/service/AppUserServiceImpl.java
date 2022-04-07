@@ -54,23 +54,6 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     return appUserRepo.findByUsername(username);
   }
 
-  @Override
-  public void changeRoleFromStudentIntoInstructor(String username) {
-    log.info("Changing role to user: {}", username);
-    AppUser appUser = appUserRepo.findByUsername(username);
-    List<String> appUserRoles = appUser.getAppRoles().stream()
-        .map(AppRole::getName)
-        .collect(Collectors.toList());
-    if (appUserRoles.contains("INSTRUCTOR")) {
-      log.info("Fail, user: {} already is INSTRUCTOR", username);
-    } else if (appUserRoles.contains("STUDENT")) {
-      AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
-      appUser.getAppRoles().add(instructorRole);
-      appUserRepo.save(appUser);
-      log.info("Success, user: {} is now INSTRUCTOR", username);
-    }
-  }
-
   public AppUserServiceImpl(final AppUserRepo appUserRepo, final AppRoleRepo appRoleRepo, final PasswordEncoder passwordEncoder) {
     this.appUserRepo = appUserRepo;
     this.appRoleRepo = appRoleRepo;
