@@ -19,8 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -45,7 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/login/**",
             "/api/token/refresh/**",
             "/api/token/clear/**",
-            "/api/users/register-new-student/**")
+            "/api/users/register-new-student/**",
+            "/api/course-states/**")
         .permitAll();
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**")
@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers(POST, "/api/instructors/course/**")
         .hasAnyAuthority("INSTRUCTOR");
+
     http.authorizeRequests()
         .anyRequest()
         .authenticated();

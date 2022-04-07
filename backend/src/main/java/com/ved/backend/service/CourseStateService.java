@@ -1,2 +1,9 @@
-package com.ved.backend.service;public interface CourseStateService {
+package com.ved.backend.service;
+
+import com.ved.backend.repo.CourseStateRepo;
+
+import java.util.Collection;
+
+public interface CourseStateService {
+  Collection<CourseStateRepo.IdAndNameOnly> getAllCourseState();
 }
