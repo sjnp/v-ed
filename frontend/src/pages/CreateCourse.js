@@ -11,7 +11,6 @@ const CreateCourse = () => {
 
         <CreateCourseForm />
       </Box>
-
     </Container>
   )
 }
