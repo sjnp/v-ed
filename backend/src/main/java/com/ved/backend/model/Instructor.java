@@ -2,6 +2,9 @@ package com.ved.backend.model;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.AUTO;
@@ -20,8 +23,8 @@ public class Instructor {
   @OneToOne(mappedBy = "instructor")
   private Student student;
 
-  @OneToMany(mappedBy = "instructor")
-  private Set<Course> courses;
+  @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL)
+  private List<Course> courses = new ArrayList<>();
 
   public Long getId() {
     return id;
@@ -47,18 +50,18 @@ public class Instructor {
     this.student = student;
   }
 
-  public Set<Course> getCourses() {
+  public List<Course> getCourses() {
     return courses;
   }
 
-  public void setCourses(Set<Course> courses) {
+  public void setCourses(List<Course> courses) {
     this.courses = courses;
   }
 
   public Instructor() {
   }
 
-  public Instructor(Long id, String recipientId, Student student, Set<Course> courses) {
+  public Instructor(Long id, String recipientId, Student student, List<Course> courses) {
     this.id = id;
     this.recipientId = recipientId;
     this.student = student;
