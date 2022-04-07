@@ -6,101 +6,84 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-const QuestionCreate = () => {
+const QuestionCreate = ({ onCreateSuccess }) => {
 
-    // const getCapitalize = (str) => {
-    //     return str.charAt(0).toUpperCase() + str.slice(1)
-    // }
-
-    // const getMaxLengthInput = (label, questionName, name) => {
-    //     return `${label} (${questionName.length}/${maxLength[name]})`
-    // }
-
-    // const [ question, setQuestion ] = useState({
-    //     topic: '',
-    //     detail: ''
-    // })
-
-    // const [ label, setLabel ] = useState({
-    //     topic: 'Topic',
-    //     detail: 'Detail'
-    // })
-
-    // const [ maxLength, setMaxLength ] = useState({
-    //     topic: 200,
-    //     detail: 1000
-    // })
-
-    // const handleChange = (event) => {
-    //     const { name, value } = event.target
-    //     setQuestion({
-    //         ...question,
-    //         [name]: value
-    //     })
-
-    //     const labelName = getCapitalize(name)
-    //     setLabel({
-    //         ...label,
-    //         [name]: getMaxLengthInput(labelName, value, name)
-    //     })
-    // }
-
-    // const handleFocus = (event) => {
-    //     const { name } = event.target
-    //     const labelName = getCapitalize(name) // text -> Text   
-    //     setLabel({
-    //         ...label,
-    //         [name]: getMaxLengthInput(labelName, question[name], name)
-    //     })
-    // }
-
-    // const handleBlur = (event) => {
-    //     const { name } = event.target
-    //     let labelName = getCapitalize(name) // text -> Text
-    //     if (question[name].length > 0) {
-    //         labelName = getMaxLengthInput(labelName, question[name], name)
-    //     }
-
-    //     setLabel({
-    //         ...label,
-    //         [name]: labelName
-    //     })
-    // }
-
-    
+    const maxLength = {
+        topic: 2,
+        detail: 10
+    }
 
     const [ question, setQuestion ] = useState({
         topic: '',
         detail: ''
     })
+    
+    const [ message, setMessage ] = useState({ // ex. (0/200)
+        topic: `(${question.topic.length}/${maxLength.topic})`,
+        detail: `(${question.detail.length}/${maxLength.detail})`
+    })
 
-    const handleChangeQuestion = (event) => {
+    const [ error, setError ] = useState({
+        topic: false,
+        detail: false
+    })
+
+    const handleChange = (event) => {
+
         const { id, value } = event.target
-        setQuestion({
-            ...question,
-            [id]: value
-        })
 
-        console.log(`${id} => ${value}`)
+        if (value.length <= maxLength[id]) {
+
+            setQuestion({ ...question, [id]: value })
+            const newMessage = `(${value.length}/${maxLength[id]})`
+            setMessage({ ...message, [id]: newMessage })
+            setError({ topic: false, detail: false })
+        
+        } else {
+            setMessage({ ...message, [id]: `(${question[id].length}/${maxLength[id]}) over max length` })
+            setError({ ...error, [id]: true })
+        }   
+    }
+
+    const handleBlur = (event) => {
+        const { id, value } = event.target
+        const newMessage = `(${value.length}/${maxLength[id]})`
+        setMessage({ ...message, [id]: newMessage })
+        setError({ ...error, [id]: false })
     }
 
     const createQuestionBoard = () => {
-        alert(`topic => ${question.topic}\ndetail => ${question.detail}`)
+        
+        if (question.topic.length === 0) {
+            setMessage({ ...message, topic: 'Topic is require' })
+            setError({ ...error, topic: true })
+            return
+        }
+
+        if (question.detail.length === 0) {
+            setMessage({ ...message, detail: 'Detail is require' })
+            setError({ ...error, detail: true })
+            return
+        }
+
+        console.log(typeof onCreateSuccess)
+        onCreateSuccess()
     }
 
     return (
         <Paper sx={{ padding: 3 }}>
             <TextField
-                id="topic" 
+                id="topic"
                 label="Topic"
                 variant="outlined"
                 margin="normal"
                 required 
                 fullWidth
                 value={question.topic}
-                onChange={handleChangeQuestion}
-                // onFocus={handleFocus}
-                // onBlur={handleBlur}
+                helperText={message.topic}
+                error={error.topic}
+                onChange={handleChange}
+                onBlur={handleBlur}
             />
             <TextField
                 id="detail"
@@ -112,9 +95,10 @@ const QuestionCreate = () => {
                 multiline
                 rows={10}
                 value={question.detail}
-                onChange={handleChangeQuestion}
-                // onFocus={handleFocus}
-                // onBlur={handleBlur}
+                helperText={message.detail}
+                error={error.detail}
+                onChange={handleChange}
+                onBlur={handleBlur}
             />
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Button variant='contained' onClick={createQuestionBoard}>
