@@ -6,7 +6,7 @@ const initialState = {
   category: null,
   overview: '',
   requirement: '',
-  contents: [
+  chapters: [
     // EXAMPLE CONTENTS
     // {
     //   name: 'Intro to Color Theory',
@@ -57,33 +57,33 @@ export const createdCourseSlice = createSlice({
       state.value.overview = action.payload.overview;
       state.value.requirement = action.payload.requirement;
     },
-    addSection: (state, action) => {
-      state.value.contents.push(action.payload.section);
-    },
-    removeSection: (state, action) => {
-      const index = Number(action.payload.index);
-      state.value.contents.splice(index, 1);
-    },
     addChapter: (state, action) => {
-      const sectionIndex = Number(action.payload.sectionIndex);
-      const chapter = action.payload.chapter;
-      state.value.contents[sectionIndex].chapters.push(chapter);
+      state.value.chapters.push(action.payload.chapter);
     },
     removeChapter: (state, action) => {
-      const sectionIndex = Number(action.payload.sectionIndex);
+      const index = Number(action.payload.index);
+      state.value.chapters.splice(index, 1);
+    },
+    addSection: (state, action) => {
       const chapterIndex = Number(action.payload.chapterIndex);
-      state.value.contents[sectionIndex].chapters.splice(chapterIndex, 1);
+      const section = action.payload.section;
+      state.value.chapters[chapterIndex].sections.push(section);
+    },
+    removeSection: (state, action) => {
+      const chapterIndex = Number(action.payload.chapterIndex);
+      const sectionIndex = Number(action.payload.sectionIndex);
+      state.value.chapters[chapterIndex].sections.splice(sectionIndex, 1);
     },
     addAssignment: (state, action) => {
-      const sectionIndex = Number(action.payload.sectionIndex);
+      const chapterIndex = Number(action.payload.chapterIndex);
       const assignment = action.payload.assignment;
-      state.value.contents[sectionIndex].assignments.push(assignment);
+      state.value.chapters[chapterIndex].assignments.push(assignment);
 
     },
     removeAssignment: (state, action) => {
-      const sectionIndex = Number(action.payload.sectionIndex);
       const chapterIndex = Number(action.payload.chapterIndex);
-      state.value.contents[sectionIndex].assignments.splice(chapterIndex, 1);
+      const assignmentIndex = Number(action.payload.assignmentIndex);
+      state.value.chapters[chapterIndex].assignments.splice(assignmentIndex, 1);
     },
     setName: (state, action) => {
       state.value.name = action.payload.name;

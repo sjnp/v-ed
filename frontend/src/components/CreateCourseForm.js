@@ -1,16 +1,16 @@
 import { Paper, StepLabel, Stepper, Step, Typography, StepContent } from "@mui/material"
 import { Box } from "@mui/system";
 import { useState } from 'react';
-import ChapterDetailsForm from "./ChapterDetailsForm";
+import SectionDetailsForm from "./SectionDetailsForm";
 import CourseAssignmentForm from "./CourseAssignmentForm";
 import CourseDetailsForm from "./CourseDetailsForm";
-import SectionDetailsForm from "./SectionDetailsForm";
+import ChapterDetailsForm from "./ChapterDetailsForm";
 
 const CreateCourseForm = () => {
   const steps = [
     'Course details',
-    'Section details',
     'Chapter details',
+    'Section details',
     'Course assignments',
     'Course materials',
     'Review your course'
@@ -26,9 +26,9 @@ const CreateCourseForm = () => {
       case 0:
         return <CourseDetailsForm handleNext={handleNext} />;
       case 1:
-        return <SectionDetailsForm handleNext={handleNext} handleBack={handleBack} />;
-      case 2:
         return <ChapterDetailsForm handleNext={handleNext} handleBack={handleBack} />;
+      case 2:
+        return <SectionDetailsForm handleNext={handleNext} handleBack={handleBack} />;
       case 3:
         return <CourseAssignmentForm handleNext={handleNext} handleBack={handleBack} />;
       case 4:

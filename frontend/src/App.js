@@ -10,7 +10,7 @@ import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 
 
-import { Routes, Route } from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
 
 import StudentCourse from './pages/StudentCourse';
@@ -23,39 +23,40 @@ function App() {
   return (
     <Routes>
 
-      <Route path='/' element={<Home />} />
+      <Route path='/' element={<Home/>}/>
 
-      <Route path='overview' element={<Overview />} />
+      <Route path='overview' element={<Overview/>}/>
 
-      <Route path='search' element={<Search />} />
-      <Route path='account-manage' element={<AccountManage />} />
-      
+      <Route path='search' element={<Search/>}/>
+      <Route path='account-manage' element={<AccountManage/>}/>
+
       {/* public routes */}
       {/* <Route path='login' element={<MuiLogin />} /> */}
       {/* <Route path='register' element={<Register />} /> */}
-      <Route path='unauthorized' element={<Unauthorized />} />
+      <Route path='unauthorized' element={<Unauthorized/>}/>
 
       {/* public testing routes */}
-      <Route path='instructor' element={<Instructor />} />
-      <Route path='instructor/create-course' element={<CreateCourse />} />
+
 
       {/* private routes */}
-      <Route element={<PersistLogin />}>
+      <Route element={<PersistLogin/>}>
 
         {/* <Route element={<RequireAuth allowRoles={["STUDENT", "INSTRUCTOR", "ADMIN"]} />}>
           <Route path='logout' element={<Logout />} />
         </Route> */}
-        <Route element={<RequireAuth allowRoles={["STUDENT"]} />}>
+        <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
           {/* <Route path='home' element={<Home />} /> */}
-          <Route path='student' element={<Student />} />
-          <Route path='student/course' element={<StudentCourse />} />
-          <Route path='student/course/video/:id' element={<VideoCourse />} />
-          <Route path='review' element={<Review />} />
+          <Route path='student' element={<Student/>}/>
+          <Route path='student/course' element={<StudentCourse/>}/>
+          <Route path='student/course/video/:id' element={<VideoCourse/>}/>
+          <Route path='review' element={<Review/>}/>
         </Route>
-        <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]} />}>
+        <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
+          <Route path='instructor' element={<Instructor/>}/>
+          <Route path='instructor/create-course' element={<CreateCourse/>}/>
         </Route>
-        <Route element={<RequireAuth allowRoles={["ADMIN"]} />}>
-          <Route path='admin' element={<Admin />} />
+        <Route element={<RequireAuth allowRoles={["ADMIN"]}/>}>
+          <Route path='admin' element={<Admin/>}/>
         </Route>
       </Route>
 
