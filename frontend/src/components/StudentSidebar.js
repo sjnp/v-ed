@@ -15,13 +15,13 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import StarsIcon from '@mui/icons-material/Stars';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
 
-const StudentSidebar = () => {
+const StudentSidebar = ({ onClickSidebar }) => {
 
     const [ selectSidebar, setSelectSidebar ] = useState('Course')
     
     const handleClickSidebar = (name) => {
         setSelectSidebar(name)
-        alert(name)
+        onClickSidebar(name)
     }
 
     const listItem = [
