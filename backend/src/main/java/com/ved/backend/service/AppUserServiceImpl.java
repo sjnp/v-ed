@@ -1,6 +1,5 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.RegisterException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.repo.AppRoleRepo;
@@ -41,15 +40,8 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
   }
 
   @Override
-  public AppUser registerStudent(AppUser appUser) throws RegisterException {
-
+  public AppUser registerStudent(AppUser appUser) {
     log.info("Register new student: {} to the database", appUser.getUsername());
-    
-    AppUser isUser = appUserRepo.findByUsername(appUser.getUsername());
-    if (Objects.nonNull(isUser)) {
-      throw RegisterException.emailDuplicate();
-    }
-    
     appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
     AppRole studentRole = appRoleRepo.findByName("STUDENT");
     appUser.getAppRoles().add(studentRole);

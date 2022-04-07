@@ -16,7 +16,7 @@ import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { Divider } from '@mui/material';
 import SectionVideoList from './SectionVideoList';
 
-const SectionCourse = () => {
+const CourseSection = () => {
 
     const sections = [
         {
@@ -90,4 +90,4 @@ const SectionCourse = () => {
     )
 }
 
-export default SectionCourse
+export default CourseSection
