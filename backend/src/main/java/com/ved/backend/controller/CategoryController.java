@@ -14,7 +14,7 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
-  @GetMapping("/")
+  @GetMapping("")
   public Collection<CategoryRepo.IdAndNameOnly> getAllCategories() {
     return categoryService.getAllCategories();
   }
