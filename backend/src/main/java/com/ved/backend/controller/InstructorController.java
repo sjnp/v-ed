@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping(path = "/api/instructors")
@@ -20,8 +21,10 @@ public class InstructorController {
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
     URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users").toUriString());
-    instructorService.createCourse(course, principal.getName());
-    return ResponseEntity.created(uri).body(null);
+    Long courseId = instructorService.createCourse(course, principal.getName());
+    HashMap<String, Long> createdCourse = new HashMap<>();
+    createdCourse.put("id", courseId);
+    return ResponseEntity.created(uri).body(createdCourse);
   }
 
   public InstructorController(InstructorService instructorService) {
