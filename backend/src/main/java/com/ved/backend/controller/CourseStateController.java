@@ -16,7 +16,7 @@ public class CourseStateController {
 
   @GetMapping("/")
   public Collection<CourseStateRepo.IdAndNameOnly> getAllCourseStates() {
-    return courseStateService.getAllCourseState();
+    return courseStateService.getAllCourseStates();
   }
 
   public CourseStateController(CourseStateService courseStateService) {
