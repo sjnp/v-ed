@@ -6,18 +6,25 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { addAssignment, removeAssignment } from '../features/createdCourseSlice';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import {URL_CREATE_NEW_COURSE} from "../utils/url";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const CourseAssignmentForm = (props) => {
 
+  const axiosPrivate = useAxiosPrivate();
   const { handleNext, handleBack } = props;
 
   const [expanded, setExpanded] = useState(false);
-  const [newAssignementDetail, setNewAssignmentDetail] = useState('');
-  const [newAssignementDetailError, setNewAssignmentDetailError] = useState(false);
+  const [newAssignmentDetail, setNewAssignmentDetail] = useState('');
+  const [newAssignmentDetailError, setNewAssignmentDetailError] = useState(false);
   const [skippable, setSkippable] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  const createdCourse = useSelector((state) => state.createdCourse.value);
   const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters);
 
   useEffect(() => {
@@ -40,11 +47,11 @@ const CourseAssignmentForm = (props) => {
   }
 
   const handleAdd = (chapterIndex) => {
-    if (newAssignementDetail) {
+    if (newAssignmentDetail) {
       dispatch(addAssignment(
         {
           chapterIndex: `${chapterIndex}`,
-          assignment: { detail: newAssignementDetail }
+          assignment: { detail: newAssignmentDetail }
         }
       ))
       setNewAssignmentDetail('');
@@ -62,10 +69,17 @@ const CourseAssignmentForm = (props) => {
     ))
   }
 
-  const handleSubmit = () => {
-    console.log(createdCourseChapters);
+  const handleSubmit = async () => {
+    console.log(createdCourse);
 
-    //TODO: save course structure to the database
+    try {
+      const response = await axiosPrivate.post(URL_CREATE_NEW_COURSE, createdCourse);
+      console.log(response);
+      handleNext();
+    } catch (err) {
+      console.log(err);
+      navigate('/', { state: { from: location }, replace: true });
+    }
   }
 
 
@@ -124,9 +138,9 @@ const CourseAssignmentForm = (props) => {
                   <TextField
                     fullWidth
                     id='newAssignmentDetail'
-                    value={newAssignementDetail}
+                    value={newAssignmentDetail}
                     onChange={handleNewAssignmentDetailChange}
-                    error={newAssignementDetailError}
+                    error={newAssignmentDetailError}
                   />
                 </Grid>
                 <Grid item xs='auto'>

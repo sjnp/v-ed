@@ -1,7 +1,9 @@
 import { register } from './register'
+import {getAllCategories} from "./category";
 
 const service = {
-    register
+    register,
+    getAllCategories
 }
 
 export default service;
