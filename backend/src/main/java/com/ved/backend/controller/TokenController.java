@@ -50,7 +50,7 @@ public class TokenController {
         String access_token = JWT.create()
             .withSubject(appUser.getUsername())
             // Access token will expire within 20 seconds.
-            .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 20))
+            .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
             .withIssuer(request.getRequestURL().toString())
             .withClaim("roles", appUser.getAppRoles()
                 .stream()
