@@ -126,7 +126,7 @@ const SearchResult = () => {
   )
 
   return (
-    <Stack spacing={1.2}>
+    <Stack spacing={2}>
       {handleData}
     </Stack>
   )
