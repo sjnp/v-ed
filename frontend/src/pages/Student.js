@@ -1,6 +1,6 @@
 // import { Container, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import AppBarHeader from "../components/AppBarHeader";
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 // component
@@ -142,7 +142,7 @@ const Student = () => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
         Student home
       </Typography>

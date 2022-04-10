@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AppBarHeader from "../components/AppBarHeader"
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import FilterSidebar from '../components/FilterSidebar'
 import SearchResult from '../components/SearchResult'
 import CourseCardWide from '../components/CourseCardWide'
@@ -22,7 +22,7 @@ const Payment = () => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <Box
         sx={{
           marginTop: 3,

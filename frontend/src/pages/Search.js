@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AppBarHeader from "../components/AppBarHeader"
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import FilterSidebar from '../components/FilterSidebar'
 import SearchResult from '../components/SearchResult'
 
@@ -10,7 +10,7 @@ import {Container,Box, Grid,Typography } from '@mui/material'
 const Search = () => {
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
      
       <Grid container>
         <Grid item xs={3} sx={{my : 3}}>
