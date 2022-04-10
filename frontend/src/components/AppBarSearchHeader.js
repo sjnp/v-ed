@@ -7,9 +7,11 @@ import useRefreshToken from "../hooks/useRefreshToken"
 import SignInSignUpModals from "./SignInSignUpModals";
 import UserMenu from "./UserMenu";
 
+import SearchBox from "./SearchBox";
+
 import { Box, Button, Link } from "@mui/material";
 
-const AppBarHeader = () => {
+const AppBarSearchHeader = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,21 +48,22 @@ const AppBarHeader = () => {
       >
         <Container maxWidth="lg">
           <Toolbar>
-
             <Grid
               container
               alignItems='center'
               spacing={2}
             >
-              <Grid item xs={3}>
+              <Grid item xs={3.5}>
                 <Button varient="text" onClick={handleClickLogoVEd}>
                   <Typography variant="h6" color="text.primary">
                     V-Ed
                   </Typography>
                 </Button>
               </Grid>
-
-              <Grid item xs={9}>
+              <Grid item xs={5} >
+                <SearchBox />
+              </Grid>
+              <Grid item xs={3.5}>
                 {
                   !persist
                     ? username
@@ -80,16 +83,13 @@ const AppBarHeader = () => {
                 }
               </Grid>
             </Grid>
-
           </Toolbar>
-
         </Container>
       </AppBar>
-
       {/* Fixed Replacement see: https://mui.com/components/app-bar/#fixed-placement */}
       <Toolbar />
     </>
   )
 }
 
-export default AppBarHeader;
+export default AppBarSearchHeader;
