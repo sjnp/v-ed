@@ -5,6 +5,7 @@ import Admin from './pages/Admin';
 import Overview from './pages/Overview';
 import Review from './pages/Review';
 import Search from './pages/Search';
+import Payment from './pages/Payment';
 
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
