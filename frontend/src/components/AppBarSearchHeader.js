@@ -23,6 +23,13 @@ const AppBarSearchHeader = () => {
   const navigate = useNavigate()
   const handleClickLogoVEd = () => navigate('/')
 
+  const handleSearchEvent = (event) => {
+    if(event.keyCode == 13){
+      console.log('value', event.target.value);
+      navigate('/search')
+   }
+  }
+
   useEffect(() => {
     let isMounted = true;
     const verifyRefreshToken = async () => {
@@ -61,7 +68,9 @@ const AppBarSearchHeader = () => {
                 </Button>
               </Grid>
               <Grid item xs={5} >
-                <SearchBox />
+                <SearchBox 
+                  onKeyDown = {handleSearchEvent}
+                />
               </Grid>
               <Grid item xs={3.5}>
                 {
