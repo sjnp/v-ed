@@ -53,11 +53,14 @@ const AppBarHeader = () => {
               spacing={2}
             >
               <Grid item xs={3}>
-                <Button varient="text" onClick={handleClickLogoVEd}>
-                  <Typography variant="h6" color="text.primary">
+                  <Typography
+                    variant="h6" 
+                    color="text.primary" 
+                    onClick={handleClickLogoVEd} 
+                    sx={{ cursor: 'pointer' }}
+                  >
                       V-Ed
                   </Typography>
-                </Button>
               </Grid>
               {
                 !persist
