@@ -25,7 +25,7 @@ public class InstructorServiceImpl implements InstructorService {
   public Long createCourse(Course course, String username) {
     log.info("Creating class from instructor: {}", username);
     Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    course.setCourseState(courseStateRepo.findByName("Incomplete"));
+    course.setCourseState(courseStateRepo.findByName("INCOMPLETE"));
     course.setInstructor(instructor);
     instructor.getCourses().add(course);
     courseRepo.save(course);

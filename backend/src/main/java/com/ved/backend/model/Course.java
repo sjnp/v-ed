@@ -30,6 +30,8 @@ public class Course {
   @Column(length = 1024, nullable = false)
   private String requirement;
 
+  private String pictureUrl;
+
   @Convert(converter = ListConverter.class)
   @Column(columnDefinition = "jsonb")
   private List<Chapter> chapters;
@@ -92,6 +94,14 @@ public class Course {
     this.requirement = requirement;
   }
 
+  public String getPictureUrl() {
+    return pictureUrl;
+  }
+
+  public void setPictureUrl(String pictureUrl) {
+    this.pictureUrl = pictureUrl;
+  }
+
   public List<Chapter> getChapters() {
     return chapters;
   }
@@ -127,12 +137,13 @@ public class Course {
   public Course() {
   }
 
-  public Course(Long id, String name, Long price, String overview, String requirement, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor) {
+  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.overview = overview;
     this.requirement = requirement;
+    this.pictureUrl = pictureUrl;
     this.chapters = chapters;
     this.category = category;
     this.courseState = courseState;
