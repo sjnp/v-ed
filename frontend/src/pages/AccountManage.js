@@ -1,5 +1,5 @@
 import { Box, Container } from "@mui/material";
-import AppBarHeader from "../components/AppBarHeader";
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import AccountManageDrawer from "../components/AccountManageSideBar";
 import AccountManageProfile from "../components/AccountManageProfile";
 import AccountManagePicture from "../components/AccountManagePicture";
@@ -21,7 +21,7 @@ const AccountManage = () => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <Box sx={{
           display: 'flex',
           flexDirection: 'row',

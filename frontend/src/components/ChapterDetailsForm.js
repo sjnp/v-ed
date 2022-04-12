@@ -1,8 +1,7 @@
-import { Accordion, AccordionSummary, AccordionDetails, Alert, AlertTitle, TextField, Typography, Grid, Paper, IconButton, Button } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IconButton, Grid, Button, MenuItem, TextField, Typography, Paper } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addChapter, removeChapter } from '../features/createdCourseSlice';
 
@@ -10,30 +9,17 @@ const ChapterDetailsForm = (props) => {
 
   const { handleNext, handleBack } = props;
 
-  const [expanded, setExpanded] = useState(false);
   const [newChapterName, setNewChapterName] = useState('');
   const [newChapterNameError, setNewChapterNameError] = useState(false);
-  const [errorAlert, setErrorAlert] = useState(false);
 
   const dispatch = useDispatch();
+  // const createdCourseSections = useSelector((state) => state.createdCourse.value.contents)
 
-  const createdCourseSections = useSelector((state) => state.createdCourse.value.contents)
+  const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters)
+    .map(item => item.name);
 
-  useEffect(() => {
-    if (createdCourseSections.find(section => section.chapters.length === 0)) {
-      setErrorAlert(true);
-    } else {
-      setErrorAlert(false);
-    }
-  }, [createdCourseSections])
-
-  const handleExpandChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-    setNewChapterName('');
-    setNewChapterNameError(false);
-  }
-
-  const handleNewChapterNameChange = (event) => {
+  console.log(createdCourseChapters);
+  const handleNewChapterChange = (event) => {
     const newChapterNameInput = event.target.value;
     setNewChapterName(newChapterNameInput);
     if (!newChapterNameInput) {
@@ -43,130 +29,94 @@ const ChapterDetailsForm = (props) => {
     }
   }
 
-  const handleAdd = (sectionIndex) => {
+  const handleAdd = () => {
     if (newChapterName) {
-      dispatch(addChapter(
-        {
-          sectionIndex: `${sectionIndex}`,
-          chapter: { name: newChapterName }
-        }
-      ))
+      dispatch(addChapter({ chapter: { name: newChapterName, sections: [], assignments: [] } }));
       setNewChapterName('');
     } else {
       setNewChapterNameError(true);
     }
   }
 
-  const handleRemove = (sectionIndex, chapterIndex) => {
-    dispatch(removeChapter(
-      {
-        sectionIndex: `${sectionIndex}`,
-        chapterIndex: `${chapterIndex}`
-      }
-    ));
+  const handleRemove = (index) => {
+    dispatch(removeChapter({ index: '${index}' }));
   }
 
   const handleSubmit = () => {
-    if (!errorAlert) {
-      console.log(createdCourseSections);
-
-      handleNext();
+    if (createdCourseChapters.length === 0) {
+      setNewChapterNameError(true);
+    } else {
+      handleNext()
     }
   }
 
   return (
     <>
-      {createdCourseSections.map((section, sectionIndex) => (
-        <Accordion
-          key={sectionIndex}
-          expanded={expanded === sectionIndex}
-          onChange={handleExpandChange(sectionIndex)}
+      {createdCourseChapters.map((chapter, index) => (
+        <Paper
+          key={index}
+          sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3, bgcolor: 'grey.200' }}
+          elevation={3}
         >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Grid
+            container
+            alignItems='center'
+            spacing={2}
+          >
+            <Grid item xs='auto'>
+              <Typography
+                component='h3'
+                variant='h6'
+              >
+                Chapter {index + 1} :
+              </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                fullWidth
+                value={chapter}
+                InputProps={{ readOnly: true }}
+              />
+            </Grid>
+            <Grid item xs='auto'>
+              <IconButton onClick={handleRemove}>
+                <DeleteIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Paper>
+      ))}
+      <Paper sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3 }} elevation={3}>
+        <Grid
+          container
+          alignItems='center'
+          spacing={2}
+        >
+          <Grid item xs='auto'>
             <Typography
               component='h3'
               variant='h6'
             >
-              Section {sectionIndex + 1} : {section.name}
+              Chapter {createdCourseChapters.length + 1} :
             </Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {section.chapters.map((chapter, chapterIndex) => (
-              <Paper
-                key={chapterIndex}
-                sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3, bgcolor: 'grey.200' }}
-                elevation={3}
-              >
-                <Grid
-                  container
-                  alignItems='center'
-                  spacing={2}
-                >
-                  <Grid item xs='auto'>
-                    <Typography
-                      component='h3'
-                      variant='h6'
-                    >
-                      Chapter {chapterIndex + 1} :
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={9}>
-                    <TextField
-                      fullWidth
-                      value={chapter.name}
-                      InputProps={{ readOnly: true }}
-                    />
-                  </Grid>
-                  <Grid item xs='auto'>
-                    <IconButton onClick={() => handleRemove(sectionIndex, chapterIndex)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Paper>
-            ))}
-            <Paper sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3 }} elevation={3}>
-              <Grid
-                container
-                alignItems='center'
-                spacing={2}
-              >
-                <Grid item xs='auto'>
-                  <Typography
-                    component='h3'
-                    variant='h6'
-                  >
-                    Chapter {createdCourseSections[sectionIndex].chapters.length + 1} :
-                  </Typography>
-                </Grid>
-                <Grid item xs={9}>
-                  <TextField
-                    fullWidth
-                    id='newChapterName'
-                    type='text'
-                    value={newChapterName}
-                    onChange={handleNewChapterNameChange}
-                    error={newChapterNameError}
-                  />
-                </Grid>
-                <Grid item xs='auto'>
-                  <IconButton onClick={() => handleAdd(sectionIndex)}>
-                    <AddCircleIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </Paper>
-
-          </AccordionDetails>
-        </Accordion>
-      ))}
-      {errorAlert
-        ? <Alert severity="error" sx={{ mt: 3 }}>
-          <AlertTitle>Error</AlertTitle>
-          Section with <strong>no chapter</strong> need to be filled.
-        </Alert>
-        : null
-      }
+          </Grid>
+          <Grid item xs={9}>
+            <TextField
+              fullWidth
+              id='newChapterName'
+              type='text'
+              value={newChapterName}
+              onChange={handleNewChapterChange}
+              error={newChapterNameError}
+            />
+          </Grid>
+          <Grid item xs='auto'>
+            <IconButton onClick={handleAdd}>
+              <AddCircleIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Paper>
       <Button
         variant='contained'
         size='large'
@@ -183,7 +133,7 @@ const ChapterDetailsForm = (props) => {
         Back
       </Button>
     </>
-  )
+  );
 }
 
 export default ChapterDetailsForm;

@@ -39,7 +39,7 @@ const UserMenu = () => {
   };
 
   return (
-    <Grid item xs={9}>
+    
       <Grid
         container
         alignItems='center'
@@ -73,7 +73,6 @@ const UserMenu = () => {
           </Menu>
         </Grid>
       </Grid>
-    </Grid>
   )
 }
 
