@@ -1,22 +1,24 @@
-import { Grid, Button, MenuItem, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCourseDetails } from '../features/createdCourseSlice';
+import {
+  Grid,
+  Button,
+  MenuItem,
+  TextField,
+  Typography,
+  Select,
+  InputLabel,
+  FormControl,
+  FormHelperText
+} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCategory, setCourseDetails} from '../features/createdCourseSlice';
+import service from "../services/service";
 
 const CourseDetailsForm = (props) => {
 
-  const { handleNext } = props;
+  const {handleNext, categories} = props;
 
-  const PRICE_REGEX = /^[0-9]{1,5}?$/
-
-  //TODO: Need to get this from backend api
-  const categories = [
-    "Programming",
-    "Art",
-    "Academic",
-    "Business",
-    "Design"
-  ];
+  const PRICE_REGEX = /^[0-9]{1,5}?$/;
 
   const dispatch = useDispatch();
 
@@ -28,7 +30,8 @@ const CourseDetailsForm = (props) => {
 
   const [name, setName] = useState(createdCourseName);
   const [price, setPrice] = useState(createdCoursePrice);
-  const [category, setCategory] = useState(createdCourseCategory ? createdCourseCategory : 0);
+  const [categorySelected, setCategorySelected] = useState(createdCourseCategory ? createdCourseCategory : '');
+  const [categorySelectedId, setCategorySelectedId] = useState( createdCourseCategory ? `${createdCourseCategory.id}` : '');
   const [overview, setOverview] = useState(createdCourseOverview);
   const [requirement, setRequirement] = useState(createdCourseRequirement);
 
@@ -36,11 +39,13 @@ const CourseDetailsForm = (props) => {
   const [priceHelper, setPriceHelper] = useState(' ');
   const [overviewHelper, setOverviewHelper] = useState(' ');
   const [requirementHelper, setRequirementHelper] = useState(' ');
+  const [categoryHelper, setCategoryHelper] = useState(' ');
 
   const [nameError, setNameError] = useState(false);
   const [priceError, setPriceError] = useState(false);
   const [overviewError, setOverviewError] = useState(false);
   const [requirementError, setRequirementError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
 
   const handleNameChange = (event) => {
     const nameInput = event.target.value;
@@ -66,7 +71,13 @@ const CourseDetailsForm = (props) => {
   }
 
   const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
+    const newCategorySelectedId = event.target.value;
+    const newCategorySelected = categories.find(category => `${category.id}` === newCategorySelectedId);
+    setCategorySelected(newCategorySelected);
+    setCategorySelectedId(newCategorySelectedId);
+    setCategoryError(false);
+    setCategoryHelper(' ');
+    dispatch(setCategory({ category: newCategorySelectedId}));
   }
 
   const handleOverviewChange = (event) => {
@@ -109,16 +120,28 @@ const CourseDetailsForm = (props) => {
       setRequirementError(true);
       setRequirementHelper(requiredText);
     }
-    if (!name || !price || !overview || !requirement) { return; }
-    if (!nameError && !priceError && !overviewError && !requirementError) {
-      dispatch(setCourseDetails({ name, price, category, overview, requirement }))
+    if (!categorySelected) {
+      setCategoryError(true);
+      setCategoryHelper(requiredText);
+    }
+    if (!name || !price || !overview || !requirement || !categorySelected) {
+      return;
+    }
+    if (!nameError && !priceError && !overviewError && !requirementError && !categoryError) {
+      dispatch(setCourseDetails({
+        name: name,
+        price: price,
+        category: categorySelected,
+        overview: overview,
+        requirement: requirement
+      }));
       handleNext();
     }
   }
 
   return (
     <>
-      <Grid container spacing={2} sx={{ paddingTop: 1 }}>
+      <Grid container spacing={2} sx={{paddingTop: 1}}>
         <Grid item xs={12}>
           <TextField
             autoComplete='off'
@@ -150,21 +173,28 @@ const CourseDetailsForm = (props) => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField
-            required
-            fullWidth
-            id='category'
-            select
-            label='Category'
-            value={category}
-            onChange={handleCategoryChange}
-          >
-            {categories.map((option, index) => (
-              <MenuItem key={index} value={index}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl fullWidth>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              required
+              fullWidth
+              labelId="Category"
+              id="category"
+              value={categorySelectedId}
+              label="Category"
+              onChange={handleCategoryChange}
+              error={categoryError}
+            >
+              {categories ?
+                categories.map((option, index) => (
+                  <MenuItem key={option.id} value={`${option.id}`}>
+                    {option.name}
+                  </MenuItem>))
+                : null
+              }
+            </Select>
+            <FormHelperText>{categoryHelper}</FormHelperText>
+          </FormControl>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -205,7 +235,7 @@ const CourseDetailsForm = (props) => {
         variant='contained'
         size='large'
         onClick={handleSubmit}
-        sx={{ mt: 2 }}
+        sx={{mt: 2}}
       >
         Next
       </Button>

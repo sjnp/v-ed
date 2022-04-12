@@ -23,7 +23,6 @@ const SignInSignUpModals = () => {
   }
 
   return (
-    <Grid item xs={9}>
       <Grid
         container
         alignItems='center'
@@ -74,7 +73,6 @@ const SignInSignUpModals = () => {
         </Grid>
 
       </Grid>
-    </Grid>
   )
 }
 

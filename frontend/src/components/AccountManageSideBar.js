@@ -1,4 +1,4 @@
-import { Avatar,Box,CssBaseline,Divider,List,ListItem,ListItemIcon,ListItemText,Paper,Toolbar,Typography } from '@mui/material';
+import { Avatar,Box,CssBaseline,Divider,List,ListItemButton,ListItemIcon,ListItemText,Paper,Toolbar,Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import ImageIcon from '@mui/icons-material/Image';
 import KeyIcon from '@mui/icons-material/Key';
@@ -8,15 +8,34 @@ import { setAccountManagePage } from "../features/pagesControlSlice";
 import stringToColor from './stringToColor';
 
 const drawerWidth = 240;
-const sideBarList = ['Profile', 'Picture', 'Change Password', 'Instructor'];
-const sideBarIconList = [<PersonIcon />, <ImageIcon />, <KeyIcon />, <SchoolIcon /> ]
 
 const AccountManageSideBar = () => {
   const username = useSelector((state) => state.auth.value.username);
+  const page = useSelector((state) => state.page.value.accountManagePage);
   const dispatch = useDispatch();
-  const handleClick = (event) => {
-    dispatch(setAccountManagePage({ page : parseInt(event.currentTarget.dataset.myValue)}))
+  
+  const handleClickSidebar = (index) => {
+    dispatch(setAccountManagePage({ page : index}))
   }
+
+  const sideBarList = [
+    {
+        text: 'Profile',
+        icon: <PersonIcon />
+    },
+    {
+        text: 'Picture',
+        icon: <ImageIcon />
+    },
+    {
+        text: 'Change Password',
+        icon: <KeyIcon />
+    },
+    {
+        text: 'Instructor',
+        icon: <SchoolIcon />
+    }
+  ]
 
   const avatar = (
       <Box
@@ -48,13 +67,15 @@ const AccountManageSideBar = () => {
 
   const drawer = (
       <List>
-        {sideBarList.map((text, index) => (
-          <ListItem button key={text} data-my-value={index} onClick={handleClick}>
-            <ListItemIcon>
-              {sideBarIconList[index]}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
+        {sideBarList.map((item, index) => (
+          <ListItemButton 
+            key={index} 
+            selected={ page === index }
+            onClick={() => handleClickSidebar(index)}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItemButton>
         ))}
       </List>
   );

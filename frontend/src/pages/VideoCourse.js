@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import ReactPlayer from 'react-player'
 
 // component
-import AppBarHeader from '../components/AppBarHeader'
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import MaterialFileDownload from '../components/MaterialFileDownload'
 import Grid from '@mui/material/Grid';
 
@@ -17,7 +17,7 @@ const VideoCourse = () => {
     
     return (
         <Container maxWidth="lg">
-            <AppBarHeader />
+            <AppBarSearchHeader />
             <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 Student Video {id}
             </Typography>

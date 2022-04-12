@@ -2,7 +2,7 @@ import { useSelector } from "react-redux"; // ใช้ดึงข้อมู�
 import { useDispatch } from "react-redux"; // ใช้เรียก Method ที่เขียนไว้ใน Reducer
 // import { AppBar, Box, Container, ThemeProvider, Toolbar, Typography } from "@mui/material";
 // import { Button, Modal, ClickAwayListener } from '@mui/material'
-import AppBarHeader from "../components/AppBarHeader";
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import CourseCard from "../components/CourseCard"
 import CaroueselCourse from "../components/CarouselCourse";
 
@@ -21,7 +21,7 @@ const Home = (props) => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <br/>
       <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
         Home

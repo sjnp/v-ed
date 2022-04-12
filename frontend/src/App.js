@@ -5,6 +5,7 @@ import Admin from './pages/Admin';
 import Overview from './pages/Overview';
 import Review from './pages/Review';
 import Search from './pages/Search';
+import Payment from './pages/Payment';
 
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
@@ -28,7 +29,7 @@ function App() {
       <Route path='overview' element={<Overview/>}/>
 
       <Route path='search' element={<Search/>}/>
-      <Route path='account-manage' element={<AccountManage/>}/>
+      
 
       {/* public routes */}
       {/* <Route path='login' element={<MuiLogin />} /> */}
@@ -50,6 +51,8 @@ function App() {
           <Route path='student/course' element={<StudentCourse/>}/>
           <Route path='student/course/video/:id' element={<VideoCourse/>}/>
           <Route path='review' element={<Review/>}/>
+          <Route path='account-manage' element={<AccountManage/>}/>
+          <Route path='payment' element={<Payment />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
           <Route path='instructor' element={<Instructor/>}/>
