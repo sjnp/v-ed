@@ -4,9 +4,7 @@ import com.ved.backend.repo.CourseStateRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @Transactional
@@ -18,9 +16,9 @@ public class CourseStateServiceImpl implements CourseStateService {
 
 
   @Override
-  public List<CourseStateRepo.IdAndNameOnly> getAllCourseState() {
+  public Collection<CourseStateRepo.IdAndNameOnly> getAllCourseStates() {
     log.info("Getting all course states");
-    return (List<CourseStateRepo.IdAndNameOnly>) new ArrayList(courseStateRepo.findAllBy());
+    return courseStateRepo.findAllBy();
   }
 
   public CourseStateServiceImpl(CourseStateRepo courseStateRepo) {

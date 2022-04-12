@@ -1,12 +1,23 @@
 import { Paper, StepLabel, Stepper, Step, Typography, StepContent } from "@mui/material"
 import { Box } from "@mui/system";
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import SectionDetailsForm from "./SectionDetailsForm";
 import CourseAssignmentForm from "./CourseAssignmentForm";
 import CourseDetailsForm from "./CourseDetailsForm";
 import ChapterDetailsForm from "./ChapterDetailsForm";
+import service from "../services/service";
 
 const CreateCourseForm = () => {
+
+  const [categories, setCategories] = useState(null);
+
+  useEffect(() => {
+    const response = service.getAllCategories()
+      .then(res => setCategories(res.data))
+      .catch(err => console.error(err));
+  }, [])
+
+
   const steps = [
     'Course details',
     'Chapter details',
@@ -24,7 +35,7 @@ const CreateCourseForm = () => {
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return <CourseDetailsForm handleNext={handleNext} />;
+        return <CourseDetailsForm handleNext={handleNext} categories={categories} />;
       case 1:
         return <ChapterDetailsForm handleNext={handleNext} handleBack={handleBack} />;
       case 2:

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AppBarHeader from "../components/AppBarHeader";
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
@@ -10,7 +10,7 @@ const Review = () => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <br/>
       <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
         Review

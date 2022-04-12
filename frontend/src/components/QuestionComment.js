@@ -6,13 +6,9 @@ import Report from './Report'
 // Material UI
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Avatar from '@mui/material/Avatar'
-
-// icon
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 
 const QuestionComment = () => {
 
@@ -34,7 +30,7 @@ const QuestionComment = () => {
                 </Grid>
                 
                 <Grid item xs={1} sx={{ justifyContent: "center", display: "flex", mt: 2 }}>
-                    <Avatar src="/static/images/avatar/1.jpg" sx={{   }} />
+                    <Avatar src="/static/images/avatar/1.jpg" />
                 </Grid>
                 
                 <Grid item xs={10}>
