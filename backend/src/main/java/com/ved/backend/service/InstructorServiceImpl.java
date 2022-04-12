@@ -22,7 +22,7 @@ public class InstructorServiceImpl implements InstructorService {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorServiceImpl.class);
 
   @Override
-  public void createCourse(Course course, String username) {
+  public Long createCourse(Course course, String username) {
     log.info("Creating class from instructor: {}", username);
     Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
     course.setCourseState(courseStateRepo.findByName("Incomplete"));
@@ -30,6 +30,7 @@ public class InstructorServiceImpl implements InstructorService {
     instructor.getCourses().add(course);
     courseRepo.save(course);
     instructorRepo.save(instructor);
+    return course.getId();
   }
 
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo) {
