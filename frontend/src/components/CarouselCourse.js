@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react"
 
+// component
 import CourseCard from "./CourseCard"
 
 // Materail UI
@@ -9,57 +9,9 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-const CaroueselCourse = (props) => {
-
-    const navigate = useNavigate();
-
-    const { labelCorousel, startIndex } = props
+const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
 
     const handleClickReadMore = () => alert(`Read more ${labelCorousel}`)
-
-    let index = startIndex
-    const data = [
-        {
-            image: `https://picsum.photos/200/300?random=${index++}`,
-            courseName: `Java programming ${index}`,
-            instructorName: `pradinan benjanavee ${index}`,
-            rating: 4.7,
-            reviewTotal: 125,
-            pathOnClick: '/overview'
-        },
-        {
-            image: `https://picsum.photos/200/300?random=${index++}`,
-            courseName: `Java programming ${index}`,
-            instructorName: `pradinan benjanavee ${index}`,
-            rating: 4.7,
-            reviewTotal: 125,
-            pathOnClick: '/overview'
-        },
-        {
-            image: `https://picsum.photos/200/300?random=${index++}`,
-            courseName: `Java programming ${index}`,
-            instructorName: `pradinan benjanavee ${index}`,
-            rating: 4.7,
-            reviewTotal: 125,
-            pathOnClick: '/overview'
-        },
-        {
-            image: `https://picsum.photos/200/300?random=${index++}`,
-            courseName: `Java programming ${index}`,
-            instructorName: `pradinan benjanavee ${index}`,
-            rating: 4.7,
-            reviewTotal: 125,
-            pathOnClick: '/overview'
-        },
-        {
-            image: `https://picsum.photos/200/300?random=${index++}`,
-            courseName: `Java programming ${index}`,
-            instructorName: `pradinan benjanavee ${index}`,
-            rating: 4.7,
-            reviewTotal: 125,
-            pathOnClick: '/overview'
-        },    
-    ]
 
     return (
         <Card sx={{ backgroundColor: '#f5f5f5', marginBottom: 2 }}>
@@ -75,15 +27,15 @@ const CaroueselCourse = (props) => {
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-evenly', m: 1, p: 1, marginTop: 0 }}>
             { 
-                data.map((element, index) => (
+                data?.map((element, index) => (
                     <CourseCard 
                         key={index}
-                        image={element.image}
+                        image={`https://picsum.photos/200/300?random=${index}`} // hard code, Fix after.
                         courseName={element.courseName}
                         instructorName={element.instructorName}
                         rating={element.rating}
                         reviewTotal={element.reviewTotal}
-                        pathOnClick={element.pathOnClick}
+                        pathOnClick={pathTo}
                     />
                 ))
             }
