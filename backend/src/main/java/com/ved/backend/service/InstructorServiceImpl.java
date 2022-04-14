@@ -1,14 +1,11 @@
 package com.ved.backend.service;
 
-import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Instructor;
-import com.ved.backend.model.Student;
 import com.ved.backend.repo.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @Transactional
@@ -39,4 +36,5 @@ public class InstructorServiceImpl implements InstructorService {
     this.courseStateRepo = courseStateRepo;
     this.instructorRepo = instructorRepo;
   }
+
 }

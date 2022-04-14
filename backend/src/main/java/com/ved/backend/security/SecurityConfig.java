@@ -46,7 +46,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/token/clear/**",
             "/api/users/register-new-student/**",
             "/api/course-states/**",
-            "/api/categories/**")
+            "/api/categories/**",
+            "/api/home/**", // remove later
+            "/api/preview/**"
+          )
         .permitAll();
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**")
