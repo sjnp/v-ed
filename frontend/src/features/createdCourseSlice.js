@@ -6,6 +6,7 @@ const initialState = {
   category: null,
   overview: '',
   requirement: '',
+  pictureUrl: '',
   chapters: [
     // EXAMPLE CONTENTS
     // {
@@ -61,7 +62,7 @@ export const createdCourseSlice = createSlice({
       state.value.chapters.push(action.payload.chapter);
     },
     removeChapter: (state, action) => {
-      const index = Number(action.payload.index);
+      const index = action.payload.index;
       state.value.chapters.splice(index, 1);
     },
     addSection: (state, action) => {
@@ -100,10 +101,20 @@ export const createdCourseSlice = createSlice({
     setRequirement: (state, action) => {
       state.value.requirement = action.payload.requirement;
     },
-
+    setPictureUrl: (state, action) => {
+      state.value.pictureUrl = action.payload.pictureUrl;
+    },
+    setChapters: (state, action) => {
+      state.value.chapters = action.payload.chapters;
+    },
+    setVideoUri: (state, action) => {
+      const chapterIndex = Number(action.payload.chapterIndex);
+      const sectionIndex = Number(action.payload.sectionIndex);
+      state.value.chapters[chapterIndex].sections[sectionIndex].videoUri = action.payload.videoUri;
+    }
   }
 });
 
-export const { setCourseDetails, addSection, removeSection, addChapter, removeChapter, addAssignment, removeAssignment, setName, setPrice, setCategory, setOverview, setRequirement } = createdCourseSlice.actions;
+export const { setCourseDetails, addSection, removeSection, addChapter, removeChapter, addAssignment, removeAssignment, setName, setPrice, setCategory, setOverview, setRequirement, setPictureUrl, setVideoUri, setChapters } = createdCourseSlice.actions;
 
 export default createdCourseSlice.reducer;
