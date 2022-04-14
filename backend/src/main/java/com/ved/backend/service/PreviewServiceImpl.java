@@ -7,15 +7,13 @@ import com.ved.backend.model.PreviewModel;
 import com.ved.backend.repo.PreviewRepo;
 import com.ved.backend.response.PreviewResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PreviewServiceImpl implements PreviewService {
-
-    @Autowired
-    private PreviewRepo previewRepo;
     
+    private final PreviewRepo previewRepo;
+
     public PreviewResponse getPreviewCategory() {
 
         PreviewResponse previewResponse = new PreviewResponse();
@@ -85,4 +83,7 @@ public class PreviewServiceImpl implements PreviewService {
         return previewResponse;
     }
 
+    public PreviewServiceImpl(PreviewRepo previewRepo) {
+        this.previewRepo = previewRepo;
+    }
 }
