@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux"; // ใช้ดึงข้อมูลออกจาก Store
-import { useDispatch } from "react-redux"; // ใช้เรียก Method ที่เขียนไว้ใน Reducer
+import { useSelector } from "react-redux";
 
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
@@ -9,7 +8,6 @@ import CaroueselCourse from "../components/CarouselCourse";
 // Material UI component
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
-import TestUpload from "../components/TestUpload";
 
 // service
 import previewService from '../services/preview'
@@ -51,12 +49,9 @@ const Home = () => {
   return (
     <Container maxWidth="lg">
       <AppBarSearchHeader />
-      <br/>
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h5" sx={{ fontWeight: 'bold', mt: 2, mb: 1 }}>
         Home
       </Typography>
-      <br/>
-
       {
         categories.myCourse?.length > 0 ?
           <CaroueselCourse data={categories.myCourse} labelCorousel="My Course" pathTo="/student" /> 
