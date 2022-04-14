@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 // component
-import AppBarHeader from '../components/AppBarHeader'
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import StudentSidebar from '../components/StudentSidebar'
 import CourseSection from '../components/CourseSection'
 import CourseContent from '../components/CourseContent'
@@ -38,7 +38,7 @@ const StudentCourse = () => {
 
     return (
         <Container maxWidth="lg" sx={{ background: '#f5f5f5' }}>
-            <AppBarHeader />
+            <AppBarSearchHeader />
             <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
                 Student Course
             </Typography>

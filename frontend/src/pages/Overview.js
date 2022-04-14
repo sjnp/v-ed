@@ -2,7 +2,7 @@ import React from 'react'
 import ReactPlayer from 'react-player'
 
 // component
-import AppBarHeader from "../components/AppBarHeader";
+import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import BuyCourseOverview from "../components/BuyCourseOverview"
 import OverviewDetail from '../components/OverviewDetail';
 
@@ -14,7 +14,7 @@ const Overview = () => {
 
   return (
     <Container maxWidth="lg">
-      <AppBarHeader />
+      <AppBarSearchHeader />
       <Grid container rowSpacing={1} sx={{ marginTop: 1 }}>
 
         <Grid item xs={8}>

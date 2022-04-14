@@ -7,9 +7,11 @@ import useRefreshToken from "../hooks/useRefreshToken"
 import SignInSignUpModals from "./SignInSignUpModals";
 import UserMenu from "./UserMenu";
 
+import SearchBox from "./SearchBox";
+
 import { Box, Button, Link } from "@mui/material";
 
-const AppBarHeader = () => {
+const AppBarSearchHeader = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,6 +22,13 @@ const AppBarHeader = () => {
 
   const navigate = useNavigate()
   const handleClickLogoVEd = () => navigate('/')
+
+  const handleSearchEvent = (event) => {
+    if(event.keyCode == 13){
+      console.log('value', event.target.value);
+      navigate('/search')
+   }
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -46,24 +55,24 @@ const AppBarHeader = () => {
       >
         <Container maxWidth="lg">
           <Toolbar>
-
             <Grid
               container
               alignItems='center'
               spacing={2}
             >
-              <Grid item xs={3}>
-                  <Typography
-                    variant="h6" 
-                    color="text.primary" 
-                    onClick={handleClickLogoVEd} 
-                    sx={{ cursor: 'pointer' }}
-                  >
-                      V-Ed
+              <Grid item xs={3.5}>
+                <Button varient="text" onClick={handleClickLogoVEd}>
+                  <Typography variant="h6" color="text.primary">
+                    V-Ed
                   </Typography>
+                </Button>
               </Grid>
-
-              <Grid item xs={9}>
+              <Grid item xs={5} >
+                <SearchBox 
+                  onKeyDown = {handleSearchEvent}
+                />
+              </Grid>
+              <Grid item xs={3.5}>
                 {
                   !persist
                     ? username
@@ -83,16 +92,13 @@ const AppBarHeader = () => {
                 }
               </Grid>
             </Grid>
-
           </Toolbar>
-
         </Container>
       </AppBar>
-
       {/* Fixed Replacement see: https://mui.com/components/app-bar/#fixed-placement */}
       <Toolbar />
     </>
   )
 }
 
-export default AppBarHeader;
+export default AppBarSearchHeader;

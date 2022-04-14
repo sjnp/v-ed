@@ -13,9 +13,9 @@ import Paper from '@mui/material/Paper'
 
 const BuyCourseOverview = () => {
 
-  const navidate = useNavigate()
+  const navigate = useNavigate()
 
-  const handleClickBuyCourse = () => navidate('/search')
+  const handleClickBuyCourse = () => navigate('/payment')
 
   const imageURL = 'https://www.cats.org.uk/media/2297/tabby-cat-looking-up.jpg?width=1600'
   const title = "Material UI from basic to advance"

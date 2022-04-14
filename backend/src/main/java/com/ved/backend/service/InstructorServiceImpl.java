@@ -70,4 +70,5 @@ public class InstructorServiceImpl implements InstructorService {
     this.instructorRepo = instructorRepo;
     this.publicObjectStorageConfigProperties = publicObjectStorageConfigProperties;
   }
+
 }
