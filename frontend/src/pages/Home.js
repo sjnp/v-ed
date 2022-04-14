@@ -9,6 +9,7 @@ import CaroueselCourse from "../components/CarouselCourse";
 // Material UI component
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
+import TestUpload from "../components/TestUpload";
 
 // service
 import previewService from '../services/preview'
@@ -55,6 +56,7 @@ const Home = () => {
         Home
       </Typography>
       <br/>
+
       {
         categories.myCourse?.length > 0 ?
           <CaroueselCourse data={categories.myCourse} labelCorousel="My Course" pathTo="/student" /> 

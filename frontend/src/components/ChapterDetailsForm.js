@@ -1,13 +1,13 @@
-import { IconButton, Grid, Button, TextField, Typography, Paper } from '@mui/material';
+import {IconButton, Grid, Button, TextField, Typography, Paper} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addChapter, removeChapter } from '../features/createdCourseSlice';
+import React, {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {addChapter, removeChapter} from '../features/createdCourseSlice';
 
 const ChapterDetailsForm = (props) => {
 
-  const { handleNext, handleBack } = props;
+  const {handleNext, handleBack} = props;
 
   const [newChapterName, setNewChapterName] = useState('');
   const [newChapterNameError, setNewChapterNameError] = useState(false);
@@ -31,7 +31,7 @@ const ChapterDetailsForm = (props) => {
 
   const handleAdd = () => {
     if (newChapterName) {
-      dispatch(addChapter({ chapter: { name: newChapterName, sections: [], assignments: [] } }));
+      dispatch(addChapter({chapter: {name: newChapterName, sections: [], assignments: []}}));
       setNewChapterName('');
     } else {
       setNewChapterNameError(true);
@@ -39,7 +39,7 @@ const ChapterDetailsForm = (props) => {
   }
 
   const handleRemove = (index) => {
-    dispatch(removeChapter({ index: '${index}' }));
+    dispatch(removeChapter({index}));
   }
 
   const handleSubmit = () => {
@@ -55,7 +55,7 @@ const ChapterDetailsForm = (props) => {
       {createdCourseChapters.map((chapter, index) => (
         <Paper
           key={index}
-          sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3, bgcolor: 'grey.200' }}
+          sx={{marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3, bgcolor: 'grey.200'}}
           elevation={3}
         >
           <Grid
@@ -75,18 +75,18 @@ const ChapterDetailsForm = (props) => {
               <TextField
                 fullWidth
                 value={chapter}
-                InputProps={{ readOnly: true }}
+                InputProps={{readOnly: true}}
               />
             </Grid>
             <Grid item xs='auto'>
-              <IconButton onClick={handleRemove}>
-                <DeleteIcon />
+              <IconButton onClick={() => handleRemove(index)}>
+                <DeleteIcon/>
               </IconButton>
             </Grid>
           </Grid>
         </Paper>
       ))}
-      <Paper sx={{ marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3 }} elevation={3}>
+      <Paper sx={{marginTop: 1, marginBottom: 2, padding: 2, paddingLeft: 3}} elevation={3}>
         <Grid
           container
           alignItems='center'
@@ -112,7 +112,7 @@ const ChapterDetailsForm = (props) => {
           </Grid>
           <Grid item xs='auto'>
             <IconButton onClick={handleAdd}>
-              <AddCircleIcon />
+              <AddCircleIcon/>
             </IconButton>
           </Grid>
         </Grid>
@@ -121,14 +121,14 @@ const ChapterDetailsForm = (props) => {
         variant='contained'
         size='large'
         onClick={handleSubmit}
-        sx={{ mt: 2 }}
+        sx={{mt: 2}}
       >
         Next
       </Button>
       <Button
         size='large'
         onClick={handleBack}
-        sx={{ mt: 2, ml: 3 }}
+        sx={{mt: 2, ml: 3}}
       >
         Back
       </Button>
