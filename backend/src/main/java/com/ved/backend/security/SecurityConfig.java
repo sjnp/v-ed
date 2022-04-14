@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.cors();
     http.csrf().disable();
     http.sessionManagement().sessionCreationPolicy(STATELESS);
+
     http.authorizeRequests()
         .antMatchers("/api/login/**",
             "/api/token/refresh/**",
@@ -48,11 +49,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/course-states/**",
             "/api/categories/**")
         .permitAll();
+
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**")
         .hasAnyAuthority("STUDENT");
+
     http.authorizeRequests()
-        .antMatchers(POST, "/api/instructors/course/**")
+        .antMatchers(GET, "/api/instructors/incomplete-courses/**")
+        .hasAnyAuthority("INSTRUCTOR");
+
+    http.authorizeRequests()
+        .antMatchers(POST, "/api/instructors/course/**",
+            "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**")
+        .hasAnyAuthority("INSTRUCTOR");
+
+    http.authorizeRequests()
+        .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

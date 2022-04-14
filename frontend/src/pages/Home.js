@@ -15,6 +15,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import TestUpload from "../components/TestUpload";
 
 
 const Home = (props) => {
@@ -29,7 +30,7 @@ const Home = (props) => {
       <br/>
       <CaroueselCourse labelCorousel="My Course" startIndex={0} />
       <CaroueselCourse labelCorousel="Programming" startIndex={5} />
-      
+      <TestUpload />
     </Container>
   )
 }

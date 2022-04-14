@@ -22,9 +22,7 @@ const CreateCourseForm = () => {
     'Course details',
     'Chapter details',
     'Section details',
-    'Course assignments',
-    'Course materials',
-    'Review your course'
+    'Course assignments'
   ]
 
   const [activeStep, setActiveStep] = useState(0);
@@ -42,8 +40,6 @@ const CreateCourseForm = () => {
         return <SectionDetailsForm handleNext={handleNext} handleBack={handleBack} />;
       case 3:
         return <CourseAssignmentForm handleNext={handleNext} handleBack={handleBack} />;
-      case 4:
-        return;
       default:
         throw new Error('Unknown step');
     }

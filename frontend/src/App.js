@@ -17,6 +17,7 @@ import StudentCourse from './pages/StudentCourse';
 import AccountManage from './pages/AccountManage';
 import VideoCourse from './pages/VideoCourse';
 import CreateCourse from './pages/CreateCourse';
+import UploadCourseMaterials from "./pages/UploadCourseMaterials";
 
 // import Logout from './pages/Logout';
 function App() {
@@ -45,7 +46,6 @@ function App() {
           <Route path='logout' element={<Logout />} />
         </Route> */}
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
-          {/* <Route path='home' element={<Home />} /> */}
           <Route path='student' element={<Student/>}/>
           <Route path='student/course' element={<StudentCourse/>}/>
           <Route path='student/course/video/:id' element={<VideoCourse/>}/>
@@ -54,6 +54,7 @@ function App() {
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
           <Route path='instructor' element={<Instructor/>}/>
           <Route path='instructor/create-course' element={<CreateCourse/>}/>
+          <Route path='instructor/create-course/:id' element={<UploadCourseMaterials/>}/>
         </Route>
         <Route element={<RequireAuth allowRoles={["ADMIN"]}/>}>
           <Route path='admin' element={<Admin/>}/>

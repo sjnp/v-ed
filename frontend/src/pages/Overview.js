@@ -19,7 +19,7 @@ const Overview = () => {
 
         <Grid item xs={8}>
           <ReactPlayer
-            url='https://www.youtube.com/watch?v=u798bXYXz2w'
+            url='https://objectstorage.ap-singapore-1.oraclecloud.com/p/XXvFzOhvxFRZFa-XPjnT-ueEIJx-m2F1HoAuYzhE90EaetI_xgn44BY-FE3lun1w/n/axjskktj5xlm/b/bucket-20220310-1506/o/bunny.mp4'
             controls={true}
             style={{ margin: 'auto' }}
           />
