@@ -1,21 +1,18 @@
-import {Divider, IconButton, Input, Paper, Stack} from "@mui/material";
-import {useEffect, useState} from "react";
+import {Chip, Divider, IconButton, Input, Paper, Stack} from "@mui/material";
+import React, {useState} from "react";
 import axios from "axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import {URL_CREATE_PAR_FOR_COURSE_PIC, URL_SAVE_COURSE_PICTURE} from "../utils/url";
+import {URL_CREATE_PAR_FOR_COURSE_PIC, URL_DELETE_COURSE_PICTURE, URL_SAVE_COURSE_PICTURE} from "../utils/url";
 import PropTypes from "prop-types";
 import Button from "@mui/material/Button";
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
-
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 import {useDispatch, useSelector} from "react-redux";
 import InstructorCourseCard from "./InstructorCourseCard";
-import {Box} from "@mui/system";
-import Grid from "@mui/material/Grid";
 import {setPictureUrl} from "../features/createdCourseSlice";
-
 
 LinearProgressWithLabel.propTypes = {
   /**
@@ -27,7 +24,7 @@ LinearProgressWithLabel.propTypes = {
 
 const UploadCoursePictureUrlForm = (props) => {
 
-  const {courseId} = props;
+  const {courseId, handleNext} = props;
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useDispatch();
   const createdCourseName = useSelector((state) => state.createdCourse.value.name);
@@ -37,15 +34,7 @@ const UploadCoursePictureUrlForm = (props) => {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [rerenderPictureUrl, setRerenderPictureUrl] = useState('');
-
-  useEffect(() => {
-    setRerenderPictureUrl(createdCoursePictureUrl)
-    if (createdCoursePictureUrl) {
-      setIsSuccess(true);
-    }
-  }, [createdCoursePictureUrl])
+  const [isSuccess, setIsSuccess] = useState(!!createdCoursePictureUrl);
 
   const handleUpload = async (event) => {
     const newFile = event.target.files[0];
@@ -63,11 +52,14 @@ const UploadCoursePictureUrlForm = (props) => {
         const pictureUrl = await saveCoursePictureUrl(parUrl.split("/o/")[1])
         console.log(pictureUrl)
         dispatch(setPictureUrl({pictureUrl: pictureUrl}))
-        setRerenderPictureUrl(parUrl);
-        setRerenderPictureUrl(pictureUrl)
+        setProgress(0);
       }, 1000);
     } catch (err) {
-      console.error(err);
+      setFile(null);
+      setIsLoading(false);
+      if (err.response.status === 400) {
+        console.log("hey")
+      }
     }
   }
 
@@ -137,7 +129,19 @@ const UploadCoursePictureUrlForm = (props) => {
     }
   }
 
+  const handleDeletePicture = async () => {
+    try {
+      await axiosPrivate.delete(`${URL_DELETE_COURSE_PICTURE}?id=${courseId}`)
+      setIsSuccess(false);
+      setFile(null);
+      dispatch(setPictureUrl({pictureUrl: ""}));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
+    <>
     <Paper
       variant="outlined"
       sx={{padding: 2}}
@@ -145,26 +149,39 @@ const UploadCoursePictureUrlForm = (props) => {
       <Stack alignItems="stretch">
         <Stack direction="row" alignItems="center" spacing={2}>
           {file === null && !createdCoursePictureUrl
-            ? <label htmlFor="contained-button-file">
-              <Input sx={{display: 'none'}} accept="image/*" id="contained-button-file" type="file"
-                     onChange={handleUpload}/>
-              <Button component="span" variant="contained" startIcon={<CloudUploadIcon/>}>
-                Upload Picture
-              </Button>
-            </label>
-            : <Stack direction="row" alignItems="center" justifyContent='space-between'>
-              <Typography>
-                {file === null
-                  ? createdCoursePictureUrl.split("/o/")[1]
-                  : file.name
-                }
-              </Typography>
-              {isSuccess &&
-                <IconButton>
-                  <CancelIcon/>
-                </IconButton>
-              }
+            ? <Stack direction="row" alignItems="center" spacing={2}>
+              <label htmlFor="contained-button-file">
+                <Input
+                  sx={{display: 'none'}}
+                  type="file"
+                  id="contained-button-file"
+                  accept="image/*"
+                  onChange={handleUpload}/>
+                <Button component="span" variant="contained" startIcon={<CloudUploadIcon/>}>
+                  Upload Picture
+                </Button>
+              </label>
+              <Typography sx={{color: "grey.600"}}>Must be .png, .jpg or .jpeg</Typography>
             </Stack>
+            : <Chip
+              label={file === null ? createdCoursePictureUrl.split("/o/")[1] : file.name}
+              variant="outlined"
+              onDelete={handleDeletePicture}
+              deleteIcon={isSuccess ? <CancelIcon/> : <></>}
+            />
+            // <Stack direction="row" alignItems="center" justifyContent='space-between'>
+            //   <Typography>
+            //     {file === null
+            //       ? createdCoursePictureUrl.split("/o/")[1]
+            //       : file.name
+            //     }
+            //   </Typography>
+            //   {isSuccess &&
+            //     <IconButton onClick={handleDeletePicture}>
+            //       <CancelIcon/>
+            //     </IconButton>
+            //   }
+            // </Stack>
           }
         </Stack>
         {isLoading && <LinearProgressWithLabel value={progress}/>}
@@ -179,7 +196,7 @@ const UploadCoursePictureUrlForm = (props) => {
                 <InstructorCourseCard
                   courseName={createdCourseName}
                   price={createdCoursePrice}
-                  pictureUrl={rerenderPictureUrl}
+                  pictureUrl={createdCoursePictureUrl}
                   isIncomplete={true}
                 />
               </Grid>
@@ -189,7 +206,16 @@ const UploadCoursePictureUrlForm = (props) => {
 
       </Stack>
     </Paper>
-  )
+  <Button
+    variant='contained'
+    size='large'
+    onClick={handleNext}
+    sx={{mt: 2}}
+  >
+    Next
+  </Button>
+  </>
+)
 }
 
 export default UploadCoursePictureUrlForm;

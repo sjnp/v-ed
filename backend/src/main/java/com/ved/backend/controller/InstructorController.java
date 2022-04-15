@@ -77,6 +77,16 @@ public class InstructorController {
     }
   }
 
+  @DeleteMapping(path = "/incomplete-courses/picture")
+  public ResponseEntity<?> deleteCoursePictureUrl(@RequestParam(name = "id") Long courseId, Principal principal) {
+    try {
+      instructorService.deleteCoursePictureUrl(courseId, principal.getName());
+      return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
   public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService) {
     this.instructorService = instructorService;
     this.publicObjectStorageService = publicObjectStorageService;

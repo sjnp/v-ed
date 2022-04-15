@@ -62,6 +62,19 @@ public class InstructorServiceImpl implements InstructorService {
     return pictureUrl;
   }
 
+  @Override
+  public void deleteCoursePictureUrl(Long courseId, String username) {
+    log.info("Deleting course picture from instructor: {}", username);
+    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
+    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
+      throw new RuntimeException("Course not found");
+    }
+    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
+    incompleteCourse.setPictureUrl("");
+    courseRepo.save(incompleteCourse);
+  }
+
 
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
     this.appUserRepo = appUserRepo;
