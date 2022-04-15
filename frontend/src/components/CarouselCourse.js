@@ -1,4 +1,5 @@
 import React from "react"
+import { Navigate, useNavigate } from "react-router-dom"
 
 // component
 import CourseCard from "./CourseCard"
@@ -12,7 +13,15 @@ import Typography from '@mui/material/Typography'
 
 const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
 
-    const handleClickReadMore = () => alert(`Read more ${labelCorousel}`)
+    const navigate = useNavigate()
+
+    const handleClickReadMore = () => {
+        if (labelCorousel === 'My Course') {
+            navigate('/student')
+        } else {
+            navigate('/search')
+        }
+    }
 
     return (
         <Card sx={{ backgroundColor: '#f5f5f5', mb: 2, p: 1 }}>
@@ -31,16 +40,15 @@ const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
                 </Grid>
                 {
                     data?.map((element, index) => (
-                        <Grid item xs={3} sx={{ pb: 2 }} >
+                        <Grid item xs={3} sx={{ pb: 2 }} key={index} >
                             <CourseCard
-                                key={index}
-                                image={`https://picsum.photos/200/300?random=${index}`} // hard code, Fix after.
+                                image={element.pictureURL}
                                 courseName={element.courseName}
                                 instructorName={element.instructorName}
                                 rating={element.rating}
-                                reviewTotal={element.reviewTotal}
+                                reviewCount={element.reviewCount}
                                 pathOnClick={pathTo}
-                                price={300}
+                                price={element.price}
                             />
                         </Grid>
                     ))

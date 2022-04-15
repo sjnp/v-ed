@@ -10,7 +10,7 @@ import Rating from "@mui/material/Rating";
 import StarIcon from '@mui/icons-material/Star';
 import CardContent from "@mui/material/CardContent";
 
-const CourseCard = ({ image, courseName, instructorName, rating, reviewTotal, pathOnClick, price }) => {
+const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pathOnClick, price }) => {
 
     const [shadow, setShadow] = useState(1)
     const handleMouseOver = () => setShadow(8)
@@ -46,7 +46,7 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewTotal, pa
                     />
                     <Box>
                         <Typography variant="caption" sx={{ textAlign: 'center' }}>
-                            {rating} ({reviewTotal})
+                            {rating} ({reviewCount})
                         </Typography>
                     </Box>
                 </Box>
