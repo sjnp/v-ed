@@ -8,6 +8,7 @@ public class PreviewResponse {
     private int reviewCount;
     private String pictureURL;
     private long price;
+    private long courseId;
 
     public PreviewResponse() {}
 
@@ -57,6 +58,14 @@ public class PreviewResponse {
 
     public void setPrice(long price) {
         this.price = price;
+    }
+
+    public long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(long courseId) {
+        this.courseId = courseId;
     }
 
 }

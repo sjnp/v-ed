@@ -57,6 +57,7 @@ public class PreviewServiceImpl implements PreviewService {
             previewResponse.setReviewCount(53); // hard code, fix latter.
             previewResponse.setPictureURL(course.getPictureUrl());
             previewResponse.setPrice(course.getPrice());
+            previewResponse.setCourseId(course.getId());
 
             previewResponseList.add(previewResponse);
         }
