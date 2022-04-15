@@ -1,11 +1,13 @@
 package com.ved.backend.service;
 
+import java.util.ArrayList;
+
 import com.ved.backend.response.PreviewResponse;
 
 public interface PreviewService {
     
-    public PreviewResponse getPreviewCategory();
+    public ArrayList<PreviewResponse> getPreviewCategory(String categoryName);
 
-    public PreviewResponse getPreviewMyCourse();
+    public ArrayList<PreviewResponse> getPreviewMyCourse();
 
 }

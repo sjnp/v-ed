@@ -16,34 +16,55 @@ const Home = () => {
 
   const usernameRedux = useSelector((state) => state.auth.value.username)
 
-  const [ categories, setcategories ] = useState({
-    myCourse: [],
-    art: [],
-    bussiness: [],
-    academic: [],
-    design: [],
-    programming: []
-  })
-
-  const previewCategoryAPI = async () => {
-    const category = await previewService.getPreviewCategory()
-    setcategories({ ...category })
-  }
+  const [ myCourse, setMyCourse ] = useState([])
+  const [ art, setArt ] = useState([])
+  const [ bussiness, setBusiness ] = useState([])
+  const [ academic, setAcademic ] = useState([])
+  const [ design, setDesign ] = useState([])
+  const [ programming, setProgramming ] = useState([])
 
   const previewMyCourseAPI = async () => {
-    const myCourse = await previewService.getPrevieMyCourse()
-    setcategories({ ...myCourse })
+    const result = await previewService.getPreviewMyCourse()
+    setMyCourse(result)
   }
-  
+
+  const previewCategoryAPI = async (type, setState) => {
+    const result = await previewService.getPreviewCategory(type)
+    setState(result)
+  }
+
   useEffect(() => {
 
     if (usernameRedux) {
-      previewMyCourseAPI()
+
+      if (myCourse.length === 0) {
+        previewMyCourseAPI()
+      }
+    
     } else {
-      setcategories({ ...categories, myCourse: [] })
-      previewCategoryAPI()
+      setMyCourse([])
     }
 
+    if (art.length === 0) {
+      previewCategoryAPI('Art', setArt)
+    }
+    
+    if (bussiness.length === 0) {
+      previewCategoryAPI('Business', setBusiness)
+    }
+    
+    if (academic.length === 0) {
+      previewCategoryAPI('Academic', setAcademic)
+    }
+    
+    if (design.length === 0) {
+      previewCategoryAPI('Design', setDesign)
+    }
+    
+    if (programming.length === 0) {
+      previewCategoryAPI('Programming', setProgramming)
+    }
+    
   }, [usernameRedux])
 
   return (
@@ -53,40 +74,34 @@ const Home = () => {
         Home
       </Typography>
       {
-        categories.myCourse?.length > 0 ?
-          <CaroueselCourse data={categories.myCourse} labelCorousel="My Course" pathTo="/student" /> 
-          : 
-          null
+        myCourse?.length > 0 ?
+          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/video/0" />
+          : null
       }
       {
-        categories.art.length > 0 ?
-          <CaroueselCourse data={categories.art} labelCorousel="Art" pathTo="/overview" /> 
-          : 
-          null
+        art?.length > 0 ?
+          <CaroueselCourse data={art} labelCorousel="Art" pathTo="/overview" />
+          : null
       }
       {
-        categories.bussiness.length > 0 ?
-          <CaroueselCourse data={categories.bussiness} labelCorousel="Bussiness" pathTo="/overview" /> 
-          : 
-          null
+        bussiness?.length > 0 ?
+          <CaroueselCourse data={bussiness} labelCorousel="Bussiness" pathTo="/overview" />
+          : null
       }
       {
-        categories.academic.length > 0 ?
-          <CaroueselCourse data={categories.academic} labelCorousel="Academic" pathTo="/overview" /> 
-          : 
-          null
+        academic?.length > 0 ?
+          <CaroueselCourse data={academic} labelCorousel="Academic" pathTo="/overview" />
+          : null
       }
       {
-        categories.design.length > 0 ?
-          <CaroueselCourse data={categories.design} labelCorousel="Design" pathTo="/overview" /> 
-          : 
-          null
+        design?.length > 0 ?
+        <CaroueselCourse data={design} labelCorousel="Design" pathTo="/overview" />
+        : null
       }
       {
-        categories.programming.length > 0 ?
-          <CaroueselCourse data={categories.programming} labelCorousel="Programming" /> 
-          : 
-          null
+        programming?.length > 0 ?
+          <CaroueselCourse data={programming} labelCorousel="Programming" pathTo="/overview" />
+          : null
       }
     </Container>
   )

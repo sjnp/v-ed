@@ -1,66 +1,62 @@
 package com.ved.backend.response;
 
-import java.util.ArrayList;
-
-import com.ved.backend.model.PreviewModel;
-
 public class PreviewResponse {
- 
-    private ArrayList<PreviewModel> art;
-    private ArrayList<PreviewModel> bussiness;
-    private ArrayList<PreviewModel> academic;
-    private ArrayList<PreviewModel> design;
-    private ArrayList<PreviewModel> programming;
-    private ArrayList<PreviewModel> myCourse;
+
+    private String courseName;
+    private String instructorName;
+    private double rating;
+    private int reviewCount;
+    private String pictureURL;
+    private long price;
 
     public PreviewResponse() {}
 
-    public ArrayList<PreviewModel> getArt() {
-        return art;
+    public String getCourseName() {
+        return courseName;
     }
 
-    public void setArt(ArrayList<PreviewModel> art) {
-        this.art = art;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
-    public ArrayList<PreviewModel> getBussiness() {
-        return bussiness;
+    public String getInstructorName() {
+        return instructorName;
     }
 
-    public void setBussiness(ArrayList<PreviewModel> bussiness) {
-        this.bussiness = bussiness;
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName;
     }
 
-    public ArrayList<PreviewModel> getAcademic() {
-        return academic;
+    public double getRating() {
+        return rating;
     }
 
-    public void setAcademic(ArrayList<PreviewModel> academic) {
-        this.academic = academic;
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
-    public ArrayList<PreviewModel> getDesign() {
-        return design;
+    public int getReviewCount() {
+        return reviewCount;
     }
 
-    public void setDesign(ArrayList<PreviewModel> design) {
-        this.design = design;
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
-    public ArrayList<PreviewModel> getProgramming() {
-        return programming;
+    public String getPictureURL() {
+        return pictureURL;
     }
 
-    public void setProgramming(ArrayList<PreviewModel> programming) {
-        this.programming = programming;
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
 
-    public ArrayList<PreviewModel> getMyCourse() {
-        return myCourse;
+    public long getPrice() {
+        return price;
     }
 
-    public void setMyCourse(ArrayList<PreviewModel> myCourse) {
-        this.myCourse = myCourse;
+    public void setPrice(long price) {
+        this.price = price;
     }
 
 }

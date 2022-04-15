@@ -1,88 +1,67 @@
 package com.ved.backend.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
-import com.ved.backend.model.PreviewModel;
+import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.PreviewRepo;
 import com.ved.backend.response.PreviewResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PreviewServiceImpl implements PreviewService {
 
-    @Autowired
-    private PreviewRepo previewRepo;
-    
-    public PreviewResponse getPreviewCategory() {
+    private final PreviewRepo previewRepo;
+    private final CategoryRepo categoryRepo;
 
-        PreviewResponse previewResponse = new PreviewResponse();
-
-        String[] categories = { "art", "bussiness", "academic", "design", "programming" };
-
-        for (String category : categories) {
-
-            ArrayList<Course> courses = previewRepo.findAll();
-            ArrayList<PreviewModel> previewModelList = new ArrayList<PreviewModel>();
-
-            for (Course course : courses) {
-
-                String courseName = course.getName();
-                String instructorFirstname = course.getInstructor().getStudent().getFirstName();
-                String instructorLastname = course.getInstructor().getStudent().getLastName();
-                String instructorName = instructorFirstname + " " + instructorLastname;
-
-                PreviewModel previewModel = new PreviewModel();
-                previewModel.setCourseName(courseName);
-                previewModel.setInstructorName(instructorName);
-                previewModel.setRating(4.4); // hard code
-                previewModel.setReviewTotal(23); // hard code
-                previewModel.setImageCourseURL(""); // hard code
-
-                previewModelList.add(previewModel);
-            }
-
-            if (category.equals("art")) previewResponse.setArt(previewModelList);
-            else if (category.equals("bussiness")) previewResponse.setBussiness(previewModelList);
-            else if (category.equals("academic")) previewResponse.setAcademic(previewModelList);
-            else if (category.equals("design")) previewResponse.setDesign(previewModelList);
-            else if (category.equals("programming")) previewResponse.setProgramming(previewModelList);
-            
-        }
-
-        previewResponse.setMyCourse(null);
-
-        return previewResponse;
+    public PreviewServiceImpl(PreviewRepo previewRepo, CategoryRepo categoryRepo) {
+        this.previewRepo = previewRepo;
+        this.categoryRepo = categoryRepo;
     }
 
-    public PreviewResponse getPreviewMyCourse() {
+    public ArrayList<PreviewResponse> getPreviewCategory(String categoryName) {
 
-        ArrayList<Course> courses = previewRepo.findAll();
-        ArrayList<PreviewModel> previewModelList = new ArrayList<PreviewModel>();
+        Category category = categoryRepo.findByName(categoryName);
 
-        for (Course course : courses) {
-
-            String courseName = course.getName();
-            String instructorFirstname = course.getInstructor().getStudent().getFirstName();
-            String instructorLastname = course.getInstructor().getStudent().getLastName();
-            String instructorName = instructorFirstname + " " + instructorLastname;
-
-            PreviewModel previewModel = new PreviewModel();
-            previewModel.setCourseName(courseName);
-            previewModel.setInstructorName(instructorName);
-            previewModel.setRating(4.4); // hard code
-            previewModel.setReviewTotal(23); // hard code
-            previewModel.setImageCourseURL(""); // hard code
-
-            previewModelList.add(previewModel);
+        if (category == null) {
+            throw new RuntimeException("ERROR: category not match.");
         }
 
-        PreviewResponse previewResponse = this.getPreviewCategory();
-        previewResponse.setMyCourse(previewModelList);
+        ArrayList<PreviewResponse> previewResponseList = this.getPreviewResponseList(category.getCourses());
 
-        return previewResponse;
+        return previewResponseList;
+    }
+
+    public ArrayList<PreviewResponse> getPreviewMyCourse() {
+        
+        ArrayList<Course> courses = previewRepo.findAll();
+        ArrayList<PreviewResponse> previewResponseList = this.getPreviewResponseList(courses);
+
+        return previewResponseList;
+    }
+
+    private ArrayList<PreviewResponse> getPreviewResponseList(Collection<Course> courses) {
+
+        ArrayList<PreviewResponse> previewResponseList = new ArrayList<PreviewResponse>();
+        for (Course course : courses) {
+
+            PreviewResponse previewResponse = new PreviewResponse();
+            previewResponse.setCourseName(course.getName());
+            String instructorFirstName = course.getInstructor().getStudent().getFirstName();
+            String instructorLastName = course.getInstructor().getStudent().getLastName();
+            previewResponse.setInstructorName(instructorFirstName + " " + instructorLastName);
+            previewResponse.setRating(4.7); // hard code, fix latter.
+            previewResponse.setReviewCount(53); // hard code, fix latter.
+            previewResponse.setPictureURL(course.getPictureUrl());
+            previewResponse.setPrice(course.getPrice());
+
+            previewResponseList.add(previewResponse);
+        }
+
+        return previewResponseList;
     }
 
 }
