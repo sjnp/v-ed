@@ -11,28 +11,25 @@ import Rating from "@mui/material/Rating"
 import StarIcon from '@mui/icons-material/Star'
 import Paper from '@mui/material/Paper'
 
-const BuyCourseOverview = () => {
+const BuyCourseOverview = ({ data }) => {
+
+  const { instructorPictureURI, courseName, instructorFirstname, instructorLastname, price } = data
 
   const navigate = useNavigate()
-
   const handleClickBuyCourse = () => navigate('/payment')
 
   const imageURL = 'https://www.cats.org.uk/media/2297/tabby-cat-looking-up.jpg?width=1600'
-  const title = "Material UI from basic to advance"
-  const subheader = "Pradinan Benjanavee"
   const rating = 4.8
   const reviewTotal = 125
-  const price = 500
 
   return (
     <Paper>
       <CardHeader
-        avatar={ <Avatar src={imageURL} /> } 
-        title={title}
-        subheader={subheader}
+        avatar={ <Avatar src={instructorPictureURI || imageURL} /> } 
+        title={courseName}
+        subheader={`${instructorFirstname} ${instructorLastname}`}
       />
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
         <Rating
           value={rating} 
           size="large" 
@@ -41,19 +38,15 @@ const BuyCourseOverview = () => {
           emptyIcon={<StarIcon fontSize="inherit" />}
           sx={{ marginTop: 2, marginBottom: 1 }}
         />
-
         <Typography variant="body1" sx={{ marginBottom: 3 }}>
             {rating} ({reviewTotal})
         </Typography>
-
         <Typography variant="h6" sx={{ marginBottom: 3 }}>
             {price} THB
         </Typography>
-
         <Button variant="contained" onClick={handleClickBuyCourse} sx={{ marginBottom: 5 }}>
-            Buy Now
+            BUY NOW
         </Button>
-
       </Box>
     </Paper>
   )

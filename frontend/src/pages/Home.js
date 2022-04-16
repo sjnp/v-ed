@@ -75,32 +75,32 @@ const Home = () => {
       </Typography>
       {
         myCourse?.length > 0 ?
-          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/video/0" />
+          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/video/" />
           : null
       }
       {
         art?.length > 0 ?
-          <CaroueselCourse data={art} labelCorousel="Art" pathTo="/overview" />
+          <CaroueselCourse data={art} labelCorousel="Art" pathTo="/overview/course/" />
           : null
       }
       {
         bussiness?.length > 0 ?
-          <CaroueselCourse data={bussiness} labelCorousel="Bussiness" pathTo="/overview" />
+          <CaroueselCourse data={bussiness} labelCorousel="Bussiness" pathTo="/overview/course/" />
           : null
       }
       {
         academic?.length > 0 ?
-          <CaroueselCourse data={academic} labelCorousel="Academic" pathTo="/overview" />
+          <CaroueselCourse data={academic} labelCorousel="Academic" pathTo="/overview/course/" />
           : null
       }
       {
         design?.length > 0 ?
-        <CaroueselCourse data={design} labelCorousel="Design" pathTo="/overview" />
+        <CaroueselCourse data={design} labelCorousel="Design" pathTo="/overview/course/" />
         : null
       }
       {
         programming?.length > 0 ?
-          <CaroueselCourse data={programming} labelCorousel="Programming" pathTo="/overview" />
+          <CaroueselCourse data={programming} labelCorousel="Programming" pathTo="/overview/course/" />
           : null
       }
     </Container>

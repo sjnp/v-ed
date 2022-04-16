@@ -27,7 +27,7 @@ function App() {
 
       <Route path='/' element={<Home/>}/>
 
-      <Route path='overview' element={<Overview/>}/>
+      <Route path='overview/course/:courseId' element={<Overview/>}/>
 
       <Route path='search' element={<Search/>}/>
       

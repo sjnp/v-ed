@@ -47,7 +47,7 @@ const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
                                 instructorName={element.instructorName}
                                 rating={element.rating}
                                 reviewCount={element.reviewCount}
-                                pathOnClick={pathTo}
+                                pathOnClick={pathTo + element.courseId}
                                 price={element.price}
                             />
                         </Grid>
