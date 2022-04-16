@@ -35,6 +35,7 @@ const UploadCoursePictureUrlForm = (props) => {
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(!!createdCoursePictureUrl);
+  const [isError, setIsError] = useState(false);
 
   const handleUpload = async (event) => {
     const newFile = event.target.files[0];
@@ -49,6 +50,7 @@ const UploadCoursePictureUrlForm = (props) => {
       setTimeout(async () => {
         setIsLoading(false)
         setIsSuccess(true)
+        setIsError(false);
         const pictureUrl = await saveCoursePictureUrl(parUrl.split("/o/")[1])
         console.log(pictureUrl)
         dispatch(setPictureUrl({pictureUrl: pictureUrl}))
@@ -140,82 +142,77 @@ const UploadCoursePictureUrlForm = (props) => {
     }
   }
 
+  const handleSubmit = () => {
+    if (!isSuccess) {
+      setIsError(true);
+    } else {
+      handleNext();
+    }
+  }
+
   return (
     <>
-    <Paper
-      variant="outlined"
-      sx={{padding: 2}}
-    >
-      <Stack alignItems="stretch">
-        <Stack direction="row" alignItems="center" spacing={2}>
-          {file === null && !createdCoursePictureUrl
-            ? <Stack direction="row" alignItems="center" spacing={2}>
-              <label htmlFor="contained-button-file">
-                <Input
-                  sx={{display: 'none'}}
-                  type="file"
-                  id="contained-button-file"
-                  accept="image/*"
-                  onChange={handleUpload}/>
-                <Button component="span" variant="contained" startIcon={<CloudUploadIcon/>}>
-                  Upload Picture
-                </Button>
-              </label>
-              <Typography sx={{color: "grey.600"}}>Must be .png, .jpg or .jpeg</Typography>
-            </Stack>
-            : <Chip
-              label={file === null ? createdCoursePictureUrl.split("/o/")[1] : file.name}
-              variant="outlined"
-              onDelete={handleDeletePicture}
-              deleteIcon={isSuccess ? <CancelIcon/> : <></>}
-            />
-            // <Stack direction="row" alignItems="center" justifyContent='space-between'>
-            //   <Typography>
-            //     {file === null
-            //       ? createdCoursePictureUrl.split("/o/")[1]
-            //       : file.name
-            //     }
-            //   </Typography>
-            //   {isSuccess &&
-            //     <IconButton onClick={handleDeletePicture}>
-            //       <CancelIcon/>
-            //     </IconButton>
-            //   }
-            // </Stack>
-          }
-        </Stack>
-        {isLoading && <LinearProgressWithLabel value={progress}/>}
-        {isSuccess &&
-          <>
-            <Divider sx={{mt: 2, mb: 2}}/>
-            <Typography variant='h6'>
-              Preview
-            </Typography>
-            <Grid container justifyContent="center">
-              <Grid item xs={3}>
-                <InstructorCourseCard
-                  courseName={createdCourseName}
-                  price={createdCoursePrice}
-                  pictureUrl={createdCoursePictureUrl}
-                  isIncomplete={true}
-                />
+      <Paper
+        variant="outlined"
+        sx={{padding: 2, borderColor: isError ? 'red': null}}
+      >
+        <Stack alignItems="stretch">
+          <Stack direction="row" alignItems="center" spacing={2}>
+            {file === null && !createdCoursePictureUrl
+              ? <Stack direction="row" alignItems="center" spacing={2}>
+                <label htmlFor="contained-button-file">
+                  <Input
+                    sx={{display: 'none'}}
+                    type="file"
+                    id="contained-button-file"
+                    accept="image/*"
+                    onChange={handleUpload}/>
+                  <Button component="span" variant="contained" startIcon={<CloudUploadIcon/>}>
+                    Upload Picture
+                  </Button>
+                </label>
+                <Typography sx={{color: "grey.600"}}>Must be .png, .jpg or .jpeg</Typography>
+              </Stack>
+              : <Chip
+                label={file === null ? createdCoursePictureUrl.split("/o/")[1] : file.name}
+                variant="outlined"
+                onDelete={handleDeletePicture}
+                deleteIcon={isSuccess ? <CancelIcon/> : <></>}
+              />
+            }
+          </Stack>
+          {isLoading && <LinearProgressWithLabel value={progress}/>}
+          {isSuccess &&
+            <>
+              <Divider sx={{mt: 2, mb: 2}}/>
+              <Typography variant='h6'>
+                Preview
+              </Typography>
+              <Grid container justifyContent="center">
+                <Grid item xs={3}>
+                  <InstructorCourseCard
+                    courseName={createdCourseName}
+                    price={createdCoursePrice}
+                    pictureUrl={createdCoursePictureUrl}
+                    isIncomplete={true}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </>
-        }
+            </>
+          }
 
-      </Stack>
-    </Paper>
-  <Button
-    variant='contained'
-    size='large'
-    onClick={handleNext}
-    sx={{mt: 2}}
-  >
-    Next
-  </Button>
-  </>
-)
+        </Stack>
+      </Paper>
+      <Button
+        variant='contained'
+        size='large'
+        onClick={handleSubmit}
+        sx={{mt: 2}}
+      >
+        Continue
+      </Button>
+    </>
+  )
 }
 
 export default UploadCoursePictureUrlForm;
