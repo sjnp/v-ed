@@ -7,14 +7,16 @@ const OverviewTabContent = ({ data }) => {
             <ul>
             {
                 data?.map((chapter, indexChapter) => (
-                    <li>
+                    <li key={indexChapter}>
                         <span style={{ fontWeight: 'bold' }}>
                             {`Chapter ${indexChapter + 1}: ${chapter.name}`}
                         </span>
                         <ul>
                         {
                             chapter.sections.map((section, indexSection) => (
-                                <li>{`Section ${indexSection + 1}: ${section.name}`}</li>
+                                <li key={indexSection}>
+                                    {`Section ${indexSection + 1}: ${section.name}`}
+                                </li>
                             ))
                         }
                         </ul>

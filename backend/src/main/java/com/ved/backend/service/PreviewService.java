@@ -10,4 +10,6 @@ public interface PreviewService {
 
     public ArrayList<PreviewResponse> getPreviewMyCourse();
 
+    public PreviewResponse getPreviewCourse(Long id);
+
 }

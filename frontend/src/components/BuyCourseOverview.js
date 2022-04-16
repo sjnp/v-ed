@@ -16,7 +16,7 @@ const BuyCourseOverview = ({ data }) => {
   const { instructorPictureURI, courseName, instructorFirstname, instructorLastname, price } = data
 
   const navigate = useNavigate()
-  const handleClickBuyCourse = () => navigate('/payment')
+  const handleClickBuyCourse = () => navigate(`/payment/course/${data.courseId}`)
 
   const imageURL = 'https://www.cats.org.uk/media/2297/tabby-cat-looking-up.jpg?width=1600'
   const rating = 4.8

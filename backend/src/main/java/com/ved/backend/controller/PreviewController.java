@@ -33,4 +33,11 @@ public class PreviewController {
         return ResponseEntity.ok().body(previewResponseList);
     }
 
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<PreviewResponse> getMyCourse(@PathVariable Long courseId) {
+        
+        PreviewResponse previewResponse = previewService.getPreviewCourse(courseId);
+        return ResponseEntity.ok().body(previewResponse);
+    }
+
 }

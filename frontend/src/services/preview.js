@@ -10,9 +10,15 @@ const getPreviewMyCourse = async () => {
     return axios.get(url).then(res => res.data).catch(err => err.response)
 }
 
+const getPreviewCourse = async (courseId) => {
+    const url = '/api/preview/course/' + courseId
+    return axios.get(url).then(res => res.data).catch(err => err.response)
+}
+
 const previewService = {
     getPreviewCategory,
-    getPreviewMyCourse
+    getPreviewMyCourse,
+    getPreviewCourse
 }
 
 export default previewService
