@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import CaroueselCourse from "../components/CarouselCourse";
@@ -12,57 +15,56 @@ import Typography from '@mui/material/Typography';
 // service
 import previewService from '../services/preview'
 
+// url
+import { URL_GET_PREVIEW_MY_COURSE } from "../utils/url";
+
 const Home = () => {
+
+  const axiosPrivate = useAxiosPrivate()
 
   const usernameRedux = useSelector((state) => state.auth.value.username)
 
   const [ myCourse, setMyCourse ] = useState([])
   const [ art, setArt ] = useState([])
-  const [ bussiness, setBusiness ] = useState([])
+  const [ business, setBusiness ] = useState([])
   const [ academic, setAcademic ] = useState([])
   const [ design, setDesign ] = useState([])
   const [ programming, setProgramming ] = useState([])
 
-  const previewMyCourseAPI = async () => {
-    const result = await previewService.getPreviewMyCourse()
-    setMyCourse(result)
-  }
+  useEffect(async () => {
 
-  const previewCategoryAPI = async (type, setState) => {
-    const result = await previewService.getPreviewCategory(type)
-    setState(result)
-  }
-
-  useEffect(() => {
-
-    if (usernameRedux) {
-
-      if (myCourse.length === 0) {
-        previewMyCourseAPI()
-      }
-    
+    if (usernameRedux && myCourse.length === 0) {
+      const response = await axiosPrivate.get(URL_GET_PREVIEW_MY_COURSE)
+        .then(res => res.data)
+        .catch(err => err.response)
+      setMyCourse(response)
     } else {
       setMyCourse([])
     }
 
     if (art.length === 0) {
-      previewCategoryAPI('Art', setArt)
+      const response = await previewService.getPreviewCategory('Art')
+      setArt(response)
     }
     
-    if (bussiness.length === 0) {
-      previewCategoryAPI('Business', setBusiness)
+    if (business.length === 0) {
+      const response = await previewService.getPreviewCategory('Business')
+      setBusiness(response)
     }
     
     if (academic.length === 0) {
-      previewCategoryAPI('Academic', setAcademic)
+      const response = await previewService.getPreviewCategory('Academic')
+      setAcademic(response)
     }
     
     if (design.length === 0) {
-      previewCategoryAPI('Design', setDesign)
+      const response = await previewService.getPreviewCategory('Design')
+      setDesign(response)
     }
     
     if (programming.length === 0) {
-      previewCategoryAPI('Programming', setProgramming)
+      const response = await previewService.getPreviewCategory('Programming')
+      setProgramming(response)
     }
     
   }, [usernameRedux])
@@ -84,8 +86,8 @@ const Home = () => {
           : null
       }
       {
-        bussiness?.length > 0 ?
-          <CaroueselCourse data={bussiness} labelCorousel="Bussiness" pathTo="/overview/course/" />
+        business?.length > 0 ?
+          <CaroueselCourse data={business} labelCorousel="Business" pathTo="/overview/course/" />
           : null
       }
       {
