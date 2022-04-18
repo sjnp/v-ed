@@ -50,4 +50,5 @@ public class OverviewController {
         CourseCardResponse response = overviewService.getOverviewCourseCard(courseId);
         return ResponseEntity.ok().body(response);
     }
+    
 }
