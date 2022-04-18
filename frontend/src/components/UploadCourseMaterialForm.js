@@ -44,7 +44,7 @@ const UploadCourseMaterialForm = (props) => {
   const getStepContent = (step) => {
     switch (step) {
       case 0:
-        return <UploadCoursePictureUrlForm courseId={courseId}/>;
+        return <UploadCoursePictureUrlForm courseId={courseId} handleNext={handleNext}/>;
       case 1:
         return
       case 2:
