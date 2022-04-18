@@ -13,10 +13,10 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
 
 // service
-import previewService from '../services/preview'
+import overviewSerview from '../services/overview'
 
 // url
-import { URL_GET_PREVIEW_MY_COURSE } from "../utils/url";
+import { URL_OVERVIEW_MY_COURSE } from "../utils/url";
 
 const Home = () => {
 
@@ -34,7 +34,7 @@ const Home = () => {
   useEffect(async () => {
 
     if (usernameRedux && myCourse.length === 0) {
-      const response = await axiosPrivate.get(URL_GET_PREVIEW_MY_COURSE)
+      const response = await axiosPrivate.get(URL_OVERVIEW_MY_COURSE)
         .then(res => res.data)
         .catch(err => err.response)
       setMyCourse(response)
@@ -43,27 +43,27 @@ const Home = () => {
     }
 
     if (art.length === 0) {
-      const response = await previewService.getPreviewCategory('Art')
+      const response = await overviewSerview.getOverviewCategory('Art')
       setArt(response)
     }
     
     if (business.length === 0) {
-      const response = await previewService.getPreviewCategory('Business')
+      const response = await overviewSerview.getOverviewCategory('Business')
       setBusiness(response)
     }
     
     if (academic.length === 0) {
-      const response = await previewService.getPreviewCategory('Academic')
+      const response = await overviewSerview.getOverviewCategory('Academic')
       setAcademic(response)
     }
     
     if (design.length === 0) {
-      const response = await previewService.getPreviewCategory('Design')
+      const response = await overviewSerview.getOverviewCategory('Design')
       setDesign(response)
     }
     
     if (programming.length === 0) {
-      const response = await previewService.getPreviewCategory('Programming')
+      const response = await overviewSerview.getOverviewCategory('Programming')
       setProgramming(response)
     }
     

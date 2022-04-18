@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader';
 import CourseCardWide from '../components/CourseCardWide'
@@ -9,12 +12,14 @@ import BankingSelect from '../components/BankingSelect'
 // Material UI
 import { Container, Box, Button, Typography } from '@mui/material'
 
-// service
-import previewService from '../services/preview'
+// url
+import { URL_OVERVIEW_COURSE_ID_CARD } from '../utils/url';
 
 const Payment = () => {
 
   const { courseId } = useParams()
+
+  const axiosPrivate = useAxiosPrivate()
 
   const [ courseCard, setCourseCard ] = useState({
       courseName: null,
@@ -26,14 +31,12 @@ const Payment = () => {
       courseId: null
   })
 
-  useEffect(() => {
+  useEffect(async () => {
 
-    const getPreviewCourseAPI = async () => {
-      const result = await previewService.getPreviewCourse(courseId)
-      setCourseCard(result)
-    }
-    getPreviewCourseAPI()
-
+    const url = URL_OVERVIEW_COURSE_ID_CARD.replace('{courseId}', courseId)
+    const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
+    setCourseCard(result)
+  
   }, [])
 
   return (

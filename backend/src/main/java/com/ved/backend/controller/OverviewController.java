@@ -1,5 +1,9 @@
 package com.ved.backend.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
+
+import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.OverviewResponse;
 import com.ved.backend.service.OverviewService;
 
@@ -19,11 +23,31 @@ public class OverviewController {
         this.overviewService = overviewService;
     }
 
-    @GetMapping("/{courseId}")
-    public ResponseEntity<OverviewResponse> getOverviewCourse(@PathVariable Long courseId) {
+    @GetMapping("/category/{category}")
+    public ResponseEntity<ArrayList<CourseCardResponse>> getOverviewCategory(@PathVariable String category) {
 
-        OverviewResponse overviewResponse = overviewService.getOverviewCourse(courseId);
-        return ResponseEntity.ok().body(overviewResponse);
+        ArrayList<CourseCardResponse> response = overviewService.getOverviewCategory(category);
+        return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/my-course")
+    public ResponseEntity<ArrayList<CourseCardResponse>> getOverviewMyCouese(Principal principal) {
+        
+        ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCouese(principal.getName());
+        return ResponseEntity.ok().body(response); 
+    }
+
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<OverviewResponse> getOverviewCourse(@PathVariable Long courseId) {
+        
+        OverviewResponse response = overviewService.getOverviewCourse(courseId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/course/{courseId}/card")
+    public ResponseEntity<CourseCardResponse> getOverviewCourseCard(@PathVariable Long courseId) {
+        
+        CourseCardResponse response = overviewService.getOverviewCourseCard(courseId);
+        return ResponseEntity.ok().body(response);
+    }
 }

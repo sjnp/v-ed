@@ -1,7 +1,7 @@
 package com.ved.backend.response;
 
-public class PreviewResponse {
-
+public class CourseCardResponse {
+ 
     private String courseName;
     private String instructorName;
     private double rating;
@@ -10,7 +10,7 @@ public class PreviewResponse {
     private long price;
     private long courseId;
 
-    public PreviewResponse() {}
+    public CourseCardResponse() {}
 
     public String getCourseName() {
         return courseName;
