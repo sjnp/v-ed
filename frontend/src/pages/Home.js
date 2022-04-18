@@ -77,7 +77,7 @@ const Home = () => {
       </Typography>
       {
         myCourse?.length > 0 ?
-          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/video/" />
+          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/" />
           : null
       }
       {

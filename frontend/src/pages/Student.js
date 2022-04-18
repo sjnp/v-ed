@@ -27,11 +27,12 @@ const Student = () => {
   }
 
   const data = {
+    courseId: 0,
     courseName: `Java programming`,
     instructorName: `pradinan benjanavee`,
     rating: 4.7,
     reviewTotal: 125,
-    pathOnClick: '/student/course'
+    pathOnClick: '/student/course/'
   }
   const datas = [ data, data, data, data, data, data, data, data, data, ]
 
@@ -52,7 +53,7 @@ const Student = () => {
             instructorName={element.instructorName}
             rating={element.rating}
             reviewTotal={element.reviewTotal}
-            pathOnClick={element.pathOnClick}
+            pathOnClick={element.pathOnClick + element.courseId}
           />
         </Grid>
       )

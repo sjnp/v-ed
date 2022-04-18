@@ -47,8 +47,8 @@ function App() {
           <Route path='logout' element={<Logout />} />
         </Route> */}
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
-          <Route path='student' element={<Student/>}/>
-          <Route path='student/course' element={<StudentCourse/>}/>
+          <Route path='student/course' element={<Student/>}/>
+          <Route path='student/course/:courseId' element={<StudentCourse/>}/>
           <Route path='student/course/video/:id' element={<VideoCourse/>}/>
           <Route path='review' element={<Review/>}/>
           <Route path='account-manage' element={<AccountManage/>}/>

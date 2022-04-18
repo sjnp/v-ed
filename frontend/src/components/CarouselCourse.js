@@ -17,7 +17,7 @@ const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
 
     const handleClickReadMore = () => {
         if (labelCorousel === 'My Course') {
-            navigate('/student')
+            navigate('/student/course')
         } else {
             navigate('/search')
         }

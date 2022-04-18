@@ -11,7 +11,7 @@ import Divider from '@mui/material/Divider';
 // icon
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 
-const SectionVideoList = ({ videos }) => {
+const ChapterVideoList = ({ videos }) => {
 
     const navigate = useNavigate()
     const handleClickVideoList = (link) => {
@@ -39,4 +39,4 @@ const SectionVideoList = ({ videos }) => {
     )
 }
 
-export default SectionVideoList
+export default ChapterVideoList

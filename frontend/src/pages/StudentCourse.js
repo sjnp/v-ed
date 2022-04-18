@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import StudentSidebar from '../components/StudentSidebar'
-import CourseSection from '../components/CourseSection'
+import CourseChapter from '../components/CourseChapter'
 import CourseContent from '../components/CourseContent'
 import CourseAssignment from '../components/CourseAssignment'
 import CourseQuestion from '../components/CourseQuestion'
@@ -17,7 +17,7 @@ import Grid from '@mui/material/Grid'
 
 const StudentCourse = () => {
 
-    const [ mainElement, setMainElement ] = useState(<CourseSection />)
+    const [ mainElement, setMainElement ] = useState(<CourseChapter />)
 
     const handleChangeMain = (name) => {
         const element = getMainElement(name)
@@ -26,7 +26,7 @@ const StudentCourse = () => {
 
     const getMainElement = (name) => {
         switch (name) {
-            case 'Course': return <CourseSection />
+            case 'Course': return <CourseChapter />
             case 'Content': return <CourseContent />
             case 'Assignment': return <CourseAssignment />
             case 'Question board': return <CourseQuestion />

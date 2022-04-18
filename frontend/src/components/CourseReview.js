@@ -38,13 +38,13 @@ const CourseReview = () => {
             lastname: `lastname ${index}`,
             datetime: new Date().toISOString()
         },
-        {
-            rating: 2.6,
-            comment: `this test commment from data index ${++index}`,
-            firstname: `firstname ${index}`,
-            lastname: `lastname ${index}`,
-            datetime: new Date().toISOString()
-        },
+        // {
+        //     rating: 2.6,
+        //     comment: `this test commment from data index ${++index}`,
+        //     firstname: `firstname ${index}`,
+        //     lastname: `lastname ${index}`,
+        //     datetime: new Date().toISOString()
+        // },
         // {
         //     rating: 2.6,
         //     comment: `this test commment from data index ${++index}`,

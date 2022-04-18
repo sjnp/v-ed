@@ -26,7 +26,7 @@ const UserMenu = () => {
   const handleCloseUserMenu = (event) => {
     setAnchorElUser(null);
     switch (event.currentTarget.dataset.myValue) {
-      case 'Student': navigate('/student');
+      case 'Student': navigate('/student/course');
         break;
       case 'Instructor': navigate('/instructor');
         break;

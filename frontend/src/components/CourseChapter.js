@@ -14,13 +14,15 @@ import ListItemText from '@mui/material/ListItemText';
 // icon
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { Divider } from '@mui/material';
-import SectionVideoList from './SectionVideoList';
 
-const CourseSection = () => {
+// component
+import ChapterVideoList from './ChapterVideoList';
 
-    const sections = [
+const CourseChapter = () => {
+
+    const chapters = [
         {
-            name: 'section 1',
+            name: 'chapter 1',
             videos: [
                 {
                     name: 'video 1',
@@ -33,7 +35,7 @@ const CourseSection = () => {
             ]
         },
         {
-            name: 'section 2',
+            name: 'chapter 2',
             videos: [
                 {
                     name: 'video 1',
@@ -50,7 +52,7 @@ const CourseSection = () => {
             ]
         },
         {
-            name: 'section 3',
+            name: 'chapter 3',
             videos: [
                 {
                     name: 'video 1',
@@ -75,13 +77,13 @@ const CourseSection = () => {
     return (
         <div>
         {
-            sections.map((section, index) => (
+            chapters.map((chapter, index) => (
                 <Accordion key={index}>
                     <AccordionSummary id="panel1a-header" expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{section.name}</Typography>
+                        <Typography>{chapter.name}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <SectionVideoList videos={section.videos} />
+                        <ChapterVideoList videos={chapter.videos} />
                     </AccordionDetails>
                 </Accordion>
             ))
@@ -90,4 +92,4 @@ const CourseSection = () => {
     )
 }
 
-export default CourseSection
+export default CourseChapter
