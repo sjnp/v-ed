@@ -36,7 +36,7 @@ const ReviewRead = ({ rating, comment, firstname, lastname, datetime }) => {
                 </Grid>
                 
                 <Grid item xs={7} sx={{ textAlign: 'right' }}>
-                    <Report />
+                    <Report type={'review'} />
                 </Grid>
                 
                 <Grid item xs={12} sx={{ mb: 2, mt: 2, pl: 2 }}>

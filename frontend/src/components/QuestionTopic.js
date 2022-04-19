@@ -75,7 +75,7 @@ const QuestionTopic = () => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ textAlign: 'right', mt: 3 }}>
-                    <Report />
+                    <Report type={'question'} />
                 </Grid>
 
             </Grid>
