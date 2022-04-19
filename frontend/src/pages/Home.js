@@ -33,41 +33,34 @@ const Home = () => {
 
   useEffect(async () => {
 
-    if (usernameRedux && myCourse.length === 0) {
-      const response = await axiosPrivate.get(URL_OVERVIEW_MY_COURSE)
-        .then(res => res.data)
+    if (usernameRedux) {
+      await axiosPrivate.get(URL_OVERVIEW_MY_COURSE)
+        .then(res => setMyCourse(res.data))
         .catch(err => err.response)
-      setMyCourse(response)
     } else {
       setMyCourse([])
     }
-
-    if (art.length === 0) {
-      const response = await overviewSerview.getOverviewCategory('Art')
-      setArt(response)
-    }
-    
-    if (business.length === 0) {
-      const response = await overviewSerview.getOverviewCategory('Business')
-      setBusiness(response)
-    }
-    
-    if (academic.length === 0) {
-      const response = await overviewSerview.getOverviewCategory('Academic')
-      setAcademic(response)
-    }
-    
-    if (design.length === 0) {
-      const response = await overviewSerview.getOverviewCategory('Design')
-      setDesign(response)
-    }
-    
-    if (programming.length === 0) {
-      const response = await overviewSerview.getOverviewCategory('Programming')
-      setProgramming(response)
-    }
     
   }, [usernameRedux])
+
+  useEffect(async () => {
+
+      let response = await overviewSerview.getOverviewCategory('Art')
+      setArt(response)
+    
+      response = await overviewSerview.getOverviewCategory('Business')
+      setBusiness(response)
+    
+      response = await overviewSerview.getOverviewCategory('Academic')
+      setAcademic(response)
+    
+      response = await overviewSerview.getOverviewCategory('Design')
+      setDesign(response)
+    
+      response = await overviewSerview.getOverviewCategory('Programming')
+      setProgramming(response)
+    
+  }, [])
 
   return (
     <Container maxWidth="lg">
