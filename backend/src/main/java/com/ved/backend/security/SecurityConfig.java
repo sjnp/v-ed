@@ -63,11 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.authorizeRequests()
         .antMatchers(POST, "/api/instructors/course/**",
-            "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**")
+            "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**",
+            "/api/instructors/incomplete-courses/video/pre-authenticated-request/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
-        .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**")
+        .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
+            "/api/instructors/incomplete-courses/chapters/**")
         .hasAnyAuthority("INSTRUCTOR");
     http.authorizeRequests()
             .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**")

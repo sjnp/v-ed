@@ -6,11 +6,15 @@ import {URL_GET_CREATED_COURSE} from "../utils/url";
 import {useDispatch} from "react-redux";
 import {setChapters, setName, setPictureUrl, setPrice} from "../features/createdCourseSlice";
 import UploadCoursePictureUrlForm from "./UploadCoursePictureUrlForm";
+import UploadCourseVideoForm from "./UploadCourseVideoForm";
+import {useLocation, useNavigate} from "react-router-dom";
 
 const UploadCourseMaterialForm = (props) => {
 
   const {courseId} = props;
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const [isFinishFetching, setIsFinishFetching] = useState(false);
 
@@ -23,7 +27,10 @@ const UploadCourseMaterialForm = (props) => {
         dispatch(setChapters({chapters: response.data.chapters}));
         setIsFinishFetching(true);
       })
-      .catch(err => console.error(err))
+      .catch(err => {
+        console.error(err);
+        navigate('/', { state: { from: location }, replace: true });
+      })
   }, []);
 
   const steps = [
@@ -46,7 +53,7 @@ const UploadCourseMaterialForm = (props) => {
       case 0:
         return <UploadCoursePictureUrlForm courseId={courseId} handleNext={handleNext}/>;
       case 1:
-        return
+        return <UploadCourseVideoForm courseId={courseId} handleNext={handleNext} handleBack={handleBack}/>;
       case 2:
         return
       case 3:
@@ -58,8 +65,8 @@ const UploadCourseMaterialForm = (props) => {
 
   if (!isFinishFetching) {
     return (
-      <Stack alignItems='center' sx={{ mt: 5}}>
-        <CircularProgress />
+      <Stack alignItems='center' sx={{mt: 5}}>
+        <CircularProgress/>
       </Stack>
     )
   }
