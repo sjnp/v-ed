@@ -3,6 +3,7 @@ package com.ved.backend.controller;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.service.InstructorService;
+import com.ved.backend.service.PrivateObjectStorageService;
 import com.ved.backend.service.PublicObjectStorageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 public class InstructorController {
   private final InstructorService instructorService;
   private final PublicObjectStorageService publicObjectStorageService;
+  private final PrivateObjectStorageService privateObjectStorageService;
 
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
@@ -59,6 +61,32 @@ public class InstructorController {
     }
   }
 
+  @PostMapping(path = "/incomplete-courses/video/pre-authenticated-request")
+  public ResponseEntity<?> createParToCreateVideo(@RequestParam(name = "id") Long courseId,
+                                                  @RequestBody HashMap<String, Object> requestData,
+                                                  Principal principal) {
+    try {
+      String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseVideo(courseId,
+          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))) ,
+          Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
+          (String) requestData.get("fileName"),
+          principal.getName());
+      HashMap<String, String> preauthenticatedRequest = new HashMap<>();
+      preauthenticatedRequest.put("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
+      URI uri = URI.create(ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("/api/instructors/incomplete-courses/video/pre-authenticated-request")
+          .toUriString());
+      return ResponseEntity.created(uri).body(preauthenticatedRequest);
+    } catch (Exception exception) {
+      if (exception.getMessage().equals("Invalid file type")) {
+        return ResponseEntity.badRequest().body(exception.getMessage());
+      } else {
+        return ResponseEntity.badRequest().body(exception.getMessage());
+      }
+    }
+  }
+
   @PutMapping(path = "/incomplete-courses/picture")
   public ResponseEntity<?> saveCoursePictureUrl(@RequestParam(name = "id") Long courseId, @RequestBody HashMap<String, String> objectData, Principal principal) {
     try {
@@ -77,6 +105,20 @@ public class InstructorController {
     }
   }
 
+  @PutMapping(path = "/incomplete-courses/chapters")
+  public ResponseEntity<?> updateCourseMaterial(@RequestParam(name = "id") Long courseId, @RequestBody Course course, Principal principal) {
+    try {
+      URI uri = URI.create(ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("/api/instructors/incomplete-courses/video")
+          .toUriString());
+      instructorService.updateCourseMaterials(courseId, course, principal.getName());
+      return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
   @DeleteMapping(path = "/incomplete-courses/picture")
   public ResponseEntity<?> deleteCoursePictureUrl(@RequestParam(name = "id") Long courseId, Principal principal) {
     try {
@@ -87,8 +129,9 @@ public class InstructorController {
     }
   }
 
-  public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService) {
+  public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService, PrivateObjectStorageService privateObjectStorageService) {
     this.instructorService = instructorService;
     this.publicObjectStorageService = publicObjectStorageService;
+    this.privateObjectStorageService = privateObjectStorageService;
   }
 }
