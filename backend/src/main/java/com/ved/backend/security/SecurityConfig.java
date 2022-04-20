@@ -48,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/users/register-new-student/**",
             "/api/course-states/**",
             "/api/categories/**",
-            "/api/home/**", // remove later
-            "/api/preview/**"
+            "/api/overview/**",
+            "/api/course/**",
+            "/api/students/**"
           )
         .permitAll();
 
@@ -69,6 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**")
         .hasAnyAuthority("INSTRUCTOR");
+    http.authorizeRequests()
+            .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**")
+            .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .anyRequest()

@@ -1,17 +1,20 @@
 import React from 'react'
 
-// Material UI
+// Material UI component
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
-const CourseInstructorDetail = () => {
+const CourseAbout = () => {
+    
+    
+    
     return (
         <Box>
             <Typography variant='h6'>
-                Instructor info
+                About course
             </Typography>
         </Box>
     )
 }
 
-export default CourseInstructorDetail
+export default CourseAbout

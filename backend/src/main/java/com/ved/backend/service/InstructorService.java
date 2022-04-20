@@ -11,4 +11,5 @@ public interface InstructorService {
   Long createCourse(Course course, String username);
   CourseRepo.CourseMaterials getIncompleteCourse(Long courseId, String username);
   String saveCoursePictureUrl(Long courseId, String objectName, String username);
+  void deleteCoursePictureUrl(Long courseId, String username);
 }

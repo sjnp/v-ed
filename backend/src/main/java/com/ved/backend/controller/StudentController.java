@@ -3,6 +3,7 @@ package com.ved.backend.controller;
 import com.ved.backend.model.Instructor;
 import com.ved.backend.service.StudentService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,12 @@ public class StudentController {
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/my-course")
+  public void getMyCourse(Principal principal) {
+    
+    // todo latter.
   }
 
   public StudentController(final StudentService studentService) {

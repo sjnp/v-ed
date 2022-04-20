@@ -1,55 +1,50 @@
 import React, { useState } from 'react'
 
 // component
-import TabOverview from './TabOverview'
-import TabContent from './TabContent'
-import TabRequirement from './TabRequirement'
-import TabReview from './TabReview'
-import TabInstructor from './TabInstructor'
+import OverviewTabOverview from './OverviewTabOverview'
+import OverviewTabContent from './OverviewTabContent'
+import OverviewTabRequirement from './OverviewTabRequirement'
+import OverviewTabReview from './OverviewTabReview'
+import OverviewTabInstructor from './OverviewTabInstructor'
 
 // Materail UI
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
 
-const OverviewDetail = () => {
+const OverviewDetail = ({ data }) => {
 
-    const [ tab, setTab ] = useState(0)
-    const handleClickTab = (event, newTab) => setTab(newTab)
+    const [ selectTab, setSelectTab ] = useState(0)
 
-    const tabIndex = {
-        overview: 0,
-        content: 1,
-        requirement: 2,
-        review: 3,
-        instructor: 4
+    const handleSelectTab = (event, newTab) => {
+        setSelectTab(newTab)
     }
 
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={tab} onChange={handleClickTab}>
-                    <Tab label="Overview" sx={{ width: '20%' }} />
-                    <Tab label="Content" sx={{ width: '20%' }} />
-                    <Tab label="Requirement" sx={{ width: '20%' }} />
-                    <Tab label="Review" sx={{ width: '20%' }} />
-                    <Tab label="Instructor" sx={{ width: '20%' }} />
+                <Tabs value={selectTab} onChange={handleSelectTab}>
+                    <Tab label='overview' sx={{ width: '20%' }} />
+                    <Tab label='content' sx={{ width: '20%' }} />
+                    <Tab label='requirement' sx={{ width: '20%' }} />
+                    <Tab label='review' sx={{ width: '20%' }} />
+                    <Tab label='instructor' sx={{ width: '20%' }} />
                 </Tabs>
             </Box>
-            <Box hidden={tab !== tabIndex.overview}>
-                <TabOverview />
+            <Box hidden={selectTab !== 0}>
+                <OverviewTabOverview data={data.overview} />
             </Box>
-            <Box hidden={tab !== tabIndex.content}>
-                <TabContent />
+            <Box hidden={selectTab !== 1}>
+                <OverviewTabContent data={data.chapterList} />
             </Box>
-            <Box hidden={tab !== tabIndex.requirement}>
-                <TabRequirement />
+            <Box hidden={selectTab !== 2}>
+                <OverviewTabRequirement data={data.requirement} />
             </Box>
-            <Box hidden={tab !== tabIndex.review}>
-                <TabReview />
+            <Box hidden={selectTab !== 3}>
+                <OverviewTabReview data={data.reviewList} />
             </Box>
-            <Box hidden={tab !== tabIndex.instructor}>
-                <TabInstructor />
+            <Box hidden={selectTab !== 4}>
+                <OverviewTabInstructor data={data} />
             </Box>
         </Box>
     )

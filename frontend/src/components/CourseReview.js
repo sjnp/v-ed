@@ -4,14 +4,14 @@ import React, { useState } from 'react'
 import ReviewRead from './ReviewRead'
 import ReviewWrite from './ReviewWrite'
 
-// Material UI
+// Material UI component
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Fab from '@mui/material/Fab'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 
-// icon
+// icon Material UI
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -38,13 +38,13 @@ const CourseReview = () => {
             lastname: `lastname ${index}`,
             datetime: new Date().toISOString()
         },
-        {
-            rating: 2.6,
-            comment: `this test commment from data index ${++index}`,
-            firstname: `firstname ${index}`,
-            lastname: `lastname ${index}`,
-            datetime: new Date().toISOString()
-        },
+        // {
+        //     rating: 2.6,
+        //     comment: `this test commment from data index ${++index}`,
+        //     firstname: `firstname ${index}`,
+        //     lastname: `lastname ${index}`,
+        //     datetime: new Date().toISOString()
+        // },
         // {
         //     rating: 2.6,
         //     comment: `this test commment from data index ${++index}`,
@@ -154,7 +154,6 @@ const CourseReview = () => {
 
     const [ elementReview, setElementReview ] = useState(getListReivew())
 
-
     const handleClickCreateReview = () => {
         setLabelPage('Write review')
         setHideArrowBackIcon(false)
@@ -168,7 +167,6 @@ const CourseReview = () => {
         setElementReview(<ReviewWrite dataRating={4.2} dataComment={"test comment edit" } />)
         setHhideCreateOrEditButton(true)
     }
-
 
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
@@ -187,18 +185,8 @@ const CourseReview = () => {
 
     return (
         <Grid container>
-
-            <Grid item xs={1}>
-                <Box hidden={hideArrowBackIcon}>
-                    <IconButton onClick={handleClickArrowBackIcon}>
-                        <ArrowBackIcon />
-                    </IconButton>
-                </Box>
-            </Grid>
-
-
-            <Grid item xs={8}>
-                <Typography variant='h6'>
+            <Grid item xs={9}>
+                <Typography variant='h6' sx={{ mb: 2 }}>
                     {labelPage}
                 </Typography>
             </Grid>
@@ -206,28 +194,22 @@ const CourseReview = () => {
                 {showCreateOrEditReviewButton()}   
             </Grid>
             <Grid item xs={2}>
-                {/* space next write button */}
                 <Box hidden={false} title="Toggle is review.">
                     <Fab size="small" color="primary" onClick={toggleIsReview}>
                         <CachedIcon />
                     </Fab>
                 </Box>
             </Grid>
-
-            <Grid item xs={1}>{/* space before list review */}</Grid>
+            <Grid item xs={1}>
+                <Box hidden={hideArrowBackIcon}>
+                    <IconButton onClick={handleClickArrowBackIcon}>
+                        <ArrowBackIcon />
+                    </IconButton>
+                </Box>
+            </Grid>
             <Grid item xs={6}>
                 {elementReview}
             </Grid>
-            <Grid item xs={5}>{/* space before list review */}</Grid>
-
-
-            <Grid item xs={1}>{/* space before list review */}</Grid>
-            <Grid item xs={6}>
-            {
-                
-            }
-            </Grid>
-
         </Grid>
     )
 }

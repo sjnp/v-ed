@@ -10,6 +10,7 @@ import CourseCard from "../components/CourseCard";
 import Typography from "@mui/material/Typography"
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
+import Toolbar from "@mui/material/Toolbar";
 
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -25,89 +26,15 @@ const Student = () => {
     }
   }
 
-  let index = 0
-  const data = [
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    },
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    {
-      image: `https://picsum.photos/200/300?random=${index++}`,
-      courseName: `Java programming ${index}`,
-      instructorName: `pradinan benjanavee ${index}`,
-      rating: 4.7,
-      reviewTotal: 125,
-      pathOnClick: '/student/course'
-    }, 
-    // {
-    //   image: `https://picsum.photos/200/300?random=${index++}`,
-    //   courseName: `Java programming ${index}`,
-    //   instructorName: `pradinan benjanavee ${index}`,
-    //   rating: 4.7,
-    //   reviewTotal: 125,
-    //   pathOnClick: '/student/course'
-    // },
-  ]
+  const data = {
+    courseId: 0,
+    courseName: `Java programming`,
+    instructorName: `pradinan benjanavee`,
+    rating: 4.7,
+    reviewTotal: 125,
+    pathOnClick: '/student/course/'
+  }
+  const datas = [ data, data, data, data, data, data, data, data, data, ]
 
   const handleData = (data) => {
     let key = 0
@@ -120,13 +47,13 @@ const Student = () => {
       result.push(
         <Grid item xs={2} key={++key}>
           <CourseCard 
-            key={index}
-            image={element.image}
+            key={key}
+            image={`https://picsum.photos/200/300?random=${key}`}
             courseName={element.courseName}
             instructorName={element.instructorName}
             rating={element.rating}
             reviewTotal={element.reviewTotal}
-            pathOnClick={element.pathOnClick}
+            pathOnClick={element.pathOnClick + element.courseId}
           />
         </Grid>
       )
@@ -150,19 +77,15 @@ const Student = () => {
         to be instructor
       </button>
       <hr/>
-      <br/>
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
         My Course
       </Typography>
-      <br/>
-
       <Grid container spacing={1} >
       {
-        handleData(data).map(item => item)
+        handleData(datas).map(item => item)
       }
       </Grid>
-
-      <br/><br/><br/><br/>
+      <Toolbar />
     </Container>
   )
 }
