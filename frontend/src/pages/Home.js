@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import CaroueselCourse from "../components/CarouselCourse";
@@ -10,41 +13,54 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography';
 
 // service
-import previewService from '../services/preview'
+import overviewSerview from '../services/overview'
+
+// url
+import { URL_OVERVIEW_MY_COURSE } from "../utils/url";
 
 const Home = () => {
 
+  const axiosPrivate = useAxiosPrivate()
+
   const usernameRedux = useSelector((state) => state.auth.value.username)
 
-  const [ categories, setcategories ] = useState({
-    myCourse: [],
-    art: [],
-    bussiness: [],
-    academic: [],
-    design: [],
-    programming: []
-  })
+  const [ myCourse, setMyCourse ] = useState([])
+  const [ art, setArt ] = useState([])
+  const [ business, setBusiness ] = useState([])
+  const [ academic, setAcademic ] = useState([])
+  const [ design, setDesign ] = useState([])
+  const [ programming, setProgramming ] = useState([])
 
-  const previewCategoryAPI = async () => {
-    const category = await previewService.getPreviewCategory()
-    setcategories({ ...category })
-  }
-
-  const previewMyCourseAPI = async () => {
-    const myCourse = await previewService.getPrevieMyCourse()
-    setcategories({ ...myCourse })
-  }
-  
-  useEffect(() => {
+  useEffect(async () => {
 
     if (usernameRedux) {
-      previewMyCourseAPI()
+      await axiosPrivate.get(URL_OVERVIEW_MY_COURSE)
+        .then(res => setMyCourse(res.data))
+        .catch(err => err.response)
     } else {
-      setcategories({ ...categories, myCourse: [] })
-      previewCategoryAPI()
+      setMyCourse([])
     }
-
+    
   }, [usernameRedux])
+
+  useEffect(async () => {
+
+      let response = await overviewSerview.getOverviewCategory('Art')
+      setArt(response)
+    
+      response = await overviewSerview.getOverviewCategory('Business')
+      setBusiness(response)
+    
+      response = await overviewSerview.getOverviewCategory('Academic')
+      setAcademic(response)
+    
+      response = await overviewSerview.getOverviewCategory('Design')
+      setDesign(response)
+    
+      response = await overviewSerview.getOverviewCategory('Programming')
+      setProgramming(response)
+    
+  }, [])
 
   return (
     <Container maxWidth="lg">
@@ -53,40 +69,34 @@ const Home = () => {
         Home
       </Typography>
       {
-        categories.myCourse?.length > 0 ?
-          <CaroueselCourse data={categories.myCourse} labelCorousel="My Course" pathTo="/student" /> 
-          : 
-          null
+        myCourse?.length > 0 ?
+          <CaroueselCourse data={myCourse} labelCorousel="My Course" pathTo="/student/course/" />
+          : null
       }
       {
-        categories.art.length > 0 ?
-          <CaroueselCourse data={categories.art} labelCorousel="Art" pathTo="/overview" /> 
-          : 
-          null
+        art?.length > 0 ?
+          <CaroueselCourse data={art} labelCorousel="Art" pathTo="/overview/course/" />
+          : null
       }
       {
-        categories.bussiness.length > 0 ?
-          <CaroueselCourse data={categories.bussiness} labelCorousel="Bussiness" pathTo="/overview" /> 
-          : 
-          null
+        business?.length > 0 ?
+          <CaroueselCourse data={business} labelCorousel="Business" pathTo="/overview/course/" />
+          : null
       }
       {
-        categories.academic.length > 0 ?
-          <CaroueselCourse data={categories.academic} labelCorousel="Academic" pathTo="/overview" /> 
-          : 
-          null
+        academic?.length > 0 ?
+          <CaroueselCourse data={academic} labelCorousel="Academic" pathTo="/overview/course/" />
+          : null
       }
       {
-        categories.design.length > 0 ?
-          <CaroueselCourse data={categories.design} labelCorousel="Design" pathTo="/overview" /> 
-          : 
-          null
+        design?.length > 0 ?
+        <CaroueselCourse data={design} labelCorousel="Design" pathTo="/overview/course/" />
+        : null
       }
       {
-        categories.programming.length > 0 ?
-          <CaroueselCourse data={categories.programming} labelCorousel="Programming" /> 
-          : 
-          null
+        programming?.length > 0 ?
+          <CaroueselCourse data={programming} labelCorousel="Programming" pathTo="/overview/course/" />
+          : null
       }
     </Container>
   )

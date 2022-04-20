@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FlagIcon from '@mui/icons-material/Flag';
 
-const Report = () => {
+const Report = ({ type }) => {
     
     const [ anchorEl, setAnchorEl ] = useState(null);
     
@@ -59,7 +59,7 @@ const Report = () => {
                 {/* </ClickAwayListener> */}
             {/* </div> */}
             {/* </Modal> */}
-            <ReportModal open={openReportModal} handleOpen={setOpenReportModel} />
+            <ReportModal type={type} open={openReportModal} handleOpen={setOpenReportModel} />
         </Box>
     )
 }

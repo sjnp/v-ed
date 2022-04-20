@@ -48,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/users/register-new-student/**",
             "/api/course-states/**",
             "/api/categories/**",
-            "/api/home/**", // remove later
-            "/api/preview/**"
+            "/api/overview/**",
+            "/api/course/**",
+            "/api/students/**"
           )
         .permitAll();
 

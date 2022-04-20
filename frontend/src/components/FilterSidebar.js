@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 // Material UI
 import { Accordion, AccordionDetails, AccordionSummary, Box, Checkbox, FormGroup, FormControlLabel, Paper, List, ListItemButton, ListItemIcon, ListItemText, Slider, Typography } from '@mui/material'
 
-import SectionVideoList from './SectionVideoList';
+// import SectionVideoList from './SectionVideoList';
 // Icon
 import SchoolIcon from '@mui/icons-material/School';
 import NotesIcon from '@mui/icons-material/Notes'

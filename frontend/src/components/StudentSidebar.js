@@ -17,7 +17,7 @@ import PersonPinIcon from '@mui/icons-material/PersonPin';
 
 const StudentSidebar = ({ onClickSidebar }) => {
 
-    const [ selectSidebar, setSelectSidebar ] = useState('Course')
+    const [ selectSidebar, setSelectSidebar ] = useState('Content')
     
     const handleClickSidebar = (name) => {
         setSelectSidebar(name)
@@ -26,12 +26,8 @@ const StudentSidebar = ({ onClickSidebar }) => {
 
     const listItem = [
         {
-            text: 'Course',
-            icon: <SchoolIcon />
-        },
-        {
             text: 'Content',
-            icon: <NotesIcon />
+            icon: <SchoolIcon />
         },
         {
             text: 'Assignment',
@@ -48,6 +44,10 @@ const StudentSidebar = ({ onClickSidebar }) => {
         {
             text: 'Instructor',
             icon: <PersonPinIcon />
+        },
+        {
+            text: 'About course',
+            icon: <NotesIcon />
         }
     ]
 

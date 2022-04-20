@@ -27,7 +27,7 @@ function App() {
 
       <Route path='/' element={<Home/>}/>
 
-      <Route path='overview' element={<Overview/>}/>
+      <Route path='overview/course/:courseId' element={<Overview/>}/>
 
       <Route path='search' element={<Search/>}/>
       
@@ -47,12 +47,12 @@ function App() {
           <Route path='logout' element={<Logout />} />
         </Route> */}
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
-          <Route path='student' element={<Student/>}/>
-          <Route path='student/course' element={<StudentCourse/>}/>
+          <Route path='student/course' element={<Student/>}/>
+          <Route path='student/course/:courseId' element={<StudentCourse/>}/>
           <Route path='student/course/video/:id' element={<VideoCourse/>}/>
           <Route path='review' element={<Review/>}/>
           <Route path='account-manage' element={<AccountManage/>}/>
-          <Route path='payment' element={<Payment />} />
+          <Route path='payment/course/:courseId' element={<Payment />} />
         </Route>
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
           <Route path='instructor' element={<Instructor/>}/>

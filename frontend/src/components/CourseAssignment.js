@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 // component
-import AssignmentSection from './AssignmentSection'
+import AssignmentChapter from './AssignmentChapter'
 import AssignmentAnswer from './AssignmentAnswer'
 
 // Material UI
@@ -16,7 +16,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 const getAssignment = () => [
     {
         no: 1,
-        name: 'Section name 1',
+        name: 'Chapter name 1',
         questions: [
             {
                 no: 1,
@@ -28,7 +28,7 @@ const getAssignment = () => [
     },
     {
         no: 2,
-        name: 'Section name 2',
+        name: 'Chapter name 2',
         questions: [
             {
                 no: 1,
@@ -46,7 +46,7 @@ const getAssignment = () => [
     },
     {
         no: 3,
-        name: 'Section name 3',
+        name: 'Chapter name 3',
         questions: [
             {
                 no: 1,
@@ -70,7 +70,7 @@ const getAssignment = () => [
     },
     {
         no: 4,
-        name: 'Section name 4',
+        name: 'Chapter name 4',
         questions: [
             {
                 no: 1,
@@ -100,7 +100,7 @@ const getAssignment = () => [
     },
     {
         no: 5,
-        name: 'Section name 5',
+        name: 'Chapter name 5',
         questions: [
             {
                 no: 1,
@@ -140,13 +140,13 @@ const CourseAssignment = () => {
 
     const assignments = getAssignment() // this is api (future)
 
-    const getAssignmentSectionElement = () => {
+    const getAssignmentChapterElement = () => {
         return assignments.map((assignment, index) => (
-            <AssignmentSection
+            <AssignmentChapter
                 key={index}
-                sectionNo={assignment.no} 
-                sectionName={assignment.name}
-                onClick={() => handleClickSectionAssignment(assignment.questions)}
+                chapterNo={assignment.no} 
+                chapterName={assignment.name}
+                onClick={() => handleClickChapterAssignment(assignment.questions)}
             />
         ))
     }
@@ -163,18 +163,18 @@ const CourseAssignment = () => {
         ))
     }
 
-    const [ assignmentElement, setAssignmentElement ] = useState(getAssignmentSectionElement())
+    const [ assignmentElement, setAssignmentElement ] = useState(getAssignmentChapterElement())
 
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
-    const handleClickSectionAssignment = (questions) => {
+    const handleClickChapterAssignment = (questions) => {
         const element = getAssignmentAnswerElement(questions)
         setAssignmentElement(element)
         setHideArrowBackIcon(false)
     }
 
     const handleClickArrowBack = () => {
-        const element = getAssignmentSectionElement()
+        const element = getAssignmentChapterElement()
         setAssignmentElement(element)
         setHideArrowBackIcon(true)
     }
