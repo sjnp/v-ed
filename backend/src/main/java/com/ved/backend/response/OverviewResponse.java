@@ -9,6 +9,7 @@ public class OverviewResponse {
     private long courseId;
     private String courseName;
     private long price;
+    private String pictureURL;
 
     private String overview;
     private List<Chapter> chapterList;
@@ -117,6 +118,14 @@ public class OverviewResponse {
 
     public void setOccupation(String occupation) {
         this.occupation = occupation;
+    }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
     }
     
 }

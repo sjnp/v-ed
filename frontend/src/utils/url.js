@@ -12,4 +12,5 @@ export const URL_OVERVIEW_CATEGORY = '/api/overview/category/'
 export const URL_OVERVIEW_MY_COURSE = '/api/overview/my-course'
 export const URL_OVERVIEW_COURSE_ID = '/api/overview/course/'
 export const URL_OVERVIEW_COURSE_ID_CARD = '/api/overview/course/{courseId}/card'
+export const URL_OVERVIEW_VIDEO_EXAMPLE = '/api/overview/video-example/'
 

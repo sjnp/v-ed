@@ -84,6 +84,7 @@ public class OverviewServiceImpl implements OverviewService {
         overviewResponse.setCourseId(course.getId());
         overviewResponse.setCourseName(course.getName());
         overviewResponse.setPrice(course.getPrice());
+        overviewResponse.setPictureURL(course.getPictureUrl());
         overviewResponse.setOverview(course.getOverview());
         overviewResponse.setChapterList(course.getChapters());
         overviewResponse.setRequirement(course.getRequirement());

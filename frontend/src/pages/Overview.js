@@ -20,11 +20,21 @@ const Overview = () => {
 
   const [ overview, setOverview ] = useState({})
 
+  const [ videoExampleURI, setVideoExampleURI ] = useState('')
+
   useEffect(() => {
 
     const getOverviewCaourseAPI = async () =>{
-      const result = await overviewService.getOverviewCaourse(courseId)
-      setOverview(result)
+      let response = await overviewService.getOverviewCaourse(courseId)
+      if (response.status === 200) {
+        setOverview(response.data)
+
+        const fileName = response.data.chapterList[0].sections[0].videoUri
+        response = await overviewService.getAccessURI(fileName)
+        if (response.status === 200) {
+          setVideoExampleURI(response.data)
+        }
+      }
     }
     getOverviewCaourseAPI()
 
@@ -36,7 +46,9 @@ const Overview = () => {
       <Grid container rowSpacing={1} sx={{ marginTop: 1 }}>
         <Grid item xs={8}>
           <ReactPlayer
-            url='https://objectstorage.ap-singapore-1.oraclecloud.com/p/XXvFzOhvxFRZFa-XPjnT-ueEIJx-m2F1HoAuYzhE90EaetI_xgn44BY-FE3lun1w/n/axjskktj5xlm/b/bucket-20220310-1506/o/bunny.mp4'
+            light={overview?.pictureURL}
+            url={videoExampleURI}
+            playing={true}
             controls={true}
             style={{ margin: 'auto' }}
           />
