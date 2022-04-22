@@ -19,6 +19,13 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
     const navigate = useNavigate()
     const handleClickCourseCard = () => navigate(pathOnClick)
 
+    let showPrice = ''
+    if (price > 0) {
+        showPrice = `${price} THB`
+    } else if (price === 0) {
+        showPrice = 'FREE'
+    }
+    
     return (
         <Card
             sx={{ boxShadow: shadow, cursor: 'pointer' }}
@@ -52,7 +59,7 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
                 </Box>
                 <Box>
                     <Typography variant="caption" color="primary" sx={{ fontWeight: 'bold', fontSize: 14, textAlign: 'center' }} >
-                        { price ? `${price} THB` : 'FREE' }
+                        {showPrice}
                     </Typography>
                 </Box>
             </Box>
