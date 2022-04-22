@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
@@ -15,7 +16,24 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
+// url
+import { URL_GET_COURSE_BY_ID } from "../utils/url";
+
 const StudentCourse = () => {
+
+    const { courseId } = useParams()
+
+    const axiosPrivate = useAxiosPrivate()
+
+    useEffect(async () => {
+        const response = await axiosPrivate.get(URL_GET_COURSE_BY_ID + courseId)
+            .then(res => res)
+            .catch(err => err.response)
+        console.log('response course id => ', response.data.courseId)
+    }, [])
 
     const [ mainElement, setMainElement ] = useState(<CourseContent />)
 

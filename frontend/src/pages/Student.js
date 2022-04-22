@@ -14,6 +14,9 @@ import Toolbar from "@mui/material/Toolbar";
 // custom hook
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
+// url
+import { URL_STUDENT_MY_COURSE } from "../utils/url";
+
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
@@ -31,23 +34,13 @@ const Student = () => {
   }
 
   useEffect(async () => {
-    const response = await axiosPrivate.get('/api/students/my-course').then(res => res).catch(err => err.response)
+    const response = await axiosPrivate.get(URL_STUDENT_MY_COURSE).then(res => res).catch(err => err.response)
     if (response.status === 200) {
       setMyCourse(response.data)
     }
   }, [])
 
-  const data = {
-    courseId: 0,
-    courseName: `Java programming`,
-    instructorName: `pradinan benjanavee`,
-    rating: 4.7,
-    reviewTotal: 125,
-    pathOnClick: '/student/course/'
-  }
-  const datas = [ data, data, data, data, data, data, data, data, data, ]
-
-  const handleData = (data) => {
+  const handleData = () => {
     let key = 0
     let column = 0
     let result = []
@@ -93,7 +86,7 @@ const Student = () => {
       </Typography>
       <Grid container spacing={1} >
       {
-        handleData(myCourses).map(item => item)
+        handleData().map(item => item)
       }
       </Grid>
       <Toolbar />
