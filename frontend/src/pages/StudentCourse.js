@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
@@ -11,7 +12,7 @@ import CourseQuestion from '../components/CourseQuestion'
 import CourseReview from '../components/CourseReview'
 import CourseInstructorDetail from '../components/CourseInstructorDetail'
 
-// Material UI
+// Material UI component
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
@@ -22,17 +23,27 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 // url
 import { URL_GET_COURSE_BY_ID } from "../utils/url";
 
+// fueature slice
+import { setCourse } from '../features/studentCourseSlice';
+
 const StudentCourse = () => {
 
     const { courseId } = useParams()
 
     const axiosPrivate = useAxiosPrivate()
 
+    const dispatch = useDispatch()
+
     useEffect(async () => {
         const response = await axiosPrivate.get(URL_GET_COURSE_BY_ID + courseId)
             .then(res => res)
             .catch(err => err.response)
-        console.log('response course id => ', response.data.courseId)
+        if (response.status === 200) {
+            dispatch( setCourse({ 
+                courseId: response.data.courseId, 
+                content: response.data.content
+            }))
+        }
     }, [])
 
     const [ mainElement, setMainElement ] = useState(<CourseContent />)
