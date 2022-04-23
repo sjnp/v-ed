@@ -1,8 +1,12 @@
 package com.ved.backend.service;
 
+import java.util.List;
+
+import com.ved.backend.model.Chapter;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.response.CourseResponse;
+// import com.ved.backend.response.CourseResponse.ChapterStudent;
 
 import org.springframework.stereotype.Service;
 
@@ -20,8 +24,9 @@ public class CourseServiceImpl implements CourseService {
 
         CourseResponse courseResponse = new CourseResponse();
         courseResponse.setCourseId(course.getId());
+        courseResponse.setContent(course.getChapters());
         
         return courseResponse;
     }
-
+    
 }
