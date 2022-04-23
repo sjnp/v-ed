@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 // component
 import AssignmentChapter from './AssignmentChapter'
@@ -12,141 +13,18 @@ import IconButton from '@mui/material/IconButton'
 // icon
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-// Data hard code for test
-const getAssignment = () => [
-    {
-        no: 1,
-        name: 'Chapter name 1',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-        ]
-    },
-    {
-        no: 2,
-        name: 'Chapter name 2',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-        ]
-    },
-    {
-        no: 3,
-        name: 'Chapter name 3',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-        ]
-    },
-    {
-        no: 4,
-        name: 'Chapter name 4',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-            {
-                no: 4,
-                question: 'question 4 ?',
-                questionDetail: 'question detail 4',
-                commentInstructor: 'good'
-            },
-        ]
-    },
-    {
-        no: 5,
-        name: 'Chapter name 5',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-            {
-                no: 4,
-                question: 'question 4 ?',
-                questionDetail: 'question detail 4',
-                commentInstructor: 'good'
-            },
-            {
-                no: 5,
-                question: 'question 5 ?',
-                questionDetail: 'question detail 5',
-                commentInstructor: ''
-            },
-        ]
-    }
-]
-
 const CourseAssignment = () => {
 
-    const assignments = getAssignment() // this is api (future)
+    const assignments = useSelector(state => state.studentAssignment.value.assignment)
+
+    const [ suffixAssignment, setSuffixAssignment ] = useState('')
 
     const getAssignmentChapterElement = () => {
         return assignments.map((assignment, index) => (
             <AssignmentChapter
                 key={index}
-                chapterNo={assignment.no} 
-                chapterName={assignment.name}
-                onClick={() => handleClickChapterAssignment(assignment.questions)}
+                chapterNo={index + 1}
+                onClick={() => handleClickChapterAssignment(assignment, index + 1)}
             />
         ))
     }
@@ -155,10 +33,8 @@ const CourseAssignment = () => {
         return questions.map((question, index) => (
             <AssignmentAnswer
                 key={index}
-                no={question.no}
-                question={question.question}
-                questionDetail={question.questionDetail}
-                commentInstructor={question.commentInstructor}
+                no={index + 1}
+                question={question.detail}
             />
         ))
     }
@@ -167,22 +43,24 @@ const CourseAssignment = () => {
 
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
-    const handleClickChapterAssignment = (questions) => {
+    const handleClickChapterAssignment = (questions, chapterNo) => {
         const element = getAssignmentAnswerElement(questions)
         setAssignmentElement(element)
         setHideArrowBackIcon(false)
+        setSuffixAssignment(` chapter ${chapterNo}`)
     }
 
     const handleClickArrowBack = () => {
         const element = getAssignmentChapterElement()
         setAssignmentElement(element)
         setHideArrowBackIcon(true)
+        setSuffixAssignment('')
     }
 
     return (
         <Box>
             <Typography variant='h6'>
-                Assignment
+                Assignment {suffixAssignment}
             </Typography>
             <Box hidden={hideArrowBackIcon}>
                 <IconButton onClick={handleClickArrowBack}>

@@ -5,6 +5,7 @@ import pageReducer from '../features/pagesControlSlice'
 import createdCourseReducer from '../features/createdCourseSlice'
 import studentCourseReducer from '../features/studentCourseSlice'
 import videoCourseReducer from '../features/videoCourseSlice'
+import studentAssignmentReducer from '../features/studentAssignmentSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     page: pageReducer,
     createdCourse: createdCourseReducer,
     studentCourse: studentCourseReducer,
-    videoCourse: videoCourseReducer
+    videoCourse: videoCourseReducer,
+    studentAssignment: studentAssignmentReducer
   }
 })

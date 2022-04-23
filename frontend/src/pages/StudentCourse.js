@@ -25,6 +25,7 @@ import { URL_GET_COURSE_BY_ID } from "../utils/url";
 
 // fueature slice
 import { setCourse } from '../features/studentCourseSlice';
+import { setAssignment } from '../features/studentAssignmentSlice';
 
 const StudentCourse = () => {
 
@@ -43,6 +44,11 @@ const StudentCourse = () => {
                 courseId: response.data.courseId, 
                 content: response.data.content
             }))
+
+            dispatch( setAssignment({
+                assignment: response.data.content.map(element => element.assignments)
+            }))
+
         }
     }, [])
 
