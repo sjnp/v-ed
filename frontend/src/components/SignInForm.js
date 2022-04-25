@@ -8,8 +8,12 @@ import { Login } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuth, setPersist } from '../features/authSlice';
 
-const LOGIN_URL = '/api/login';
+import { URL_LOGIN } from '../utils/url' 
+
+// const LOGIN_URL = '/api/login';
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+// url
 
 const SignInForm = () => {
   // const { setAuth, persist, setPersist } = useAuth();
@@ -138,7 +142,7 @@ const SignInForm = () => {
       }
     } else {
       try {
-        const response = await axios.post(LOGIN_URL,
+        const response = await axios.post(URL_LOGIN,
           JSON.stringify({ username, password }),
           {
             headers: { 'Content-Type': 'application/json' },

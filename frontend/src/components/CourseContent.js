@@ -1,75 +1,24 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-// Material UI
+// Material UI component
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Box from '@mui/material/Box'
 
-// icon
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import { Divider } from '@mui/material';
+// Material UI icon
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 // component
 import ChapterVideoList from './ChapterVideoList';
 
 const CourseContent = () => {
 
-    const chapters = [
-        {
-            name: 'chapter 1',
-            videos: [
-                {
-                    name: 'video 1',
-                    link: 'student/course/video/1'
-                },
-                {
-                    name: 'video 2',
-                    link: 'student/course/video/2'
-                },
-            ]
-        },
-        {
-            name: 'chapter 2',
-            videos: [
-                {
-                    name: 'video 1',
-                    link: 'student/course/video/1'
-                },
-                {
-                    name: 'video 2',
-                    link: 'student/course/video/2'
-                },
-                {
-                    name: 'video 3',
-                    link: 'student/course/video/3'
-                },
-            ]
-        },
-        {
-            name: 'chapter 3',
-            videos: [
-                {
-                    name: 'video 1',
-                    link: 'student/course/video/1'
-                },
-                {
-                    name: 'video 2',
-                    link: 'student/course/video/2'
-                },
-                {
-                    name: 'video 3',
-                    link: 'student/course/video/3'
-                },
-                {
-                    name: 'video 4',
-                    link: 'student/course/video/4'
-                },
-            ]
-        },
-    ]
+    const content = useSelector(state => state.studentCourse.value.content)
+
+    const chapters = content
     
     return (
         <Box>
@@ -78,13 +27,13 @@ const CourseContent = () => {
             </Typography>
             <Box>
             {
-                chapters.map((chapter, index) => (
+                chapters?.map((chapter, index) => (
                     <Accordion key={index}>
                         <AccordionSummary id="panel1a-header" expandIcon={<ExpandMoreIcon />}>
-                            <Typography>{chapter.name}</Typography>
+                            <Typography>{`Chapter ${index + 1}: ${chapter.name}`}</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <ChapterVideoList videos={chapter.videos} />
+                            <ChapterVideoList videos={chapter.sections} />
                         </AccordionDetails>
                     </Accordion>
                 ))

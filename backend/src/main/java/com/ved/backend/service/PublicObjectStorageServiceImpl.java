@@ -54,6 +54,7 @@ public class PublicObjectStorageServiceImpl implements PublicObjectStorageServic
 
     CreatePreauthenticatedRequestResponse response = client
         .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
+    client.close();
 
     return publicObjectStorageConfigProperties.getRegionalObjectStorageUri() +
         response.getPreauthenticatedRequest().getAccessUri() +

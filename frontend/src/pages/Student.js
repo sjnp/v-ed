@@ -1,7 +1,6 @@
-// import { Container, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 // component
 import CourseCard from "../components/CourseCard";
@@ -12,10 +11,18 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Toolbar from "@mui/material/Toolbar";
 
+// custom hook
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
+// url
+import { URL_STUDENT_MY_COURSE } from "../utils/url";
+
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [ myCourses, setMyCourse ] = useState([])
 
   const upgradeToInstructor = async () => {
     try {
@@ -26,41 +33,38 @@ const Student = () => {
     }
   }
 
-  const data = {
-    courseId: 0,
-    courseName: `Java programming`,
-    instructorName: `pradinan benjanavee`,
-    rating: 4.7,
-    reviewTotal: 125,
-    pathOnClick: '/student/course/'
-  }
-  const datas = [ data, data, data, data, data, data, data, data, data, ]
+  useEffect(async () => {
+    const response = await axiosPrivate.get(URL_STUDENT_MY_COURSE).then(res => res).catch(err => err.response)
+    if (response.status === 200) {
+      setMyCourse(response.data)
+    }
+  }, [])
 
-  const handleData = (data) => {
+  const handleData = () => {
     let key = 0
     let column = 0
     let result = []
-    for (const element of data) {
+    for (const myCourse of myCourses) {
       
-      if (column === 0) result.push(<Grid item xs={1} key={++key}></Grid>)
+      if (column === 0) result.push(<Grid item xs={1.5} key={++key}></Grid>)
 
       result.push(
-        <Grid item xs={2} key={++key}>
-          <CourseCard 
+        <Grid item xs={3} key={++key}>
+          <CourseCard
             key={key}
-            image={`https://picsum.photos/200/300?random=${key}`}
-            courseName={element.courseName}
-            instructorName={element.instructorName}
-            rating={element.rating}
-            reviewTotal={element.reviewTotal}
-            pathOnClick={element.pathOnClick + element.courseId}
+            image={myCourse.pictureURL}
+            courseName={myCourse.courseName}
+            instructorName={myCourse.instructorName}
+            rating={myCourse.rating}
+            reviewCount={myCourse.reviewCount}
+            pathOnClick={'/student/course/' + myCourse.courseId}
           />
         </Grid>
       )
       ++column
 
-      if (column === 5) {
-        result.push(<Grid item xs={1} key={++key}></Grid>)
+      if (column === 3) {
+        result.push(<Grid item xs={1.5} key={++key}></Grid>)
         column = 0
       }
     }
@@ -82,7 +86,7 @@ const Student = () => {
       </Typography>
       <Grid container spacing={1} >
       {
-        handleData(datas).map(item => item)
+        handleData().map(item => item)
       }
       </Grid>
       <Toolbar />

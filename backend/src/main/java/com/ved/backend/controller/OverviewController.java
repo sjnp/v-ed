@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.OverviewResponse;
 import com.ved.backend.service.OverviewService;
+import com.ved.backend.service.PrivateObjectStorageService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OverviewController {
 
     private final OverviewService overviewService;
+    private final PrivateObjectStorageService privateObjectStorageService;
  
-    public OverviewController(OverviewService overviewService) {
+    public OverviewController(OverviewService overviewService, PrivateObjectStorageService privateObjectStorageService) {
         this.overviewService = overviewService;
+        this.privateObjectStorageService = privateObjectStorageService;
     }
 
     @GetMapping("/category/{category}")
@@ -48,6 +51,13 @@ public class OverviewController {
     public ResponseEntity<CourseCardResponse> getOverviewCourseCard(@PathVariable Long courseId) {
         
         CourseCardResponse response = overviewService.getOverviewCourseCard(courseId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("video-example/{fileName}")
+    public ResponseEntity<String> getVideoExampleURI(@PathVariable String fileName) {
+        
+        String response = privateObjectStorageService.getAccessURI(fileName);
         return ResponseEntity.ok().body(response);
     }
     

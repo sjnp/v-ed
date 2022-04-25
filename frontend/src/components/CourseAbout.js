@@ -6,8 +6,6 @@ import Typography from '@mui/material/Typography'
 
 const CourseAbout = () => {
     
-    
-    
     return (
         <Box>
             <Typography variant='h6'>

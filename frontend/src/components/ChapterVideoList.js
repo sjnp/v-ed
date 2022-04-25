@@ -1,22 +1,34 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
-// Material UI
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
+// Material UI component
+import List from '@mui/material/List'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Divider from '@mui/material/Divider'
 
 // icon
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo'
+
+// feature slice
+import { setVideo } from '../features/videoCourseSlice'
 
 const ChapterVideoList = ({ videos }) => {
 
     const navigate = useNavigate()
-    const handleClickVideoList = (link) => {
-        const links = link.split('/')
-        navigate(`/student/course/video/${links[links.length-1]}`)
+
+    const dispatch = useDispatch()
+
+    const courseId = useSelector(state => state.studentCourse.value.courseId)
+
+    const handleClickVideoList = (courseId, videoUri) => {
+        dispatch( setVideo({ 
+            courseId: courseId, 
+            videoUri: videoUri 
+        }))
+        navigate(`/student/course/video/${courseId}`)
     } 
     
     return (
@@ -25,11 +37,11 @@ const ChapterVideoList = ({ videos }) => {
             {
                 videos.map((video, index) => (
                     <div key={index}>
-                        <ListItemButton onClick={() => handleClickVideoList(video.link)}>
+                        <ListItemButton onClick={() => handleClickVideoList(courseId, video.videoUri)}>
                             <ListItemIcon>
                                 <OndemandVideoIcon />
                             </ListItemIcon>
-                            <ListItemText primary={video.name} />
+                            <ListItemText primary={`Chapter ${index + 1} : ${video.name}`} />
                         </ListItemButton>
                         <Divider />
                     </div>
