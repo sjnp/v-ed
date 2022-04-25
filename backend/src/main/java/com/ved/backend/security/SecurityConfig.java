@@ -40,20 +40,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.cors();
     http.csrf().disable();
     http.sessionManagement().sessionCreationPolicy(STATELESS);
+
     http.authorizeRequests()
         .antMatchers("/api/login/**",
             "/api/token/refresh/**",
             "/api/token/clear/**",
             "/api/users/register-new-student/**",
             "/api/course-states/**",
-            "/api/categories/**")
+            "/api/categories/**",
+            "/api/overview/**",
+            "/api/course/**",
+            "/api/students/**"
+          )
         .permitAll();
+
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**")
         .hasAnyAuthority("STUDENT");
+
     http.authorizeRequests()
-        .antMatchers(POST, "/api/instructors/course/**")
+        .antMatchers(GET, "/api/instructors/incomplete-courses/**")
         .hasAnyAuthority("INSTRUCTOR");
+
+    http.authorizeRequests()
+        .antMatchers(POST, "/api/instructors/course/**",
+            "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**",
+            "/api/instructors/incomplete-courses/video/pre-authenticated-request/**")
+        .hasAnyAuthority("INSTRUCTOR");
+
+    http.authorizeRequests()
+        .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
+            "/api/instructors/incomplete-courses/chapters/**")
+        .hasAnyAuthority("INSTRUCTOR");
+    http.authorizeRequests()
+            .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**")
+            .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .anyRequest()

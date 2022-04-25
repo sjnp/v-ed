@@ -1,10 +1,16 @@
 import React from 'react'
 
+// Material UI
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+
 const CourseInstructorDetail = () => {
     return (
-        <div>
-            Course Instructor Detail
-        </div>
+        <Box>
+            <Typography variant='h6'>
+                Instructor info
+            </Typography>
+        </Box>
     )
 }
 

@@ -74,8 +74,7 @@ const CourseAssignmentForm = (props) => {
 
     try {
       const response = await axiosPrivate.post(URL_CREATE_NEW_COURSE, createdCourse);
-      console.log(response);
-      handleNext();
+      navigate(`/instructor/create-course/${response.data.id}`);
     } catch (err) {
       console.log(err);
       navigate('/', { state: { from: location }, replace: true });
@@ -159,7 +158,7 @@ const CourseAssignmentForm = (props) => {
         onClick={handleSubmit}
         sx={{ mt: 2 }}
       >
-        {skippable ? 'Skip' : 'Next'}
+        {skippable ? 'Skip' : 'Submit'}
       </Button>
       <Button
         size='large'

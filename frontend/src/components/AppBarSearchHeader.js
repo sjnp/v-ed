@@ -61,11 +61,14 @@ const AppBarSearchHeader = () => {
               spacing={2}
             >
               <Grid item xs={3.5}>
-                <Button varient="text" onClick={handleClickLogoVEd}>
-                  <Typography variant="h6" color="text.primary">
+                  <Typography
+                    variant="h6" 
+                    color="text.primary"
+                    onClick={handleClickLogoVEd} 
+                    sx={{ cursor: 'pointer' }}
+                  >
                     V-Ed
                   </Typography>
-                </Button>
               </Grid>
               <Grid item xs={5} >
                 <SearchBox 

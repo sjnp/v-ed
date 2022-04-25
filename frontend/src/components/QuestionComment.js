@@ -50,7 +50,7 @@ const QuestionComment = () => {
                 </Grid>
 
                 <Grid item xs={1} sx={{ textAlign: 'right', mt: 3 }}>
-                    <Report />
+                    <Report type={'comment'} />
                 </Grid>
 
             </Grid>

@@ -5,7 +5,6 @@ import QuestionBoard from './QuestionBoard';
 import QuestionCreate from './QuestionCreate';
 import QuestionCard from './QuestionCard';
 
-
 // Material UI
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'

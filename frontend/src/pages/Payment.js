@@ -1,27 +1,46 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 
-import AppBarSearchHeader from "../components/AppBarSearchHeader";
-import FilterSidebar from '../components/FilterSidebar'
-import SearchResult from '../components/SearchResult'
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+
+// component
+import AppBarSearchHeader from '../components/AppBarSearchHeader';
 import CourseCardWide from '../components/CourseCardWide'
 import BankingSelect from '../components/BankingSelect'
 
 // Material UI
-import { Container, Box, Button , Grid, Typography } from '@mui/material'
+import { Container, Box, Button, Typography } from '@mui/material'
+
+// url
+import { URL_OVERVIEW_COURSE_ID_CARD } from '../utils/url';
 
 const Payment = () => {
 
-  const data = {
-    image: `https://picsum.photos/200/300?random=${0}`,
-    courseName: `Java programming ${0}`,
-    instructorName: `pradinan benjanavee ${0}`,
-    rating: 4.7,
-    reviewTotal: 125,
-    pathOnClick: '/overview'
-  }
+  const { courseId } = useParams()
+
+  const axiosPrivate = useAxiosPrivate()
+
+  const [ courseCard, setCourseCard ] = useState({
+      courseName: null,
+      instructorName: null,
+      rating: null,
+      reviewCount: null,
+      pictureURL: null,
+      price: null,
+      courseId: null
+  })
+
+  useEffect(async () => {
+
+    const url = URL_OVERVIEW_COURSE_ID_CARD.replace('{courseId}', courseId)
+    const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
+    setCourseCard(result)
+  
+  }, [])
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth='lg'>
       <AppBarSearchHeader />
       <Box
         sx={{
@@ -38,14 +57,13 @@ const Payment = () => {
           Course Select :
         </Typography>
         <CourseCardWide
-          key={0}
-          image={data.image}
-          courseName={data.courseName}
-          instructorName={data.instructorName}
-          rating={data.rating}
-          reviewTotal={data.reviewTotal}
-          pathOnClick={data.pathOnClick}
-          price={500}
+          image={courseCard.pictureURL}
+          courseName={courseCard.courseName}
+          instructorName={courseCard.instructorName}
+          rating={courseCard.rating}
+          reviewTotal={courseCard.reviewCount}
+          pathOnClick={`/overview/course/${courseCard.courseId}`}
+          price={courseCard.price}
         />
         <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2, marginTop: 10 }}>
           Internet Banking :
@@ -53,7 +71,6 @@ const Payment = () => {
         <BankingSelect />
         <Button
           type='submit'
-          // fullWidth
           variant='contained'
           size='large'
           sx={{
@@ -61,7 +78,6 @@ const Payment = () => {
             marginBottom: 2,
             width: 300
           }}
-        // startIcon={<Login />}
         >
           Payment
         </Button>

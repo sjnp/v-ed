@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 // component
-import AssignmentSection from './AssignmentSection'
+import AssignmentChapter from './AssignmentChapter'
 import AssignmentAnswer from './AssignmentAnswer'
 
 // Material UI
@@ -12,141 +13,18 @@ import IconButton from '@mui/material/IconButton'
 // icon
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-// Data hard code for test
-const getAssignment = () => [
-    {
-        no: 1,
-        name: 'Section name 1',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-        ]
-    },
-    {
-        no: 2,
-        name: 'Section name 2',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-        ]
-    },
-    {
-        no: 3,
-        name: 'Section name 3',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-        ]
-    },
-    {
-        no: 4,
-        name: 'Section name 4',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-            {
-                no: 4,
-                question: 'question 4 ?',
-                questionDetail: 'question detail 4',
-                commentInstructor: 'good'
-            },
-        ]
-    },
-    {
-        no: 5,
-        name: 'Section name 5',
-        questions: [
-            {
-                no: 1,
-                question: 'question 1 ?',
-                questionDetail: 'question detail 1',
-                commentInstructor: ''
-            },
-            {
-                no: 2,
-                question: 'question 2 ?',
-                questionDetail: 'question detail 2',
-                commentInstructor: 'normal'
-            },
-            {
-                no: 3,
-                question: 'question 3 ?',
-                questionDetail: 'question detail 3',
-                commentInstructor: 'bad'
-            },
-            {
-                no: 4,
-                question: 'question 4 ?',
-                questionDetail: 'question detail 4',
-                commentInstructor: 'good'
-            },
-            {
-                no: 5,
-                question: 'question 5 ?',
-                questionDetail: 'question detail 5',
-                commentInstructor: ''
-            },
-        ]
-    }
-]
-
 const CourseAssignment = () => {
 
-    const assignments = getAssignment() // this is api (future)
+    const assignments = useSelector(state => state.studentAssignment.value.assignment)
 
-    const getAssignmentSectionElement = () => {
+    const [ suffixAssignment, setSuffixAssignment ] = useState('')
+
+    const getAssignmentChapterElement = () => {
         return assignments.map((assignment, index) => (
-            <AssignmentSection
+            <AssignmentChapter
                 key={index}
-                sectionNo={assignment.no} 
-                sectionName={assignment.name}
-                onClick={() => handleClickSectionAssignment(assignment.questions)}
+                chapterNo={index + 1}
+                onClick={() => handleClickChapterAssignment(assignment, index + 1)}
             />
         ))
     }
@@ -155,34 +33,34 @@ const CourseAssignment = () => {
         return questions.map((question, index) => (
             <AssignmentAnswer
                 key={index}
-                no={question.no}
-                question={question.question}
-                questionDetail={question.questionDetail}
-                commentInstructor={question.commentInstructor}
+                no={index + 1}
+                question={question.detail}
             />
         ))
     }
 
-    const [ assignmentElement, setAssignmentElement ] = useState(getAssignmentSectionElement())
+    const [ assignmentElement, setAssignmentElement ] = useState(getAssignmentChapterElement())
 
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
-    const handleClickSectionAssignment = (questions) => {
+    const handleClickChapterAssignment = (questions, chapterNo) => {
         const element = getAssignmentAnswerElement(questions)
         setAssignmentElement(element)
         setHideArrowBackIcon(false)
+        setSuffixAssignment(` chapter ${chapterNo}`)
     }
 
     const handleClickArrowBack = () => {
-        const element = getAssignmentSectionElement()
+        const element = getAssignmentChapterElement()
         setAssignmentElement(element)
         setHideArrowBackIcon(true)
+        setSuffixAssignment('')
     }
 
     return (
         <Box>
             <Typography variant='h6'>
-                Assignment
+                Assignment {suffixAssignment}
             </Typography>
             <Box hidden={hideArrowBackIcon}>
                 <IconButton onClick={handleClickArrowBack}>
