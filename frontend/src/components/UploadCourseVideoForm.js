@@ -3,7 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
+  Chip, CircularProgress,
   Input, Modal,
   Paper,
   Stack,
@@ -38,11 +38,11 @@ const UploadCourseVideoForm = (props) => {
   const dispatch = useDispatch();
 
   const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters);
-  const createdCoursePictureUrl = useSelector((state) => state.createdCourse.value.pictureUrl);
 
   const [expanded, setExpanded] = useState(false);
   const [courseVideoUrl, setCourseVideoUrl] = useState("");
   const [openVideoModal, setOpenVideoModal] = useState(false);
+  const [isFetchingVideoUrl, setIsFetchingVideoUrl] = useState(false);
   const [sectionUploadStates, setSectionUploadStates] = useState(createdCourseChapters.map(chapter => chapter.sections.map(section => {
     return {
       file: null, progress: 0, isLoading: false, isSuccess: !!section.videoUri, isError: false
@@ -132,7 +132,6 @@ const UploadCourseVideoForm = (props) => {
       newSectionUploadStates[chapterIndex][sectionIndex].progress = 0;
       setSectionUploadStates(newSectionUploadStates);
       await updateCourseVideoMaterials(chapterIndex, sectionIndex, multipartUploadUri);
-
     })
   }
 
@@ -147,6 +146,7 @@ const UploadCourseVideoForm = (props) => {
 
   const playVideo = (chapterIndex, sectionIndex) => async () => {
     setOpenVideoModal(true);
+    setIsFetchingVideoUrl(true);
     const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
       axiosPrivate,
       URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
@@ -157,6 +157,7 @@ const UploadCourseVideoForm = (props) => {
         fileName: createdCourseChapters[chapterIndex].sections[sectionIndex].videoUri
       });
     setCourseVideoUrl(parUrl);
+    setIsFetchingVideoUrl(false);
   }
 
   const handleCloseVideoModal = () => {
@@ -269,14 +270,28 @@ const UploadCourseVideoForm = (props) => {
                               top: '50%',
                               left: '50%',
                               transform: 'translate(-50%, -50%)',
+                              bgcolor: 'grey.800'
                             }}
                           >
+                            {isFetchingVideoUrl &&
+                              <Box
+                                sx={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  left: '50%',
+                                  transform: 'translate(-50%, -50%)',
+                                }}
+                              >
+                                <CircularProgress size='5em' color="inherit"/>
+                              </Box>
+
+                            }
                             <ReactPlayer
                               url={courseVideoUrl}
                               // light={createdCoursePictureUrl}
                               controls={true}
                               playing={false}
-                              style={{ margin: 'auto' }}
+                              style={{margin: 'auto'}}
                             />
                           </Box>
                         </Modal>
