@@ -31,8 +31,13 @@ const splitFile = (newFile) => {
   return chunks;
 }
 
+const commit = async (url) => {
+  await axios.post(url).then(() => true).catch(() => false)
+}
+
 export const uploadUtility = {
   createPreauthenticatedRequestForCourse,
   splitFile,
-  createMultipartUploadUri
+  createMultipartUploadUri,
+  commit
 }

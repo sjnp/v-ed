@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
 // component
 import AssignmentChapter from './AssignmentChapter'
 import AssignmentAnswer from './AssignmentAnswer'
@@ -29,11 +32,12 @@ const CourseAssignment = () => {
         ))
     }
 
-    const getAssignmentAnswerElement = (questions = []) => {
+    const getAssignmentAnswerElement = (questions = [], chapterNo) => {
         return questions.map((question, index) => (
             <AssignmentAnswer
                 key={index}
                 no={index + 1}
+                chapterNo={chapterNo}
                 question={question.detail}
             />
         ))
@@ -44,7 +48,7 @@ const CourseAssignment = () => {
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
     const handleClickChapterAssignment = (questions, chapterNo) => {
-        const element = getAssignmentAnswerElement(questions)
+        const element = getAssignmentAnswerElement(questions, chapterNo)
         setAssignmentElement(element)
         setHideArrowBackIcon(false)
         setSuffixAssignment(` chapter ${chapterNo}`)
