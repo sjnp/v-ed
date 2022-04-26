@@ -158,6 +158,12 @@ const UploadCourseVideoForm = (props) => {
       });
     setCourseVideoUrl(parUrl);
   }
+
+  const handleCloseVideoModal = () => {
+    setCourseVideoUrl("");
+    setOpenVideoModal(false);
+  }
+
   const deleteCourseVideoMaterials = (chapterIndex, sectionIndex) => async () => {
     const emptyUri = "";
     dispatch(setVideoUri({
@@ -255,7 +261,7 @@ const UploadCourseVideoForm = (props) => {
                         />
                         <Modal
                           open={openVideoModal}
-                          onClose={() => setOpenVideoModal(false)}
+                          onClose={() => handleCloseVideoModal()}
                         >
                           <Box
                             sx={{
@@ -269,7 +275,7 @@ const UploadCourseVideoForm = (props) => {
                               url={courseVideoUrl}
                               // light={createdCoursePictureUrl}
                               controls={true}
-                              playing={true}
+                              playing={false}
                               style={{ margin: 'auto' }}
                             />
                           </Box>
