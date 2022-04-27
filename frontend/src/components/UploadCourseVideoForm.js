@@ -3,7 +3,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Chip,
+  Box,
+  Chip, CircularProgress,
   Input, Modal,
   Paper,
   Stack,
@@ -22,13 +23,18 @@ import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import React, {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import {URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID, URL_UPDATE_COURSE_MATERIAL} from "../utils/url";
+import {
+  URL_COURSE_HANDOUT,
+  URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT,
+  URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
+  URL_UPDATE_COURSE_MATERIAL
+} from "../utils/url";
 import axios from "axios";
-import {setVideoUri} from "../features/createdCourseSlice";
+import {removeHandoutUri, setHandoutUri, setVideoUri} from "../features/createdCourseSlice";
 import LinearProgressWithLabel from "./LinearProgressWithLabel";
 import {uploadUtility} from "../utils/uploadUtility.js";
 import ReactPlayer from "react-player";
-import {Box} from "@mui/system";
+import {deleteUtility} from "../utils/deleteUtility";
 
 const UploadCourseVideoForm = (props) => {
 
@@ -38,16 +44,42 @@ const UploadCourseVideoForm = (props) => {
   const dispatch = useDispatch();
 
   const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters);
-  const createdCoursePictureUrl = useSelector((state) => state.createdCourse.value.pictureUrl);
 
   const [expanded, setExpanded] = useState(false);
   const [courseVideoUrl, setCourseVideoUrl] = useState("");
   const [openVideoModal, setOpenVideoModal] = useState(false);
-  const [sectionUploadStates, setSectionUploadStates] = useState(createdCourseChapters.map(chapter => chapter.sections.map(section => {
-    return {
-      file: null, progress: 0, isLoading: false, isSuccess: !!section.videoUri, isError: false
-    }
-  })))
+  const [isFetchingVideoUrl, setIsFetchingVideoUrl] = useState(false);
+  const [sectionVideoUploadStates, setSectionVideoUploadStates] = useState(createdCourseChapters
+    .map(chapter => chapter.sections
+      .map(section => {
+        return {
+          file: null,
+          progress: 0,
+          isLoading: false,
+          isSuccess: !!section.videoUri,
+          isError: false
+        }
+      })));
+  const [sectionHandoutUploadStates, setSectionHandoutUploadStates] = useState(createdCourseChapters
+    .map(chapter => chapter.sections
+      .map(section => {
+        if (section.handouts) {
+          return section.handouts.map(handout => {
+            return {
+              file: null,
+              objectName: handout.handoutUri,
+              progress: 0,
+              isLoading: false,
+              isSuccess: !!handout.handoutUri,
+              isError: false
+            }
+          });
+        } else {
+          return [];
+        }
+      })
+    )
+  );
 
   useEffect(() => {
     const updateChapters = async () => {
@@ -72,10 +104,10 @@ const UploadCourseVideoForm = (props) => {
     const newFile = event.target.files[0];
     console.log(`chapterIndex: ${chapterIndex}, sectionIndex: ${sectionIndex}`);
     try {
-      let newSectionUploadStates = [...sectionUploadStates];
+      let newSectionUploadStates = [...sectionVideoUploadStates];
       newSectionUploadStates[chapterIndex][sectionIndex].file = newFile;
       newSectionUploadStates[chapterIndex][sectionIndex].isLoading = true;
-      setSectionUploadStates(newSectionUploadStates);
+      setSectionVideoUploadStates(newSectionUploadStates);
 
       const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
         axiosPrivate,
@@ -88,17 +120,17 @@ const UploadCourseVideoForm = (props) => {
         });
       const multipartUploadUri = await uploadUtility.createMultipartUploadUri(parUrl);
       const chunks = uploadUtility.splitFile(newFile);
-      await multipartUpload(chapterIndex, sectionIndex, chunks, multipartUploadUri);
+      await multipartVideoUpload(chapterIndex, sectionIndex, chunks, multipartUploadUri);
     } catch (err) {
-      let newSectionUploadStates = [...sectionUploadStates];
+      let newSectionUploadStates = [...sectionVideoUploadStates];
       newSectionUploadStates[chapterIndex][sectionIndex].file = null;
       newSectionUploadStates[chapterIndex][sectionIndex].isLoading = false;
-      setSectionUploadStates(newSectionUploadStates);
+      setSectionVideoUploadStates(newSectionUploadStates);
       console.error(err);
     }
   }
 
-  const multipartUpload = async (chapterIndex, sectionIndex, chunks, multipartUploadUri) => {
+  const multipartVideoUpload = async (chapterIndex, sectionIndex, chunks, multipartUploadUri) => {
     let promises = [];
     for (let i = 0; i < chunks.length; i++) {
       promises.push(
@@ -106,15 +138,15 @@ const UploadCourseVideoForm = (props) => {
           `${multipartUploadUri}${i + 1}`,
           chunks[i])
           .then(response => {
-            const prevProgress = sectionUploadStates[chapterIndex][sectionIndex].progress;
+            const prevProgress = sectionVideoUploadStates[chapterIndex][sectionIndex].progress;
             if (prevProgress + 100 / chunks.length > 100) {
-              let newSectionUploadStates = [...sectionUploadStates];
+              let newSectionUploadStates = [...sectionVideoUploadStates];
               newSectionUploadStates[chapterIndex][sectionIndex].progress = 100;
-              setSectionUploadStates(newSectionUploadStates);
+              setSectionVideoUploadStates(newSectionUploadStates);
             } else {
-              let newSectionUploadStates = [...sectionUploadStates];
+              let newSectionUploadStates = [...sectionVideoUploadStates];
               newSectionUploadStates[chapterIndex][sectionIndex].progress = prevProgress + 100 / chunks.length;
-              setSectionUploadStates(newSectionUploadStates);
+              setSectionVideoUploadStates(newSectionUploadStates);
             }
             console.log(`chuck ${i}: complete`);
           })
@@ -125,14 +157,13 @@ const UploadCourseVideoForm = (props) => {
     await Promise.all(promises).then(async () => {
       await axios.post(`${multipartUploadUri}`);
       console.log(`ch:${chapterIndex} sec:${sectionIndex} complete`);
-      let newSectionUploadStates = [...sectionUploadStates]
+      let newSectionUploadStates = [...sectionVideoUploadStates]
       newSectionUploadStates[chapterIndex][sectionIndex].isLoading = false;
       newSectionUploadStates[chapterIndex][sectionIndex].isSuccess = true;
       newSectionUploadStates[chapterIndex][sectionIndex].isError = false;
       newSectionUploadStates[chapterIndex][sectionIndex].progress = 0;
-      setSectionUploadStates(newSectionUploadStates);
+      setSectionVideoUploadStates(newSectionUploadStates);
       await updateCourseVideoMaterials(chapterIndex, sectionIndex, multipartUploadUri);
-
     })
   }
 
@@ -147,6 +178,7 @@ const UploadCourseVideoForm = (props) => {
 
   const playVideo = (chapterIndex, sectionIndex) => async () => {
     setOpenVideoModal(true);
+    setIsFetchingVideoUrl(true);
     const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
       axiosPrivate,
       URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
@@ -157,6 +189,7 @@ const UploadCourseVideoForm = (props) => {
         fileName: createdCourseChapters[chapterIndex].sections[sectionIndex].videoUri
       });
     setCourseVideoUrl(parUrl);
+    setIsFetchingVideoUrl(false);
   }
 
   const handleCloseVideoModal = () => {
@@ -171,11 +204,117 @@ const UploadCourseVideoForm = (props) => {
       sectionIndex: sectionIndex,
       videoUri: emptyUri
     }));
-    let newSectionUploadStates = [...sectionUploadStates];
+    let newSectionUploadStates = [...sectionVideoUploadStates];
     newSectionUploadStates[chapterIndex][sectionIndex].file = null;
     newSectionUploadStates[chapterIndex][sectionIndex].isLoading = false;
     newSectionUploadStates[chapterIndex][sectionIndex].isSuccess = false;
-    setSectionUploadStates(newSectionUploadStates);
+    setSectionVideoUploadStates(newSectionUploadStates);
+  }
+
+  const handleHandoutUpload = (chapterIndex, sectionIndex) => async (event) => {
+    const newFiles = event.target.files;
+    for (const newFile of newFiles) {
+      try {
+        let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+        const newHandout = {
+          file: newFile,
+          objectName: null,
+          progress: 0,
+          isLoading: true,
+          isSuccess: false,
+          isError: false
+        }
+        newSectionHandoutUploadStates[chapterIndex][sectionIndex].push(newHandout);
+        const handoutIndex = newSectionHandoutUploadStates[chapterIndex][sectionIndex].length - 1;
+        setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+
+        const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
+          axiosPrivate,
+          URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT,
+          courseId,
+          {
+            chapterIndex: chapterIndex,
+            sectionIndex: sectionIndex,
+            fileName: newFile.name
+          }
+        );
+        const multipartUploadUri = await uploadUtility.createMultipartUploadUri(parUrl);
+        const chunks = uploadUtility.splitFile(newFile);
+        await multipartHandoutUpload(chapterIndex, sectionIndex, handoutIndex, chunks, multipartUploadUri);
+      } catch (err) {
+        let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+        newSectionHandoutUploadStates[chapterIndex][sectionIndex] = newSectionHandoutUploadStates[chapterIndex][sectionIndex]
+          .filter(handout => handout.file !== newFile);
+        setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+        console.error(err);
+      }
+    }
+  }
+
+  const multipartHandoutUpload = async (chapterIndex, sectionIndex, handoutIndex, chunks, multipartUploadUri) => {
+    let promises = [];
+    for (let i = 0; i < chunks.length; i++) {
+      promises.push(
+        axios.put(
+          `${multipartUploadUri}${i + 1}`,
+          chunks[i])
+          .then(response => {
+            const prevProgress = sectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].progress;
+            if (prevProgress + 100 / chunks.length > 100) {
+              let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+              newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].progress = 100;
+              setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+            } else {
+              let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+              newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].progress = prevProgress + 100 / chunks.length;
+              setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+            }
+            console.log(`handout chunk ${i}: complete`);
+          })
+          .catch(err => console.error(err))
+      );
+    }
+    await Promise.all(promises).then(async () => {
+      await axios.post(`${multipartUploadUri}`);
+      console.log(`ch:${chapterIndex} sec:${sectionIndex} handout:${handoutIndex} complete`);
+      const handoutUri = multipartUploadUri.split("/u/")[1].split("/id/")[0];
+      let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].isLoading = false;
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].isSuccess = true;
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].isError = false;
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].progress = 0;
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].objectName = handoutUri;
+      setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+      dispatch(setHandoutUri({
+        chapterIndex: chapterIndex,
+        sectionIndex: sectionIndex,
+        handoutUri: handoutUri
+      }));
+    });
+  }
+
+  const deleteCourseHandoutMaterials = (handout, chapterIndex, sectionIndex) => async () => {
+    try {
+      await deleteUtility.deleteCourseHandout(
+        axiosPrivate,
+        URL_COURSE_HANDOUT,
+        courseId,
+        handout.objectName
+      );
+      console.log(`Delete success: ${handout.objectName}`)
+    } catch (err) {
+      console.error(err);
+    } finally {
+      let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+      newSectionHandoutUploadStates[chapterIndex][sectionIndex] = newSectionHandoutUploadStates[chapterIndex][sectionIndex]
+        .filter(item => item.objectName !== handout.objectName);
+      setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+      dispatch(removeHandoutUri({
+        chapterIndex: chapterIndex,
+        sectionIndex: sectionIndex,
+        handoutUri: handout.objectName
+      }));
+    }
   }
 
   const handleBackOnClick = () => {
@@ -217,7 +356,7 @@ const UploadCourseVideoForm = (props) => {
                     Section {sectionIndex + 1} : {section.name}
                   </TableCell>
                   <TableCell>
-                    {sectionUploadStates[chapterIndex][sectionIndex].file === null && !section.videoUri &&
+                    {sectionVideoUploadStates[chapterIndex][sectionIndex].file === null && !section.videoUri &&
                       <Stack direction='row'>
                         <label htmlFor={`video-button-file-${chapterIndex}${sectionIndex}`}>
                           <Input
@@ -236,22 +375,22 @@ const UploadCourseVideoForm = (props) => {
                             onClick={() => {
                             }}/>
                         </label>
-                        {sectionUploadStates[chapterIndex][sectionIndex].isError &&
+                        {sectionVideoUploadStates[chapterIndex][sectionIndex].isError &&
                           <Typography sx={{color: "grey.600", mt: 0.5}}>Must be .mkv or .mp4</Typography>}
                       </Stack>
                     }
-                    {sectionUploadStates[chapterIndex][sectionIndex].isLoading &&
+                    {sectionVideoUploadStates[chapterIndex][sectionIndex].isLoading &&
                       <LinearProgressWithLabel
-                        value={sectionUploadStates[chapterIndex][sectionIndex].progress}
-                        fileName={sectionUploadStates[chapterIndex][sectionIndex].file.name}
+                        value={sectionVideoUploadStates[chapterIndex][sectionIndex].progress}
+                        fileName={sectionVideoUploadStates[chapterIndex][sectionIndex].file.name}
                       />
                     }
-                    {sectionUploadStates[chapterIndex][sectionIndex].isSuccess &&
+                    {sectionVideoUploadStates[chapterIndex][sectionIndex].isSuccess &&
                       <>
                         <Chip
-                          label={sectionUploadStates[chapterIndex][sectionIndex].file === null
+                          label={sectionVideoUploadStates[chapterIndex][sectionIndex].file === null
                             ? section.videoUri
-                            : sectionUploadStates[chapterIndex][sectionIndex].file.name
+                            : sectionVideoUploadStates[chapterIndex][sectionIndex].file.name
                           }
                           variant="outlined"
                           icon={<PlayArrowRoundedIcon/>}
@@ -269,14 +408,28 @@ const UploadCourseVideoForm = (props) => {
                               top: '50%',
                               left: '50%',
                               transform: 'translate(-50%, -50%)',
+                              bgcolor: 'grey.800'
                             }}
                           >
+                            {isFetchingVideoUrl &&
+                              <Box
+                                sx={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  left: '50%',
+                                  transform: 'translate(-50%, -50%)',
+                                }}
+                              >
+                                <CircularProgress size='5em' color="inherit"/>
+                              </Box>
+
+                            }
                             <ReactPlayer
                               url={courseVideoUrl}
                               // light={createdCoursePictureUrl}
                               controls={true}
                               playing={false}
-                              style={{ margin: 'auto' }}
+                              style={{margin: 'auto'}}
                             />
                           </Box>
                         </Modal>
@@ -286,22 +439,46 @@ const UploadCourseVideoForm = (props) => {
 
                   </TableCell>
                   <TableCell>
-                    <label htmlFor={`button-file-${chapterIndex}${sectionIndex}`}>
-                      <Input
-                        sx={{display: 'none'}}
-                        type="file"
-                        id={`button-file-${chapterIndex}${sectionIndex}`}
-                        // onChange={handleUpload}
-                      />
-                      <Chip
-                        icon={<AddIcon/>}
-                        color="primary"
-                        label="Add"
-                        component="span"
-                        sx={{mr: 1, mb: 1}}
-                        onClick={() => {
-                        }}/>
-                    </label>
+                    <Stack spacing={1} alignItems='flex-start'>
+                      <label htmlFor={`handout-button-file-${chapterIndex}${sectionIndex}`}>
+                        <Input
+                          sx={{display: 'none'}}
+                          type="file"
+                          multiple
+                          id={`handout-button-file-${chapterIndex}${sectionIndex}`}
+                          onChange={handleHandoutUpload(chapterIndex, sectionIndex)}
+                        />
+                        <Chip
+                          icon={<AddIcon/>}
+                          color="primary"
+                          label="Add"
+                          component="span"
+                          sx={{mr: 1, mb: 1}}
+                          onClick={() => {
+                          }}/>
+                      </label>
+                      {sectionHandoutUploadStates[chapterIndex][sectionIndex]
+                        .filter((handout) => handout.isSuccess)
+                        .map((handout, handoutIndex) => (
+                          <Chip
+                            key={handoutIndex}
+                            label={handout.file === null ? handout.objectName : handout.file.name}
+                            variant='outlined'
+                            onDelete={deleteCourseHandoutMaterials(handout, chapterIndex, sectionIndex)}
+                            deleteIcon={<CancelIcon/>}
+                          />
+                        ))}
+                      {sectionHandoutUploadStates[chapterIndex][sectionIndex]
+                        .filter((handout) => handout.isLoading)
+                        .map((handout, handoutIndex) => (
+                          <LinearProgressWithLabel
+                            key={handoutIndex}
+                            value={handout.progress}
+                            fileName={handout.file.name}
+                          />
+                        ))
+                      }
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
@@ -316,7 +493,8 @@ const UploadCourseVideoForm = (props) => {
       variant='contained'
       size='large'
       onClick={() => {
-        console.log(sectionUploadStates)
+        console.log(sectionVideoUploadStates)
+        console.log(sectionHandoutUploadStates)
         console.log(createdCourseChapters)
       }}
       sx={{mt: 2}}

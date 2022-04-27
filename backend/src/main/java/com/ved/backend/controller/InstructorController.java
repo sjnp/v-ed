@@ -71,7 +71,7 @@ public class InstructorController {
     try {
 
       String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseVideo(courseId,
-          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))) ,
+          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
           Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
           (String) requestData.get("fileName"),
           principal.getName());
@@ -90,6 +90,40 @@ public class InstructorController {
       } else {
         return ResponseEntity.badRequest().body(exception.getMessage());
       }
+    }
+  }
+
+  @PostMapping(path = "/incomplete-courses/handout/pre-authenticated-request")
+  public ResponseEntity<?> createParToCreateHandout(@RequestParam(name = "id") Long courseId,
+                                                    @RequestBody HashMap<String, Object> requestData,
+                                                    Principal principal) {
+    try {
+      String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseHandout(courseId,
+          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
+          Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
+          (String) requestData.get("fileName"),
+          principal.getName());
+      HashMap<String, String> preauthenticatedRequest = new HashMap<>();
+      preauthenticatedRequest.put("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
+      URI uri = URI.create(ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("/api/instructors/incomplete-courses/handout/pre-authenticated-request")
+          .toUriString());
+      return ResponseEntity.created(uri).body(preauthenticatedRequest);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @DeleteMapping(path = "/incomplete-courses/handout")
+  public ResponseEntity<?> deleteHandout(@RequestParam(name = "id") Long courseId,
+                                         @RequestParam(name = "objectName") String objectName,
+                                         Principal principal) {
+    try {
+      privateObjectStorageService.deleteHandout(courseId, objectName, principal.getName());
+      return ResponseEntity.noContent().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
     }
   }
 
