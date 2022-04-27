@@ -20,16 +20,21 @@ public class Answer {
     private Long id;
 
     @Column(nullable = false)
-    private Long section;
+    private Long chapter;
+
+    @Column(nullable = false)
+    private Long no;
 
     @Column(nullable = false)
     private LocalDateTime datetime;
 
     @Column(nullable = false)
-    private String uri;
+    private String fileName;
 
     @Column(nullable = true)
     private String commentInstructor;
+
+    public Answer() {}
 
     public Long getId() {
         return id;
@@ -39,12 +44,20 @@ public class Answer {
         this.id = id;
     }
 
-    public Long getSection() {
-        return section;
+    public Long getChapter() {
+        return chapter;
     }
 
-    public void setSection(Long section) {
-        this.section = section;
+    public void setChapter(Long chapter) {
+        this.chapter = chapter;
+    }
+
+    public Long getNo() {
+        return no;
+    }
+
+    public void setNo(Long no) {
+        this.no = no;
     }
 
     public LocalDateTime getDatetime() {
@@ -55,12 +68,12 @@ public class Answer {
         this.datetime = datetime;
     }
 
-    public String getUri() {
-        return uri;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getCommentInstructor() {
@@ -69,6 +82,6 @@ public class Answer {
 
     public void setCommentInstructor(String commentInstructor) {
         this.commentInstructor = commentInstructor;
-    }    
-    
+    }
+
 }
