@@ -48,8 +48,8 @@ const StudentCourse = () => {
             dispatch( setAssignment({
                 assignment: response.data.content.map(element => element.assignments)
             }))
-
         }
+        
     }, [])
 
     const [ mainElement, setMainElement ] = useState(<CourseContent />)

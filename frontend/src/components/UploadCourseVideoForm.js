@@ -315,18 +315,6 @@ const UploadCourseVideoForm = (props) => {
         handoutUri: handout.objectName
       }));
     }
-
-    // const emptyUri = "";
-    // dispatch(setVideoUri({
-    //   chapterIndex: chapterIndex,
-    //   sectionIndex: sectionIndex,
-    //   videoUri: emptyUri
-    // }));
-    // let newSectionUploadStates = [...sectionVideoUploadStates];
-    // newSectionUploadStates[chapterIndex][sectionIndex].file = null;
-    // newSectionUploadStates[chapterIndex][sectionIndex].isLoading = false;
-    // newSectionUploadStates[chapterIndex][sectionIndex].isSuccess = false;
-    // setSectionVideoUploadStates(newSectionUploadStates);
   }
 
   const handleBackOnClick = () => {
@@ -479,17 +467,6 @@ const UploadCourseVideoForm = (props) => {
                             onDelete={deleteCourseHandoutMaterials(handout, chapterIndex, sectionIndex)}
                             deleteIcon={<CancelIcon/>}
                           />
-                          //   <Chip
-                          //   label={sectionVideoUploadStates[chapterIndex][sectionIndex].file === null
-                          //   ? section.videoUri
-                          //   : sectionVideoUploadStates[chapterIndex][sectionIndex].file.name
-                          // }
-                          //   variant="outlined"
-                          //   icon={<PlayArrowRoundedIcon/>}
-                          //   onClick={playVideo(chapterIndex, sectionIndex)}
-                          //   onDelete={deleteCourseVideoMaterials(chapterIndex, sectionIndex)}
-                          //   deleteIcon={<CancelIcon/>}
-                          //   />
                         ))}
                       {sectionHandoutUploadStates[chapterIndex][sectionIndex]
                         .filter((handout) => handout.isLoading)
@@ -501,12 +478,6 @@ const UploadCourseVideoForm = (props) => {
                           />
                         ))
                       }
-                      {/*{sectionVideoUploadStates[chapterIndex][sectionIndex].isLoading &&*/}
-                      {/*  <LinearProgressWithLabel*/}
-                      {/*    value={sectionVideoUploadStates[chapterIndex][sectionIndex].progress}*/}
-                      {/*    fileName={sectionVideoUploadStates[chapterIndex][sectionIndex].file.name}*/}
-                      {/*  />*/}
-                      {/*}*/}
                     </Stack>
                   </TableCell>
                 </TableRow>

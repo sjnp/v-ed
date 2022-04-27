@@ -20,6 +20,9 @@ public class InstructorController {
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
+
+
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
     URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/instructors/course").toUriString());
@@ -66,17 +69,20 @@ public class InstructorController {
                                                   @RequestBody HashMap<String, Object> requestData,
                                                   Principal principal) {
     try {
+
       String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseVideo(courseId,
           Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
           Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
           (String) requestData.get("fileName"),
           principal.getName());
+
       HashMap<String, String> preauthenticatedRequest = new HashMap<>();
       preauthenticatedRequest.put("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
       URI uri = URI.create(ServletUriComponentsBuilder
           .fromCurrentContextPath()
           .path("/api/instructors/incomplete-courses/video/pre-authenticated-request")
           .toUriString());
+
       return ResponseEntity.created(uri).body(preauthenticatedRequest);
     } catch (Exception exception) {
       if (exception.getMessage().equals("Invalid file type")) {
