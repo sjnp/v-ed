@@ -30,9 +30,9 @@ import { URL_ASSIGNMENT_ANSWER_SAVE } from '../utils/url'
 
 const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
 
-    const { courseId } = useParams()
-
     const axiosPrivate = useAxiosPrivate()
+
+    const { courseId } = useParams()
 
     const [ answerId, setAnswerId ] = useState(null)
     const [ fileName, setFileName ] = useState('')
@@ -72,33 +72,41 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
         
         const startIndex = multipartUploadUri.indexOf('answer_sid')
         const endIndex = multipartUploadUri.indexOf('/id/')
-        const fileUri = multipartUploadUri.substring(startIndex, endIndex)
+        const fileNameForSave = multipartUploadUri.substring(startIndex, endIndex)
 
-        const response = await axiosPrivate.post(URL_ASSIGNMENT_ANSWER_SAVE, { section: 0, uri: fileUri })
-            .then(res => res)
-            .catch(err => err.response)
+        const response = await axiosPrivate.post(
+            URL_ASSIGNMENT_ANSWER_SAVE,
+            {
+                chapter: chapterNo,
+                no: no,
+                fileName: fileNameForSave
+            }
+        )
+        .then(res => res)
+        .catch(err => err.response)
 
         if (response.status === 201) {
             setIsUpload(false)
             setIsComplete(true)
             setAnswerId(response.data)
+            event.target.value = null
         } else {
-            alert('save file name fail')
+            alert(`save ${fileNameForSave} fail`)
         }
     }
 
     const handleCancelAnswer = async () => {
-        if (answerId) {
-
-            const response = await axiosPrivate.delete('/api/assignment/answer/' + answerId)
-                .then(res => res)
-                .catch(err => err.response)
-            if (response.status === 204) {
-                setIsComplete(false)
-                setAnswerId(null)
+        if (window.confirm('Delete sure ?')) {
+            if (answerId) {
+                const response = await axiosPrivate.delete('/api/assignment/answer/' + answerId)
+                    .then(res => res)
+                    .catch(err => err.response)
+                if (response.status === 204) {
+                    setIsComplete(false)
+                    setAnswerId(null)
+                }
             }
-        
-        }
+        } 
     }
 
     return (

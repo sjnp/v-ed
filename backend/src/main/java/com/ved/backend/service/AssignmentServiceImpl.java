@@ -1,14 +1,11 @@
 package com.ved.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
-import com.ved.backend.exception.MyException;
 import com.ved.backend.model.Answer;
 import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.request.AnswerRequest;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,18 +30,7 @@ public class AssignmentServiceImpl implements AssignmentService {
     }
 
     public void deleteAnswerFile(Long answerId, String username) {
-        
-        Optional<Answer> answerOptional = answerRepo.findById(answerId);
-        
-        if (!answerOptional.isPresent()) {
-            throw new MyException("assignment.answer.id.not.found", HttpStatus.NOT_FOUND);
-        }
-
-        Answer answer = answerOptional.get();
-        answer.setUri("");
-
-        answerRepo.save(answer);
+        answerRepo.deleteById(answerId);
     }
 
-    
 }
