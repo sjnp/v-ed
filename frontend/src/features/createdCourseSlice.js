@@ -111,10 +111,28 @@ export const createdCourseSlice = createSlice({
       const chapterIndex = Number(action.payload.chapterIndex);
       const sectionIndex = Number(action.payload.sectionIndex);
       state.value.chapters[chapterIndex].sections[sectionIndex].videoUri = action.payload.videoUri;
+    },
+    setHandoutUri: (state, action) => {
+      const chapterIndex = Number(action.payload.chapterIndex);
+      const sectionIndex = Number(action.payload.sectionIndex);
+      if (!state.value.chapters[chapterIndex].sections[sectionIndex].handouts) {
+        state.value.chapters[chapterIndex].sections[sectionIndex].handouts = [];
+      }
+      state.value.chapters[chapterIndex].sections[sectionIndex].handouts.push({handoutUri: action.payload.handoutUri});
+    },
+    removeHandoutUri: (state, action) => {
+      const chapterIndex = Number(action.payload.chapterIndex);
+      const sectionIndex = Number(action.payload.sectionIndex);
+      const handoutUri = action.payload.handoutUri;
+      const oldHandouts = state.value.chapters[chapterIndex].sections[sectionIndex].handouts;
+      state.value.chapters[chapterIndex].sections[sectionIndex].handouts = oldHandouts
+        .filter(item => item.handoutUri !== handoutUri);
     }
   }
 });
 
-export const { setCourseDetails, addSection, removeSection, addChapter, removeChapter, addAssignment, removeAssignment, setName, setPrice, setCategory, setOverview, setRequirement, setPictureUrl, setVideoUri, setChapters } = createdCourseSlice.actions;
+export const { setCourseDetails, addSection, removeSection, addChapter, removeChapter, addAssignment, removeAssignment,
+  setName, setPrice, setCategory, setOverview, setRequirement, setPictureUrl, setVideoUri, setChapters,
+  setHandoutUri, removeHandoutUri } = createdCourseSlice.actions;
 
 export default createdCourseSlice.reducer;
