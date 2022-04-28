@@ -18,8 +18,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
 const CourseQuestion = () => {
 
-    const axiosPrivate = useAxiosPrivate()
-
     const handleClickQuestionCard = (item) => {
         setQuestionBoardElement(<QuestionBoard />)
         setHideAddButton(true)

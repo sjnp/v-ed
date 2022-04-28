@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
+// api
+import apiPrivate from '../api/apiPrivate';
+
 // Material UI
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -16,81 +19,85 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    const maxLength = {
-        topic: 200,
-        detail: 1000
-    }
+    const maxLengthTopic = 200
+    const maxLengthDetail = 1000
 
-    const [ question, setQuestion ] = useState({
-        topic: '',
-        detail: ''
-    })
-    
-    const [ message, setMessage ] = useState({ // ex. (0/200)
-        topic: `(${question.topic.length}/${maxLength.topic})`,
-        detail: `(${question.detail.length}/${maxLength.detail})`
-    })
+    const [ topic, setTopic ] = useState('')
+    const [ detail, setDetail ] = useState('')
 
-    const [ error, setError ] = useState({
-        topic: false,
-        detail: false
-    })
+    const [ messageTopic, setMessageTopic ] = useState(`(0/${maxLengthTopic})`)
+    const [ messageDetail, setMessageDetail ] = useState(`(0/${maxLengthDetail})`)
 
-    const handleChange = (event) => {
+    const [ errorTopic, setErrorTopic ] = useState(false)
+    const [ errorDetail, setErrorDetail ] = useState(false)
 
-        const { id, value } = event.target
-
-        if (value.length <= maxLength[id]) {
-
-            setQuestion({ ...question, [id]: value })
-            const newMessage = `(${value.length}/${maxLength[id]})`
-            setMessage({ ...message, [id]: newMessage })
-            setError({ topic: false, detail: false })
-        
+    const handleChangeTopic = (event) => {
+        if (event.target.value.length <= maxLengthTopic) {
+            setTopic(event.target.value)
+            setMessageTopic(`(${event.target.value.length}/${maxLengthTopic})`)
+            setErrorTopic(false)
         } else {
-            setMessage({ ...message, [id]: `(${question[id].length}/${maxLength[id]}) over max length` })
-            setError({ ...error, [id]: true })
-        }   
+            setMessageTopic(`(${topic.length}/${maxLengthTopic}) limit ${maxLengthTopic} character`)
+            setErrorTopic(true)
+        }
     }
 
-    const handleBlur = (event) => {
-        const { id, value } = event.target
-        const newMessage = `(${value.length}/${maxLength[id]})`
-        setMessage({ ...message, [id]: newMessage })
-        setError({ ...error, [id]: false })
+    const handleChangeDetail = (event) => {
+        if (event.target.value.length <= maxLengthDetail) {
+            setDetail(event.target.value)
+            setMessageDetail(`(${event.target.value.length}/${maxLengthDetail})`)
+            setErrorDetail(false)
+        } else {
+            setMessageDetail(`(${detail.length}/${maxLengthDetail}) limit ${maxLengthDetail} character`)
+            setErrorDetail(true)
+        }
     }
 
-    const createQuestionBoard = async () => {
+    const handleBlurTopic = () => {
+        setMessageTopic(`(${topic.length}/${maxLengthTopic})`)
+        setErrorTopic(false)
+    }
+
+    const handleBlurDetail = () => {
+        setMessageDetail(`(${detail.length}/${maxLengthDetail})`)
+        setErrorDetail(false)
+    }
+
+    const handleClickCreate = async () => {
         
-        if (question.topic.length === 0) {
-            setMessage({ ...message, topic: 'Topic is require' })
-            setError({ ...error, topic: true })
-            return
+        let isRequired = false
+
+        if (topic.length === 0) {
+            setMessageTopic(`(${topic.length}/${maxLengthTopic}) is required`)
+            setErrorTopic(true)
+            isRequired = true
         }
 
-        if (question.detail.length === 0) {
-            setMessage({ ...message, detail: 'Detail is require' })
-            setError({ ...error, detail: true })
-            return
+        if (detail.length === 0) {
+            setMessageDetail(`(${detail.length}/${maxLengthDetail}) is required`)
+            setErrorDetail(true)
+            isRequired = true
         }
+
+        if (isRequired) return
+
+        alert('create success')
 
         const payLoad = {
-            topic: question.topic,
-            detail: question.detail,
+            topic: topic,
+            detail: detail
         }
-        const response = await axiosPrivate.post(URL_QUESTION_BOARD_CREATE, payLoad)
-            .then(res => res)
-            .catch(err => err.response)
+        const response = await apiPrivate.post(axiosPrivate, URL_QUESTION_BOARD_CREATE, payLoad)
 
         if (response.status === 201) {
             onCreateSuccess()
         } else {
-            alert('Create fail, please try again.')
+            alert('Error, please try again')
         }
     }
 
     return (
-        <Paper sx={{ padding: 3 }}>
+        <Paper sx={{ p: 3 }}>
             <TextField
                 id="topic"
                 label="Topic"
@@ -99,11 +106,11 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 required 
                 fullWidth
                 multiline
-                value={question.topic}
-                helperText={message.topic}
-                error={error.topic}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                value={topic}
+                onChange={handleChangeTopic}
+                helperText={messageTopic}
+                error={errorTopic}
+                onBlur={handleBlurTopic}
             />
             <TextField
                 id="detail"
@@ -113,15 +120,14 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 required 
                 fullWidth
                 multiline
-                // rows={10}
-                value={question.detail}
-                helperText={message.detail}
-                error={error.detail}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                value={detail}
+                onChange={handleChangeDetail}
+                helperText={messageDetail}
+                error={errorDetail}
+                onBlur={handleBlurDetail}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Button variant='contained' onClick={createQuestionBoard}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
+                <Button variant='contained' sx={{ width: '20%' }} onClick={handleClickCreate}>
                     Create
                 </Button>
             </Box>
