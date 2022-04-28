@@ -20,6 +20,9 @@ public class InstructorController {
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
+
+
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
     URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/instructors/course").toUriString());
@@ -66,17 +69,20 @@ public class InstructorController {
                                                   @RequestBody HashMap<String, Object> requestData,
                                                   Principal principal) {
     try {
+
       String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseVideo(courseId,
-          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))) ,
+          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
           Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
           (String) requestData.get("fileName"),
           principal.getName());
+
       HashMap<String, String> preauthenticatedRequest = new HashMap<>();
       preauthenticatedRequest.put("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
       URI uri = URI.create(ServletUriComponentsBuilder
           .fromCurrentContextPath()
           .path("/api/instructors/incomplete-courses/video/pre-authenticated-request")
           .toUriString());
+
       return ResponseEntity.created(uri).body(preauthenticatedRequest);
     } catch (Exception exception) {
       if (exception.getMessage().equals("Invalid file type")) {
@@ -84,6 +90,40 @@ public class InstructorController {
       } else {
         return ResponseEntity.badRequest().body(exception.getMessage());
       }
+    }
+  }
+
+  @PostMapping(path = "/incomplete-courses/handout/pre-authenticated-request")
+  public ResponseEntity<?> createParToCreateHandout(@RequestParam(name = "id") Long courseId,
+                                                    @RequestBody HashMap<String, Object> requestData,
+                                                    Principal principal) {
+    try {
+      String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseHandout(courseId,
+          Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
+          Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
+          (String) requestData.get("fileName"),
+          principal.getName());
+      HashMap<String, String> preauthenticatedRequest = new HashMap<>();
+      preauthenticatedRequest.put("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
+      URI uri = URI.create(ServletUriComponentsBuilder
+          .fromCurrentContextPath()
+          .path("/api/instructors/incomplete-courses/handout/pre-authenticated-request")
+          .toUriString());
+      return ResponseEntity.created(uri).body(preauthenticatedRequest);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @DeleteMapping(path = "/incomplete-courses/handout")
+  public ResponseEntity<?> deleteHandout(@RequestParam(name = "id") Long courseId,
+                                         @RequestParam(name = "objectName") String objectName,
+                                         Principal principal) {
+    try {
+      privateObjectStorageService.deleteHandout(courseId, objectName, principal.getName());
+      return ResponseEntity.noContent().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
     }
   }
 
@@ -113,6 +153,16 @@ public class InstructorController {
           .path("/api/instructors/incomplete-courses/video")
           .toUriString());
       instructorService.updateCourseMaterials(courseId, course, principal.getName());
+      return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @PutMapping(path = "/incomplete-courses/submission")
+  public ResponseEntity<?> submitIncompleteCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+    try {
+      instructorService.submitIncompleteCourse(courseId, principal.getName());
       return ResponseEntity.ok().build();
     } catch (Exception exception) {
       return ResponseEntity.notFound().build();

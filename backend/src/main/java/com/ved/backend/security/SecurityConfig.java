@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overview/**",
             "/api/course/**",
             "/api/students/**"
-          )
+        )
         .permitAll();
 
     http.authorizeRequests()
@@ -65,16 +65,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers(POST, "/api/instructors/course/**",
             "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**",
-            "/api/instructors/incomplete-courses/video/pre-authenticated-request/**")
+            "/api/instructors/incomplete-courses/video/pre-authenticated-request/**",
+            "/api/instructors/incomplete-courses/handout/pre-authenticated-request/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
-            "/api/instructors/incomplete-courses/chapters/**")
+            "/api/instructors/incomplete-courses/chapters/**",
+            "/api/instructors/incomplete-courses/submission/**")
         .hasAnyAuthority("INSTRUCTOR");
+
     http.authorizeRequests()
-            .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**")
-            .hasAnyAuthority("INSTRUCTOR");
+        .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**",
+            "/api/instructors/incomplete-courses/handout/**")
+        .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .anyRequest()
@@ -101,7 +105,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-
 
 
   public SecurityConfig(final UserDetailsService userDetailsService, final BCryptPasswordEncoder bCryptPasswordEncoder) {

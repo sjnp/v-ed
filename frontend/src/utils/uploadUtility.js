@@ -20,7 +20,12 @@ const createMultipartUploadUri = async (parUrl) => {
 }
 
 const splitFile = (newFile) => {
-  const chunkSize = 1024 * 1024;
+  // if file size is less than 1 GB, then chunk size is 1 MB,
+  // else chunk size is 5 MB.
+  let chunkSize = 1024 * 1024;
+  if (newFile.size / 1024 / 1024 > 1000) {
+    chunkSize = 5 * chunkSize;
+  }
   const chunks = [];
   for (let start = 0; start < newFile.size; start += chunkSize) {
     const chunk = newFile.slice(start, start + chunkSize);
@@ -31,8 +36,13 @@ const splitFile = (newFile) => {
   return chunks;
 }
 
+const commit = async (url) => {
+  await axios.post(url).then(() => true).catch(() => false)
+}
+
 export const uploadUtility = {
   createPreauthenticatedRequestForCourse,
   splitFile,
-  createMultipartUploadUri
+  createMultipartUploadUri,
+  commit
 }
