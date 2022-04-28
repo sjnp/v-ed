@@ -88,6 +88,19 @@ public class InstructorServiceImpl implements InstructorService {
     courseRepo.save(incompleteCourse);
   }
 
+  @Override
+  public void submitIncompleteCourse(Long courseId, String username) {
+    log.info("Submitting course from instructor: {}", username);
+    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
+    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
+      throw new RuntimeException("Course not found");
+    }
+    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
+    incompleteCourse.setCourseState(courseStateRepo.findByName("PENDING"));
+    courseRepo.save(incompleteCourse);
+  }
+
 
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
     this.appUserRepo = appUserRepo;

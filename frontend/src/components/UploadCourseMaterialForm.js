@@ -6,8 +6,9 @@ import {URL_GET_CREATED_COURSE} from "../utils/url";
 import {useDispatch} from "react-redux";
 import {setChapters, setName, setPictureUrl, setPrice} from "../features/createdCourseSlice";
 import UploadCoursePictureUrlForm from "./UploadCoursePictureUrlForm";
-import UploadCourseVideoForm from "./UploadCourseVideoForm";
+import UploadVideoAndHandoutForm from "./UploadVideoAndHandoutForm";
 import {useLocation, useNavigate} from "react-router-dom";
+import UploadCourseConfirmationForm from "./UploadCourseConfirmationForm";
 
 const UploadCourseMaterialForm = (props) => {
 
@@ -35,8 +36,8 @@ const UploadCourseMaterialForm = (props) => {
 
   const steps = [
     'Course Picture',
-    'Course Videos',
-    'Study Materials',
+    'Course Videos & Handouts',
+    'Confirmation'
   ]
 
   const [activeStep, setActiveStep] = useState(0);
@@ -53,11 +54,9 @@ const UploadCourseMaterialForm = (props) => {
       case 0:
         return <UploadCoursePictureUrlForm courseId={courseId} handleNext={handleNext}/>;
       case 1:
-        return <UploadCourseVideoForm courseId={courseId} handleNext={handleNext} handleBack={handleBack}/>;
+        return <UploadVideoAndHandoutForm courseId={courseId} handleNext={handleNext} handleBack={handleBack}/>;
       case 2:
-        return
-      case 3:
-        return
+        return <UploadCourseConfirmationForm courseId={courseId} handleBack={handleBack} />
       default:
         throw new Error('Unknown step');
     }

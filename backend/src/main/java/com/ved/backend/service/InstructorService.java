@@ -10,4 +10,5 @@ public interface InstructorService {
   String saveCoursePictureUrl(Long courseId, String objectName, String username);
   void updateCourseMaterials(Long courseId, Course course, String username);
   void deleteCoursePictureUrl(Long courseId, String username);
+  void submitIncompleteCourse(Long courseId, String username);
 }

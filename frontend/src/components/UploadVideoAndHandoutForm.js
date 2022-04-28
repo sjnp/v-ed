@@ -1,10 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  Chip, CircularProgress,
+  Chip, CircularProgress, Divider,
   Input, Modal,
   Paper,
   Stack,
@@ -17,14 +18,18 @@ import {
   Typography
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorIcon from '@mui/icons-material/Error';
 import AddIcon from '@mui/icons-material/Add';
 import CancelIcon from '@mui/icons-material/Cancel';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import React, {useEffect, useState} from "react";
 import Button from "@mui/material/Button";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {
-  URL_COURSE_HANDOUT,
+  URL_INCOMPLETE_COURSE_HANDOUT,
   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT,
   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
   URL_UPDATE_COURSE_MATERIAL
@@ -36,7 +41,7 @@ import {uploadUtility} from "../utils/uploadUtility.js";
 import ReactPlayer from "react-player";
 import {deleteUtility} from "../utils/deleteUtility";
 
-const UploadCourseVideoForm = (props) => {
+const UploadVideoAndHandoutForm = (props) => {
 
   const {courseId, handleNext, handleBack} = props;
 
@@ -45,6 +50,8 @@ const UploadCourseVideoForm = (props) => {
 
   const createdCourseChapters = useSelector((state) => state.createdCourse.value.chapters);
 
+  const [isLoadingVideo, setIsLoadingVideo] = useState(Array(createdCourseChapters.length).fill(false));
+  const [isLoadingHandout, setIsLoadingHandout] = useState(Array(createdCourseChapters.length).fill(false));
   const [expanded, setExpanded] = useState(false);
   const [courseVideoUrl, setCourseVideoUrl] = useState("");
   const [openVideoModal, setOpenVideoModal] = useState(false);
@@ -56,6 +63,7 @@ const UploadCourseVideoForm = (props) => {
           file: null,
           progress: 0,
           isLoading: false,
+          isDeleting: false,
           isSuccess: !!section.videoUri,
           isError: false
         }
@@ -70,6 +78,7 @@ const UploadCourseVideoForm = (props) => {
               objectName: handout.handoutUri,
               progress: 0,
               isLoading: false,
+              isDeleting: false,
               isSuccess: !!handout.handoutUri,
               isError: false
             }
@@ -95,6 +104,25 @@ const UploadCourseVideoForm = (props) => {
     updateChapters().then(res => console.log(createdCourseChapters))
 
   }, [axiosPrivate, courseId, createdCourseChapters]);
+
+  useEffect(() => {
+    if (sectionVideoUploadStates) {
+      const newIsLoading = sectionVideoUploadStates
+        .map(chapter => chapter
+          .some(section => section.isLoading || section.isDeleting));
+      setIsLoadingVideo(newIsLoading);
+    }
+  }, [sectionVideoUploadStates]);
+
+  useEffect(() => {
+    if (sectionHandoutUploadStates) {
+      const newIsLoading = sectionHandoutUploadStates
+        .map(chapter => chapter
+          .some(section => section
+            .some(handout => handout.isLoading || handout.isDeleting)));
+      setIsLoadingHandout(newIsLoading);
+    }
+  }, [sectionHandoutUploadStates])
 
   const handleExpandChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -221,6 +249,7 @@ const UploadCourseVideoForm = (props) => {
           objectName: null,
           progress: 0,
           isLoading: true,
+          isDeleting: false,
           isSuccess: false,
           isError: false
         }
@@ -249,6 +278,7 @@ const UploadCourseVideoForm = (props) => {
         console.error(err);
       }
     }
+    event.target.value = null;
   }
 
   const multipartHandoutUpload = async (chapterIndex, sectionIndex, handoutIndex, chunks, multipartUploadUri) => {
@@ -295,13 +325,23 @@ const UploadCourseVideoForm = (props) => {
 
   const deleteCourseHandoutMaterials = (handout, chapterIndex, sectionIndex) => async () => {
     try {
-      await deleteUtility.deleteCourseHandout(
-        axiosPrivate,
-        URL_COURSE_HANDOUT,
-        courseId,
-        handout.objectName
-      );
-      console.log(`Delete success: ${handout.objectName}`)
+      // const newIsUploading = [...isUploading];
+      // newIsUploading[chapterIndex] = true;
+      // console.log(newIsUploading);
+      // setIsUploading(newIsUploading);
+      let newSectionHandoutUploadStates = [...sectionHandoutUploadStates];
+      const handoutIndex = newSectionHandoutUploadStates[chapterIndex][sectionIndex].findIndex(item => item.objectName === handout.objectName);
+      if (handoutIndex !== -1) {
+        newSectionHandoutUploadStates[chapterIndex][sectionIndex][handoutIndex].isDeleting = true;
+        setSectionHandoutUploadStates(newSectionHandoutUploadStates);
+        await deleteUtility.deleteCourseHandout(
+          axiosPrivate,
+          URL_INCOMPLETE_COURSE_HANDOUT,
+          courseId,
+          handout.objectName
+        );
+        console.log(`Delete success: ${handout.objectName}`)
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -314,11 +354,27 @@ const UploadCourseVideoForm = (props) => {
         sectionIndex: sectionIndex,
         handoutUri: handout.objectName
       }));
+      // const newIsUploading = [...isUploading];
+      // newIsUploading[chapterIndex] = false;
+      // console.log(newIsUploading);
+      // setIsUploading(newIsUploading);
     }
   }
 
   const handleBackOnClick = () => {
     handleBack();
+  }
+
+  const handleSubmit = async () => {
+    if (createdCourseChapters.some(chapter => chapter.sections.some(section => !!section.videoUri === false)) === false) {
+      try {
+        await axiosPrivate.put(`${URL_UPDATE_COURSE_MATERIAL}?id=${courseId}`,
+          {chapters: createdCourseChapters})
+        handleNext();
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   return (<>
@@ -332,9 +388,19 @@ const UploadCourseVideoForm = (props) => {
       }}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-        <Typography component='h3' variant='h6'>
-          Chapter {chapterIndex + 1} : {chapter.name}
-        </Typography>
+        <Stack direction='row' alignItems='center' spacing={1}>
+          <Typography component='h3' variant='h6'>
+            Chapter {chapterIndex + 1} : {chapter.name}
+          </Typography>
+
+          {(isLoadingVideo[chapterIndex] || isLoadingHandout[chapterIndex]) && <CircularProgress size='1.5em'/>}
+          {(!isLoadingVideo[chapterIndex] && !isLoadingHandout[chapterIndex])
+            ? chapter.sections.some(section => !!section.videoUri === false)
+              ? <ErrorIcon color="primary"/>
+              : <CheckCircleIcon sx={{color: 'grey.400'}}/>
+            : null
+          }
+        </Stack>
       </AccordionSummary>
       <AccordionDetails>
         <TableContainer component={Paper}>
@@ -422,7 +488,6 @@ const UploadCourseVideoForm = (props) => {
                               >
                                 <CircularProgress size='5em' color="inherit"/>
                               </Box>
-
                             }
                             <ReactPlayer
                               url={courseVideoUrl}
@@ -434,9 +499,7 @@ const UploadCourseVideoForm = (props) => {
                           </Box>
                         </Modal>
                       </>
-
                     }
-
                   </TableCell>
                   <TableCell>
                     <Stack spacing={1} alignItems='flex-start'>
@@ -468,47 +531,52 @@ const UploadCourseVideoForm = (props) => {
                             deleteIcon={<CancelIcon/>}
                           />
                         ))}
-                      {sectionHandoutUploadStates[chapterIndex][sectionIndex]
-                        .filter((handout) => handout.isLoading)
-                        .map((handout, handoutIndex) => (
+                    </Stack>
+                    {sectionHandoutUploadStates[chapterIndex][sectionIndex]
+                      .filter((handout) => handout.isLoading)
+                      .map((handout, handoutIndex) => (
+                        <Stack sx={{mt: 1}} key={handoutIndex} spacing={1} alignItems='stretch'>
+                          <Divider/>
                           <LinearProgressWithLabel
-                            key={handoutIndex}
+                            sx={{mt: 3}}
                             value={handout.progress}
                             fileName={handout.file.name}
                           />
-                        ))
-                      }
-                    </Stack>
+                        </Stack>
+                      ))
+                    }
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
-
           </Table>
         </TableContainer>
       </AccordionDetails>
-
     </Accordion>))}
-    <Button
-      variant='contained'
-      size='large'
-      onClick={() => {
-        console.log(sectionVideoUploadStates)
-        console.log(sectionHandoutUploadStates)
-        console.log(createdCourseChapters)
-      }}
-      sx={{mt: 2}}
-    >
-      Show all
-    </Button>
-    <Button
-      size='large'
-      onClick={handleBackOnClick}
-      sx={{mt: 2}}
-    >
-      Back
-    </Button>
+    <Stack spacing={2} direction='row' sx={{mt: 2}}>
+      <LoadingButton
+        variant='contained'
+        size='large'
+        onClick={handleSubmit}
+        loading={isLoadingVideo.some(state => state === true) || isLoadingHandout.some(state => state === true)}
+        loadingPosition="start"
+        startIcon={<CloudUploadIcon/>}
+        disabled={createdCourseChapters.some(chapter => chapter.sections.some(section => !!section.videoUri === false))}
+      >
+        Submit
+      </LoadingButton>
+      <LoadingButton
+        size='large'
+        variant='outlined'
+        onClick={handleBackOnClick}
+        loading={isLoadingVideo.some(state => state === true) || isLoadingHandout.some(state => state === true)}
+        loadingPosition="start"
+        startIcon={<ArrowBackIcon/>}
+      >
+        Back
+      </LoadingButton>
+    </Stack>
   </>);
 }
 
-export default UploadCourseVideoForm;
+export default UploadVideoAndHandoutForm;
