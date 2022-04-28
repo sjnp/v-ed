@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
 // Material UI
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
+// url
+import { URL_QUESTION_BOARD_CREATE } from '../utils/url';
+
 const QuestionCreate = ({ onCreateSuccess }) => {
 
+    const axiosPrivate = useAxiosPrivate()
+
     const maxLength = {
-        topic: 2,
-        detail: 10
+        topic: 200,
+        detail: 1000
     }
 
     const [ question, setQuestion ] = useState({
@@ -52,7 +60,7 @@ const QuestionCreate = ({ onCreateSuccess }) => {
         setError({ ...error, [id]: false })
     }
 
-    const createQuestionBoard = () => {
+    const createQuestionBoard = async () => {
         
         if (question.topic.length === 0) {
             setMessage({ ...message, topic: 'Topic is require' })
@@ -66,8 +74,19 @@ const QuestionCreate = ({ onCreateSuccess }) => {
             return
         }
 
-        console.log(typeof onCreateSuccess)
-        onCreateSuccess()
+        const payLoad = {
+            topic: question.topic,
+            detail: question.detail,
+        }
+        const response = await axiosPrivate.post(URL_QUESTION_BOARD_CREATE, payLoad)
+            .then(res => res)
+            .catch(err => err.response)
+
+        if (response.status === 201) {
+            onCreateSuccess()
+        } else {
+            alert('Create fail, please try again.')
+        }
     }
 
     return (
@@ -79,6 +98,7 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 margin="normal"
                 required 
                 fullWidth
+                multiline
                 value={question.topic}
                 helperText={message.topic}
                 error={error.topic}
@@ -93,7 +113,7 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 required 
                 fullWidth
                 multiline
-                rows={10}
+                // rows={10}
                 value={question.detail}
                 helperText={message.detail}
                 error={error.detail}

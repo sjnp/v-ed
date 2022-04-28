@@ -16,17 +16,15 @@ import IconButton from '@mui/material/IconButton'
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 
-
 const CourseQuestion = () => {
 
+    const axiosPrivate = useAxiosPrivate()
+
     const handleClickQuestionCard = (item) => {
-        setQuestionBoardElement(
-            <QuestionBoard
-                
-            />
-        )
+        setQuestionBoardElement(<QuestionBoard />)
         setHideAddButton(true)
         setHideArrowBackIcon(false)
+        setQuestionLabel('Question board')
     }
 
     const getListQuestionBoard = () => {
@@ -78,27 +76,31 @@ const CourseQuestion = () => {
         setQuestionBoardElement(<QuestionCreate onCreateSuccess={handleCreateSuccess} />)
         setHideAddButton(true)
         setHideArrowBackIcon(false)
+        setQuestionLabel('Create Question')
     }
 
     const handleClickArrowBack = () => {
         setQuestionBoardElement(listQuestionBorad)
         setHideAddButton(false)
         setHideArrowBackIcon(true)
+        setQuestionLabel('All question board')
     }
 
     const handleCreateSuccess = () => {
         handleClickArrowBack()
     }
 
+    const [ questionLabel, setQuestionLabel ] = useState('All question board')
+
     return (
         <Box>
             <Grid container>
-                <Grid item xs={2}>
+                <Grid item xs={10}>
                     <Typography variant='h6'>
-                        Question board
+                        {questionLabel}
                     </Typography>
                 </Grid>
-                <Grid item xs={8}></Grid>
+                {/* <Grid item xs={8}></Grid> */}
                 <Grid item xs={2}>
                     <Box hidden={hideAddButton}>
                         <Fab size="small" color="primary" onClick={handleClickCreate}>
@@ -107,7 +109,7 @@ const CourseQuestion = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Box hidden={hideArrowBackIcon}>
+            <Box hidden={hideArrowBackIcon} sx={{ mb: 1 }} >
                 <IconButton onClick={handleClickArrowBack}>
                     <ArrowBackIcon />
                 </IconButton>

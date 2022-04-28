@@ -36,8 +36,6 @@ const QuestionBoard = () => {
 
     return (
         <Box>
-            Question board
-
             <QuestionTopic />
             <QuestionComment />
         </Box>
