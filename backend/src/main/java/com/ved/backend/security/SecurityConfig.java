@@ -82,6 +82,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
+        .antMatchers(GET, "/api/admins/pending-courses/**")
+        .hasAnyAuthority("ADMIN");
+
+    http.authorizeRequests()
         .anyRequest()
         .authenticated();
     http.addFilter(customAuthenticationFilter);
