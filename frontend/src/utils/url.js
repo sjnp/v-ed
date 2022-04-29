@@ -30,3 +30,7 @@ export const URL_COURSE_VIDEO = '/api/course/video/'
 // assignment
 export const URL_ASSIGNMENT_UPLOAD_ANSWER = '/api/assignment/answer/upload'
 export const URL_ASSIGNMENT_ANSWER_SAVE = '/api/assignment/answer/save'
+
+// question board
+export const URL_QUESTION_BOARD_CREATE = '/api/question-board/create'
+export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
