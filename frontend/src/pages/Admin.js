@@ -3,13 +3,13 @@ import AppBarHeader from "../components/AppBarHeader";
 import Tabs from "@mui/material/Tabs";
 import {useState} from "react";
 import Tab from "@mui/material/Tab";
-import PendingCourses from "../components/PendingCourses";
+import PendingCourseList from "../components/PendingCourseList";
 
 const Admin = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const tabs = [
-    {label: 'Course', children: <PendingCourses/>},
+    {label: 'Course', children: <PendingCourseList/>},
     {
       label: 'Report', children: <div><Typography>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. In congue placerat risus. Proin at volutpat ligula.
