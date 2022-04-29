@@ -1,6 +1,7 @@
 package com.ved.backend.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.ved.backend.exception.MyException;
 import com.ved.backend.model.QuestionBoard;
@@ -18,7 +19,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         this.questionBoardRepo = questionBoardRepo;
     }
 
-    public void create(QuestionBoard questionBorad) {
+    public QuestionBoard create(QuestionBoard questionBorad) {
 
         if (questionBorad.getTopic().length() == 0) {
             throw new MyException("question.board.topic.empty", HttpStatus.BAD_REQUEST);
@@ -31,8 +32,12 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBorad.setCreatedDateTime(LocalDateTime.now());
         questionBorad.setIsVisible(true);
 
-        questionBoardRepo.save(questionBorad);
+        return questionBoardRepo.save(questionBorad);
+    }
+
+    public List<QuestionBoard> getQuestionAll() {
+        
+        return questionBoardRepo.findAll();
     }
     
-
 }

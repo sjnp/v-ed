@@ -1,15 +1,13 @@
 import React from 'react'
 
-// Material UI
+// Material UI component
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 
-// icon
-import CommentIcon from '@mui/icons-material/Comment';
-import MessageIcon from '@mui/icons-material/Message';
+// Material UI icon
+import CommentIcon from '@mui/icons-material/Comment'
 
 const QuestionCard = ({ topic, datetime, comment, onClickQuestionCard }) => {
     
@@ -22,7 +20,7 @@ const QuestionCard = ({ topic, datetime, comment, onClickQuestionCard }) => {
                     </Box>
                 </Grid>
                 <Grid item xs={1}>
-                    <CommentIcon />
+                    <CommentIcon sx={{ mr: 1 }}/>
                     {comment}
                 </Grid>
                 <Grid item>

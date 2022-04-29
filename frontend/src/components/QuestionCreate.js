@@ -81,8 +81,6 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
         if (isRequired) return
 
-        alert('create success')
-
         const payLoad = {
             topic: topic,
             detail: detail
@@ -90,7 +88,7 @@ const QuestionCreate = ({ onCreateSuccess }) => {
         const response = await apiPrivate.post(axiosPrivate, URL_QUESTION_BOARD_CREATE, payLoad)
 
         if (response.status === 201) {
-            onCreateSuccess()
+            onCreateSuccess(response.data)
         } else {
             alert('Error, please try again')
         }

@@ -6,6 +6,7 @@ import createdCourseReducer from '../features/createdCourseSlice'
 import studentCourseReducer from '../features/studentCourseSlice'
 import videoCourseReducer from '../features/videoCourseSlice'
 import studentAssignmentReducer from '../features/studentAssignmentSlice'
+import questionBoardReducer from '../features/questionBoardSlice'
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     createdCourse: createdCourseReducer,
     studentCourse: studentCourseReducer,
     videoCourse: videoCourseReducer,
-    studentAssignment: studentAssignmentReducer
+    studentAssignment: studentAssignmentReducer,
+    questionBoard: questionBoardReducer
   }
 })

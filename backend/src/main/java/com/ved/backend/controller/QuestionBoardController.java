@@ -1,10 +1,13 @@
 package com.ved.backend.controller;
 
+import java.util.List;
+
 import com.ved.backend.model.QuestionBoard;
 import com.ved.backend.service.QuestionBoardService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +24,15 @@ public class QuestionBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createQuestion(@RequestBody QuestionBoard questionBoard ) {
-        questionBoardService.create(questionBoard);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<QuestionBoard> createQuestion(@RequestBody QuestionBoard questionBoard) {
+        QuestionBoard response = questionBoardService.create(questionBoard);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/question/all")
+    public ResponseEntity<List<QuestionBoard>> getQuestionAll() {
+        List<QuestionBoard> response = questionBoardService.getQuestionAll();
+        return ResponseEntity.ok().body(response);
     }
 
 }
