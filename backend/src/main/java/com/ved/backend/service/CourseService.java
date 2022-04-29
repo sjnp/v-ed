@@ -10,5 +10,7 @@ import java.util.Map;
 public interface CourseService {
  
     public CourseResponse getCourse(Long courseId);
-    public List<Map<String,Object>> getPendingCourse();
+    public List<Map<String,Object>> getPendingCourses();
+
+    Map<String, Object> getPendingCourse(Long courseId);
 }

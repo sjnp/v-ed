@@ -1,4 +1,5 @@
 import {
+  Button,
   CircularProgress,
   Paper,
   Stack,
@@ -14,7 +15,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {useNavigate} from "react-router-dom";
 import {URL_GET_PENDING_COURSES} from "../utils/url";
 
-const PendingCourses = () => {
+const PendingCourseList = () => {
 
   // const pendingCourses = [
   //   { instructorName: 'FirstName LastName', id: 5, name: 'Intro to CourseName'},
@@ -44,24 +45,29 @@ const PendingCourses = () => {
   return (<>
     <TableContainer component={Paper} variant='outlined'>
       <Table
-        // style={{tableLayout: 'fixed'}}
+        style={{tableLayout: 'fixed'}}
       >
         <TableHead>
           <TableRow>
             <TableCell>Instructor</TableCell>
             <TableCell>Course</TableCell>
+            <TableCell/>
           </TableRow>
         </TableHead>
         <TableBody>
           {pendingCourses.map((course => (
             <TableRow
-              style={{verticalAlign: 'top'}}
               key={course.id}
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
               hover
             >
               <TableCell component='th'>{course.instructorName}</TableCell>
               <TableCell>{course.name}</TableCell>
+              <TableCell align='right'>
+                <Button variant='contained' onClick={() => {navigate(`/admin/pending-course/${course.id}`)}}>
+                  Review
+                </Button>
+              </TableCell>
             </TableRow>
           )))}
         </TableBody>
@@ -70,4 +76,4 @@ const PendingCourses = () => {
   </>)
 }
 
-export default PendingCourses;
+export default PendingCourseList;

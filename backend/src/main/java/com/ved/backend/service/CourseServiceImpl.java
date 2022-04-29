@@ -32,7 +32,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Map<String,Object>> getPendingCourse() {
+    public List<Map<String,Object>> getPendingCourses() {
         CourseState pendingState = courseStateRepo.findByName("PENDING");
         List<Course> pendingCourses = courseRepo.findCoursesByCourseState(pendingState);
         List<Map<String,Object>> pendingCoursesJson = new ArrayList<>();
@@ -45,6 +45,33 @@ public class CourseServiceImpl implements CourseService {
             pendingCoursesJson.add(courseJson);
         }
         return pendingCoursesJson;
+    }
+
+    @Override
+    public Map<String, Object> getPendingCourse(Long courseId) {
+        CourseState pendingState = courseStateRepo.findByName("PENDING");
+        try {
+            Course course = courseRepo.findCourseByCourseStateAndId(pendingState, courseId);
+            Map<String, Object> courseJson = new HashMap<>();
+            courseJson.put("name", course.getName());
+            courseJson.put("price", course.getPrice());
+            courseJson.put("pictureUrl", course.getPictureUrl());
+            Map<String, Object> instructorInfo = new HashMap<>();
+            Student student = course.getInstructor().getStudent();
+            instructorInfo.put("firstName", student.getFirstName());
+            instructorInfo.put("lastName", student.getLastName());
+            instructorInfo.put("biography", student.getBiography());
+            instructorInfo.put("occupation", student.getOccupation());
+            instructorInfo.put("profilePicUri", student.getProfilePicUri());
+            courseJson.put("instructorInfo" , instructorInfo);
+            courseJson.put("category", course.getCategory().getName());
+            courseJson.put("requirement", course.getRequirement());
+            courseJson.put("overview", course.getOverview());
+            courseJson.put("chapters", course.getChapters());
+            return courseJson;
+        } catch (Exception exception) {
+            throw new RuntimeException("Course not found");
+        }
     }
 
     public CourseServiceImpl(CourseRepo courseRepo, CourseStateRepo courseStateRepo) {

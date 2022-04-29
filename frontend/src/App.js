@@ -19,6 +19,7 @@ import AccountManage from './pages/AccountManage';
 import VideoCourse from './pages/VideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
+import PendingCourse from "./pages/PendingCourse";
 
 // import Logout from './pages/Logout';
 function App() {
@@ -61,6 +62,7 @@ function App() {
         </Route>
         <Route element={<RequireAuth allowRoles={["ADMIN"]}/>}>
           <Route path='admin' element={<Admin/>}/>
+          <Route path='admin/pending-course/:courseId' element={<PendingCourse/>}/>
         </Route>
       </Route>
 
