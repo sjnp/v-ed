@@ -64,7 +64,7 @@ const CourseQuestion = () => {
             <QuestionCard 
                 key={index}
                 topic={item.topic}
-                datetime={moment(item.createdDateTime).format("DD/MM/YYYY | kk:mm:ss")}
+                datetime={moment(item.createDateTime).format("DD/MM/YYYY | kk:mm:ss")}
                 comment={0}
                 onClickQuestionCard={() => handleClickQuestionCard(item)}
             />

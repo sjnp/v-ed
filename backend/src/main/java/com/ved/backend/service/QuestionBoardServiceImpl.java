@@ -29,8 +29,8 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             throw new MyException("question.board.detail.empty", HttpStatus.BAD_REQUEST);
         }
 
-        questionBorad.setCreatedDateTime(LocalDateTime.now());
-        questionBorad.setIsVisible(true);
+        questionBorad.setVisible(true);
+        questionBorad.setCreateDateTime(LocalDateTime.now());
 
         return questionBoardRepo.save(questionBorad);
     }

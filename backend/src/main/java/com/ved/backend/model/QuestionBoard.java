@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import static javax.persistence.GenerationType.AUTO;
 
 import java.time.LocalDateTime;
@@ -13,24 +14,33 @@ import javax.persistence.Column;
 @Entity
 @Table
 public class QuestionBoard {
-    
+
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String topic;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String detail;
 
     @Column(nullable = false)
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createDateTime;
 
-    @Column(nullable = true)
-    private boolean isVisible;
+    @Column(nullable = false)
+    private Boolean visible;
 
-    public QuestionBoard() {}
+    public QuestionBoard() {
+    }
+
+    public QuestionBoard(Long id, String topic, String detail, LocalDateTime createDateTime, Boolean visible) {
+        this.id = id;
+        this.topic = topic;
+        this.detail = detail;
+        this.createDateTime = createDateTime;
+        this.visible = visible;
+    }
 
     public Long getId() {
         return id;
@@ -56,20 +66,20 @@ public class QuestionBoard {
         this.detail = detail;
     }
 
-    public LocalDateTime getCreatedDateTime() {
-        return createdDateTime;
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
     }
 
-    public void setCreatedDateTime(LocalDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
     }
 
-    public boolean getIsVisible() {
-        return isVisible;
+    public Boolean getVisible() {
+        return visible;
     }
 
-    public void setIsVisible(boolean isVisible) {
-        this.isVisible = isVisible;
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
     }
 
 }
