@@ -88,7 +88,7 @@ public class InstructorController {
       if (exception.getMessage().equals("Invalid file type")) {
         return ResponseEntity.badRequest().body(exception.getMessage());
       } else {
-        return ResponseEntity.badRequest().body(exception.getMessage());
+        return ResponseEntity.notFound().build();
       }
     }
   }
