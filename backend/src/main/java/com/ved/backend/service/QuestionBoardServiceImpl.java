@@ -8,7 +8,10 @@ import javax.transaction.Transactional;
 
 import com.ved.backend.exception.MyException;
 import com.ved.backend.model.QuestionBoard;
+import com.ved.backend.model.Student;
+import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.QuestionBoardRepo;
+import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.response.QuestionBoardResponse;
 
 import org.springframework.http.HttpStatus;
@@ -19,10 +22,17 @@ import org.springframework.stereotype.Service;
 public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     private final QuestionBoardRepo questionBoardRepo;
-    
+    private final AppUserRepo appUserRepo;
+    private final StudentRepo studentRepo;
  
-    public QuestionBoardServiceImpl(QuestionBoardRepo questionBoardRepo) {
+    public QuestionBoardServiceImpl(
+        QuestionBoardRepo questionBoardRepo, 
+        AppUserRepo appUserRepo, 
+        StudentRepo studentRepo
+    ) {
         this.questionBoardRepo = questionBoardRepo;
+        this.appUserRepo = appUserRepo;
+        this.studentRepo = studentRepo;
     }
 
     public QuestionBoardResponse create(QuestionBoard questionBorad, String username) {
@@ -35,11 +45,15 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             throw new MyException("question.board.detail.empty", HttpStatus.BAD_REQUEST);
         }
 
-
+        Student student = appUserRepo.findByUsername(username).getStudent();
 
         questionBorad.setVisible(true);
         questionBorad.setCreateDateTime(LocalDateTime.now());
+        questionBorad.setStudent(student);
 
+        student.getQuestionBoards().add(questionBorad);
+
+        studentRepo.save(student);
         QuestionBoard questionBoard = questionBoardRepo.save(questionBorad);
 
         return new QuestionBoardResponse(questionBoard);

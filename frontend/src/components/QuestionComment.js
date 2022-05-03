@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 
 // component
 import Report from './Report'
@@ -37,7 +38,7 @@ const QuestionComment = ({ data }) => {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant='caption' color="text.secondary">
-                            {commentDateTime}
+                            {moment(commentDateTime).format("DD/MM/YYYY | kk:mm:ss")}
                         </Typography>
                     </Grid>
                 </Grid>
