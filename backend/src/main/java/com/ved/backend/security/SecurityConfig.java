@@ -51,7 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overview/**",
             "/api/course/**",
             "/api/students/**",
-            "/api/question-board/**"
+            "/api/question-board/**",
+            "/api/comment/**"
         )
         .permitAll();
 

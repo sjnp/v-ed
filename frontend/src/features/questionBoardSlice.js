@@ -5,6 +5,7 @@ const initialState = {
     topic: null,
     detail: null,
     datetime: null,
+    comments: []
 }
 
 export const questionBoardSlice = createSlice({
@@ -18,6 +19,7 @@ export const questionBoardSlice = createSlice({
             state.value.topic = action.payload.topic
             state.value.detail = action.payload.detail
             state.value.datetime = action.payload.datetime
+            state.value.comments = action.payload.comments
         },
         resetQuestionBoard: (state) => {
             state.value = initialState;

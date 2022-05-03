@@ -1,36 +1,71 @@
 package com.ved.backend.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import static javax.persistence.GenerationType.AUTO;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table
 public class QuestionBoard {
-    
+
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String topic;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String detail;
 
     @Column(nullable = false)
-    private LocalDateTime createdDateTime;
+    private LocalDateTime createDateTime;
 
-    @Column(nullable = true)
-    private boolean isVisible;
+    @Column(nullable = false)
+    private boolean visible;
 
-    public QuestionBoard() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinTable(name = "student_question_board",
+        joinColumns = { @JoinColumn(name = "question_board_id", referencedColumnName = "id") },
+        inverseJoinColumns = { @JoinColumn(name = "student_id", referencedColumnName = "id") })
+    private Student student;
+
+    @OneToMany(mappedBy = "questionBoard", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    public QuestionBoard() {
+    }
+
+    public QuestionBoard(
+        Long id, 
+        String topic, 
+        String detail, 
+        LocalDateTime createDateTime, 
+        boolean visible,
+        List<Comment> comments,
+        Student student
+    ) {
+        this.id = id;
+        this.topic = topic;
+        this.detail = detail;
+        this.createDateTime = createDateTime;
+        this.visible = visible;
+        this.comments = comments;
+        this.student = student;
+    }
 
     public Long getId() {
         return id;
@@ -56,20 +91,36 @@ public class QuestionBoard {
         this.detail = detail;
     }
 
-    public LocalDateTime getCreatedDateTime() {
-        return createdDateTime;
+    public LocalDateTime getCreateDateTime() {
+        return createDateTime;
     }
 
-    public void setCreatedDateTime(LocalDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setCreateDateTime(LocalDateTime createDateTime) {
+        this.createDateTime = createDateTime;
     }
 
-    public boolean getIsVisible() {
-        return isVisible;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public void setIsVisible(boolean isVisible) {
-        this.isVisible = isVisible;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
 }

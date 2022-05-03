@@ -3,6 +3,9 @@ package com.ved.backend.model;
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
+
+import java.util.List;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -27,6 +30,9 @@ public class Student {
 
   @OneToOne(mappedBy = "student")
   private AppUser appUser;
+
+  @OneToMany(mappedBy = "student")
+  private List<QuestionBoard> questionBoards;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
   @JoinTable(name = "student_instructor",
@@ -98,10 +104,28 @@ public class Student {
     this.instructor = instructor;
   }
 
+  public List<QuestionBoard> getQuestionBoards() {
+    return questionBoards;
+  }
+
+  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
+    this.questionBoards = questionBoards;
+  }
+
   public Student() {
   }
 
-  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser, Instructor instructor) {
+  public Student(
+    Long id, 
+    String firstName, 
+    String lastName, 
+    String occupation, 
+    String biography, 
+    String profilePicUri, 
+    AppUser appUser, 
+    Instructor instructor,
+    List<QuestionBoard> questionBoards
+  ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -110,6 +134,7 @@ public class Student {
     this.profilePicUri = profilePicUri;
     this.appUser = appUser;
     this.instructor = instructor;
+    this.questionBoards = questionBoards;
   }
 
 }
