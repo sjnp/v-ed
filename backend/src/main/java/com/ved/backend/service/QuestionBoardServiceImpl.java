@@ -1,16 +1,21 @@
 package com.ved.backend.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 import com.ved.backend.exception.MyException;
 import com.ved.backend.model.QuestionBoard;
 import com.ved.backend.repo.QuestionBoardRepo;
+import com.ved.backend.response.QuestionBoardResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     private final QuestionBoardRepo questionBoardRepo;
@@ -19,7 +24,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         this.questionBoardRepo = questionBoardRepo;
     }
 
-    public QuestionBoard create(QuestionBoard questionBorad) {
+    public QuestionBoardResponse create(QuestionBoard questionBorad) {
 
         if (questionBorad.getTopic().length() == 0) {
             throw new MyException("question.board.topic.empty", HttpStatus.BAD_REQUEST);
@@ -32,12 +37,21 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         questionBorad.setVisible(true);
         questionBorad.setCreateDateTime(LocalDateTime.now());
 
-        return questionBoardRepo.save(questionBorad);
+        QuestionBoard questionBoard = questionBoardRepo.save(questionBorad);
+
+        return new QuestionBoardResponse(questionBoard);
     }
 
-    public List<QuestionBoard> getQuestionAll() {
+    public List<QuestionBoardResponse> getQuestionAll() {
         
-        return questionBoardRepo.findAll();
+        List<QuestionBoard> questionBoards = questionBoardRepo.findAll();
+
+        List<QuestionBoardResponse> questionBoardResponses = new ArrayList<QuestionBoardResponse>();
+        for (QuestionBoard questionBoard : questionBoards) {
+            questionBoardResponses.add(new QuestionBoardResponse(questionBoard));
+        }
+
+        return questionBoardResponses;
     }
     
 }

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
 import moment from 'moment'
 
 // feature slice
 import { setQuestionBoard } from '../features/questionBoardSlice'
+import { setComment } from '../features/commentSlice'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -45,13 +45,21 @@ const CourseQuestion = () => {
     const [ hideAddButton, setHideAddButton ] = useState(false)
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
+    const [ callApi, setCallApi ] = useState(false)
+
     const handleClickQuestionCard = (item) => {
+
         dispatch( setQuestionBoard({
             questionId: item.id,
             topic: item.topic,
             detail: item.detail,
             datetime: item.createdDateTime
         }))
+
+        dispatch( setComment({
+            comments: item.comments
+        }))
+
         setQuestionBoardElement(<QuestionBoard />)
         setHideAddButton(true)
         setHideArrowBackIcon(false)
@@ -60,12 +68,22 @@ const CourseQuestion = () => {
 
     const getListQuestionBoard = (data) => {
 
+        if (data?.length === 0) {
+            return (
+                <Grid container>
+                    <Grid item xs={3.5}>&nbsp;</Grid>
+                    <Grid item xs={4} sx={{ color: 'gray', pt: 25 }}>No question board</Grid>
+                    <Grid item xs={4}>&nbsp;</Grid>
+                </Grid>
+            )
+        }
+
         return data?.map((item, index) => (
             <QuestionCard 
                 key={index}
                 topic={item.topic}
                 datetime={moment(item.createDateTime).format("DD/MM/YYYY | kk:mm:ss")}
-                comment={0}
+                commentCount={item.comments.length}
                 onClickQuestionCard={() => handleClickQuestionCard(item)}
             />
         ))
@@ -77,7 +95,7 @@ const CourseQuestion = () => {
             setQuestion(response.data)
             setQuestionBoardElement(getListQuestionBoard(response.data))
         }
-    }, [])
+    }, [callApi])
 
     const handleClickCreate = () => {
         setQuestionBoardElement(<QuestionCreate onCreateSuccess={handleCreateSuccess} />)
@@ -91,6 +109,7 @@ const CourseQuestion = () => {
         setHideAddButton(false)
         setHideArrowBackIcon(true)
         setQuestionLabel('All question board')
+        setCallApi(true)
     }
 
     const handleCreateSuccess = (item) => {
@@ -99,32 +118,29 @@ const CourseQuestion = () => {
     }
     
     return (
-        <Box>
-            <Grid container>
-                <Grid item xs={10}>
-                    <Typography variant='h6'>
-                        {questionLabel}
-                    </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <Box hidden={hideAddButton}>
-                        <Fab size="small" color="primary" onClick={handleClickCreate}>
-                            <AddIcon />
-                        </Fab>
-                    </Box>
-                </Grid>
-                <Grid item xs={12} hidden={hideArrowBackIcon} sx={{ mb: 1 }} >
-                    <IconButton onClick={handleClickArrowBack}>
-                        <ArrowBackIcon />
-                    </IconButton>
-                </Grid>
-                <Grid item xs={hideArrowBackIcon ? 1 : 0}></Grid>
-                <Grid item xs={11}>
-                    {quesetionBoardElement}
-                </Grid>
+        <Grid container>
+            <Grid item xs={10}>
+                <Typography variant='h6'>
+                    {questionLabel}
+                </Typography>
             </Grid>
-
-        </Box>
+            <Grid item xs={2}>
+                <Box hidden={hideAddButton}>
+                    <Fab size="small" color="primary" onClick={handleClickCreate}>
+                        <AddIcon />
+                    </Fab>
+                </Box>
+            </Grid>
+            <Grid item xs={12} hidden={hideArrowBackIcon} sx={{ mb: 1 }} >
+                <IconButton onClick={handleClickArrowBack}>
+                    <ArrowBackIcon />
+                </IconButton>
+            </Grid>
+            <Grid item xs={hideArrowBackIcon ? 1 : 0}></Grid>
+            <Grid item xs={11}>
+                {quesetionBoardElement}
+            </Grid>
+        </Grid>
     )
 }
 

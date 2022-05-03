@@ -12,22 +12,27 @@ import Grid from '@mui/material/Grid'
 import Fab from '@mui/material/Fab'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Typography from '@mui/material/Typography'
 
+import CircularProgress from '@mui/material/CircularProgress'
+
 // Material UI icon
 import CreateIcon from '@mui/icons-material/Create'
 
-const QuestionWriteComment = () => {
+// url
+import { URL_CREATE_COMMENT } from '../utils/url'
+
+const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
     const axiosPrivate = useAxiosPrivate()
 
     const questionId = useSelector(state => state.questionBoard.value.questionId)
-
+    
     const maxLength = 1000
 
     const [ comment, setComment ] = useState('')
@@ -35,6 +40,8 @@ const QuestionWriteComment = () => {
     const [ message, setMessage ] = useState(`(${comment.length}/${maxLength})`)
 
     const [ error, setError ] = useState(false)
+
+    const [ loading, setLoading ] = useState(false)
 
     const handleChangeComment = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -48,27 +55,32 @@ const QuestionWriteComment = () => {
     }
 
     const handleClickComment = async () => {
+
         if (comment.length === 0) {
             setMessage(`(${comment.length}/${maxLength}) is required.`)
             setError(true)
             return
         }
+
+        setLoading(true)
         
         const payload = {
             questionId: questionId,
             comment: comment
-
         }
-        const response = await apiPrivate.post(axiosPrivate, '/api/comment/create', payload)
+        const response = await apiPrivate.post(axiosPrivate, URL_CREATE_COMMENT, payload)
 
         if (response.status === 201) {
             setComment('')
             setMessage(`(${comment.length}/${maxLength})`)
             setError(false)
             handleCloseDialog()
+            onCreateCommentSuccess(response.data)
         } else {
             alert('Error, please try again.')
         }
+
+        setLoading(false)
     }
 
     const handleBlur = () => {
@@ -82,7 +94,10 @@ const QuestionWriteComment = () => {
         setOpenDialog(true)
     }
 
-    const handleCloseDialog = () => {
+    const handleCloseDialog = (event, reason) => {
+
+        if (loading && reason === 'backdropClick') return
+
         setOpenDialog(false)
         setMessage(`(${comment.length}/${maxLength})`)
         setError(false)
@@ -112,6 +127,7 @@ const QuestionWriteComment = () => {
                         label="Comment"
                         type="email"
                         margin="normal"
+                        disabled={loading}
                         required
                         fullWidth
                         multiline
@@ -122,12 +138,38 @@ const QuestionWriteComment = () => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button variant='outlined' onClick={handleCloseDialog} color="primary">
-                        Cancel
+                    <Button
+                        variant='outlined'
+                        color="primary" 
+                        disabled={loading}
+                        sx={{ mr: 1, mb:1 }}
+                        onClick={handleCloseDialog} 
+                    >
+                        CANCEL
                     </Button>
-                    <Button variant='contained' onClick={handleClickComment} color="primary">
-                        Comment
+                    <Button 
+                        variant='contained' 
+                        color="primary"
+                        disabled={loading}
+                        sx={{ mr: 1, mb:1 }}
+                        onClick={handleClickComment}                         
+                    >
+                        COMMENT
                     </Button>
+                    {
+                        loading && 
+                        <CircularProgress
+                            size={24}
+                            sx={{
+                                color: 'green', 
+                                position: 'absolute', 
+                                top: '50%', 
+                                left: '50%', 
+                                mt: '-12px', 
+                                ml: '-12px'
+                            }}
+                        />
+                    }
                 </DialogActions>
             </Dialog>
         </Box>
