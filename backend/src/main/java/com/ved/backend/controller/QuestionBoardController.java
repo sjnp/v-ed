@@ -1,5 +1,6 @@
 package com.ved.backend.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import com.ved.backend.model.QuestionBoard;
@@ -25,8 +26,8 @@ public class QuestionBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<QuestionBoardResponse> createQuestion(@RequestBody QuestionBoard questionBoard) {
-        QuestionBoardResponse response = questionBoardService.create(questionBoard);
+    public ResponseEntity<QuestionBoardResponse> createQuestion(@RequestBody QuestionBoard questionBoard, Principal principal) {
+        QuestionBoardResponse response = questionBoardService.create(questionBoard, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

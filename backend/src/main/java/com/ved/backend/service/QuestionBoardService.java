@@ -7,7 +7,7 @@ import com.ved.backend.response.QuestionBoardResponse;
 
 public interface QuestionBoardService {
  
-    public QuestionBoardResponse create(QuestionBoard questionBorad);
+    public QuestionBoardResponse create(QuestionBoard questionBorad, String username);
 
     public List<QuestionBoardResponse> getQuestionAll();
 

@@ -19,12 +19,13 @@ import org.springframework.stereotype.Service;
 public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     private final QuestionBoardRepo questionBoardRepo;
+    
  
     public QuestionBoardServiceImpl(QuestionBoardRepo questionBoardRepo) {
         this.questionBoardRepo = questionBoardRepo;
     }
 
-    public QuestionBoardResponse create(QuestionBoard questionBorad) {
+    public QuestionBoardResponse create(QuestionBoard questionBorad, String username) {
 
         if (questionBorad.getTopic().length() == 0) {
             throw new MyException("question.board.topic.empty", HttpStatus.BAD_REQUEST);
@@ -33,6 +34,8 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         if (questionBorad.getDetail().length() == 0) {
             throw new MyException("question.board.detail.empty", HttpStatus.BAD_REQUEST);
         }
+
+
 
         questionBorad.setVisible(true);
         questionBorad.setCreateDateTime(LocalDateTime.now());

@@ -1,5 +1,6 @@
 package com.ved.backend.controller;
 
+import java.security.Principal;
 import java.util.HashMap;
 
 import com.ved.backend.response.CommentResponse;
@@ -23,12 +24,13 @@ public class CommentController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CommentResponse> createComment(@RequestBody HashMap<String, Object> bodyRequest) {
+    public ResponseEntity<CommentResponse> createComment(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
         
         Long questionBoardId = Long.parseLong(String.valueOf(bodyRequest.get("questionId")));
         String comment = String.valueOf(bodyRequest.get("comment"));
+        String username = principal.getName();
 
-        CommentResponse response = commentService.create(questionBoardId, comment);
+        CommentResponse response = commentService.create(questionBoardId, comment, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

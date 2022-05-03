@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService{
         this.commentRepo = commentRepo;
     }
 
-    public CommentResponse create(Long questionBoardId, String comment) {
+    public CommentResponse create(Long questionBoardId, String comment, String username) {
 
         Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(questionBoardId);
 
