@@ -15,6 +15,8 @@ public class QuestionBoardResponse {
     private LocalDateTime createDateTime;
     private boolean visible;
     private List<CommentResponse> comments;
+    private String firstname;
+    private String lastname;
     
     public QuestionBoardResponse() {
     }
@@ -26,6 +28,8 @@ public class QuestionBoardResponse {
         this.createDateTime = questionBoard.getCreateDateTime();
         this.visible = questionBoard.isVisible();
         this.comments = this.getListComemnt(questionBoard.getComments());
+        this.firstname = questionBoard.getStudent().getFirstName();
+        this.lastname = questionBoard.getStudent().getLastName();
     }
 
     private List<CommentResponse> getListComemnt(List<Comment> comments) {
@@ -82,6 +86,22 @@ public class QuestionBoardResponse {
 
     public void setComments(List<CommentResponse> comments) {
         this.comments = comments;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
 }

@@ -10,6 +10,9 @@ public class CommentResponse {
     private String comment;
     private LocalDateTime commentDateTime;
     private boolean visible;
+    private String state;
+    private String firstname;
+    private String lastname;
 
     public CommentResponse() {
     }
@@ -19,6 +22,9 @@ public class CommentResponse {
         this.comment = comment.getComment();
         this.commentDateTime = comment.getCommentDateTime();
         this.visible = comment.isVisible();
+        this.state = comment.getCommentState().getName();
+        this.firstname = comment.getStudent().getFirstName();
+        this.lastname = comment.getStudent().getLastName();
     }
 
     public Long getId() {
@@ -51,6 +57,30 @@ public class CommentResponse {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
 }

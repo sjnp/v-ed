@@ -34,6 +34,9 @@ public class Student {
   @OneToMany(mappedBy = "student")
   private List<QuestionBoard> questionBoards;
 
+  @OneToMany(mappedBy = "student")
+  private List<Comment> comments;
+
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
   @JoinTable(name = "student_instructor",
       joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},
@@ -112,6 +115,14 @@ public class Student {
     this.questionBoards = questionBoards;
   }
 
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
   public Student() {
   }
 
@@ -124,7 +135,8 @@ public class Student {
     String profilePicUri, 
     AppUser appUser, 
     Instructor instructor,
-    List<QuestionBoard> questionBoards
+    List<QuestionBoard> questionBoards,
+    List<Comment> comments
   ) {
     this.id = id;
     this.firstName = firstName;
@@ -135,6 +147,7 @@ public class Student {
     this.appUser = appUser;
     this.instructor = instructor;
     this.questionBoards = questionBoards;
+    this.comments = comments;
   }
 
 }
