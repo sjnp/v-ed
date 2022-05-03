@@ -1,43 +1,38 @@
-import {Box, Button, Container, Typography} from "@mui/material";
+import {Box, Button, Container, Stack, Typography} from "@mui/material";
 import AppBarHeader from "../components/AppBarHeader";
 import {useNavigate} from "react-router-dom";
-import IncompleteCourseList from "../components/IncompleteCourseList";
+import InstructorCourseList from "../components/InstructorCourseList";
 import {useEffect, useState} from "react";
 
 const Instructor = () => {
   const navigate = useNavigate();
 
-  const [incompleteCourses , setIncompleteCourses] = useState();
-  useEffect(() => {
-
-  }, []);
-
   return (
     <Container maxWidth="lg">
       <AppBarHeader/>
-      <Box
+      <Stack
+        alignItems='stretch'
         component='main'
         sx={{
-          margin: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
+          mt: 3,
+          mb: 3
         }}
       >
-        <Button
-          variant='contained'
-          size='large'
-          sx={{
-            marginBottom: 3
-          }}
-          onClick={() => {navigate('/instructor/create-course')}}
-        >
-          Create Course
-        </Button>
+        <Stack direction='row' justifyContent='center'>
+          <Button
+            variant='contained'
+            size='large'
+            sx={{
+              marginBottom: 3
+            }}
+            onClick={() => {navigate('/instructor/create-course')}}
+          >
+            Create Course
+          </Button>
+        </Stack>
 
-        <IncompleteCourseList/>
-
-      </Box>
+        <InstructorCourseList/>
+      </Stack>
     </Container>
   )
 }
