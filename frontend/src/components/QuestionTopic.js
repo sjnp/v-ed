@@ -14,6 +14,9 @@ import Avatar from '@mui/material/Avatar'
 // Material UI icon
 import { Typography } from '@mui/material'
 
+// utils
+import color from '../utils/color'
+
 const QuestionTopic = () => {
 
     const topic = useSelector(state => state.questionBoard.value.topic)
@@ -24,7 +27,7 @@ const QuestionTopic = () => {
     const lastname = "benjanavee"
  
     return (
-        <Paper>
+        <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER') }}>
             <Grid container sx={{ padding: 2 }}>
                 <Grid item xs={12}>
                     <Typography variant="h6">

@@ -23,6 +23,7 @@ import Typography from '@mui/material/Typography'
 import Fab from '@mui/material/Fab'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
+import CircularProgress from '@mui/material/CircularProgress'
 
 // Material UI icon
 import AddIcon from '@mui/icons-material/Add'
@@ -45,7 +46,8 @@ const CourseQuestion = () => {
     const [ hideAddButton, setHideAddButton ] = useState(false)
     const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
 
-    const [ callApi, setCallApi ] = useState(false)
+    const [ loading, setLoading ] = useState(false)
+
 
     const handleClickQuestionCard = (item) => {
 
@@ -90,12 +92,18 @@ const CourseQuestion = () => {
     }
 
     useEffect(async () => {
+        await callApiQuestionBoard()
+    }, [])
+
+    const callApiQuestionBoard = async () => {
+        setLoading(true)
         const response = await apiPrivate.get(axiosPrivate, URL_GET_QUESTION_TOPIC_ALL)
         if (response.status === 200) {
             setQuestion(response.data)
             setQuestionBoardElement(getListQuestionBoard(response.data))
         }
-    }, [callApi])
+        setLoading(false)
+    }
 
     const handleClickCreate = () => {
         setQuestionBoardElement(<QuestionCreate onCreateSuccess={handleCreateSuccess} />)
@@ -104,16 +112,17 @@ const CourseQuestion = () => {
         setQuestionLabel('Create Question')
     }
 
-    const handleClickArrowBack = () => {
+    const handleClickArrowBack = async (item, callApi = true) => {
+        if (callApi) callApiQuestionBoard()
         setQuestionBoardElement(getListQuestionBoard(question))
         setHideAddButton(false)
         setHideArrowBackIcon(true)
         setQuestionLabel('All question board')
-        setCallApi(true)
+        
     }
 
     const handleCreateSuccess = (item) => {
-        handleClickArrowBack([ item ])
+        handleClickArrowBack([ item ], false)
         handleClickQuestionCard(item)
     }
     
@@ -140,6 +149,20 @@ const CourseQuestion = () => {
             <Grid item xs={11}>
                 {quesetionBoardElement}
             </Grid>
+            {
+                        loading && 
+                        <CircularProgress
+                            size={24}
+                            sx={{
+                                color: 'green', 
+                                position: 'absolute', 
+                                top: '50%', 
+                                left: '50%', 
+                                mt: '-12px', 
+                                ml: '-12px'
+                            }}
+                        />
+                    }
         </Grid>
     )
 }

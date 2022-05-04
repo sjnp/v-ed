@@ -6,11 +6,12 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 // api
 import apiPrivate from '../api/apiPrivate';
 
-// Material UI
+// Material UI component
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 
 // url
 import { URL_QUESTION_BOARD_CREATE } from '../utils/url';
@@ -30,6 +31,8 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
     const [ errorTopic, setErrorTopic ] = useState(false)
     const [ errorDetail, setErrorDetail ] = useState(false)
+
+    const [ loading, setLoading ] = useState(false)
 
     const handleChangeTopic = (event) => {
         if (event.target.value.length <= maxLengthTopic) {
@@ -81,6 +84,8 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
         if (isRequired) return
 
+        setLoading(true)
+
         const payLoad = {
             topic: topic,
             detail: detail
@@ -92,6 +97,7 @@ const QuestionCreate = ({ onCreateSuccess }) => {
         } else {
             alert('Error, please try again')
         }
+        setLoading(false)
     }
 
     return (
@@ -125,10 +131,24 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 onBlur={handleBlurDetail}
             />
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
-                <Button variant='contained' sx={{ width: '20%' }} onClick={handleClickCreate}>
+                <Button variant='contained' disabled={loading} sx={{ width: '20%' }} onClick={handleClickCreate}>
                     Create
                 </Button>
             </Box>
+            {
+                        loading && 
+                        <CircularProgress
+                            size={24}
+                            sx={{
+                                color: 'green', 
+                                position: 'absolute', 
+                                top: '50%', 
+                                left: '50%', 
+                                mt: '-12px', 
+                                ml: '-12px'
+                            }}
+                        />
+                    }
         </Paper>
     )
 }
