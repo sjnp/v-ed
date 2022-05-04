@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 // component
 import ReviewRead from './ReviewRead'
 import ReviewWrite from './ReviewWrite'
+import ReviewEdit from './ReviewEdit'
 
 // Material UI component
 import Typography from '@mui/material/Typography'
@@ -11,177 +12,106 @@ import Fab from '@mui/material/Fab'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 
-// icon Material UI
+// Material UI icon
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CachedIcon from '@mui/icons-material/Cached';
 
-const CourseReview = () => {
 
-    let index = 0
+
+const CourseReview = () => {
+    
+    const [ reviews, setReviews ] = useState([])
+
+    const getReviewReadElement = () => {
+        if (reviews?.length === 0) {
+            return <div style={{ textAlign: 'center', color: 'gray' }}>No review</div>
+        }
+
+        return reviews
+    }
+    const [ elementReview, setElementReview ] = useState(getReviewReadElement())
+
+    const [ isReview, setIsReview ] = useState(false)
 
     const [ labelPage, setLabelPage ] = useState('Review')
+    const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
+    const [ hideActionReview, setHideActionReview ] = useState(false)
 
-    const reviews = [
-        {
-            rating: 2.6,
-            comment: `this test commment from data index ${++index}`,
-            firstname: `firstname ${index}`,
-            lastname: `lastname ${index}`,
-            datetime: new Date().toISOString()
-        },
-        {
-            rating: 2.6,
-            comment: `this test commment from data index ${++index}`,
-            firstname: `firstname ${index}`,
-            lastname: `lastname ${index}`,
-            datetime: new Date().toISOString()
-        },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-        // {
-        //     rating: 2.6,
-        //     comment: `this test commment from data index ${++index}`,
-        //     firstname: `firstname ${index}`,
-        //     lastname: `lastname ${index}`,
-        //     datetime: new Date().toISOString()
-        // },
-    ]
-
-    const getListReivew = () => {
-        return reviews.map((review, index) => (
-            <ReviewRead
-                key={index}
-                rating={review.rating}
-                comment={review.comment}
-                firstname={review.firstname}
-                lastname={review.lastname}
-                datetime={review.datetime}
-            />
-        ))
-    }
-    
-    const [ isReview, setIsReview ] = useState(true)
-
-    const showCreateOrEditReviewButton = () => {
-        if (isReview) {
-            return (
-                <Box hidden={hideCreateOrEditButton} title="Edit your review.">
-                    <Fab size="small" color="primary" onClick={handleClickEditReview}>
-                        <EditIcon />
-                    </Fab>
-                </Box>
-            )
-        } else {
-            return (
-                <Box hidden={hideCreateOrEditButton} title="Let write review.">
-                    <Fab size="small" color="primary" onClick={handleClickCreateReview}>
-                        <AddIcon />
-                    </Fab>
-                </Box>
-            )
-        }
-    }
-
-    const [ elementReview, setElementReview ] = useState(getListReivew())
-
-    const handleClickCreateReview = () => {
+    const handleCreateReview = () => {
         setLabelPage('Write review')
         setHideArrowBackIcon(false)
         setElementReview(<ReviewWrite />)
-        setHhideCreateOrEditButton(true)
+        setHideActionReview(true)
     }
 
-    const handleClickEditReview = () => {
-        setLabelPage('Edit review')
-        setHideArrowBackIcon(false)
-        setElementReview(<ReviewWrite dataRating={4.2} dataComment={"test comment edit" } />)
-        setHhideCreateOrEditButton(true)
+    const handleEditReview = () => {
+        alert('edit review')
     }
 
-    const [ hideArrowBackIcon, setHideArrowBackIcon ] = useState(true)
-
-    const [ hideCreateOrEditButton, setHhideCreateOrEditButton ] = useState(false)
-
-    const handleClickArrowBackIcon = () => {
-        setHideArrowBackIcon(true)
+    const handClickArrowIcon = () => {
         setLabelPage('Review')
-        setElementReview(getListReivew())
-        setHhideCreateOrEditButton(false)
+        setHideArrowBackIcon(true)
+        setElementReview(getReviewReadElement())
+        setHideActionReview(false)
     }
 
-    const toggleIsReview = () => {
-        setIsReview(!isReview)
-    }
+    
+
+
+
+    // const getListReivew = () => {
+    //     return reviews.map((review, index) => (
+    //         <ReviewRead
+    //             key={index}
+    //             rating={review.rating}
+    //             comment={review.comment}
+    //             firstname={review.firstname}
+    //             lastname={review.lastname}
+    //             datetime={review.datetime}
+    //         />
+    //     ))
+    // }
+
+    // const [ isReview, setIsReview ] = useState(isReviewAlready)
+
+    
+
+    // const [ reviews, setReview ] = useState([])
+    // const notReview = <div style={{ textAlign: 'center', color: 'gray' }}>Not review.</div>
+
+
+    // const handleClickCreateReview = () => {
+        // setLabelPage('Write review')
+        // setHideArrowBackIcon(false)
+        // setElementReview(<ReviewWrite />)
+        // setHideCreateReviewIcon(true)
+        // setHideEditReviewIcon(true)
+    // }
+
+    // const handleClickEditReview = () => {
+        // setLabelPage('Edit review')
+        // setHideArrowBackIcon(false)
+        // setElementReview(<ReviewEdit />)
+        // setHideCreateReviewIcon(true)
+        // setHideEditReviewIcon(true)
+    // }
+
+    // const [ hideCreateReviewIcon, setHideCreateReviewIcon ] = useState(!isReview)
+    // const [ hideEditReviewIcon, setHideEditReviewIcon ] = useState(isReview)
+    // const [hideArrowBackIcon, setHideArrowBackIcon] = useState(true)
+
+    // const [  ]
+
+    // const [ hideCreateOrEditButton, setHhideCreateOrEditButton ] = useState(false)
+
+    // const handleClickArrowBackIcon = () => {
+        // setHideArrowBackIcon(true)
+        // setLabelPage('Review')
+        // setElementReview(reviews?.length || notReview)
+        // toggleIsReview()
+    // }
 
     return (
         <Grid container>
@@ -190,22 +120,30 @@ const CourseReview = () => {
                     {labelPage}
                 </Typography>
             </Grid>
-            <Grid item xs={1}>
-                {showCreateOrEditReviewButton()}   
+            <Grid item xs={1} >
+                <Box hidden={hideActionReview}>
+                {
+                    isReview ?
+                        <Fab size="small" color="primary" onClick={handleEditReview}>
+                            <EditIcon />
+                        </Fab>
+                        
+                    :
+                        <Fab size="small" color="primary" onClick={handleCreateReview} >
+                            <AddIcon />
+                        </Fab>
+                }
+                </Box>
             </Grid>
             <Grid item xs={2}>
-                <Box hidden={false} title="Toggle is review.">
-                    <Fab size="small" color="primary" onClick={toggleIsReview}>
-                        <CachedIcon />
-                    </Fab>
-                </Box>
+                <Fab size="small" color="primary" onClick={() => setIsReview(!isReview)}>
+                    <CachedIcon />
+                </Fab>
             </Grid>
-            <Grid item xs={1}>
-                <Box hidden={hideArrowBackIcon}>
-                    <IconButton onClick={handleClickArrowBackIcon}>
-                        <ArrowBackIcon />
-                    </IconButton>
-                </Box>
+            <Grid item xs={2} hidden={hideArrowBackIcon}>
+                <IconButton onClick={handClickArrowIcon}>
+                    <ArrowBackIcon />
+                </IconButton>
             </Grid>
             <Grid item xs={6}>
                 {elementReview}

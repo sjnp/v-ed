@@ -136,19 +136,19 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 </Button>
             </Box>
             {
-                        loading && 
-                        <CircularProgress
-                            size={24}
-                            sx={{
-                                color: 'green', 
-                                position: 'absolute', 
-                                top: '50%', 
-                                left: '50%', 
-                                mt: '-12px', 
-                                ml: '-12px'
-                            }}
-                        />
-                    }
+                loading && 
+                <CircularProgress
+                    size={24}
+                    sx={{
+                        color: 'green', 
+                        position: 'absolute', 
+                        top: '50%', 
+                        left: '50%', 
+                        mt: '-12px', 
+                        ml: '-12px'
+                    }}
+                />
+            }
         </Paper>
     )
 }
