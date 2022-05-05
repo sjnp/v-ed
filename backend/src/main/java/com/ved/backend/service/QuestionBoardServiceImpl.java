@@ -3,6 +3,7 @@ package com.ved.backend.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -69,6 +70,20 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         }
 
         return questionBoardResponses;
+    }
+
+    public QuestionBoardResponse getQuestionBoard(Long id) {
+
+        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(id);
+
+        if (questionBoardOptional.isEmpty()) {
+            throw new MyException("question.baord.id.not.found", HttpStatus.BAD_REQUEST);
+        }
+
+        QuestionBoard questionBoard = questionBoardOptional.get();
+        QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(questionBoard);
+
+        return questionBoardResponse;
     }
     
 }

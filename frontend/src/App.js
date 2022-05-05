@@ -20,13 +20,15 @@ import VideoCourse from './pages/VideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
 import PendingCourse from "./pages/PendingCourse";
-import StudentQuestionBoard from './pages/StudentQuestionBoard';
+import StudentQuestion from './pages/StudentQuestion';
 import StudentAssignment from './pages/StudentAssignment';
 import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
 import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
 import StudentAssignmentAnswer from './pages/StudentAssignmentAnswer';
+import StudentCreateQuestion from './pages/StudentCreateQuestion';
+import StudentBoard from './pages/StudentBoard';
 
 // import Logout from './pages/Logout';
 function App() {
@@ -79,7 +81,15 @@ function App() {
           
           <Route
             path='student/course/:courseId/question-board' 
-            element={ <StudentQuestionBoard /> }
+            element={ <StudentQuestion /> }
+          />
+          <Route
+            path='student/course/:courseId/question-board/create' 
+            element={ <StudentCreateQuestion /> }
+          />
+          <Route
+            path='student/course/:courseId/question-board/:questionBoardId' 
+            element={ <StudentBoard /> }
           />
           
           <Route 

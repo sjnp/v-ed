@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import AssignmentChapter from '../components/AssignmentChapter'
+import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -35,8 +36,9 @@ const StudentAssignment = () => {
 
     const [ assignments, setAssignments ] = useState([])
 
-    useEffect(async () => {
+    const [ loading, setLoading ] = useState(true)
 
+    useEffect(async () => {
         const url = URL_GET_COURSE_BY_ID + courseId
         const response = await apiPrivate.get(axiosPrivate, url)
 
@@ -46,15 +48,12 @@ const StudentAssignment = () => {
         } else {
             alert('Fail')
         }
-
+        setLoading(false)
     }, [])
 
     const handleClickAssignmentChapter = (assignment, index) => {
         const chapterNo = index + 1
 
-        console.log('-------------')
-        console.log(assignment)
-        console.log('-------------')
         dispatch( setAssignment({
             chapterNo: chapterNo,
             assignments: assignment
@@ -92,6 +91,7 @@ const StudentAssignment = () => {
                                 />
                             ))
                         }
+                        <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
                 </Grid>

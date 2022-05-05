@@ -11,4 +11,6 @@ public interface QuestionBoardService {
 
     public List<QuestionBoardResponse> getQuestionAll();
 
+    public QuestionBoardResponse getQuestionBoard(Long id);
+
 }

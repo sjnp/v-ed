@@ -17,14 +17,16 @@ import { Typography } from '@mui/material'
 // utils
 import color from '../utils/color'
 
-const QuestionTopic = () => {
+const QuestionTopic = ({ data }) => {
 
-    const topic = useSelector(state => state.questionBoard.value.topic)
-    const detail = useSelector(state => state.questionBoard.value.detail)
-    const datetime = useSelector(state => state.questionBoard.value.datetime)
+    const { id, topic, detail, datetime, firstname, lastname } = data
 
-    const firstname = "pradinan"
-    const lastname = "benjanavee"
+    // const topic = useSelector(state => state.questionBoard.value.topic)
+    // const detail = useSelector(state => state.questionBoard.value.detail)
+    // const datetime = useSelector(state => state.questionBoard.value.datetime)
+
+    // const firstname = "pradinan"
+    // const lastname = "benjanavee"
  
     return (
         <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER') }}>
@@ -43,7 +45,7 @@ const QuestionTopic = () => {
                 <Grid item xs={1} sx={{ justifyContent: "center", display: "flex", mt: 2 }}>
                     <Avatar src="/static/images/avatar/1.jpg" sx={{   }} />
                 </Grid>
-                <Grid item xs={10}>
+                <Grid item xs={10} sx={{ pl: 1 }}>
                     <Grid item xs={12} sx={{ mt: 1 }}>
                         <Typography variant='subtitle1'>
                             {firstname} {lastname}

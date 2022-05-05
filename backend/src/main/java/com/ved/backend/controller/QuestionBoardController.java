@@ -10,6 +10,7 @@ import com.ved.backend.service.QuestionBoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,12 @@ public class QuestionBoardController {
     @GetMapping("/question/all")
     public ResponseEntity<List<QuestionBoardResponse>> getQuestionAll() {
         List<QuestionBoardResponse> response = questionBoardService.getQuestionAll();
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{questionBoardId}")
+    public ResponseEntity<QuestionBoardResponse> getQuestionBoard(@PathVariable Long questionBoardId) {
+        QuestionBoardResponse response = questionBoardService.getQuestionBoard(questionBoardId);
         return ResponseEntity.ok().body(response);
     }
 
