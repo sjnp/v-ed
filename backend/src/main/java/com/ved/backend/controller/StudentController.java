@@ -4,12 +4,9 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.service.OverviewService;
 import com.ved.backend.service.StudentService;
+import com.ved.backend.storeClass.Finance;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -32,6 +29,13 @@ public class StudentController {
     // fix latter.
     ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCouese(principal.getName());
     return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping(path = "/active-instrustor")
+  public ResponseEntity<?> activeInstructor(@RequestBody Finance finance, Principal principal) {
+    String result = studentService.activeInstructor(finance, principal.getName());
+
+    return ResponseEntity.ok(result);
   }
 
   public StudentController(final StudentService studentService, final OverviewService overviewService) {

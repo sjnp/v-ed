@@ -32,7 +32,7 @@ const AccountManageSideBar = () => {
         icon: <KeyIcon />
     },
     {
-        text: 'Instructor',
+        text: 'Active Instructor',
         icon: <SchoolIcon />
     }
   ]
