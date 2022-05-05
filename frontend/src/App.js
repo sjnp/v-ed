@@ -26,6 +26,7 @@ import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
 import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
+import StudentAssignmentAnswer from './pages/StudentAssignmentAnswer';
 
 // import Logout from './pages/Logout';
 function App() {
@@ -61,13 +62,40 @@ function App() {
           <Route path='account-manage' element={<AccountManage/>}/>
           <Route path='payment/course/:courseId' element={<Payment />} />
 
+          
+          <Route 
+            path='student/course/:courseId/content' 
+            element={ <StudentContent /> }
+          />
 
-          <Route path='student/course/:courseId/content' element={ <StudentContent /> } />
-          <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
-          <Route path='student/course/:courseId/question-board' element={ <StudentQuestionBoard /> } />
-          <Route path='student/course/:courseId/review' element={ <StudentReview /> } />
-          <Route path='student/course/:courseId/instructor' element={ <StudentInstructor /> } />
-          <Route path='student/course/:courseId/about-course' element={ <StudentAboutCourse /> } />
+          <Route
+            path='student/course/:courseId/assignment' 
+            element={ <StudentAssignment /> }
+          />
+          <Route
+            path='student/course/:courseId/assignment/chapter/:chapterNo'
+            element={ <StudentAssignmentAnswer /> }
+          />
+          
+          <Route
+            path='student/course/:courseId/question-board' 
+            element={ <StudentQuestionBoard /> }
+          />
+          
+          <Route 
+            path='student/course/:courseId/review' 
+            element={ <StudentReview /> }
+          />
+          
+          <Route 
+            path='student/course/:courseId/instructor' 
+            element={ <StudentInstructor /> } 
+          />
+          
+          <Route 
+            path='student/course/:courseId/about-course' 
+            element={ <StudentAboutCourse /> }
+          />
 
 
         </Route>

@@ -50,12 +50,15 @@ const StudentContent = () => {
                     <StudentMenu active='content' /> 
                 </Grid>
                 <Grid item xs={9}>
-
-                    <Grid item xs={12}>
-                        <Typography variant='h6'>
-                            Course content
-                        </Typography>
+                    <Grid container>
+                        <Grid item xs={1}></Grid>
+                        <Grid item xs={11}>
+                            <Typography variant='h6'>
+                                Course content
+                            </Typography>
+                        </Grid>
                     </Grid>
+                    
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10}>
