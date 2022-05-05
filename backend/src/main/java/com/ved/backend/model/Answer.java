@@ -1,87 +1,107 @@
 package com.ved.backend.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
 import java.time.LocalDateTime;
-
-import javax.persistence.Column;
 
 @Entity
 @Table
 public class Answer {
 
-    @Id
-    @GeneratedValue(strategy = AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = AUTO)
+  private Long id;
 
-    @Column(nullable = false)
-    private Long chapter;
+  @Column(nullable = false)
+  private Long chapter;
 
-    @Column(nullable = false)
-    private Long no;
+  @Column(nullable = false)
+  private Long no;
 
-    @Column(nullable = false)
-    private LocalDateTime datetime;
+  @Column(nullable = false)
+  private LocalDateTime datetime;
 
-    @Column(nullable = false)
-    private String fileName;
+  @Column(nullable = false)
+  private String fileName;
 
-    @Column(nullable = true)
-    private String commentInstructor;
+  @Column(nullable = true)
+  private String commentInstructor;
 
-    public Answer() {}
+  @ManyToOne(fetch = LAZY)
+  @JoinTable(name = "student_course_answer",
+      joinColumns = {@JoinColumn(name = "answer_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "student_course_id", referencedColumnName = "id")})
+  private StudentCourse studentCourse;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Long getChapter() {
-        return chapter;
-    }
+  public Long getChapter() {
+    return chapter;
+  }
 
-    public void setChapter(Long chapter) {
-        this.chapter = chapter;
-    }
+  public void setChapter(Long chapter) {
+    this.chapter = chapter;
+  }
 
-    public Long getNo() {
-        return no;
-    }
+  public Long getNo() {
+    return no;
+  }
 
-    public void setNo(Long no) {
-        this.no = no;
-    }
+  public void setNo(Long no) {
+    this.no = no;
+  }
 
-    public LocalDateTime getDatetime() {
-        return datetime;
-    }
+  public LocalDateTime getDatetime() {
+    return datetime;
+  }
 
-    public void setDatetime(LocalDateTime datetime) {
-        this.datetime = datetime;
-    }
+  public void setDatetime(LocalDateTime datetime) {
+    this.datetime = datetime;
+  }
 
-    public String getFileName() {
-        return fileName;
-    }
+  public String getFileName() {
+    return fileName;
+  }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
 
-    public String getCommentInstructor() {
-        return commentInstructor;
-    }
+  public String getCommentInstructor() {
+    return commentInstructor;
+  }
 
-    public void setCommentInstructor(String commentInstructor) {
-        this.commentInstructor = commentInstructor;
-    }
+  public void setCommentInstructor(String commentInstructor) {
+    this.commentInstructor = commentInstructor;
+  }
 
+  public StudentCourse getStudentCourse() {
+    return studentCourse;
+  }
+
+  public void setStudentCourse(StudentCourse studentCourse) {
+    this.studentCourse = studentCourse;
+  }
+
+  public Answer() {
+  }
+
+  public Answer(Long id, Long chapter, Long no, LocalDateTime datetime, String fileName, String commentInstructor, StudentCourse studentCourse) {
+    this.id = id;
+    this.chapter = chapter;
+    this.no = no;
+    this.datetime = datetime;
+    this.fileName = fileName;
+    this.commentInstructor = commentInstructor;
+    this.studentCourse = studentCourse;
+  }
 }

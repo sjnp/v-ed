@@ -25,6 +25,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
     private final QuestionBoardRepo questionBoardRepo;
     private final AppUserRepo appUserRepo;
     private final StudentRepo studentRepo;
+    
  
     public QuestionBoardServiceImpl(
         QuestionBoardRepo questionBoardRepo, 
@@ -36,6 +37,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         this.studentRepo = studentRepo;
     }
 
+    //TO DO: fix this :D
     public QuestionBoardResponse create(QuestionBoard questionBorad, String username) {
 
         if (questionBorad.getTopic().length() == 0) {
@@ -46,18 +48,19 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
             throw new MyException("question.board.detail.empty", HttpStatus.BAD_REQUEST);
         }
 
-        Student student = appUserRepo.findByUsername(username).getStudent();
+    //    Student student = appUserRepo.findByUsername(username).getStudent();
 
-        questionBorad.setVisible(true);
-        questionBorad.setCreateDateTime(LocalDateTime.now());
-        questionBorad.setStudent(student);
+    //    questionBorad.setVisible(true);
+    //    questionBorad.setCreateDateTime(LocalDateTime.now());
+    //    questionBorad.setStudent(student);
 
-        student.getQuestionBoards().add(questionBorad);
+    //    student.getQuestionBoards().add(questionBorad);
 
-        studentRepo.save(student);
-        QuestionBoard questionBoard = questionBoardRepo.save(questionBorad);
+    //    studentRepo.save(student);
+    //    QuestionBoard questionBoard = questionBoardRepo.save(questionBorad);
 
-        return new QuestionBoardResponse(questionBoard);
+    //    return new QuestionBoardResponse(questionBoard);
+        return null;
     }
 
     public List<QuestionBoardResponse> getQuestionAll() {

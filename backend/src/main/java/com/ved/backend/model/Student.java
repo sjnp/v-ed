@@ -32,10 +32,10 @@ public class Student {
   private AppUser appUser;
 
   @OneToMany(mappedBy = "student")
-  private List<QuestionBoard> questionBoards;
+  private List<Comment> comments;
 
   @OneToMany(mappedBy = "student")
-  private List<Comment> comments;
+  private List<StudentCourse> studentCourses;
 
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
   @JoinTable(name = "student_instructor",
@@ -65,6 +65,14 @@ public class Student {
 
   public String getProfilePicUri() {
     return profilePicUri;
+  }
+
+  public List<StudentCourse> getStudentCourses() {
+    return studentCourses;
+  }
+
+  public void setStudentCourses(List<StudentCourse> studentCourses) {
+    this.studentCourses = studentCourses;
   }
 
   public AppUser getAppUser() {
@@ -107,14 +115,6 @@ public class Student {
     this.instructor = instructor;
   }
 
-  public List<QuestionBoard> getQuestionBoards() {
-    return questionBoards;
-  }
-
-  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
-    this.questionBoards = questionBoards;
-  }
-
   public List<Comment> getComments() {
     return comments;
   }
@@ -126,18 +126,7 @@ public class Student {
   public Student() {
   }
 
-  public Student(
-    Long id, 
-    String firstName, 
-    String lastName, 
-    String occupation, 
-    String biography, 
-    String profilePicUri, 
-    AppUser appUser, 
-    Instructor instructor,
-    List<QuestionBoard> questionBoards,
-    List<Comment> comments
-  ) {
+  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser, List<Comment> comments, List<StudentCourse> studentCourses, Instructor instructor) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -145,9 +134,9 @@ public class Student {
     this.biography = biography;
     this.profilePicUri = profilePicUri;
     this.appUser = appUser;
-    this.instructor = instructor;
-    this.questionBoards = questionBoards;
     this.comments = comments;
+    this.studentCourses = studentCourses;
+    this.instructor = instructor;
   }
 
 }

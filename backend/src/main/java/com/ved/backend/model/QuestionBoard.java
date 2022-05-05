@@ -21,106 +21,124 @@ import javax.persistence.JoinColumn;
 @Table
 public class QuestionBoard {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
 
-    @Column(nullable = false, length = 200)
-    private String topic;
+  @Column(nullable = false, length = 200)
+  private String topic;
 
-    @Column(nullable = false, length = 1000)
-    private String detail;
+  @Column(nullable = false, length = 1000)
+  private String detail;
 
-    @Column(nullable = false)
-    private LocalDateTime createDateTime;
+  @Column(nullable = false)
+  private LocalDateTime createDateTime;
 
-    @Column(nullable = false)
-    private boolean visible;
+  @Column(nullable = false)
+  private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "student_question_board",
-        joinColumns = { @JoinColumn(name = "question_board_id", referencedColumnName = "id") },
-        inverseJoinColumns = { @JoinColumn(name = "student_id", referencedColumnName = "id") })
-    private Student student;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(name = "student_course_question_board",
+      joinColumns = {@JoinColumn(name = "question_board_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "student_course_id", referencedColumnName = "id")})
+  private StudentCourse studentCourse;
 
-    @OneToMany(mappedBy = "questionBoard", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
+  @OneToMany(mappedBy = "questionBoard", cascade = CascadeType.ALL)
+  private List<Comment> comments = new ArrayList<>();
 
-    public QuestionBoard() {
-    }
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinTable(name = "course_question_board",
+      joinColumns = {@JoinColumn(name = "question_board_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id")})
+  private Course course;
 
-    public QuestionBoard(
-        Long id, 
-        String topic, 
-        String detail, 
-        LocalDateTime createDateTime, 
-        boolean visible,
-        List<Comment> comments,
-        Student student
-    ) {
-        this.id = id;
-        this.topic = topic;
-        this.detail = detail;
-        this.createDateTime = createDateTime;
-        this.visible = visible;
-        this.comments = comments;
-        this.student = student;
-    }
+  @OneToMany(mappedBy = "questionBoard")
+  private List<QuestionReport> questionReports;
 
-    public Long getId() {
-        return id;
-    }
+  public QuestionBoard() {
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public QuestionBoard(Long id, String topic, String detail, LocalDateTime createDateTime, boolean visible, StudentCourse studentCourse, List<Comment> comments, Course course, List<QuestionReport> questionReports) {
+    this.id = id;
+    this.topic = topic;
+    this.detail = detail;
+    this.createDateTime = createDateTime;
+    this.visible = visible;
+    this.studentCourse = studentCourse;
+    this.comments = comments;
+    this.course = course;
+    this.questionReports = questionReports;
+  }
 
-    public String getTopic() {
-        return topic;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getDetail() {
-        return detail;
-    }
+  public String getTopic() {
+    return topic;
+  }
 
-    public void setDetail(String detail) {
-        this.detail = detail;
-    }
+  public void setTopic(String topic) {
+    this.topic = topic;
+  }
 
-    public LocalDateTime getCreateDateTime() {
-        return createDateTime;
-    }
+  public String getDetail() {
+    return detail;
+  }
 
-    public void setCreateDateTime(LocalDateTime createDateTime) {
-        this.createDateTime = createDateTime;
-    }
+  public void setDetail(String detail) {
+    this.detail = detail;
+  }
 
-    public boolean isVisible() {
-        return visible;
-    }
+  public LocalDateTime getCreateDateTime() {
+    return createDateTime;
+  }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
+  public void setCreateDateTime(LocalDateTime createDateTime) {
+    this.createDateTime = createDateTime;
+  }
 
-    public List<Comment> getComments() {
-        return comments;
-    }
+  public boolean isVisible() {
+    return visible;
+  }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+  }
 
-    public Student getStudent() {
-        return student;
-    }
+  public List<Comment> getComments() {
+    return comments;
+  }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
 
+  public StudentCourse getStudentCourse() {
+    return studentCourse;
+  }
+
+  public void setStudentCourse(StudentCourse studentCourse) {
+    this.studentCourse = studentCourse;
+  }
+
+  public Course getCourse() {
+    return course;
+  }
+
+  public void setCourse(Course course) {
+    this.course = course;
+  }
+
+  public List<QuestionReport> getQuestionReports() {
+    return questionReports;
+  }
+
+  public void setQuestionReports(List<QuestionReport> questionReports) {
+    this.questionReports = questionReports;
+  }
 }

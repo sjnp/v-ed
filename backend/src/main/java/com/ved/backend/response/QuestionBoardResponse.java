@@ -28,8 +28,8 @@ public class QuestionBoardResponse {
         this.createDateTime = questionBoard.getCreateDateTime();
         this.visible = questionBoard.isVisible();
         this.comments = this.getListComemnt(questionBoard.getComments());
-        this.firstname = questionBoard.getStudent().getFirstName();
-        this.lastname = questionBoard.getStudent().getLastName();
+        this.firstname = questionBoard.getStudentCourse().getStudent().getFirstName();
+        this.lastname = questionBoard.getStudentCourse().getStudent().getLastName();
     }
 
     private List<CommentResponse> getListComemnt(List<Comment> comments) {

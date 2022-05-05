@@ -54,6 +54,18 @@ public class Course {
       inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")})
   private Instructor instructor;
 
+  @OneToMany(mappedBy = "course")
+  private List<StudentCourse> studentCourses;
+
+  @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
+  @JoinTable(name = "course_published_course",
+      joinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "id")},
+      inverseJoinColumns = {@JoinColumn(name = "published_course_id", referencedColumnName = "id")})
+  private PublishedCourse publishedCourse;
+
+  @OneToMany(mappedBy = "course")
+  private List<QuestionBoard> questionBoards;
+
   public Long getId() {
     return id;
   }
@@ -134,10 +146,34 @@ public class Course {
     this.instructor = instructor;
   }
 
+  public List<StudentCourse> getStudentCourses() {
+    return studentCourses;
+  }
+
+  public void setStudentCourses(List<StudentCourse> studentCourses) {
+    this.studentCourses = studentCourses;
+  }
+
+  public PublishedCourse getPublishedCourse() {
+    return publishedCourse;
+  }
+
+  public void setPublishedCourse(PublishedCourse publishedCourse) {
+    this.publishedCourse = publishedCourse;
+  }
+
+  public List<QuestionBoard> getQuestionBoards() {
+    return questionBoards;
+  }
+
+  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
+    this.questionBoards = questionBoards;
+  }
+
   public Course() {
   }
 
-  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor) {
+  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor, List<StudentCourse> studentCourses, PublishedCourse publishedCourse, List<QuestionBoard> questionBoards) {
     this.id = id;
     this.name = name;
     this.price = price;
@@ -148,5 +184,8 @@ public class Course {
     this.category = category;
     this.courseState = courseState;
     this.instructor = instructor;
+    this.studentCourses = studentCourses;
+    this.publishedCourse = publishedCourse;
+    this.questionBoards = questionBoards;
   }
 }
