@@ -3,17 +3,7 @@ package com.ved.backend.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 @Entity
 @Table
@@ -50,25 +40,21 @@ public class Comment {
         inverseJoinColumns = { @JoinColumn(name = "student_id", referencedColumnName = "id") })
     private Student student;
 
+    @OneToMany(mappedBy = "comment")
+    private List<CommentReport> commentReports;
+
     public Comment() {
     }
 
-    public Comment(
-        Long id, 
-        String comment, 
-        LocalDateTime commentDateTime, 
-        boolean visible,
-        QuestionBoard questionBoard,
-        CommentState commentState,
-        Student student
-    ) {
+    public Comment(Long id, String comment, LocalDateTime commentDateTime, boolean visible, CommentState commentState, QuestionBoard questionBoard, Student student, List<CommentReport> commentReports) {
         this.id = id;
         this.comment = comment;
         this.commentDateTime = commentDateTime;
         this.visible = visible;
-        this.questionBoard = questionBoard;
         this.commentState = commentState;
+        this.questionBoard = questionBoard;
         this.student = student;
+        this.commentReports = commentReports;
     }
 
     public Long getId() {
@@ -111,22 +97,6 @@ public class Comment {
         this.questionBoard = questionBoard;
     }
 
-    // public String getCommentState() {
-    //     return commentState;
-    // }
-
-    // public void setCommentState(String commentState) {
-    //     this.commentState = commentState;
-    // }
-
-    // public List<CommentState> getCommentStates() {
-    //     return commentStates;
-    // }
-
-    // public void setCommentStates(List<CommentState> commentStates) {
-    //     this.commentStates = commentStates;
-    // }
-
     public Student getStudent() {
         return student;
     }
@@ -143,4 +113,11 @@ public class Comment {
         this.commentState = commentState;
     }
 
+    public List<CommentReport> getCommentReports() {
+        return commentReports;
+    }
+
+    public void setCommentReports(List<CommentReport> commentReports) {
+        this.commentReports = commentReports;
+    }
 }
