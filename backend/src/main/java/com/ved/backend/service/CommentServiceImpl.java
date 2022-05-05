@@ -6,7 +6,6 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.ved.backend.exception.MyException;
-import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Comment;
 import com.ved.backend.model.CommentState;
 import com.ved.backend.model.QuestionBoard;

@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 // api
 import apiPrivate from '../api/apiPrivate';
 
-// Material UI
+// component
+import LoadingCircle from '../components/LoadingCircle'
+
+// Material UI component
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -15,9 +19,13 @@ import Button from '@mui/material/Button';
 // url
 import { URL_QUESTION_BOARD_CREATE } from '../utils/url';
 
-const QuestionCreate = ({ onCreateSuccess }) => {
+const QuestionCreate = () => {
 
     const axiosPrivate = useAxiosPrivate()
+
+    const navigate = useNavigate()
+
+    const { courseId } = useParams()
 
     const maxLengthTopic = 200
     const maxLengthDetail = 1000
@@ -30,6 +38,8 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
     const [ errorTopic, setErrorTopic ] = useState(false)
     const [ errorDetail, setErrorDetail ] = useState(false)
+
+    const [ loading, setLoading ] = useState(false)
 
     const handleChangeTopic = (event) => {
         if (event.target.value.length <= maxLengthTopic) {
@@ -65,30 +75,33 @@ const QuestionCreate = ({ onCreateSuccess }) => {
 
     const handleClickCreate = async () => {
         
-        let isRequired = false
+        let invalid = false
 
         if (topic.length === 0) {
             setMessageTopic(`(${topic.length}/${maxLengthTopic}) is required`)
             setErrorTopic(true)
-            isRequired = true
+            invalid = true
         }
 
         if (detail.length === 0) {
             setMessageDetail(`(${detail.length}/${maxLengthDetail}) is required`)
             setErrorDetail(true)
-            isRequired = true
+            invalid = true
         }
 
-        if (isRequired) return
+        if (invalid) return
 
+        setLoading(true)
+        
         const payLoad = {
             topic: topic,
             detail: detail
         }
         const response = await apiPrivate.post(axiosPrivate, URL_QUESTION_BOARD_CREATE, payLoad)
+        setLoading(false)
 
         if (response.status === 201) {
-            onCreateSuccess(response.data)
+            navigate(`/student/course/${courseId}/question-board/${response.data.id}`)
         } else {
             alert('Error, please try again')
         }
@@ -125,10 +138,16 @@ const QuestionCreate = ({ onCreateSuccess }) => {
                 onBlur={handleBlurDetail}
             />
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
-                <Button variant='contained' sx={{ width: '20%' }} onClick={handleClickCreate}>
+                <Button
+                    variant='contained' 
+                    disabled={loading} 
+                    sx={{ width: '20%' }} 
+                    onClick={handleClickCreate}
+                >
                     Create
                 </Button>
             </Box>
+            <LoadingCircle loading={loading} layoutLeft={60} />
         </Paper>
     )
 }

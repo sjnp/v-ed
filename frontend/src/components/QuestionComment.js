@@ -4,22 +4,23 @@ import moment from 'moment'
 // component
 import Report from './Report'
 
-// Material UI
+// Material UI component
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip';
+
+// utils
+import color from '../utils/color'
 
 const QuestionComment = ({ data }) => {
 
-    const { comment, commentDateTime } = data
-
-    const firstname = "pradinan"
-    const lastname = "benjanavee"
+    let { comment, commentDateTime, commentState, firstname, lastname } = data
 
     return (
-        <Paper sx={{ mt: 2 }}>
+        <Paper sx={{ mt: 2, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
             <Grid container sx={{ padding: 2 }}>
                 <Grid item xs={12} sx={{ mb: 2 }}>
                     {comment}
@@ -33,7 +34,8 @@ const QuestionComment = ({ data }) => {
                 <Grid item xs={10}>
                     <Grid item xs={12} sx={{ mt: 1 }}>
                         <Typography variant='subtitle1'>
-                            {firstname} {lastname}
+                            {firstname} {lastname} 
+                            <Chip label={commentState} sx={{ ml: 1, pt: 0.4 }} size="small" variant="outlined" />
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>

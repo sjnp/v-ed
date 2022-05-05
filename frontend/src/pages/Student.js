@@ -71,6 +71,37 @@ const Student = () => {
     return result
   }
 
+  const handleDataBeta = () => {
+    let key = 0
+    let column = 0
+    let result = []
+    for (const myCourse of myCourses) {
+      
+      if (column === 0) result.push(<Grid item xs={1.5} key={++key}></Grid>)
+
+      result.push(
+        <Grid item xs={3} key={++key}>
+          <CourseCard
+            key={key}
+            image={myCourse.pictureURL}
+            courseName={myCourse.courseName}
+            instructorName={myCourse.instructorName}
+            rating={myCourse.rating}
+            reviewCount={myCourse.reviewCount}
+            pathOnClick={'/student/course/' + myCourse.courseId + '/content'}
+          />
+        </Grid>
+      )
+      ++column
+
+      if (column === 3) {
+        result.push(<Grid item xs={1.5} key={++key}></Grid>)
+        column = 0
+      }
+    }
+    return result
+  }
+
   return (
     <Container maxWidth="lg">
       <AppBarSearchHeader />
@@ -87,6 +118,13 @@ const Student = () => {
       <Grid container spacing={1} >
       {
         handleData().map(item => item)
+      }
+      <Grid item xs={12}>
+        <hr/>
+        (Beta)
+      </Grid>
+      {
+        handleDataBeta().map(item => item)
       }
       </Grid>
       <Toolbar />

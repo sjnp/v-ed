@@ -10,7 +10,7 @@ public class CommentResponse {
     private String comment;
     private LocalDateTime commentDateTime;
     private boolean visible;
-    private String state;
+    private String commentState;
     private String firstname;
     private String lastname;
 
@@ -22,7 +22,7 @@ public class CommentResponse {
         this.comment = comment.getComment();
         this.commentDateTime = comment.getCommentDateTime();
         this.visible = comment.isVisible();
-        this.state = comment.getCommentState().getName();
+        this.commentState = comment.getCommentState().getName();
         this.firstname = comment.getStudent().getFirstName();
         this.lastname = comment.getStudent().getLastName();
     }
@@ -59,12 +59,12 @@ public class CommentResponse {
         this.visible = visible;
     }
 
-    public String getState() {
-        return state;
+    public String getCommentState() {
+        return commentState;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setCommentState(String commentState) {
+        this.commentState = commentState;
     }
 
     public String getFirstname() {

@@ -9,6 +9,9 @@ import studentAssignmentReducer from '../features/studentAssignmentSlice'
 import questionBoardReducer from '../features/questionBoardSlice'
 import commentReducer from '../features/commentSlice'
 
+// beta
+import assignmentReducer from "../features/assignmentSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -18,6 +21,10 @@ export const store = configureStore({
     videoCourse: videoCourseReducer,
     studentAssignment: studentAssignmentReducer,
     questionBoard: questionBoardReducer,
-    comment: commentReducer
+    comment: commentReducer,
+    
+    // beta
+    assignmentStudent: assignmentReducer
+
   }
 })
