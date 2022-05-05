@@ -72,9 +72,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         return questionBoardResponses;
     }
 
-    public QuestionBoardResponse getQuestionBoard(Long id) {
+    public QuestionBoardResponse getQuestionBoard(Long questionBoardId) {
 
-        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(id);
+        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(questionBoardId);
 
         if (questionBoardOptional.isEmpty()) {
             throw new MyException("question.baord.id.not.found", HttpStatus.BAD_REQUEST);
@@ -85,5 +85,12 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
         return questionBoardResponse;
     }
+
+    public List<QuestionBoardResponse> getQuestionCourse(Long courseId) {
+
+
+        return null;
+    }
+
     
 }

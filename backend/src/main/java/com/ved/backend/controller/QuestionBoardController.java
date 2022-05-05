@@ -44,4 +44,11 @@ public class QuestionBoardController {
         return ResponseEntity.ok().body(response);
     }
 
+    // todo : wait join table
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<QuestionBoardResponse>> getQuestionTopic(@PathVariable Long courseId) {
+        // <List<QuestionBoardResponse> response = questionBoardService.getQuestionBoard(questionBoardId);
+        return ResponseEntity.ok().body(null);
+    }
+
 }

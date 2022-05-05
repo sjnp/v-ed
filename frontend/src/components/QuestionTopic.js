@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import moment from 'moment'
 
 // component
@@ -20,16 +19,9 @@ import color from '../utils/color'
 const QuestionTopic = ({ data }) => {
 
     const { id, topic, detail, datetime, firstname, lastname } = data
-
-    // const topic = useSelector(state => state.questionBoard.value.topic)
-    // const detail = useSelector(state => state.questionBoard.value.detail)
-    // const datetime = useSelector(state => state.questionBoard.value.datetime)
-
-    // const firstname = "pradinan"
-    // const lastname = "benjanavee"
  
     return (
-        <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER') }}>
+        <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER'), mb: 5 }}>
             <Grid container sx={{ padding: 2 }}>
                 <Grid item xs={12}>
                     <Typography variant="h6">

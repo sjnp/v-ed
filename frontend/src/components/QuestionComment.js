@@ -20,7 +20,7 @@ const QuestionComment = ({ data }) => {
     let { comment, commentDateTime, commentState, firstname, lastname } = data
 
     return (
-        <Paper sx={{ mt: 2, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
+        <Paper sx={{ mt: 3, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
             <Grid container sx={{ padding: 2 }}>
                 <Grid item xs={12} sx={{ mb: 2 }}>
                     {comment}
