@@ -1,29 +1,29 @@
 import React from 'react'
 
-// Material UI
+// Material UI component
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
 
-// icon
-import CommentIcon from '@mui/icons-material/Comment';
-import MessageIcon from '@mui/icons-material/Message';
+// Material UI icon
+import CommentIcon from '@mui/icons-material/Comment'
 
-const QuestionCard = ({ topic, datetime, comment, onClickQuestionCard }) => {
+const QuestionCard = ({ topic, datetime, commentCount, onClickQuestionCard }) => {
     
     return (
         <Paper sx={{ m: 2, p: 2, width: '70%', cursor: 'pointer' }} onClick={onClickQuestionCard}>
             <Grid container>
-                <Grid item xs={11}>
+                <Grid item xs={10}>
                     <Box sx={{ fontWeight: 'bold' }}>
                         {topic}
                     </Box>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={1} textAlign='end' sx={{ color: 'gray' }}>
                     <CommentIcon />
-                    {comment}
+                </Grid>
+                <Grid item xs={1} sx={{ pl: 1, fontSize: 15, color: 'gray' }}>
+                    {commentCount}
                 </Grid>
                 <Grid item>
                     <Typography variant="caption" color="text.secondary">

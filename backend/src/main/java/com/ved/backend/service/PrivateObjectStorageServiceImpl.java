@@ -74,6 +74,34 @@ public class PrivateObjectStorageServiceImpl implements PrivateObjectStorageServ
   }
 
   @Override
+  public String createParToReadFile(String fileUri, String username) throws IOException {
+    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+    ObjectStorageClient client = new ObjectStorageClient(provider);
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails =
+        CreatePreauthenticatedRequestDetails.builder()
+            .name(username + "_read_" + fileUri)
+            .objectName(fileUri)
+            .accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead)
+            .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
+            .build();
+
+    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest =
+        CreatePreauthenticatedRequestRequest.builder()
+            .namespaceName(privateObjectStorageConfigProperties.getNamespace())
+            .bucketName(privateObjectStorageConfigProperties.getBucketName())
+            .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails)
+            .build();
+
+    CreatePreauthenticatedRequestResponse response = client
+        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
+    client.close();
+
+    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() +
+        response.getPreauthenticatedRequest().getAccessUri();
+  }
+
+  @Override
   public void deleteHandout(Long courseId, String objectName, String username) throws IOException {
     CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourse(courseId, username);
     String handoutPrefixName = "course_handout_" + incompleteCourseMaterials.getId();

@@ -35,10 +35,10 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
         >
             <CardMedia component="img" height="140" image={image} />
             <CardContent >
-                <Typography variant="body1" color="text.primary" title={courseName}>
+                <Typography noWrap variant="body1" color="text.primary" title={courseName}>
                     {courseName}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" title={instructorName}>
+                <Typography noWrap variant="body2" color="text.secondary" title={instructorName}>
                     {instructorName}
                 </Typography>
             </CardContent>

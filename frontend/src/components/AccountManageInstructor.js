@@ -1,7 +1,7 @@
-import { Avatar,Box,CssBaseline,Divider,List,ListItem,ListItemIcon,ListItemText,Paper,Toolbar,Typography,TextField,FormControlLabel,Checkbox,Alert,Button,Grid } from '@mui/material';
+import { Box, Paper, Typography, TextField, Button } from '@mui/material';
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useState } from "react";
 import BankingRecipientSelect from "./BankingRecipientSelect";
 
 const drawerWidth = 720;
@@ -38,11 +38,11 @@ const AccountManageInstructor = () => {
   }
   
   return (
-    <Paper 
-      elevation={2} 
-      sx={{ 
-        width: drawerWidth, 
-        flexShrink: 0 
+    <Paper
+      elevation={2}
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0
       }}
     >
       <Box
@@ -55,7 +55,7 @@ const AccountManageInstructor = () => {
       >
         <Typography 
           // ml={3} 
-          component='h1' 
+          component='h1'
           variant='h5'
         >
           Instructor
@@ -95,19 +95,19 @@ const AccountManageInstructor = () => {
           onChange={handleTextField}
           // onBlur={handlePasswordBlur}
         />
-    <Button
-      type='submit'
-      fullWidth
-      variant='contained'
-      size='large'
-      sx={{
-        marginTop: 6,
-        marginBottom: 2
-      }}
-      // startIcon={<Login />}
-    >
-      Verify and Activate Instructor
-    </Button>
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          size='large'
+          sx={{
+            marginTop: 6,
+            marginBottom: 2
+          }}
+        // startIcon={<Login />}
+        >
+          Verify and Activate Instructor
+        </Button>
       </Box>
 
 

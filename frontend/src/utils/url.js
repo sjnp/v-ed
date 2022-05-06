@@ -8,6 +8,9 @@ export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID = '/api/instructors/incomp
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT = '/api/instructors/incomplete-courses/handout/pre-authenticated-request'
 export const URL_INCOMPLETE_COURSE_HANDOUT = '/api/instructors/incomplete-courses/handout'
 export const URL_SUBMIT_INCOMPLETE_COURSE = '/api/instructors/incomplete-courses/submission'
+export const URL_GET_PENDING_COURSES = '/api/admins/pending-courses'
+export const URL_GET_PENDING_COURSE_VIDEO = '/api/admins/pending-courses/video'
+export const URL_GET_PENDING_COURSE_HANDOUT = '/api/admins/pending-courses/handout'
 
 export const URL_SAVE_COURSE_PICTURE = '/api/instructors/incomplete-courses/picture'
 export const URL_UPDATE_COURSE_MATERIAL = '/api/instructors/incomplete-courses/chapters'
@@ -30,3 +33,11 @@ export const URL_COURSE_VIDEO = '/api/course/video/'
 // assignment
 export const URL_ASSIGNMENT_UPLOAD_ANSWER = '/api/assignment/answer/upload'
 export const URL_ASSIGNMENT_ANSWER_SAVE = '/api/assignment/answer/save'
+
+// question board
+export const URL_QUESTION_BOARD_CREATE = '/api/question-board/create'
+export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
+export const URL_GET_QUESTION_BOARD_BY_ID = '/api/question-board/'
+
+// comment
+export const URL_CREATE_COMMENT = '/api/comment/create'

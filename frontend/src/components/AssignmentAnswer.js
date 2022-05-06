@@ -35,14 +35,14 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
     const { courseId } = useParams()
 
     const [ answerId, setAnswerId ] = useState(null)
-    const [ fileName, setFileName ] = useState('')
+    const [ fileNameLocal, setFileNameLocal ] = useState('')
     const [ progress, setProgress ] = useState(0)
     const [ isUpload, setIsUpload ] = useState(false)
     const [ isComplete, setIsComplete ] = useState(false)
 
     const handleUploadAnswer = async (event) => {
         const file = event.target.files[0]
-        setFileName(file.name)
+        setFileNameLocal(file.name)
         setIsUpload(true)
 
         const parUrl = await axiosPrivate.post(
@@ -72,14 +72,14 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
         
         const startIndex = multipartUploadUri.indexOf('answer_sid')
         const endIndex = multipartUploadUri.indexOf('/id/')
-        const fileNameForSave = multipartUploadUri.substring(startIndex, endIndex)
+        const fileName = multipartUploadUri.substring(startIndex, endIndex)
 
         const response = await axiosPrivate.post(
             URL_ASSIGNMENT_ANSWER_SAVE,
             {
                 chapter: chapterNo,
                 no: no,
-                fileName: fileNameForSave
+                fileName: fileName
             }
         )
         .then(res => res)
@@ -90,8 +90,10 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
             setIsComplete(true)
             setAnswerId(response.data)
             event.target.value = null
+            setFileNameLocal(fileName)
+            setProgress(0)
         } else {
-            alert(`save ${fileNameForSave} fail`)
+            alert(`save ${fileName} fail`)
         }
     }
 
@@ -127,7 +129,8 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
                     </label>
                     <label hidden={!isComplete}>
                         <Chip
-                            label={fileName}
+                            label={fileNameLocal}
+                            title={fileNameLocal}
                             variant='outlined'
                             onDelete={handleCancelAnswer}
                             deleteIcon={<CancelIcon titleAccess='answer cancel' />}
@@ -136,7 +139,7 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
                 </Grid>
                 <Grid item xs={8}>
                     <div hidden={!isUpload} >
-                        <LinearProgressWithLabel value={progress} fileName={fileName} />
+                        <LinearProgressWithLabel value={progress} fileName={fileNameLocal} />
                     </div>
                 </Grid>
             </Grid>

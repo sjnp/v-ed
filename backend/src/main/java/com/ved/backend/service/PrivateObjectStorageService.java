@@ -6,11 +6,13 @@ import com.ved.backend.request.AnswerRequest;
 
 public interface PrivateObjectStorageService {
   
-  String createParToUploadCourseVideo(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException;
+  public String createParToUploadCourseVideo(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException;
 
-  String createParToUploadCourseHandout(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException;
+  public String createParToUploadCourseHandout(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException;
 
-  void deleteHandout(Long courseId, String objectName, String name) throws IOException;
+  public String createParToReadFile(String fileUri, String username) throws IOException;
+
+  public void deleteHandout(Long courseId, String objectName, String name) throws IOException;
 
   public String getAccessURI(String fileName);
 
