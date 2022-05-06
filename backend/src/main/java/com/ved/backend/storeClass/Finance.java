@@ -12,7 +12,7 @@ public class Finance {
     private String bankAccountName;
     private String bankAccountNumber;
     private String recipientName;
-    private String taxId;
+    private String type;
 
     public String getBankBrand() {return bankBrand;}
     public void setBankBrand(String bankBrand) {this.bankBrand = bankBrand;}
@@ -26,18 +26,18 @@ public class Finance {
     public String getRecipientName() {return recipientName;}
     public void setRecipientName(String recipientName) {this.recipientName = recipientName;}
 
-    public String getTaxId() {return taxId;}
-    public void setTaxId(String taxId) {this.taxId = taxId;}
+    public String getType() {return type;}
+    public void setType(String type) {this.type = type;}
 
     public Finance() {
     }
 
-    public Finance(String bankBrand, String bankAccountName, String bankAccountNumber, String recipientName, String taxId) {
+    public Finance(String bankBrand, String bankAccountName, String bankAccountNumber, String recipientName, String type) {
         this.bankBrand = bankBrand;
         this.bankAccountName = bankAccountName;
         this.bankAccountNumber = bankAccountNumber;
         this.recipientName = recipientName;
-        this.taxId = taxId;
+        this.type = type;
 
     }
 }
