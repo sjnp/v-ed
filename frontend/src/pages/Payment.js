@@ -7,7 +7,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader';
 import CourseCardWide from '../components/CourseCardWide'
-import BankingSelect from '../components/BankingSelect'
+import BankingPaymentSelect from '../components/BankingPaymentSelect'
 
 // Material UI
 import { Container, Box, Button, Typography } from '@mui/material'
@@ -68,7 +68,7 @@ const Payment = () => {
         <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2, marginTop: 10 }}>
           Internet Banking :
         </Typography>
-        <BankingSelect />
+        <BankingPaymentSelect />
         <Button
           type='submit'
           variant='contained'
