@@ -2,17 +2,14 @@ package com.ved.backend.service;
 
 import java.util.List;
 
-import com.ved.backend.model.QuestionBoard;
 import com.ved.backend.response.QuestionBoardResponse;
 
 public interface QuestionBoardService {
- 
-    public QuestionBoardResponse create(QuestionBoard questionBorad, String username);
 
-    public List<QuestionBoardResponse> getQuestionAll();
+    public QuestionBoardResponse create(Long courseId, String topic, String detail, String username);
 
-    public QuestionBoardResponse getQuestionBoard(Long questionBoardId);
+    public QuestionBoardResponse getQuestionBoardById(Long questionBoardId);
 
-    public List<QuestionBoardResponse> getQuestionCourse(Long courseId);
+    public List<QuestionBoardResponse> getQuestionBoardByCourseId(Long courseId);
 
 }

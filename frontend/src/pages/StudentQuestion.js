@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import moment from 'moment'
 
 // component
@@ -25,7 +24,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_QUESTION_TOPIC_ALL } from "../utils/url"
+import { URL_GET_QUESTION_BOARD_BY_COURSE } from '../utils/url'
 
 const StudentQuestion = () => {
 
@@ -41,12 +40,12 @@ const StudentQuestion = () => {
 
     useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_QUESTION_TOPIC_ALL)
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_QUESTION_BOARD_BY_COURSE + courseId)
 
         if (response.status === 200) {
             setQuestion(response.data)
         } else {
-            alert('Fail')
+            alert('Qeustion fail')
         }
         setLoading(false)
 
@@ -88,7 +87,7 @@ const StudentQuestion = () => {
                             </Fab>
                         </Grid>
                     </Grid>
-                    <Grid container>
+                    <Grid container sx={{ mt: 2 }}>
                         <Grid item xs={2}></Grid>
                         <Grid item xs={10}>
                             {

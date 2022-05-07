@@ -1,9 +1,9 @@
 package com.ved.backend.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 
-import com.ved.backend.model.QuestionBoard;
 import com.ved.backend.response.QuestionBoardResponse;
 import com.ved.backend.service.QuestionBoardService;
 
@@ -27,28 +27,26 @@ public class QuestionBoardController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<QuestionBoardResponse> createQuestion(@RequestBody QuestionBoard questionBoard, Principal principal) {
-        QuestionBoardResponse response = questionBoardService.create(questionBoard, principal.getName());
+    public ResponseEntity<QuestionBoardResponse> createQuestion(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
+        
+        Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
+        String topic = bodyRequest.get("topic").toString();
+        String detail = bodyRequest.get("detail").toString();
+        
+        QuestionBoardResponse response = questionBoardService.create(courseId, topic, detail, principal.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping("/question/all")
-    public ResponseEntity<List<QuestionBoardResponse>> getQuestionAll() {
-        List<QuestionBoardResponse> response = questionBoardService.getQuestionAll();
-        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{questionBoardId}")
     public ResponseEntity<QuestionBoardResponse> getQuestionBoard(@PathVariable Long questionBoardId) {
-        QuestionBoardResponse response = questionBoardService.getQuestionBoard(questionBoardId);
+        QuestionBoardResponse response = questionBoardService.getQuestionBoardById(questionBoardId);
         return ResponseEntity.ok().body(response);
     }
 
-    // todo : wait join table
     @GetMapping("/course/{courseId}")
     public ResponseEntity<List<QuestionBoardResponse>> getQuestionTopic(@PathVariable Long courseId) {
-        // <List<QuestionBoardResponse> response = questionBoardService.getQuestionBoard(questionBoardId);
-        return ResponseEntity.ok().body(null);
+        List<QuestionBoardResponse> response = questionBoardService.getQuestionBoardByCourseId(courseId);
+        return ResponseEntity.ok().body(response);
     }
 
 }

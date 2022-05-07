@@ -1,23 +1,23 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'
+
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
-// api
-import apiPrivate from '../api/apiPrivate';
+// custom api
+import apiPrivate from '../api/apiPrivate'
 
 // component
 import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
 
 // url
-import { URL_QUESTION_BOARD_CREATE } from '../utils/url';
+import { URL_QUESTION_BOARD_CREATE } from '../utils/url'
 
 const QuestionCreate = () => {
 
@@ -94,6 +94,7 @@ const QuestionCreate = () => {
         setLoading(true)
         
         const payLoad = {
+            courseId: courseId,
             topic: topic,
             detail: detail
         }
