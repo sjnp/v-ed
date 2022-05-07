@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 
-// icon
+// Material UI icon
 import DownloadIcon from '@mui/icons-material/Download'
 import FileDownloadDoneIcon from '@mui/icons-material/FileDownloadDone';
 
@@ -19,8 +19,7 @@ const DownloadFileItem = ({ url, name }) => {
 
     const handleDownload = async () => {
         // todo : call api get preauthenticate
-        const result = await saveAs(url, name)
-        console.log(result)
+        await saveAs(url, name)
         setIconDownload(<FileDownloadDoneIcon />)
         setIsDownload(true)
     }

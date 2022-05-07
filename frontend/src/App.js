@@ -59,7 +59,12 @@ function App() {
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
           <Route path='student/course' element={<Student/>}/>
           <Route path='student/course/:courseId' element={<StudentCourse/>}/>
-          <Route path='student/course/video/:id' element={<VideoCourse/>}/>
+          
+          <Route
+            path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' 
+            element={ <VideoCourse/> }
+          />
+          
           <Route path='review' element={<Review/>}/>
           <Route path='account-manage' element={<AccountManage/>}/>
           <Route path='payment/course/:courseId' element={<Payment />} />

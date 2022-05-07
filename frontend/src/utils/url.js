@@ -29,6 +29,7 @@ export const URL_STUDENT_MY_COURSE = '/api/students/my-course'
 // course
 export const URL_GET_COURSE_BY_ID = '/api/course/'
 export const URL_COURSE_VIDEO = '/api/course/video/'
+export const URL_COURSE_VIDEO_BY_COURSE_CHAPTER_SECTION = '/api/course/{courseId}/video/chapter/{chapter}/section/{section}'
 
 // assignment
 export const URL_ASSIGNMENT_UPLOAD_ANSWER = '/api/assignment/answer/upload'
@@ -38,6 +39,7 @@ export const URL_ASSIGNMENT_ANSWER_SAVE = '/api/assignment/answer/save'
 export const URL_QUESTION_BOARD_CREATE = '/api/question-board/create'
 export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
 export const URL_GET_QUESTION_BOARD_BY_ID = '/api/question-board/'
+export const URL_GET_QUESTION_BOARD_BY_COURSE = '/api/question-board/course/'
 
 // comment
 export const URL_CREATE_COMMENT = '/api/comment/create'
