@@ -3,6 +3,9 @@ package com.ved.backend.service;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.CourseRepo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public interface InstructorService {
 
   Long createCourse(Course course, String username);
@@ -11,4 +14,6 @@ public interface InstructorService {
   void updateCourseMaterials(Long courseId, Course course, String username);
   void deleteCoursePictureUrl(Long courseId, String username);
   void submitIncompleteCourse(Long courseId, String username);
+
+  HashMap<String, Object> getAllIncompleteCourses(String username);
 }

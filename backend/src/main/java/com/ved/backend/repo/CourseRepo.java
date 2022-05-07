@@ -15,7 +15,15 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
     List<Chapter> getChapters();
   }
 
+  interface CourseBasicInfo {
+    Long getId();
+    String getName();
+    Long getPrice();
+    String getPictureUrl();
+  }
+
   CourseMaterials findCourseByInstructorAndCourseStateAndId(Instructor instructor, CourseState courseState, Long id);
   List<Course> findCoursesByCourseState(CourseState courseState);
   Course findCourseByCourseStateAndId(CourseState courseState,Long id);
+  List<CourseBasicInfo> findCoursesByInstructorAndCourseState(Instructor instructor, CourseState courseState);
 }

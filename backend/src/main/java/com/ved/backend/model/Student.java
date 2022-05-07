@@ -55,6 +55,8 @@ public class Student {
     return lastName;
   }
 
+  public String getFullName() { return firstName + " " + lastName; }
+
   public String getOccupation() {
     return occupation;
   }

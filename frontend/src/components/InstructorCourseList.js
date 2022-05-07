@@ -1,12 +1,13 @@
 import {Divider, Paper, Stack, ToggleButton, ToggleButtonGroup, Typography} from "@mui/material";
 import {useState} from "react";
+import IncompleteCourseList from "./IncompleteCourseList";
 
 const InstructorCourseList = () => {
 
   const toggleButtons = [
     {
       label: "Incomplete",
-      element: null
+      element: <IncompleteCourseList />
     },
     {
       label: "Pending",
@@ -44,7 +45,7 @@ const InstructorCourseList = () => {
             onChange={handleTypeChange}
           >
             {toggleButtons.map((button, index) =>
-              <ToggleButton value={index}>
+              <ToggleButton value={index} key={index}>
                 {button.label}
               </ToggleButton>
             )}
