@@ -53,6 +53,16 @@ public class InstructorController {
     }
   }
 
+  @GetMapping(path = "/pending-courses")
+  public ResponseEntity<?> getAllPendingCourse(Principal principal) {
+    try {
+      HashMap<String, Object> pendingCoursesJson = instructorService.getAllPendingCourses(principal.getName());
+      return ResponseEntity.ok().body(pendingCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
   @PostMapping(path = "/incomplete-courses/picture/pre-authenticated-request")
   public ResponseEntity<?> createParToCreatePicture(@RequestParam(name = "id") Long courseId, @RequestBody String fileName, Principal principal) {
     try {

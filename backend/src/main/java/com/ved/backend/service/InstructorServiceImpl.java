@@ -120,6 +120,22 @@ public class InstructorServiceImpl implements InstructorService {
     }
   }
 
+  @Override
+  public HashMap<String, Object> getAllPendingCourses(String username) {
+    log.info("Finding all pending courses from instructor: {}", username);
+    try {
+      Student student = appUserRepo.findByUsername(username).getStudent();
+      CourseState incompleteState = courseStateRepo.findByName("PENDING");
+      List<CourseRepo.CourseBasicInfo> courses = courseRepo.findCoursesByInstructorAndCourseState(student.getInstructor(), incompleteState);
+      HashMap<String, Object> coursesJson = new HashMap<>();
+      coursesJson.put("courses", courses);
+      coursesJson.put("instructorFullName", student.getFullName());
+      return coursesJson;
+    } catch (Exception exception) {
+      throw new RuntimeException(exception.getMessage());
+    }
+  }
+
 
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
     this.appUserRepo = appUserRepo;
