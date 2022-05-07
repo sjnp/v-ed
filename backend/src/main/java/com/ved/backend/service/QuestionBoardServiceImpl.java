@@ -3,16 +3,20 @@ package com.ved.backend.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import com.ved.backend.exception.MyException;
+import com.ved.backend.model.AppUser;
+import com.ved.backend.model.Course;
 import com.ved.backend.model.QuestionBoard;
-import com.ved.backend.model.Student;
+import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppUserRepo;
+import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.QuestionBoardRepo;
-import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.response.QuestionBoardResponse;
 
 import org.springframework.http.HttpStatus;
@@ -24,59 +28,64 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
     private final QuestionBoardRepo questionBoardRepo;
     private final AppUserRepo appUserRepo;
-    private final StudentRepo studentRepo;
+    private final StudentCourseRepo studentCourseRepo;
+    private final CourseRepo courseRepo;
+    
  
     public QuestionBoardServiceImpl(
         QuestionBoardRepo questionBoardRepo, 
-        AppUserRepo appUserRepo, 
-        StudentRepo studentRepo
+        AppUserRepo appUserRepo,
+        StudentCourseRepo studentCourseRepo,
+        CourseRepo courseRepo
     ) {
         this.questionBoardRepo = questionBoardRepo;
         this.appUserRepo = appUserRepo;
-        this.studentRepo = studentRepo;
+        this.studentCourseRepo = studentCourseRepo;
+        this.courseRepo = courseRepo;
     }
 
-    //TO DO: fix this :D
-    public QuestionBoardResponse create(QuestionBoard questionBorad, String username) {
+    public QuestionBoardResponse create(Long courseId, String topic, String detail, String username) {
 
-        if (questionBorad.getTopic().length() == 0) {
-            throw new MyException("question.board.topic.empty", HttpStatus.BAD_REQUEST);
+        if (Objects.isNull(courseId)) {
+            throw new MyException("question.board.course.id.null", HttpStatus.BAD_REQUEST);
         }
 
-        if (questionBorad.getDetail().length() == 0) {
-            throw new MyException("question.board.detail.empty", HttpStatus.BAD_REQUEST);
+        if (Objects.isNull(topic) || topic.length() == 0) {
+            throw new MyException("question.board.topic.null", HttpStatus.BAD_REQUEST);
         }
 
-//        Student student = appUserRepo.findByUsername(username).getStudent();
-//
-//        questionBorad.setVisible(true);
-//        questionBorad.setCreateDateTime(LocalDateTime.now());
-//        questionBorad.setStudent(student);
-//
-//        student.getQuestionBoards().add(questionBorad);
-//
-//        studentRepo.save(student);
-//        QuestionBoard questionBoard = questionBoardRepo.save(questionBorad);
-//
-//        return new QuestionBoardResponse(questionBoard);
-        return null;
+        if (Objects.isNull(detail) || detail.length() == 0) {
+            throw new MyException("question.board.detail.null", HttpStatus.BAD_REQUEST);
+        }
+
+        AppUser appUser = appUserRepo.findByUsername(username);
+        Long studentId = appUser.getStudent().getId();
+        StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
+
+        QuestionBoard questionBoard = new QuestionBoard();
+        questionBoard.setTopic(topic);
+        questionBoard.setDetail(detail);
+        questionBoard.setCreateDateTime(LocalDateTime.now());
+        questionBoard.setVisible(true);
+        questionBoard.setCourse(studentCourse.getCourse());
+        questionBoard.setStudentCourse(studentCourse);
+
+        Course course = studentCourse.getCourse();
+        course.getQuestionBoards().add(questionBoard);
+
+        studentCourse.getQuestionBoards().add(questionBoard);
+
+        questionBoardRepo.save(questionBoard);
+        studentCourseRepo.save(studentCourse);
+        courseRepo.save(course);
+
+        QuestionBoardResponse response = new QuestionBoardResponse(questionBoard);
+        return response;
     }
 
-    public List<QuestionBoardResponse> getQuestionAll() {
-        
-        List<QuestionBoard> questionBoards = questionBoardRepo.findAll();
+    public QuestionBoardResponse getQuestionBoardById(Long questionBoardId) {
 
-        List<QuestionBoardResponse> questionBoardResponses = new ArrayList<QuestionBoardResponse>();
-        for (QuestionBoard questionBoard : questionBoards) {
-            questionBoardResponses.add(new QuestionBoardResponse(questionBoard));
-        }
-
-        return questionBoardResponses;
-    }
-
-    public QuestionBoardResponse getQuestionBoard(Long id) {
-
-        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(id);
+        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(questionBoardId);
 
         if (questionBoardOptional.isEmpty()) {
             throw new MyException("question.baord.id.not.found", HttpStatus.BAD_REQUEST);
@@ -87,5 +96,25 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 
         return questionBoardResponse;
     }
-    
+
+    public List<QuestionBoardResponse> getQuestionBoardByCourseId(Long courseId) {
+
+        Optional<Course> courseOptional = courseRepo.findById(courseId);
+
+        if (courseOptional.isEmpty()) {
+            throw new MyException("question.baord.course.id.not.found", HttpStatus.BAD_REQUEST);
+        }
+
+        Course course = courseOptional.get();
+        List<QuestionBoard> questionBoards = course.getQuestionBoards();
+
+        List<QuestionBoardResponse> response = new ArrayList<QuestionBoardResponse>();
+        for (QuestionBoard questionBoard : questionBoards) {
+            QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(questionBoard);
+            response.add(questionBoardResponse);
+        }
+
+        return response;
+    }
+
 }

@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     courseId: null,
-    videoUri: null
+    videoUri: null,
+    materials: []
 }
 
 export const videoCourseSlice = createSlice({
@@ -14,6 +15,7 @@ export const videoCourseSlice = createSlice({
         setVideo: (state, action) => {
             state.value.courseId = action.payload.courseId
             state.value.videoUri = action.payload.videoUri
+            state.value.materials = action.payload.materials
         },
         reset: (state) => {
             state.value = initialState;

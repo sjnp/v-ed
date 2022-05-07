@@ -1,7 +1,5 @@
 package com.ved.backend.controller;
 
-import java.util.HashMap;
-
 import com.ved.backend.model.Review;
 import com.ved.backend.response.ReviewResponse;
 import com.ved.backend.service.ReviewService;

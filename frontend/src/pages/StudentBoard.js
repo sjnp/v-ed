@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
-import BetaCourseContent from '../components/BetaCourseContent';
 import LoadingCircle from '../components/LoadingCircle'
-
+import QuestionTopic from '../components/QuestionTopic'
+import QuestionWriteComment from '../components/QuestionWriteComment'
+import QuestionComment from '../components/QuestionComment'
 
 // Material UI component
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import Fab from '@mui/material/Fab'
-
-// Material UI icon
-import AddIcon from '@mui/icons-material/Add'
+import Toolbar from '@mui/material/Toolbar'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -25,9 +22,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_COURSE_BY_ID } from "../utils/url"
 import { URL_GET_QUESTION_BOARD_BY_ID } from '../utils/url'
-import QuestionTopic from '../components/QuestionTopic'
 
 const StudentBoard = () => {
 
@@ -35,10 +30,9 @@ const StudentBoard = () => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    const [ loading, setLoading ] = useState(true)
-
     const [ questionBoard, setQuestionBoard ] = useState(null)
 
+    const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
 
@@ -53,6 +47,15 @@ const StudentBoard = () => {
         setLoading(false)
 
     }, [])
+
+    const handleCreateCommentSuccess = (data) => {
+        const newComment = questionBoard.comments
+        newComment.push(data)
+        setQuestionBoard({
+            ...questionBoard, 
+            comments: newComment
+        })
+    }
 
     return (
         <Container>
@@ -73,12 +76,20 @@ const StudentBoard = () => {
                     </Grid>
                     <Grid container sx={{ pt: 3 }}>
                         <Grid item xs={1}></Grid>
-                        <Grid item xs={10}>
-                        {
-                            questionBoard ? <QuestionTopic data={questionBoard} /> : null
-                        }
-                            
+                        <Grid item xs={9}>
+                            {
+                                questionBoard ? <QuestionTopic data={questionBoard} /> : null
+                            }
+                            {
+                                questionBoard?.comments.map((comment, index) => (
+                                    <QuestionComment key={index} data={comment} />
+                                ))
+                            }
+                            <Toolbar />
                             <LoadingCircle loading={loading} layoutLeft={60} />
+                        </Grid>
+                        <Grid item xs={1}>
+                            <QuestionWriteComment onCreateCommentSuccess={handleCreateCommentSuccess} />
                         </Grid>
                     </Grid>
                 </Grid>

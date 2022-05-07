@@ -28,9 +28,19 @@ public class CourseController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("video/{fileName}")
+    @GetMapping("/video/{fileName}")
     public ResponseEntity<String> getVideoExampleURI(@PathVariable String fileName) {
         String response = privateObjectStorageService.getAccessURI(fileName);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{courseId}/video/chapter/{chapterNo}/section/{sectionNo}")
+    public ResponseEntity<String> getVideoURI(
+        @PathVariable String courseId, 
+        @PathVariable String chapterNo,
+        @PathVariable String sectionNo
+    ) {
+        String response = privateObjectStorageService.getAccessVideoURI(courseId, chapterNo, sectionNo);
         return ResponseEntity.ok().body(response);
     }
 

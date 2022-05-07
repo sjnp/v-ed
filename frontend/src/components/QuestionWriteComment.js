@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 // api
 import apiPrivate from '../api/apiPrivate'
+
+// component
+import LoadingCircle from './LoadingCircle'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
@@ -18,7 +21,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Typography from '@mui/material/Typography'
-import CircularProgress from '@mui/material/CircularProgress'
 
 // Material UI icon
 import CreateIcon from '@mui/icons-material/Create'
@@ -28,19 +30,17 @@ import { URL_CREATE_COMMENT } from '../utils/url'
 
 const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
-    const axiosPrivate = useAxiosPrivate()
+    const { questionBoardId } = useParams()
 
-    const questionId = useSelector(state => state.questionBoard.value.questionId)
+    const axiosPrivate = useAxiosPrivate()
     
     const maxLength = 1000
-
     const [ comment, setComment ] = useState('')
-
     const [ message, setMessage ] = useState(`(${comment.length}/${maxLength})`)
-
     const [ error, setError ] = useState(false)
 
     const [ loading, setLoading ] = useState(false)
+    const [ openDialog, setOpenDialog ] = useState(false);
 
     const handleChangeComment = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -64,7 +64,7 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
         setLoading(true)
         
         const payload = {
-            questionId: questionId,
+            questionId: questionBoardId,
             comment: comment
         }
         const response = await apiPrivate.post(axiosPrivate, URL_CREATE_COMMENT, payload)
@@ -86,8 +86,6 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
         setMessage(`(${comment.length}/${maxLength})`)
         setError(false)
     }
-
-    const [ openDialog, setOpenDialog ] = useState(false);
 
     const handleOpenDialog = () => {
         setOpenDialog(true)
@@ -155,20 +153,7 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
                     >
                         COMMENT
                     </Button>
-                    {
-                        loading && 
-                        <CircularProgress
-                            size={24}
-                            sx={{
-                                color: 'green', 
-                                position: 'absolute', 
-                                top: '50%', 
-                                left: '50%', 
-                                mt: '-12px', 
-                                ml: '-12px'
-                            }}
-                        />
-                    }
+                    <LoadingCircle loading={loading} layoutLeft={50} />
                 </DialogActions>
             </Dialog>
         </Box>
