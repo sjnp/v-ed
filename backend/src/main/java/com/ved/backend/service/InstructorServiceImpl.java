@@ -6,6 +6,9 @@ import com.ved.backend.repo.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -99,6 +102,38 @@ public class InstructorServiceImpl implements InstructorService {
     Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
     incompleteCourse.setCourseState(courseStateRepo.findByName("PENDING"));
     courseRepo.save(incompleteCourse);
+  }
+
+  @Override
+  public HashMap<String, Object> getAllIncompleteCourses(String username) {
+    log.info("Finding all incomplete courses from instructor: {}", username);
+    try {
+      Student student = appUserRepo.findByUsername(username).getStudent();
+      CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
+      List<CourseRepo.CourseBasicInfo> courses = courseRepo.findCoursesByInstructorAndCourseState(student.getInstructor(), incompleteState);
+      HashMap<String, Object> coursesJson = new HashMap<>();
+      coursesJson.put("courses", courses);
+      coursesJson.put("instructorFullName", student.getFullName());
+      return coursesJson;
+    } catch (Exception exception) {
+      throw new RuntimeException(exception.getMessage());
+    }
+  }
+
+  @Override
+  public HashMap<String, Object> getAllPendingCourses(String username) {
+    log.info("Finding all pending courses from instructor: {}", username);
+    try {
+      Student student = appUserRepo.findByUsername(username).getStudent();
+      CourseState incompleteState = courseStateRepo.findByName("PENDING");
+      List<CourseRepo.CourseBasicInfo> courses = courseRepo.findCoursesByInstructorAndCourseState(student.getInstructor(), incompleteState);
+      HashMap<String, Object> coursesJson = new HashMap<>();
+      coursesJson.put("courses", courses);
+      coursesJson.put("instructorFullName", student.getFullName());
+      return coursesJson;
+    } catch (Exception exception) {
+      throw new RuntimeException(exception.getMessage());
+    }
   }
 
 

@@ -18,18 +18,18 @@ const Instructor = () => {
           mb: 3
         }}
       >
-        <Stack direction='row' justifyContent='center'>
-          <Button
-            variant='contained'
-            size='large'
-            sx={{
-              marginBottom: 3
-            }}
-            onClick={() => {navigate('/instructor/create-course')}}
-          >
-            Create Course
-          </Button>
-        </Stack>
+        {/*<Stack direction='row' justifyContent='center'>*/}
+        {/*  <Button*/}
+        {/*    variant='contained'*/}
+        {/*    size='large'*/}
+        {/*    sx={{*/}
+        {/*      marginBottom: 3*/}
+        {/*    }}*/}
+        {/*    onClick={() => {navigate('/instructor/create-course')}}*/}
+        {/*  >*/}
+        {/*    Create Course*/}
+        {/*  </Button>*/}
+        {/*</Stack>*/}
 
         <InstructorCourseList/>
       </Stack>

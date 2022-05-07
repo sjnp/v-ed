@@ -127,12 +127,15 @@ export const createdCourseSlice = createSlice({
       const oldHandouts = state.value.chapters[chapterIndex].sections[sectionIndex].handouts;
       state.value.chapters[chapterIndex].sections[sectionIndex].handouts = oldHandouts
         .filter(item => item.handoutUri !== handoutUri);
+    },
+    resetCourse: (state) => {
+      state.value = {...initialState};
     }
   }
 });
 
 export const { setCourseDetails, addSection, removeSection, addChapter, removeChapter, addAssignment, removeAssignment,
   setName, setPrice, setCategory, setOverview, setRequirement, setPictureUrl, setVideoUri, setChapters,
-  setHandoutUri, removeHandoutUri } = createdCourseSlice.actions;
+  setHandoutUri, removeHandoutUri, resetCourse } = createdCourseSlice.actions;
 
 export default createdCourseSlice.reducer;
