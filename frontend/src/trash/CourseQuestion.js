@@ -14,8 +14,8 @@ import apiPrivate from '../api/apiPrivate'
 
 // component
 import QuestionBoard from './QuestionBoard'
-import QuestionCreate from './QuestionCreate'
-import QuestionCard from './QuestionCard'
+import QuestionCreate from '../components/QuestionCreate'
+import QuestionCard from '../components/QuestionCard'
 
 // Material UI component
 import Box from '@mui/material/Box'

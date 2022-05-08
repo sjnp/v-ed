@@ -8,7 +8,7 @@ import StudentSidebar from '../components/StudentSidebar'
 import CourseContent from '../components/CourseContent'
 import CourseAbout from '../components/CourseAbout'
 import CourseAssignment from '../components/CourseAssignment'
-import CourseQuestion from '../components/CourseQuestion'
+// import CourseQuestion from '../components/CourseQuestion'
 // import CourseReview from '../components/CourseReview'
 import CourseInstructorDetail from '../components/CourseInstructorDetail'
 
@@ -63,7 +63,7 @@ const StudentCourse = () => {
         switch (name) {
             case 'Content': return <CourseContent />
             case 'Assignment': return <CourseAssignment />
-            case 'Question board': return <CourseQuestion />
+            // case 'Question board': return <CourseQuestion />
             // case 'Review': return <CourseReview />
             case 'Instructor': return <CourseInstructorDetail />
             case 'About course': return <CourseAbout />
