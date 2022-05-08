@@ -32,6 +32,7 @@ export const URL_STUDENT_MY_COURSE = '/api/students/my-course'
 export const URL_GET_COURSE_BY_ID = '/api/course/'
 export const URL_COURSE_VIDEO = '/api/course/video/'
 export const URL_COURSE_VIDEO_BY_COURSE_CHAPTER_SECTION = '/api/course/{courseId}/video/chapter/{chapter}/section/{section}'
+export const URL_GET_ABOUT_COURSE = '/api/course/about-course/'
 
 // assignment
 export const URL_ASSIGNMENT_UPLOAD_ANSWER = '/api/assignment/answer/upload'

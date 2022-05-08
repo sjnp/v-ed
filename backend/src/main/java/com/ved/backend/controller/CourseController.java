@@ -1,5 +1,6 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.service.CourseService;
 import com.ved.backend.service.PrivateObjectStorageService;
@@ -41,6 +42,12 @@ public class CourseController {
         @PathVariable String sectionNo
     ) {
         String response = privateObjectStorageService.getAccessVideoURI(courseId, chapterNo, sectionNo);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/about-course/{courseId}")
+    public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
+        AboutCourseResponse response = courseService.getAboutCourse(courseId);
         return ResponseEntity.ok().body(response);
     }
 
