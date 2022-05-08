@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -78,6 +79,16 @@ public class InstructorController {
     try {
       HashMap<String, Object> rejectedCoursesJson = instructorService.getAllRejectedCourses(principal.getName());
       return ResponseEntity.ok().body(rejectedCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @GetMapping(path = "/published-courses")
+  public ResponseEntity<?> getAllPublishedCourse(Principal principal) {
+    try {
+      List<HashMap<String, Object>> publishedCourses = instructorService.getAllPublishedCourses(principal.getName());
+      return ResponseEntity.ok().body(publishedCourses);
     } catch (Exception exception) {
       return ResponseEntity.badRequest().body(exception.getMessage());
     }

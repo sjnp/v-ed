@@ -6,6 +6,7 @@ import com.ved.backend.repo.*;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +177,36 @@ public class InstructorServiceImpl implements InstructorService {
       Course course = courseRepo.findCourseByCourseStateAndInstructorAndId(approvedState, instructor, courseId);
       CourseState publishedState = courseStateRepo.findByName("PUBLISHED");
       course.setCourseState(publishedState);
+      PublishedCourse publishedCourse = new PublishedCourse();
+      publishedCourse.setTotalScore(0.0);
+      publishedCourse.setTotalUser(0L);
+      publishedCourse.setStar(0.0);
+      course.setPublishedCourse(publishedCourse);
       courseRepo.save(course);
+    } catch (Exception exception) {
+      throw new RuntimeException("Course not found");
+    }
+  }
+
+  @Override
+  public List<HashMap<String, Object>> getAllPublishedCourses(String username) {
+    try {
+      Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+      CourseState publishedState = courseStateRepo.findByName("PUBLISHED");
+      List<Course> publishedCourses = courseRepo.findCoursesByCourseStateAndInstructor(publishedState, instructor);
+      List<HashMap<String, Object>> publishedCoursesJson = new ArrayList<>();
+      for(Course course: publishedCourses) {
+        HashMap<String, Object> courseMap = new HashMap<>();
+        courseMap.put("id", course.getId());
+        courseMap.put("name", course.getName());
+        courseMap.put("pictureUrl", course.getPictureUrl());
+        courseMap.put("price", course.getPrice());
+        PublishedCourse publishedCourse = course.getPublishedCourse();
+        courseMap.put("rating", publishedCourse.getStar());
+        courseMap.put("reviewTotal", publishedCourse.getTotalUser());
+        publishedCoursesJson.add(courseMap);
+      }
+      return publishedCoursesJson;
     } catch (Exception exception) {
       throw new RuntimeException("Course not found");
     }

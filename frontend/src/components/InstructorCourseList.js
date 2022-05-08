@@ -4,6 +4,7 @@ import IncompleteCourseList from "./IncompleteCourseList";
 import InstructorPendingCourseList from "./InstructorPendingCourseList";
 import InstructorApprovedCourseList from "./InstructorApprovedCourseList";
 import InstructorRejectedCourseList from "./InstructorRejectedCourseList";
+import InstructorPublishedCourseList from "./InstructorPublishedCourseList";
 
 const InstructorCourseList = () => {
 
@@ -71,6 +72,7 @@ const InstructorCourseList = () => {
           </Stack>
           <Divider/>
           {/*TO DO InstructorPublishedCourseList*/}
+          <InstructorPublishedCourseList/>
         </Stack>
       </Paper>
     </Stack>

@@ -4,6 +4,7 @@ import com.ved.backend.model.Course;
 import com.ved.backend.repo.CourseRepo;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface InstructorService {
 
@@ -28,4 +29,6 @@ public interface InstructorService {
   HashMap<String, Object> getAllRejectedCourses(String username);
 
   void publishApprovedCourse(Long courseId, String username);
+
+  List<HashMap<String, Object>> getAllPublishedCourses(String username);
 }
