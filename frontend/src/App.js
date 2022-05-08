@@ -29,6 +29,8 @@ import StudentAboutCourse from './pages/StudentAboutCourse';
 import StudentAssignmentAnswer from './pages/StudentAssignmentAnswer';
 import StudentCreateQuestion from './pages/StudentCreateQuestion';
 import StudentBoard from './pages/StudentBoard';
+import StudentCreateReview from './pages/StudentCreateReview';
+import StudentEditReview from './pages/StudentEditReview';
 
 // import Logout from './pages/Logout';
 function App() {
@@ -100,6 +102,14 @@ function App() {
           <Route 
             path='student/course/:courseId/review' 
             element={ <StudentReview /> }
+          />
+          <Route 
+            path='student/course/:courseId/review/create' 
+            element={ <StudentCreateReview /> }
+          />
+          <Route 
+            path='student/course/:courseId/review/:reviewId' 
+            element={ <StudentEditReview /> }
           />
           
           <Route 
