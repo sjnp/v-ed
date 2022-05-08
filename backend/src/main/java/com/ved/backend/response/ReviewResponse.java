@@ -9,6 +9,8 @@ public class ReviewResponse {
     private Long id;
     private double rating;
     private String comment;
+    private String firstname;
+    private String lastname;
     private LocalDateTime reviewDateTime;
     private boolean visible;
 
@@ -19,6 +21,8 @@ public class ReviewResponse {
         this.id = review.getId();
         this.rating = review.getRating();
         this.comment = review.getComment();
+        this.firstname = review.getStudent().getFirstName();
+        this.lastname= review.getStudent().getLastName();
         this.reviewDateTime = review.getReviewDateTime();
         this.visible = review.isVisible();
     }
@@ -45,6 +49,22 @@ public class ReviewResponse {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public LocalDateTime getReviewDateTime() {

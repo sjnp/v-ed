@@ -43,3 +43,9 @@ export const URL_GET_QUESTION_BOARD_BY_COURSE = '/api/question-board/course/'
 
 // comment
 export const URL_CREATE_COMMENT = '/api/comment/create'
+
+// review
+export const URL_CREATE_REVIEW = '/api/review/create'
+export const URL_GET_REVIEW_COURSE = '/api/review/course/'
+export const URL_GET_REVIEW = '/api/review/'
+export const URL_PUT_EDIT_REVIEW = '/api/review/{reviewId}/edit'
