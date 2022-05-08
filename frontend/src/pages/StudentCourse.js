@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
 import StudentSidebar from '../components/StudentSidebar'
-import CourseContent from '../components/CourseContent'
+// import CourseContent from '../components/CourseContent'
 import CourseAbout from '../components/CourseAbout'
 import CourseAssignment from '../components/CourseAssignment'
 // import CourseQuestion from '../components/CourseQuestion'
@@ -52,7 +52,8 @@ const StudentCourse = () => {
         
     }, [])
 
-    const [ mainElement, setMainElement ] = useState(<CourseContent />)
+    // const [ mainElement, setMainElement ] = useState(<CourseContent />)
+    const [ mainElement, setMainElement ] = useState(null)
 
     const handleChangeMain = (name) => {
         const element = getMainElement(name)
@@ -61,7 +62,7 @@ const StudentCourse = () => {
 
     const getMainElement = (name) => {
         switch (name) {
-            case 'Content': return <CourseContent />
+            // case 'Content': return <CourseContent />
             case 'Assignment': return <CourseAssignment />
             // case 'Question board': return <CourseQuestion />
             // case 'Review': return <CourseReview />
