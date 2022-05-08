@@ -2,6 +2,8 @@ import {Divider, Paper, Stack, ToggleButton, ToggleButtonGroup, Typography} from
 import {useState} from "react";
 import IncompleteCourseList from "./IncompleteCourseList";
 import InstructorPendingCourseList from "./InstructorPendingCourseList";
+import InstructorApprovedCourseList from "./InstructorApprovedCourseList";
+import InstructorRejectedCourseList from "./InstructorRejectedCourseList";
 
 const InstructorCourseList = () => {
 
@@ -16,11 +18,11 @@ const InstructorCourseList = () => {
     },
     {
       label: "Approved",
-      element: null
+      element: <InstructorApprovedCourseList />
     },
     {
       label: "Rejected",
-      element: null
+      element: <InstructorRejectedCourseList />
     }
   ];
 

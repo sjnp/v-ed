@@ -136,6 +136,37 @@ public class InstructorServiceImpl implements InstructorService {
     }
   }
 
+  @Override
+  public HashMap<String, Object> getAllApprovedCourses(String username) {
+    log.info("Finding all approved courses from instructor: {}", username);
+    try {
+      Student student = appUserRepo.findByUsername(username).getStudent();
+      CourseState approvedState = courseStateRepo.findByName("APPROVED");
+      List<CourseRepo.CourseBasicInfo> courses = courseRepo.findCoursesByInstructorAndCourseState(student.getInstructor(), approvedState);
+      HashMap<String, Object> coursesJson = new HashMap<>();
+      coursesJson.put("courses", courses);
+      coursesJson.put("instructorFullName", student.getFullName());
+      return coursesJson;
+    } catch (Exception exception) {
+      throw new RuntimeException(exception.getMessage());
+    }
+  }
+
+  @Override
+  public HashMap<String, Object> getAllRejectedCourses(String username) {
+    log.info("Finding all rejected courses from instructor: {}", username);
+    try {
+      Student student = appUserRepo.findByUsername(username).getStudent();
+      CourseState rejectedState = courseStateRepo.findByName("REJECTED");
+      List<CourseRepo.CourseBasicInfo> courses = courseRepo.findCoursesByInstructorAndCourseState(student.getInstructor(), rejectedState);
+      HashMap<String, Object> coursesJson = new HashMap<>();
+      coursesJson.put("courses", courses);
+      coursesJson.put("instructorFullName", student.getFullName());
+      return coursesJson;
+    } catch (Exception exception) {
+      throw new RuntimeException(exception.getMessage());
+    }
+  }
 
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
     this.appUserRepo = appUserRepo;

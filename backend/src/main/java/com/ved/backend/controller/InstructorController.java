@@ -63,6 +63,28 @@ public class InstructorController {
     }
   }
 
+  @GetMapping(path = "/approved-courses")
+  public ResponseEntity<?> getAllApprovedCourse(Principal principal) {
+    try {
+      HashMap<String, Object> approvedCoursesJson = instructorService.getAllApprovedCourses(principal.getName());
+      return ResponseEntity.ok().body(approvedCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @GetMapping(path = "/rejected-courses")
+  public ResponseEntity<?> getAllRejectedCourse(Principal principal) {
+    try {
+      HashMap<String, Object> rejectedCoursesJson = instructorService.getAllRejectedCourses(principal.getName());
+      return ResponseEntity.ok().body(rejectedCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+
+
   @PostMapping(path = "/incomplete-courses/picture/pre-authenticated-request")
   public ResponseEntity<?> createParToCreatePicture(@RequestParam(name = "id") Long courseId, @RequestBody String fileName, Principal principal) {
     try {
