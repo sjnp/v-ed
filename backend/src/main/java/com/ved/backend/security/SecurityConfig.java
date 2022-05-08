@@ -78,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
             "/api/instructors/incomplete-courses/chapters/**",
-            "/api/instructors/incomplete-courses/submission/**")
+            "/api/instructors/incomplete-courses/submission/**",
+            "/api/instructors/approved-courses/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

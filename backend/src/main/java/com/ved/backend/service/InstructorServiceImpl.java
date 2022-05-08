@@ -168,6 +168,20 @@ public class InstructorServiceImpl implements InstructorService {
     }
   }
 
+  @Override
+  public void publishApprovedCourse(Long courseId, String username) {
+    try {
+      Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+      CourseState approvedState = courseStateRepo.findByName("APPROVED");
+      Course course = courseRepo.findCourseByCourseStateAndInstructorAndId(approvedState, instructor, courseId);
+      CourseState publishedState = courseStateRepo.findByName("PUBLISHED");
+      course.setCourseState(publishedState);
+      courseRepo.save(course);
+    } catch (Exception exception) {
+      throw new RuntimeException("Course not found");
+    }
+  }
+
   public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
     this.appUserRepo = appUserRepo;
     this.courseRepo = courseRepo;

@@ -212,6 +212,16 @@ public class InstructorController {
     }
   }
 
+  @PutMapping(path = "/approved-courses")
+  public ResponseEntity<?> publishApprovedCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+    try {
+      instructorService.publishApprovedCourse(courseId, principal.getName());
+      return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
   @DeleteMapping(path = "/incomplete-courses/picture")
   public ResponseEntity<?> deleteCoursePictureUrl(@RequestParam(name = "id") Long courseId, Principal principal) {
     try {

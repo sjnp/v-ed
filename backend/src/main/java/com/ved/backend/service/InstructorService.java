@@ -26,4 +26,6 @@ public interface InstructorService {
   HashMap<String, Object> getAllApprovedCourses(String username);
 
   HashMap<String, Object> getAllRejectedCourses(String username);
+
+  void publishApprovedCourse(Long courseId, String username);
 }

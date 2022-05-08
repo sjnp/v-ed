@@ -10,54 +10,71 @@ const InstructorCourseList = () => {
   const toggleButtons = [
     {
       label: "Incomplete",
-      element: <IncompleteCourseList />
+      element: <IncompleteCourseList/>
     },
     {
       label: "Pending",
-      element: <InstructorPendingCourseList />
+      element: <InstructorPendingCourseList/>
     },
     {
       label: "Approved",
-      element: <InstructorApprovedCourseList />
+      element: <InstructorApprovedCourseList/>
     },
     {
       label: "Rejected",
-      element: <InstructorRejectedCourseList />
+      element: <InstructorRejectedCourseList/>
     }
   ];
 
   const [type, setType] = useState(0);
 
   const handleTypeChange = (event, newType) => {
-    setType(newType);
+    if (newType !== null) {
+      setType(newType);
+    }
   };
 
   return (
-    <Paper variant='outlined'>
-      <Stack
-        spacing={2}
-        sx={{padding: 3}}
-      >
-        <Stack direction='row' justifyContent='space-between' alignItems='center'>
-          <Typography variant='h5'>Your pending courses</Typography>
-          <ToggleButtonGroup
-            color='primary'
-            size='medium'
-            exclusive
-            value={type}
-            onChange={handleTypeChange}
-          >
-            {toggleButtons.map((button, index) =>
-              <ToggleButton value={index} key={index}>
-                {button.label}
-              </ToggleButton>
-            )}
-          </ToggleButtonGroup>
+    <Stack spacing={3}>
+      <Paper variant='outlined'>
+        <Stack
+          spacing={2}
+          sx={{padding: 2}}
+        >
+          <Stack direction='row' justifyContent='space-between' alignItems='center'>
+            <Typography variant='h5'>Your pending courses</Typography>
+            <ToggleButtonGroup
+              color='primary'
+              size='medium'
+              exclusive
+              value={type}
+              onChange={handleTypeChange}
+            >
+              {toggleButtons.map((button, index) =>
+                <ToggleButton value={index} key={index}>
+                  {button.label}
+                </ToggleButton>
+              )}
+            </ToggleButtonGroup>
+          </Stack>
+          <Divider/>
+          {toggleButtons[type].element}
         </Stack>
-        <Divider/>
-        {toggleButtons[type].element}
-      </Stack>
-    </Paper>
+      </Paper>
+      <Paper variant='outlined'>
+        <Stack
+          spacing={2}
+          sx={{padding: 2}}
+        >
+          <Stack direction='row' justifyContent='space-between' alignItems='center'>
+            <Typography variant='h5'>Your published courses</Typography>
+          </Stack>
+          <Divider/>
+          {/*TO DO InstructorPublishedCourseList*/}
+        </Stack>
+      </Paper>
+    </Stack>
+
   )
 }
 

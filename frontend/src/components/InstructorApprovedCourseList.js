@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {CircularProgress, Stack, Grid, Typography} from "@mui/material";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {URL_GET_ALL_INSTRUCTOR_APPROVED_COURSES} from "../utils/url";
-import InstructorCourseCard from "./InstructorCourseCard";
+import InstructorApprovedCourseCard from "./InstructorApprovedCourseCard";
 
 const InstructorApprovedCourseList = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,6 @@ const InstructorApprovedCourseList = () => {
           courseCard['courseName'] = course.name;
           courseCard['pictureUrl'] = course.pictureUrl;
           courseCard['price'] = course.price;
-          courseCard['isIncomplete'] = true;
           return courseCard;
         });
         console.log(newApprovedCourses);
@@ -46,7 +45,7 @@ const InstructorApprovedCourseList = () => {
         ? <Grid container spacing={1}>
           {approvedCourses.map(course => (
             <Grid item xs={3} key={course.id}>
-              <InstructorCourseCard {...course} />
+              <InstructorApprovedCourseCard {...course} />
             </Grid>
           ))}
         </Grid>
