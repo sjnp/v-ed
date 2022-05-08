@@ -8,7 +8,6 @@ const CreateCourse = () => {
     <Container maxWidth="lg">
       <AppBarHeader />
       <Box component='main'>
-
         <CreateCourseForm />
       </Box>
     </Container>

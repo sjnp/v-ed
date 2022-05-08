@@ -6,16 +6,20 @@ import CourseAssignmentForm from "./CourseAssignmentForm";
 import CourseDetailsForm from "./CourseDetailsForm";
 import ChapterDetailsForm from "./ChapterDetailsForm";
 import service from "../services/service";
+import {useDispatch} from "react-redux";
+import {resetCourse} from "../features/createdCourseSlice";
 
 const CreateCourseForm = () => {
 
   const [categories, setCategories] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const response = service.getAllCategories()
+    service.getAllCategories()
       .then(res => setCategories(res.data))
       .catch(err => console.error(err));
-  }, [])
+    dispatch(resetCourse());
+  }, [dispatch])
 
 
   const steps = [

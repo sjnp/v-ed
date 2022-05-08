@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/instructors")
@@ -32,13 +33,33 @@ public class InstructorController {
     return ResponseEntity.created(uri).body(createdCourseId);
   }
 
-  @GetMapping(path = "/incomplete-courses")
+  @GetMapping(path = "/incomplete-courses", params = "id")
   public ResponseEntity<?> getIncompleteCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
     try {
       CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourse(courseId, principal.getName());
       return ResponseEntity.ok().body(incompleteCourseMaterials);
     } catch (Exception exception) {
       return ResponseEntity.notFound().build();
+    }
+  }
+
+  @GetMapping(path = "/incomplete-courses")
+  public ResponseEntity<?> getAllIncompleteCourse(Principal principal) {
+    try {
+     HashMap<String, Object> incompleteCoursesJson = instructorService.getAllIncompleteCourses(principal.getName());
+     return ResponseEntity.ok().body(incompleteCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @GetMapping(path = "/pending-courses")
+  public ResponseEntity<?> getAllPendingCourse(Principal principal) {
+    try {
+      HashMap<String, Object> pendingCoursesJson = instructorService.getAllPendingCourses(principal.getName());
+      return ResponseEntity.ok().body(pendingCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
     }
   }
 
