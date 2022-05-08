@@ -124,11 +124,13 @@ function App() {
 
 
         </Route>
+
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
           <Route path='instructor' element={<Instructor/>}/>
           <Route path='instructor/create-course' element={<CreateCourse/>}/>
           <Route path='instructor/create-course/:id' element={<UploadCourseMaterials/>}/>
         </Route>
+
         <Route element={<RequireAuth allowRoles={["ADMIN"]}/>}>
           <Route path='admin' element={<Admin/>}/>
           <Route path='admin/pending-course/:courseId' element={<PendingCourse/>}/>

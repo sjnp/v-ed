@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -62,6 +63,38 @@ public class InstructorController {
       return ResponseEntity.badRequest().body(exception.getMessage());
     }
   }
+
+  @GetMapping(path = "/approved-courses")
+  public ResponseEntity<?> getAllApprovedCourse(Principal principal) {
+    try {
+      HashMap<String, Object> approvedCoursesJson = instructorService.getAllApprovedCourses(principal.getName());
+      return ResponseEntity.ok().body(approvedCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @GetMapping(path = "/rejected-courses")
+  public ResponseEntity<?> getAllRejectedCourse(Principal principal) {
+    try {
+      HashMap<String, Object> rejectedCoursesJson = instructorService.getAllRejectedCourses(principal.getName());
+      return ResponseEntity.ok().body(rejectedCoursesJson);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @GetMapping(path = "/published-courses")
+  public ResponseEntity<?> getAllPublishedCourse(Principal principal) {
+    try {
+      List<HashMap<String, Object>> publishedCourses = instructorService.getAllPublishedCourses(principal.getName());
+      return ResponseEntity.ok().body(publishedCourses);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+
 
   @PostMapping(path = "/incomplete-courses/picture/pre-authenticated-request")
   public ResponseEntity<?> createParToCreatePicture(@RequestParam(name = "id") Long courseId, @RequestBody String fileName, Principal principal) {
@@ -184,6 +217,16 @@ public class InstructorController {
   public ResponseEntity<?> submitIncompleteCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
     try {
       instructorService.submitIncompleteCourse(courseId, principal.getName());
+      return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @PutMapping(path = "/approved-courses")
+  public ResponseEntity<?> publishApprovedCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+    try {
+      instructorService.publishApprovedCourse(courseId, principal.getName());
       return ResponseEntity.ok().build();
     } catch (Exception exception) {
       return ResponseEntity.notFound().build();
