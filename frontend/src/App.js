@@ -58,70 +58,42 @@ function App() {
         {/* <Route element={<RequireAuth allowRoles={["STUDENT", "INSTRUCTOR", "ADMIN"]} />}>
           <Route path='logout' element={<Logout />} />
         </Route> */}
+        
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
-          <Route path='student/course' element={<Student/>}/>
-          <Route path='student/course/:courseId' element={<StudentCourse/>}/>
-          
-          <Route
-            path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' 
-            element={ <VideoCourse/> }
-          />
-          
+
+          <Route path='student/course/:courseId' element={<StudentCourse/>}/>          
           <Route path='review' element={<Review/>}/>
           <Route path='account-manage' element={<AccountManage/>}/>
           <Route path='payment/course/:courseId' element={<Payment />} />
 
-          
-          <Route 
-            path='student/course/:courseId/content' 
-            element={ <StudentContent /> }
-          />
+          {/* student my course */}
+          <Route path='student/course' element={<Student/>}/>
 
-          <Route
-            path='student/course/:courseId/assignment' 
-            element={ <StudentAssignment /> }
-          />
-          <Route
-            path='student/course/:courseId/assignment/chapter/:chapterNo'
-            element={ <StudentAssignmentAnswer /> }
-          />
-          
-          <Route
-            path='student/course/:courseId/question-board' 
-            element={ <StudentQuestion /> }
-          />
-          <Route
-            path='student/course/:courseId/question-board/create' 
-            element={ <StudentCreateQuestion /> }
-          />
-          <Route
-            path='student/course/:courseId/question-board/:questionBoardId' 
-            element={ <StudentBoard /> }
-          />
-          
-          <Route 
-            path='student/course/:courseId/review' 
-            element={ <StudentReview /> }
-          />
-          <Route 
-            path='student/course/:courseId/review/create' 
-            element={ <StudentCreateReview /> }
-          />
-          <Route 
-            path='student/course/:courseId/review/:reviewId' 
-            element={ <StudentEditReview /> }
-          />
-          
-          <Route 
-            path='student/course/:courseId/instructor' 
-            element={ <StudentInstructor /> } 
-          />
-          
-          <Route 
-            path='student/course/:courseId/about-course' 
-            element={ <StudentAboutCourse /> }
-          />
+          {/* student video course */}
+          <Route path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' element={ <VideoCourse/> } />
 
+          {/* student content */}
+          <Route path='student/course/:courseId/content' element={ <StudentContent /> } />
+
+          {/* student assignment */}
+          <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
+          <Route path='student/course/:courseId/assignment/chapter/:chapterNo' element={ <StudentAssignmentAnswer /> } />
+          
+          {/* student question board */}
+          <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />
+          <Route path='student/course/:courseId/question-board/create' element={ <StudentCreateQuestion /> } />
+          <Route path='student/course/:courseId/question-board/:questionBoardId' element={ <StudentBoard /> } />
+          
+          {/* student review */}
+          <Route path='student/course/:courseId/review' element={ <StudentReview /> } />
+          <Route path='student/course/:courseId/review/create' element={ <StudentCreateReview /> } />
+          <Route path='student/course/:courseId/review/:reviewId' element={ <StudentEditReview /> } />
+          
+          {/* student instructor */}
+          <Route path='student/course/:courseId/instructor' element={ <StudentInstructor /> } />
+          
+          {/* student about course */}
+          <Route path='student/course/:courseId/about-course' element={ <StudentAboutCourse /> } />
 
         </Route>
 

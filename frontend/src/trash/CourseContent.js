@@ -12,7 +12,7 @@ import Box from '@mui/material/Box'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 // component
-import ChapterVideoList from './ChapterVideoList';
+import ChapterVideoList from '../components/ChapterVideoList';
 
 const CourseContent = () => {
 
