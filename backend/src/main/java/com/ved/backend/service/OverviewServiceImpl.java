@@ -3,7 +3,9 @@ package com.ved.backend.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ved.backend.exception.MyException;
 import com.ved.backend.model.Category;
@@ -56,11 +58,12 @@ public class OverviewServiceImpl implements OverviewService {
     }
 
     public ArrayList<CourseCardResponse> getOverviewCategory(String categoryName) {
+        
+        Category category = this.categoryRepo.findByName(categoryName.toUpperCase());
+        Set<Course> courseSet = category.getCourses();
+        ArrayList<CourseCardResponse> courseCardResponses = getCourseCardResponseList(courseSet);
 
-        Category category = this.categoryRepo.findByName(categoryName);
-        ArrayList<CourseCardResponse> courseCardResponseList = getCourseCardResponseList(category.getCourses());
-
-        return courseCardResponseList;
+        return courseCardResponses;
     }
 
     public ArrayList<CourseCardResponse> getOverviewMyCouese(String username) {
