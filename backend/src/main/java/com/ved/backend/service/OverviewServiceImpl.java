@@ -85,20 +85,7 @@ public class OverviewServiceImpl implements OverviewService {
         }
 
         Course course = courseOptional.get();
-        OverviewResponse overviewResponse = new OverviewResponse();
-        overviewResponse.setCourseId(course.getId());
-        overviewResponse.setCourseName(course.getName());
-        overviewResponse.setPrice(course.getPrice());
-        overviewResponse.setPictureURL(course.getPictureUrl());
-        overviewResponse.setOverview(course.getOverview());
-        overviewResponse.setChapterList(course.getChapters());
-        overviewResponse.setRequirement(course.getRequirement());
-        overviewResponse.setReviewList(null);
-        overviewResponse.setInstructorFirstname(course.getInstructor().getStudent().getFirstName());
-        overviewResponse.setInstructorLastname(course.getInstructor().getStudent().getLastName());
-        overviewResponse.setInstructorPictureURI(course.getInstructor().getStudent().getProfilePicUri());
-        overviewResponse.setBiography(course.getInstructor().getStudent().getBiography());
-        overviewResponse.setOccupation(course.getInstructor().getStudent().getOccupation());
+        OverviewResponse overviewResponse = new OverviewResponse(course);
 
         return overviewResponse;
     }
