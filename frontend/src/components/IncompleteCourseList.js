@@ -34,7 +34,7 @@ const IncompleteCourseList = () => {
   if (isLoading) {
     return (
       <Grid container>
-        <Grid item xs={12} sx={{m: 15}}>
+        <Grid item xs={12} sx={{m: 12}}>
           <Stack alignItems='center'>
             <CircularProgress/>
           </Stack>
@@ -54,7 +54,7 @@ const IncompleteCourseList = () => {
           ))}
         </Grid>
         : <Grid container>
-          <Grid item xs={12} sx={{m: 15}}>
+          <Grid item xs={12} sx={{m: 12}}>
             <Stack alignItems='center'>
               <Button
                 variant='contained'

@@ -1,28 +1,31 @@
 import {useEffect, useState} from "react";
 import {CircularProgress, Stack, Grid, Typography} from "@mui/material";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import {URL_GET_ALL_INSTRUCTOR_PENDING_COURSES} from "../utils/url";
+import {URL_GET_ALL_INSTRUCTOR_PUBLISHED_COURSES} from "../utils/url";
 import InstructorCourseCard from "./InstructorCourseCard";
 
-const InstructorPendingCourseList = () => {
+const InstructorPublishedCourseList = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [pendingCourses, setPendingCourses] = useState([]);
+  const [publishedCourses, setPublishedCourses] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
-    axiosPrivate.get(URL_GET_ALL_INSTRUCTOR_PENDING_COURSES)
+    axiosPrivate.get(URL_GET_ALL_INSTRUCTOR_PUBLISHED_COURSES)
       .then(res => {
-        const newPendingCourses = res.data.courses.map(course => {
+        const newPublishedCourses = res.data.map(course => {
           const courseCard = {};
           courseCard['id'] = course.id;
           courseCard['courseName'] = course.name;
           courseCard['pictureUrl'] = course.pictureUrl;
           courseCard['price'] = course.price;
-          courseCard['isIncomplete'] = true;
+          courseCard['rating'] = course.rating;
+          courseCard['reviewTotal'] = course.reviewTotal;
+          courseCard['isIncomplete'] = false;
+          // courseCard['pathOnClick'] = null;
           return courseCard;
         });
-        console.log(newPendingCourses);
-        setPendingCourses(newPendingCourses);
+        console.log(newPublishedCourses);
+        setPublishedCourses(newPublishedCourses);
       })
       .then(() => setIsLoading(false))
       .catch(err => console.error(err));
@@ -42,9 +45,9 @@ const InstructorPendingCourseList = () => {
 
   return (
     <>
-      {!!pendingCourses.length
+      {!!publishedCourses.length
         ? <Grid container spacing={1}>
-          {pendingCourses.map(course => (
+          {publishedCourses.map(course => (
             <Grid item xs={3} key={course.id}>
               <InstructorCourseCard {...course} />
             </Grid>
@@ -54,7 +57,7 @@ const InstructorPendingCourseList = () => {
           <Grid item xs={12} sx={{m: 12}}>
             <Stack alignItems='center'>
               <Typography>
-                There is no pending course.
+                There is no published course.
               </Typography>
             </Stack>
           </Grid>
@@ -64,4 +67,4 @@ const InstructorPendingCourseList = () => {
   );
 }
 
-export default InstructorPendingCourseList;
+export default InstructorPublishedCourseList;
