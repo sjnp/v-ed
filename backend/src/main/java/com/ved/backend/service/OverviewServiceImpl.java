@@ -3,6 +3,7 @@ package com.ved.backend.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -33,6 +34,8 @@ public class OverviewServiceImpl implements OverviewService {
         ArrayList<CourseCardResponse> courseCardResponseList = new ArrayList<CourseCardResponse>();
         for (Course course : courses) {
 
+            if (Objects.isNull(course.getPublishedCourse())) continue;
+
             CourseCardResponse courseCardResponse = this.getCourseCardResponse(course);
             courseCardResponseList.add(courseCardResponse);
         }
@@ -50,8 +53,8 @@ public class OverviewServiceImpl implements OverviewService {
         courseCardResponse.setInstructorName(instructorFirstName + " " + instructorLastName);
         courseCardResponse.setPictureURL(course.getPictureUrl());
         courseCardResponse.setPrice(course.getPrice());
-        courseCardResponse.setRating(4.5); // hard code, fix latter.
-        courseCardResponse.setReviewCount(20); // hard code, fix latter.
+        courseCardResponse.setRating(course.getPublishedCourse().getStar());
+        courseCardResponse.setReviewCount(course.getPublishedCourse().getTotalUser());
 
         return courseCardResponse;
     }
@@ -65,9 +68,9 @@ public class OverviewServiceImpl implements OverviewService {
         return courseCardResponses;
     }
 
-    public ArrayList<CourseCardResponse> getOverviewMyCouese(String username) {
+    public ArrayList<CourseCardResponse> getOverviewMyCourse(String username) {
 
-        List<Course> courses = courseRepo.findAll(); // test find all, todo latter.
+        List<Course> courses = courseRepo.findAll(); // test find all, todo find from student course later.
         ArrayList<CourseCardResponse> courseCardResponseList = getCourseCardResponseList(courses);
 
         return courseCardResponseList;
@@ -77,7 +80,7 @@ public class OverviewServiceImpl implements OverviewService {
 
         Optional<Course> courseOptional = courseRepo.findById(courseId);
 
-        if (!courseOptional.isPresent()) {
+        if (courseOptional.isEmpty()) {
             throw new MyException("overview.course.id.not.found", HttpStatus.NOT_FOUND);
         }
 

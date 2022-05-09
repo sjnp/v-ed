@@ -30,7 +30,7 @@ public class StudentController {
   @GetMapping("/my-course")
   public ResponseEntity<ArrayList<CourseCardResponse>> getMyCourse(Principal principal) {
     // fix latter.
-    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCouese(principal.getName());
+    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
