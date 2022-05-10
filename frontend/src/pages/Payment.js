@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
@@ -18,6 +18,8 @@ import { URL_OVERVIEW_COURSE_ID_CARD } from '../utils/url';
 const Payment = () => {
 
   const { courseId } = useParams()
+
+  const navigate = useNavigate()
 
   const axiosPrivate = useAxiosPrivate()
 
@@ -81,6 +83,11 @@ const Payment = () => {
         >
           Payment
         </Button>
+
+        <Button variant='contained' onClick={() => navigate(`/payment/course/${courseId}/success`)}>
+          Go to payment success page
+        </Button>
+
       </Box>
     </Container>
   )

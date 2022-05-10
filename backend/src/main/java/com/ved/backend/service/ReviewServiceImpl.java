@@ -139,13 +139,24 @@ public class ReviewServiceImpl implements ReviewService {
         if (reviewOptional.isEmpty()) {
             throw new MyException("review.not.found", HttpStatus.BAD_REQUEST);
         }
-
         Review review = reviewOptional.get();
+
+        Optional<Course> courseOptional = courseRepo.findById(reviewRequest.getCourseId());
+        Course course = courseOptional.get();
+        PublishedCourse publishedCourse = course.getPublishedCourse();
+        
+        Double newScore = publishedCourse.getTotalScore() - review.getRating();
+        newScore = newScore + reviewRequest.getRating();
+        Double newStar = newScore / publishedCourse.getTotalUser();
+        publishedCourse.setTotalScore(newScore);
+        publishedCourse.setStar(newStar);
+        
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getReview());
         review.setReviewDateTime(LocalDateTime.now());
 
         reviewRepo.save(review);
+        publishedCourseRepo.save(publishedCourse);
     }
 
 }
