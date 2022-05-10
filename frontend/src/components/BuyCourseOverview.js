@@ -24,7 +24,7 @@ const BuyCourseOverview = ({ data }) => {
   // const { ratingCourse, totalReview } = data
   // const { courseId } = data
 
-  let {
+  const {
     instructorPictureURI, 
     courseName, 
     instructorFirstname, 
@@ -34,8 +34,6 @@ const BuyCourseOverview = ({ data }) => {
     totalReview, 
     courseId
   } = data
-
-  price -= price
 
   const navigate = useNavigate()
 
