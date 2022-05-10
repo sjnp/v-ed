@@ -41,4 +41,6 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
   Course findCourseByCourseStateAndId(CourseState courseState, Long id);
 
   List<CourseBasicInfo> findCoursesByInstructorAndCourseState(Instructor instructor, CourseState courseState);
+
+  Course findCourseById(Long id);
 }

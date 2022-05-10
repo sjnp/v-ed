@@ -31,6 +31,7 @@ import StudentCreateQuestion from './pages/StudentCreateQuestion';
 import StudentBoard from './pages/StudentBoard';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 // import Logout from './pages/Logout';
 function App() {
@@ -64,7 +65,10 @@ function App() {
           <Route path='student/course/:courseId' element={<StudentCourse/>}/>          
           <Route path='review' element={<Review/>}/>
           <Route path='account-manage' element={<AccountManage/>}/>
+
+          {/* payment */}
           <Route path='payment/course/:courseId' element={<Payment />} />
+          <Route path='payment/course/:courseId/success' element={<PaymentSuccess />} />
 
           {/* student my course */}
           <Route path='student/course' element={<Student/>}/>
