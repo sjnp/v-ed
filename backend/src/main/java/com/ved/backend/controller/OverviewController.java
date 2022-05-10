@@ -36,7 +36,7 @@ public class OverviewController {
     @GetMapping("/my-course")
     public ResponseEntity<ArrayList<CourseCardResponse>> getOverviewMyCouese(Principal principal) {
         
-        ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCouese(principal.getName());
+        ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
         return ResponseEntity.ok().body(response); 
     }
 

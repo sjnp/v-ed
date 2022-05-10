@@ -5,7 +5,7 @@ public class CourseCardResponse {
     private String courseName;
     private String instructorName;
     private double rating;
-    private int reviewCount;
+    private Long reviewCount;
     private String pictureURL;
     private long price;
     private long courseId;
@@ -36,11 +36,11 @@ public class CourseCardResponse {
         this.rating = rating;
     }
 
-    public int getReviewCount() {
+    public Long getReviewCount() {
         return reviewCount;
     }
 
-    public void setReviewCount(int reviewCount) {
+    public void setReviewCount(Long reviewCount) {
         this.reviewCount = reviewCount;
     }
 

@@ -35,27 +35,30 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
         >
             <CardMedia component="img" height="140" image={image} />
             <CardContent >
-                <Typography variant="body1" color="text.primary" title={courseName}>
+                <Typography noWrap variant="body1" color="text.primary" title={courseName}>
                     {courseName}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" title={instructorName}>
+                <Typography noWrap variant="body2" color="text.secondary" title={instructorName}>
                     {instructorName}
                 </Typography>
             </CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.5, alignItems: 'center' }}>
                 <Box sx={{ display: "flex", alignItems: 'center' }}>
-                    <Rating
-                        value={rating}
-                        size="small"
-                        readOnly
-                        precision={0.1}
-                        emptyIcon={<StarIcon fontSize="inherit" />}
-                    />
+                {
+                    rating === 0 && reviewCount === 0 ?
+                    <Typography variant="caption" color='gray'>{'No review now'}</Typography>
+                    :
                     <Box>
-                        <Typography variant="caption" sx={{ textAlign: 'center' }}>
-                            {rating} ({reviewCount})
-                        </Typography>
+                        <Rating
+                            value={rating}
+                            size="small"
+                            readOnly
+                            precision={0.1}
+                            emptyIcon={<StarIcon fontSize="inherit" />}
+                        />
+                        <Typography variant="caption" textAlign='center'>{rating} ({reviewCount})</Typography>
                     </Box>
+                }    
                 </Box>
                 <Box>
                     <Typography variant="caption" color="primary" sx={{ fontWeight: 'bold', fontSize: 14, textAlign: 'center' }} >

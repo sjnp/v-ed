@@ -74,6 +74,34 @@ public class PrivateObjectStorageServiceImpl implements PrivateObjectStorageServ
   }
 
   @Override
+  public String createParToReadFile(String fileUri, String username) throws IOException {
+    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+    ObjectStorageClient client = new ObjectStorageClient(provider);
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails =
+        CreatePreauthenticatedRequestDetails.builder()
+            .name(username + "_read_" + fileUri)
+            .objectName(fileUri)
+            .accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead)
+            .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
+            .build();
+
+    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest =
+        CreatePreauthenticatedRequestRequest.builder()
+            .namespaceName(privateObjectStorageConfigProperties.getNamespace())
+            .bucketName(privateObjectStorageConfigProperties.getBucketName())
+            .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails)
+            .build();
+
+    CreatePreauthenticatedRequestResponse response = client
+        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
+    client.close();
+
+    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() +
+        response.getPreauthenticatedRequest().getAccessUri();
+  }
+
+  @Override
   public void deleteHandout(Long courseId, String objectName, String username) throws IOException {
     CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourse(courseId, username);
     String handoutPrefixName = "course_handout_" + incompleteCourseMaterials.getId();
@@ -98,9 +126,20 @@ public class PrivateObjectStorageServiceImpl implements PrivateObjectStorageServ
       AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
       ObjectStorageClient client = new ObjectStorageClient(provider);
 
-      CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(fileName).objectName(fileName).accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
+      CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
+        .builder()
+        .name(fileName)
+        .objectName(fileName)
+        .accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead)
+        .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
+        .build();
 
-      CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
+      CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest
+        .builder()
+        .namespaceName(privateObjectStorageConfigProperties.getNamespace())
+        .bucketName(privateObjectStorageConfigProperties.getBucketName())
+        .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails)
+        .build();
 
       CreatePreauthenticatedRequestResponse response;
       response = client.createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
@@ -116,6 +155,11 @@ public class PrivateObjectStorageServiceImpl implements PrivateObjectStorageServ
       log.error("Preauthenticate uri example video fail, response error {}", e.getMessage());
       throw new MyException("pre.authentication.fail", HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  public String getAccessVideoURI(String courseId, String chapterNo, String sectionNo) {
+    String fileName = "course_vid_" + courseId + "_c" + chapterNo + "_s" + sectionNo + ".mp4";
+    return this.getAccessURI(fileName);
   }
 
   public String getUploadFileURI(AnswerRequest answerRequest, String username) {

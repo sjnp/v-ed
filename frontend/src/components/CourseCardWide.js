@@ -72,16 +72,21 @@ const CourseCardWide = ({ image, courseName, instructorName, rating, reviewTotal
               </CardContent>
               <Box sx={{height : cardHeight - 115}}/>
               <CardActions sx={{ marginLeft: 0.6 }}>
-                  <Rating
+              {
+                rating === 0 && reviewTotal === 0 ?
+                  <Typography variant="caption">No review now</Typography>
+                  :
+                  <Box>
+                    <Rating
                       value={rating} 
                       size="small" 
                       readOnly 
                       precision={0.1} 
                       emptyIcon={<StarIcon fontSize="inherit" />}
-                  />
-                  <Typography variant="caption">
-                      {rating} ({reviewTotal})
-                  </Typography>
+                    />
+                    <Typography variant="caption">{rating} ({reviewTotal})</Typography>
+                  </Box>
+              }
               </CardActions>
             </Box>
             

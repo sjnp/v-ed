@@ -1,38 +1,77 @@
-import {Box} from "@mui/system";
-import {Paper, Step, StepContent, StepLabel, Stepper, Typography} from "@mui/material";
+import {useEffect, useState} from "react";
+import {CircularProgress, Stack, Grid, Button} from "@mui/material";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import {URL_GET_ALL_INCOMPLETE_COURSES} from "../utils/url";
+import InstructorCourseCard from "./InstructorCourseCard";
+import {useNavigate} from "react-router-dom";
 
 const IncompleteCourseList = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [incompleteCourses, setIncompleteCourses] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axiosPrivate.get(URL_GET_ALL_INCOMPLETE_COURSES)
+      .then(res => {
+        const newIncompleteCourses = res.data.courses.map(course => {
+          const courseCard = {};
+          courseCard['id'] = course.id;
+          courseCard['courseName'] = course.name;
+          courseCard['pictureUrl'] = course.pictureUrl;
+          courseCard['price'] = course.price;
+          courseCard['pathOnClick'] = `/instructor/create-course/${course.id}`
+          courseCard['isIncomplete'] = true;
+          return courseCard;
+        });
+        console.log(newIncompleteCourses);
+        setIncompleteCourses(newIncompleteCourses);
+      })
+      .then(() => setIsLoading(false))
+      .catch(err => console.error(err));
+  }, [axiosPrivate]);
+
+  if (isLoading) {
+    return (
+      <Grid container>
+        <Grid item xs={12} sx={{m: 12}}>
+          <Stack alignItems='center'>
+            <CircularProgress/>
+          </Stack>
+        </Grid>
+      </Grid>
+    );
+  }
 
   return (
-    <Paper elevation={3}>
-      <Box
-        sx={{
-          padding: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch'
-        }}
-      >
-        <Typography
-          component='h2'
-          variant='h4'>
-          Incomplete Courses
-        </Typography>
-        <Typography>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. In congue placerat risus. Proin at volutpat ligula.
-          Curabitur diam urna, dapibus ut auctor ut, ullamcorper in urna. Aenean in nulla dui. Sed feugiat tortor sed
-          lorem gravida elementum. Nunc rutrum ornare porta. Vestibulum imperdiet lorem eu lacus fermentum, id hendrerit
-          ante auctor. Praesent in velit semper, tempor mi ac, dictum neque. Aenean interdum fringilla magna. Ut feugiat
-          ultrices mi at gravida. Cras elit ligula, tempus in malesuada et, dictum a eros. Vestibulum ante ipsum primis
-          in faucibus orci luctus et ultrices posuere cubilia curae; Sed quis condimentum nisi, ac vehicula lacus.
-          Curabitur magna diam, malesuada et elit quis, aliquam ultricies dolor. Morbi fringilla vitae arcu nec posuere.
-        </Typography>
-
-      </Box>
-
-
-    </Paper>
-  )
+    <>
+      {!!incompleteCourses.length
+        ? <Grid container spacing={1}>
+          {incompleteCourses.map(course => (
+            <Grid item xs={3} key={course.id}>
+              <InstructorCourseCard {...course} />
+            </Grid>
+          ))}
+        </Grid>
+        : <Grid container>
+          <Grid item xs={12} sx={{m: 12}}>
+            <Stack alignItems='center'>
+              <Button
+                variant='contained'
+                size='large'
+                sx={{
+                  marginBottom: 3
+                }}
+                onClick={() => {navigate('/instructor/create-course')}}
+              >
+                Create Course
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
+      }
+    </>
+  );
 }
 
 export default IncompleteCourseList;

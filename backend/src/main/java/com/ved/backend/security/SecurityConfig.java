@@ -50,7 +50,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/categories/**",
             "/api/overview/**",
             "/api/course/**",
-            "/api/students/**"
+            "/api/students/**",
+            "/api/question-board/**",
+            "/api/comment/**",
+            "/api/review/**",
+            "/api/student-course/**"
         )
         .permitAll();
 
@@ -59,7 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(GET, "/api/instructors/incomplete-courses/**")
+        .antMatchers(GET, "/api/instructors/incomplete-courses/**",
+            "/api/instructors/pending-courses/**",
+            "/api/instructors/approved-courses/**",
+            "/api/instructors/rejected-courses/**",
+            "/api/instructors/published-courses/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
@@ -72,13 +80,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
             "/api/instructors/incomplete-courses/chapters/**",
-            "/api/instructors/incomplete-courses/submission/**")
+            "/api/instructors/incomplete-courses/submission/**",
+            "/api/instructors/approved-courses/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**",
             "/api/instructors/incomplete-courses/handout/**")
         .hasAnyAuthority("INSTRUCTOR");
+
+    http.authorizeRequests()
+        .antMatchers(GET, "/api/admins/pending-courses/**",
+            "/api/admins/pending-courses/video/**")
+        .hasAnyAuthority("ADMIN");
+
+    http.authorizeRequests()
+        .antMatchers(PUT, "/api/admins/pending-courses/**")
+        .hasAnyAuthority("ADMIN");
 
     http.authorizeRequests()
         .anyRequest()

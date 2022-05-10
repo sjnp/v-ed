@@ -3,6 +3,9 @@ package com.ved.backend.model;
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
+
+import java.util.List;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -28,6 +31,15 @@ public class Student {
   @OneToOne(mappedBy = "student")
   private AppUser appUser;
 
+  @OneToMany(mappedBy = "student")
+  private List<Comment> comments;
+
+  @OneToMany(mappedBy = "student")
+  private List<StudentCourse> studentCourses;
+
+  @OneToOne(mappedBy = "student")
+  private Review review;
+
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
   @JoinTable(name = "student_instructor",
       joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},
@@ -46,6 +58,8 @@ public class Student {
     return lastName;
   }
 
+  public String getFullName() { return firstName + " " + lastName; }
+
   public String getOccupation() {
     return occupation;
   }
@@ -56,6 +70,14 @@ public class Student {
 
   public String getProfilePicUri() {
     return profilePicUri;
+  }
+
+  public List<StudentCourse> getStudentCourses() {
+    return studentCourses;
+  }
+
+  public void setStudentCourses(List<StudentCourse> studentCourses) {
+    this.studentCourses = studentCourses;
   }
 
   public AppUser getAppUser() {
@@ -98,10 +120,38 @@ public class Student {
     this.instructor = instructor;
   }
 
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
+  public Review getReview() {
+    return review;
+  }
+
+  public void setReview(Review review) {
+    this.review = review;
+  }
+
   public Student() {
   }
 
-  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser, Instructor instructor) {
+  public Student(
+    Long id, 
+    String firstName, 
+    String lastName, 
+    String occupation,
+    String biography, 
+    String profilePicUri, 
+    AppUser appUser, 
+    List<Comment> comments, 
+    List<StudentCourse> studentCourses, 
+    Instructor instructor,
+    Review review
+  ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -109,7 +159,10 @@ public class Student {
     this.biography = biography;
     this.profilePicUri = profilePicUri;
     this.appUser = appUser;
+    this.comments = comments;
+    this.studentCourses = studentCourses;
     this.instructor = instructor;
+    this.review = review;
   }
 
 }
