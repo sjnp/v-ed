@@ -1,25 +1,35 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.model.Answer;
 import com.ved.backend.model.Instructor;
-import com.ved.backend.response.CourseCardResponse;
-import com.ved.backend.service.OverviewService;
-import com.ved.backend.service.StudentService;
+import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.ReviewRequest;
+import com.ved.backend.response.*;
+import com.ved.backend.service.*;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping(path = "/api/students")
 public class StudentController {
 
   private final StudentService studentService;
   private final OverviewService overviewService;
+  private final StudentCourseService studentCourseService;
+  private final CourseService courseService;
+  private final PrivateObjectStorageService privateObjectStorageService;
+  private final AssignmentService assignmentService;
+  private final PostService postService;
+  private final CommentService commentService;
+  private final ReviewService reviewService;
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
@@ -27,15 +37,128 @@ public class StudentController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/my-course")
-  public ResponseEntity<ArrayList<CourseCardResponse>> getMyCourse(Principal principal) {
+  @GetMapping("/courses")
+  public ResponseEntity<ArrayList<CourseCardResponse>> getAllCourses(Principal principal) {
     // fix latter.
     ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
-  public StudentController(final StudentService studentService, final OverviewService overviewService) {
-    this.studentService = studentService;
-    this.overviewService = overviewService;
+  // REFACTOR: moved from OverviewController
+  @GetMapping("/course-samples")
+  public ResponseEntity<ArrayList<CourseCardResponse>> getCourseSamples(Principal principal) {
+
+    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}")
+  public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId) {
+    CourseResponse response = courseService.getCourse(courseId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
+  public ResponseEntity<String> getVideoURI(@PathVariable String courseId,
+                                            @PathVariable String chapterIndex,
+                                            @PathVariable String sectionIndex) {
+    String response = privateObjectStorageService.getAccessVideoURI(courseId, chapterIndex, sectionIndex);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/about")
+  public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
+    AboutCourseResponse response = courseService.getAboutCourse(courseId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts")
+  public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long courseId) {
+    List<PostResponse> response = postService.getPostByCourseId(courseId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts/{postId}")
+  public ResponseEntity<PostResponse> getQuestionBoard(@PathVariable Long courseId,
+                                                       @PathVariable Long postId,
+                                                       Principal principal) {
+    PostResponse response = postService.getPostById(postId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/reviews")
+  public ResponseEntity<ReviewCourseResponse> getAllReviews(@PathVariable Long courseId, Principal principal) {
+    ReviewCourseResponse response = reviewService.getReviewCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/reviews/{reviewId}")
+  public ResponseEntity<ReviewResponse> getReview(@PathVariable Long courseId,
+                                                  @PathVariable Long reviewId,
+                                                  Principal principal) {
+    ReviewResponse response = reviewService.getReview(reviewId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}")
+  public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
+    studentCourseService.buyFreeCourse(courseId, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @PostMapping("/courses/answers/pre-authenticated-request")
+  public ResponseEntity<String> createParToUploadAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
+    String response = assignmentService.getUploadAnswerURI(answerRequest, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/answer")
+  public ResponseEntity<Long> saveAnswer(@PathVariable Long courseId,
+                                         @RequestBody Answer answer,
+                                         Principal principal) {
+    Long answerId = assignmentService.saveAnswer(answer, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).body(answerId);
+  }
+
+  @PostMapping("/courses/post")
+  public ResponseEntity<PostResponse> createPost(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
+
+    Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
+    String topic = bodyRequest.get("topic").toString();
+    String detail = bodyRequest.get("detail").toString();
+
+    PostResponse response = postService.create(courseId, topic, detail, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/posts/comment")
+  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId,
+                                                       @RequestBody HashMap<String, Object> bodyRequest,
+                                                       Principal principal) {
+    Long questionBoardId = Long.parseLong(String.valueOf(bodyRequest.get("questionId")));
+    String comment = String.valueOf(bodyRequest.get("comment"));
+    String username = principal.getName();
+    CommentResponse response = commentService.create(questionBoardId, comment, username);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  @PostMapping("/courses/review")
+  public ResponseEntity<?> createReview(@RequestBody ReviewRequest reviewRequest, Principal principal) {
+    reviewService.create(reviewRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @PutMapping("/courses/reviews/{reviewId}")
+  public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest) {
+    reviewService.edit(reviewId, reviewRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @DeleteMapping("/courses/{courseId}/answer/{answerId}")
+  public ResponseEntity<?> deleteAnswer(@PathVariable Long courseId,
+                                        @PathVariable Long answerId,
+                                        Principal principal) {
+    assignmentService.deleteAnswerFile(answerId, principal.getName());
+    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 }

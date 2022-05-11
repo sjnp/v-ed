@@ -11,40 +11,40 @@ import javax.transaction.Transactional;
 import com.ved.backend.exception.MyException;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
-import com.ved.backend.model.QuestionBoard;
+import com.ved.backend.model.Post;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.QuestionBoardRepo;
+import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.StudentCourseRepo;
-import com.ved.backend.response.QuestionBoardResponse;
+import com.ved.backend.response.PostResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class QuestionBoardServiceImpl implements QuestionBoardService {
+public class PostServiceImpl implements PostService {
 
-    private final QuestionBoardRepo questionBoardRepo;
+    private final PostRepo postRepo;
     private final AppUserRepo appUserRepo;
     private final StudentCourseRepo studentCourseRepo;
     private final CourseRepo courseRepo;
     
  
-    public QuestionBoardServiceImpl(
-        QuestionBoardRepo questionBoardRepo, 
+    public PostServiceImpl(
+        PostRepo postRepo,
         AppUserRepo appUserRepo,
         StudentCourseRepo studentCourseRepo,
         CourseRepo courseRepo
     ) {
-        this.questionBoardRepo = questionBoardRepo;
+        this.postRepo = postRepo;
         this.appUserRepo = appUserRepo;
         this.studentCourseRepo = studentCourseRepo;
         this.courseRepo = courseRepo;
     }
 
-    public QuestionBoardResponse create(Long courseId, String topic, String detail, String username) {
+    public PostResponse create(Long courseId, String topic, String detail, String username) {
 
         if (Objects.isNull(courseId)) {
             throw new MyException("question.board.course.id.null", HttpStatus.BAD_REQUEST);
@@ -62,42 +62,42 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         Long studentId = appUser.getStudent().getId();
         StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
 
-        QuestionBoard questionBoard = new QuestionBoard();
-        questionBoard.setTopic(topic);
-        questionBoard.setDetail(detail);
-        questionBoard.setCreateDateTime(LocalDateTime.now());
-        questionBoard.setVisible(true);
-        questionBoard.setCourse(studentCourse.getCourse());
-        questionBoard.setStudentCourse(studentCourse);
+        Post post = new Post();
+        post.setTopic(topic);
+        post.setDetail(detail);
+        post.setCreateDateTime(LocalDateTime.now());
+        post.setVisible(true);
+        post.setCourse(studentCourse.getCourse());
+        post.setStudentCourse(studentCourse);
 
         Course course = studentCourse.getCourse();
-        course.getQuestionBoards().add(questionBoard);
+        course.getQuestionBoards().add(post);
 
-        studentCourse.getQuestionBoards().add(questionBoard);
+        studentCourse.getQuestionBoards().add(post);
 
-        questionBoardRepo.save(questionBoard);
+        postRepo.save(post);
         studentCourseRepo.save(studentCourse);
         courseRepo.save(course);
 
-        QuestionBoardResponse response = new QuestionBoardResponse(questionBoard);
+        PostResponse response = new PostResponse(post);
         return response;
     }
 
-    public QuestionBoardResponse getQuestionBoardById(Long questionBoardId) {
+    public PostResponse getPostById(Long questionBoardId) {
 
-        Optional<QuestionBoard> questionBoardOptional = questionBoardRepo.findById(questionBoardId);
+        Optional<Post> questionBoardOptional = postRepo.findById(questionBoardId);
 
         if (questionBoardOptional.isEmpty()) {
             throw new MyException("question.baord.id.not.found", HttpStatus.BAD_REQUEST);
         }
 
-        QuestionBoard questionBoard = questionBoardOptional.get();
-        QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(questionBoard);
+        Post post = questionBoardOptional.get();
+        PostResponse postResponse = new PostResponse(post);
 
-        return questionBoardResponse;
+        return postResponse;
     }
 
-    public List<QuestionBoardResponse> getQuestionBoardByCourseId(Long courseId) {
+    public List<PostResponse> getPostByCourseId(Long courseId) {
 
         Optional<Course> courseOptional = courseRepo.findById(courseId);
 
@@ -106,12 +106,12 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
         }
 
         Course course = courseOptional.get();
-        List<QuestionBoard> questionBoards = course.getQuestionBoards();
+        List<Post> posts = course.getQuestionBoards();
 
-        List<QuestionBoardResponse> response = new ArrayList<QuestionBoardResponse>();
-        for (QuestionBoard questionBoard : questionBoards) {
-            QuestionBoardResponse questionBoardResponse = new QuestionBoardResponse(questionBoard);
-            response.add(questionBoardResponse);
+        List<PostResponse> response = new ArrayList<PostResponse>();
+        for (Post post : posts) {
+            PostResponse postResponse = new PostResponse(post);
+            response.add(postResponse);
         }
 
         return response;

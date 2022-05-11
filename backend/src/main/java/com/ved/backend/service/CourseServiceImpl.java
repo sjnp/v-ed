@@ -93,7 +93,6 @@ public class CourseServiceImpl implements CourseService {
   public String getVideoUriFromPendingCourse(Long courseId,
                                              Integer chapterIndex,
                                              Integer sectionIndex,
-                                             String requestVideoUri,
                                              String username) {
     try {
       CourseState pendingState = courseStateRepo.findByName("PENDING");
@@ -104,11 +103,13 @@ public class CourseServiceImpl implements CourseService {
               .getSections()
               .get(sectionIndex)
               .get("videoUri"));
-      if (courseVideoUri.equals(requestVideoUri)) {
-        return privateObjectStorageService.createParToReadFile(requestVideoUri, username);
-      } else {
-        throw new RuntimeException("Course not found");
-      }
+      return privateObjectStorageService.createParToReadFile(courseVideoUri, username);
+//       TODO: Need to add orElseThrow when calling courseRepo
+//      if (courseVideoUri.equals(requestVideoUri)) {
+//        return privateObjectStorageService.createParToReadFile(requestVideoUri, username);
+//      } else {
+//        throw new RuntimeException("Course not found");
+//      }
     } catch (Exception exception) {
       throw new RuntimeException("Course not found");
     }

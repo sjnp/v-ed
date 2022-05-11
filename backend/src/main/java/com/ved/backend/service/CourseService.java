@@ -20,7 +20,6 @@ public interface CourseService {
     public String getVideoUriFromPendingCourse(Long courseId,
                                                Integer chapterIndex,
                                                Integer sectionIndex,
-                                               String videoUri,
                                                String username);
 
     public String getHandoutUrlFromPendingCourse(Long courseId,

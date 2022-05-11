@@ -2,7 +2,7 @@ import axios from "axios";
 
 const createPreauthenticatedRequestForCourse = async (axiosPrivate, url, courseId, data) => {
   const response = await axiosPrivate.post(
-    `${url}?id=${courseId}`,
+    url.replace('{courseId}', courseId),
     {...data}
   );
 

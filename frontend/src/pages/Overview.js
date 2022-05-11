@@ -25,7 +25,7 @@ const Overview = () => {
   useEffect(() => {
 
     const getOverviewCaourseAPI = async () =>{
-      let response = await overviewService.getOverviewCaourse(courseId)
+      let response = await overviewService.getOverviewCourse(courseId)
       if (response.status === 200) {
         setOverview(response.data)
 

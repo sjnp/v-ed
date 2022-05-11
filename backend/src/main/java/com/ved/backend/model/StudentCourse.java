@@ -29,7 +29,7 @@ public class StudentCourse {
   private List<Answer> answers;
 
   @OneToMany(mappedBy = "studentCourse", cascade = CascadeType.ALL)
-  private List<QuestionBoard> questionBoards;
+  private List<Post> posts;
 
   public Long getId() {
     return id;
@@ -79,24 +79,24 @@ public class StudentCourse {
     this.course = course;
   }
 
-  public List<QuestionBoard> getQuestionBoards() {
-    return questionBoards;
+  public List<Post> getQuestionBoards() {
+    return posts;
   }
 
-  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
-    this.questionBoards = questionBoards;
+  public void setQuestionBoards(List<Post> posts) {
+    this.posts = posts;
   }
 
   public StudentCourse() {
   }
 
-  public StudentCourse(Long id, String chargeId, String transferId, Student student, Course course, List<Answer> answers, List<QuestionBoard> questionBoards) {
+  public StudentCourse(Long id, String chargeId, String transferId, Student student, Course course, List<Answer> answers, List<Post> posts) {
     this.id = id;
     this.chargeId = chargeId;
     this.transferId = transferId;
     this.student = student;
     this.course = course;
     this.answers = answers;
-    this.questionBoards = questionBoards;
+    this.posts = posts;
   }
 }

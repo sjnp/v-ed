@@ -1,7 +1,7 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import {Alert, Box, Paper, Stack, Typography} from "@mui/material";
+import {Alert, Paper, Stack, Typography} from "@mui/material";
 import React, {useState} from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {URL_SUBMIT_INCOMPLETE_COURSE} from "../utils/url";
@@ -18,7 +18,7 @@ const UploadCourseConfirmationForm = (props) => {
     setIsLoading(true);
     try {
       const response = await axiosPrivate.put(
-        `${URL_SUBMIT_INCOMPLETE_COURSE}?id=${courseId}`
+        URL_SUBMIT_INCOMPLETE_COURSE.replace('{courseId}', courseId)
       )
       console.log(response.data);
       navigate(`/instructor`);

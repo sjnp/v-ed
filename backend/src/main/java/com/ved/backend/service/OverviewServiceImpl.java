@@ -63,6 +63,7 @@ public class OverviewServiceImpl implements OverviewService {
 
         Category category = this.categoryRepo.findByName(categoryName.toUpperCase());
         Set<Course> courseSet = category.getCourses();
+
         ArrayList<CourseCardResponse> courseCardResponses = getCourseCardResponseList(courseSet);
 
         return courseCardResponses;

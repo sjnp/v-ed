@@ -17,6 +17,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 // custom api
 import apiPrivate from '../api/apiPrivate'
+import {URL_BUY_COURSE} from "../utils/url";
 
 const BuyCourseOverview = ({ data }) => {
 
@@ -47,7 +48,7 @@ const BuyCourseOverview = ({ data }) => {
 
   const handleClickGetCourse = async () => {
     setIsBuyFree(true)
-    const response = await apiPrivate.post(axiosPrivate, '/api/student-course/buy-free-course/' + courseId)
+    const response = await apiPrivate.post(axiosPrivate, URL_BUY_COURSE.replace('{courseId}', courseId))
     
     if (response.status === 201) {
       navigate(`/payment/course/${courseId}/success`)

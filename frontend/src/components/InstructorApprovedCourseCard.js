@@ -7,7 +7,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActions from '@mui/material/CardActions';
 import CardContent from "@mui/material/CardContent";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import PublishIcon from '@mui/icons-material/Publish';
 import LoadingButton from "@mui/lab/LoadingButton";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -24,13 +23,7 @@ const InstructorApprovedCourseCard = ({id, pictureUrl, courseName, price}) => {
   const handleMouseOut = () => setShadow(1);
   const handlePublishCourse = () => {
     setIsLoading(true);
-    axiosPrivate.put(URL_PUBLISH_INSTRUCTOR_COURSE,
-      null,
-      {
-        params: {
-          id: id
-        }
-      })
+    axiosPrivate.put(URL_PUBLISH_INSTRUCTOR_COURSE.replace('{courseId}', id))
       .then(() => navigate('/instructor'))
       .catch(err => console.error(err));
   }

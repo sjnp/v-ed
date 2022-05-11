@@ -23,17 +23,17 @@ public class ReportState {
   private List<CommentReport> commentReports;
 
   @OneToMany(mappedBy = "reportState")
-  private List<QuestionReport> questionReports;
+  private List<PostReport> postReports;
 
   public ReportState() {
   }
 
-  public ReportState(Long id, String name, List<ReviewReport> reviewReports, List<CommentReport> commentReports, List<QuestionReport> questionReports) {
+  public ReportState(Long id, String name, List<ReviewReport> reviewReports, List<CommentReport> commentReports, List<PostReport> postReports) {
     this.id = id;
     this.name = name;
     this.reviewReports = reviewReports;
     this.commentReports = commentReports;
-    this.questionReports = questionReports;
+    this.postReports = postReports;
   }
 
   public Long getId() {
@@ -68,11 +68,11 @@ public class ReportState {
     this.commentReports = commentReports;
   }
 
-  public List<QuestionReport> getQuestionReports() {
-    return questionReports;
+  public List<PostReport> getQuestionReports() {
+    return postReports;
   }
 
-  public void setQuestionReports(List<QuestionReport> questionReports) {
-    this.questionReports = questionReports;
+  public void setQuestionReports(List<PostReport> postReports) {
+    this.postReports = postReports;
   }
 }

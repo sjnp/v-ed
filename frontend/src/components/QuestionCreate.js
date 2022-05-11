@@ -17,7 +17,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 
 // url
-import { URL_QUESTION_BOARD_CREATE } from '../utils/url'
+import { URL_CREATE_POST } from '../utils/url'
 
 const QuestionCreate = () => {
 
@@ -98,7 +98,7 @@ const QuestionCreate = () => {
             topic: topic,
             detail: detail
         }
-        const response = await apiPrivate.post(axiosPrivate, URL_QUESTION_BOARD_CREATE, payLoad)
+        const response = await apiPrivate.post(axiosPrivate, URL_CREATE_POST, payLoad)
         setLoading(false)
 
         if (response.status === 201) {

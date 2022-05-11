@@ -64,7 +64,7 @@ public class Course {
   private PublishedCourse publishedCourse;
 
   @OneToMany(mappedBy = "course")
-  private List<QuestionBoard> questionBoards;
+  private List<Post> posts;
 
   public Long getId() {
     return id;
@@ -162,18 +162,18 @@ public class Course {
     this.publishedCourse = publishedCourse;
   }
 
-  public List<QuestionBoard> getQuestionBoards() {
-    return questionBoards;
+  public List<Post> getQuestionBoards() {
+    return posts;
   }
 
-  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
-    this.questionBoards = questionBoards;
+  public void setQuestionBoards(List<Post> posts) {
+    this.posts = posts;
   }
 
   public Course() {
   }
 
-  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor, List<StudentCourse> studentCourses, PublishedCourse publishedCourse, List<QuestionBoard> questionBoards) {
+  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor, List<StudentCourse> studentCourses, PublishedCourse publishedCourse, List<Post> posts) {
     this.id = id;
     this.name = name;
     this.price = price;
@@ -186,6 +186,6 @@ public class Course {
     this.instructor = instructor;
     this.studentCourses = studentCourses;
     this.publishedCourse = publishedCourse;
-    this.questionBoards = questionBoards;
+    this.posts = posts;
   }
 }

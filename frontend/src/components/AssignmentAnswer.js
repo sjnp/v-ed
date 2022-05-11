@@ -25,8 +25,8 @@ import CancelIcon from '@mui/icons-material/Cancel'
 import { uploadUtility } from "../utils/uploadUtility"
 
 // url
-import { URL_ASSIGNMENT_UPLOAD_ANSWER } from '../utils/url'
-import { URL_ASSIGNMENT_ANSWER_SAVE } from '../utils/url'
+import { URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER } from '../utils/url'
+import { URL_SAVE_ANSWER } from '../utils/url'
 
 const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
 
@@ -46,7 +46,7 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
         setIsUpload(true)
 
         const parUrl = await axiosPrivate.post(
-            URL_ASSIGNMENT_UPLOAD_ANSWER, 
+            URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER,
             {
                 fileName: file.name,
                 courseId: courseId,
@@ -75,7 +75,7 @@ const AssignmentAnswer = ({ chapterNo, no, question, commentInstructor }) => {
         const fileName = multipartUploadUri.substring(startIndex, endIndex)
 
         const response = await axiosPrivate.post(
-            URL_ASSIGNMENT_ANSWER_SAVE,
+            URL_SAVE_ANSWER,
             {
                 chapter: chapterNo,
                 no: no,
