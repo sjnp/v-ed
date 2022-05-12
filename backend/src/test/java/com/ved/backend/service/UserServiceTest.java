@@ -1,18 +1,17 @@
 package com.ved.backend.service;
 
 import com.ved.backend.exception.ConflictException;
+import com.ved.backend.exception.NotFoundException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -153,6 +152,7 @@ class UserServiceTest {
     //when
     //then
     assertThatThrownBy(() -> underTest.getAppUser(username))
+        .isInstanceOf(NotFoundException.class)
         .hasMessageContaining("User with username: " + username + " does not exist");
   }
 }
