@@ -1,7 +1,7 @@
 package com.ved.backend.controller;
 
 import com.ved.backend.model.AppUser;
-import com.ved.backend.service.AppUserService;
+import com.ved.backend.service.UserService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/api/users")
 public class UserController {
-  private final AppUserService appUserService;
+  private final UserService userService;
 
   @PostMapping("/new-student")
   public ResponseEntity<?> registerStudent(@RequestBody AppUser appUser) {
-    appUserService.registerStudent(appUser);
+    userService.registerStudent(appUser);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 

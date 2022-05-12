@@ -1,28 +1,38 @@
 package com.ved.backend.service;
 
+// import com.ved.backend.exception.RegisterException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
+
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
+import lombok.AllArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
-
-public class AppUserServiceImpl  {
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppUserServiceImpl.class);
+@AllArgsConstructor
+@Service
+@Transactional
+public class UserService implements UserDetailsService {
 
   private final AppUserRepo appUserRepo;
   private final AppRoleRepo appRoleRepo;
   private final PasswordEncoder passwordEncoder;
 
-  public User loadUserByUsername(String username) throws UsernameNotFoundException {
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppUserServiceImpl.class);
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     AppUser appUser = appUserRepo.findByUsername(username);
     if (appUser == null) {
       String userNotFound = "User: " + username + " not found in the database";
@@ -36,24 +46,16 @@ public class AppUserServiceImpl  {
     }
   }
 
-
-  public AppUser registerStudent(AppUser appUser) {
+  public void registerStudent(AppUser appUser) {
     log.info("Register new student: {} to the database", appUser.getUsername());
     appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
     AppRole studentRole = appRoleRepo.findByName("STUDENT");
     appUser.getAppRoles().add(studentRole);
-    return appUserRepo.save(appUser);
+    appUserRepo.save(appUser);
   }
-
 
   public AppUser getAppUser(String username) {
     log.info("Fetching user: {}", username);
     return appUserRepo.findByUsername(username);
-  }
-
-  public AppUserServiceImpl(final AppUserRepo appUserRepo, final AppRoleRepo appRoleRepo, final PasswordEncoder passwordEncoder) {
-    this.appUserRepo = appUserRepo;
-    this.appRoleRepo = appRoleRepo;
-    this.passwordEncoder = passwordEncoder;
   }
 }

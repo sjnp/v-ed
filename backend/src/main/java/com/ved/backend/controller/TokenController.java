@@ -8,7 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
-import com.ved.backend.service.AppUserService;
+import com.ved.backend.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -30,7 +30,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping("/api/token")
 public class TokenController {
-  private final AppUserService appUserService;
+  private final UserService userService;
 
   @GetMapping("/refresh")
   public void refreshToken(@CookieValue(name = "refresh_token", defaultValue = "") String refresh_token,
@@ -46,7 +46,7 @@ public class TokenController {
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(refresh_token);
         String username = decodedJWT.getSubject();
-        AppUser appUser = appUserService.getAppUser(username);
+        AppUser appUser = userService.getAppUser(username);
         String access_token = JWT.create()
             .withSubject(appUser.getUsername())
             // Access token will expire within 20 seconds.
@@ -102,8 +102,8 @@ public class TokenController {
     }
     response.setStatus(NO_CONTENT.value());
   }
-  public TokenController(final AppUserService appUserService) {
-    this.appUserService = appUserService;
+  public TokenController(final UserService userService) {
+    this.userService = userService;
   }
 
 }
