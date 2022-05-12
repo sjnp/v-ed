@@ -1,6 +1,9 @@
 package com.ved.backend.service;
 
 // import com.ved.backend.exception.RegisterException;
+
+import com.ved.backend.exception.ConflictException;
+import com.ved.backend.exception.NotFoundException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 
@@ -33,20 +36,26 @@ public class UserService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    AppUser appUser = appUserRepo.findByUsername(username);
-    if (appUser == null) {
-      String userNotFound = "User: " + username + " not found in the database";
-      log.error(userNotFound);
-      throw new UsernameNotFoundException(userNotFound);
-    } else {
-      log.info("User: {} found in the database", username);
-      Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-      appUser.getAppRoles().forEach(appRole -> authorities.add(new SimpleGrantedAuthority(appRole.getName())));
-      return new User(appUser.getUsername(), appUser.getPassword(), authorities);
-    }
+    AppUser appUser = appUserRepo.findAppUserByUsername(username)
+        .orElseThrow(() -> {
+          String userDoesNotExist = "User with username: " + username + " does not exist";
+          log.error(userDoesNotExist);
+          return new UsernameNotFoundException(userDoesNotExist);
+        });
+    log.info("User with username: {} is found", username);
+    Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+    appUser.getAppRoles()
+        .forEach(appRole -> authorities.add(new SimpleGrantedAuthority(appRole.getName())));
+    return new User(appUser.getUsername(), appUser.getPassword(), authorities);
   }
 
   public void registerStudent(AppUser appUser) {
+    if (appUserRepo.existsByUsername(appUser.getUsername())) {
+      String usernameAlreadyExist = "User with username: " + appUser.getUsername() + " already exists";
+      log.error(usernameAlreadyExist);
+      throw new ConflictException(usernameAlreadyExist);
+    }
+
     log.info("Register new student: {} to the database", appUser.getUsername());
     appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
     AppRole studentRole = appRoleRepo.findByName("STUDENT");
@@ -56,6 +65,8 @@ public class UserService implements UserDetailsService {
 
   public AppUser getAppUser(String username) {
     log.info("Fetching user: {}", username);
-    return appUserRepo.findByUsername(username);
+    return appUserRepo
+        .findAppUserByUsername(username)
+        .orElseThrow(() -> new NotFoundException("User with username: " + username + " does not exist"));
   }
 }
