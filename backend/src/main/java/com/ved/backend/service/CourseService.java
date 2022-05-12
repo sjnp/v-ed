@@ -4,6 +4,7 @@ import com.ved.backend.exception.MyException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Student;
+import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
@@ -22,6 +23,7 @@ public class CourseService {
 
     private final CourseRepo courseRepo;
     private final CourseStateRepo courseStateRepo;
+    private final CategoryRepo categoryRepo;
     private final PrivateObjectStorageService privateObjectStorageService;
 
     public CourseResponse getCourse(Long courseId) {
@@ -151,6 +153,16 @@ public class CourseService {
         } catch (Exception exception) {
             throw new RuntimeException("Course not found");
         }
+    }
+
+    public Collection<CourseStateRepo.IdAndNameOnly> getAllCourseStates() {
+//        log.info("Getting all course states");
+        return courseStateRepo.findAllBy();
+    }
+
+    public Collection<CategoryRepo.IdAndNameOnly> getAllCategories() {
+//        log.info("Getting all categories");
+        return categoryRepo.findAllBy();
     }
 
 }

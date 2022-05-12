@@ -62,4 +62,33 @@ public class PublicObjectStorageService {
         pictureObjectName;
   }
 
+  public String createPreauthenticatedRequestToUpload(String fileName, String preauthenticatedRequestName) throws IOException {
+
+    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+    ObjectStorageClient client = new ObjectStorageClient(provider);
+
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
+        .builder()
+        .name(preauthenticatedRequestName)
+        .objectName(fileName)
+        .accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite)
+        .timeExpires(new Date(System.currentTimeMillis() + publicObjectStorageConfigProperties.getExpiryTimer()))
+        .build();
+
+    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest
+        .builder()
+        .namespaceName(publicObjectStorageConfigProperties.getNamespace())
+        .bucketName(publicObjectStorageConfigProperties.getBucketName())
+        .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
+
+    CreatePreauthenticatedRequestResponse response = client
+        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
+    client.close();
+
+    return publicObjectStorageConfigProperties.getRegionalObjectStorageUri() +
+        response.getPreauthenticatedRequest().getAccessUri() +
+        fileName;
+  }
+
 }

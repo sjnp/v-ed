@@ -80,6 +80,9 @@ public class InstructorService {
     courseRepo.save(incompleteCourse);
   }
 
+  public void uploadCoursePicture() {
+
+  }
 
   public void deleteCoursePictureUrl(Long courseId, String username) {
     log.info("Deleting course picture from instructor: {}", username);

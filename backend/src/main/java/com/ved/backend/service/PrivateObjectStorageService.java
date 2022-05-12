@@ -23,6 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails.AccessType;
+import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails.AccessType.*;
+
 @AllArgsConstructor
 @Service
 @Transactional
@@ -34,6 +37,67 @@ public class PrivateObjectStorageService {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PrivateObjectStorageService.class);
 
+  private ObjectStorageClient createClient() throws IOException {
+    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+    return new ObjectStorageClient(provider);
+  }
+
+  private String createPreauthenticatedRequest(String fileName,
+                                               String preauthenticatedRequestName,
+                                               AccessType accessType) throws IOException {
+    ObjectStorageClient client = createClient();
+
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
+        .builder()
+        .name(preauthenticatedRequestName)
+        .objectName(fileName)
+        .accessType(accessType)
+        .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
+        .build();
+
+    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest
+        .builder()
+        .namespaceName(privateObjectStorageConfigProperties.getNamespace())
+        .bucketName(privateObjectStorageConfigProperties.getBucketName())
+        .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails)
+        .build();
+
+    CreatePreauthenticatedRequestResponse response = client
+        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
+    client.close();
+
+    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() +
+        response.getPreauthenticatedRequest().getAccessUri() +
+        fileName;
+  }
+
+  public String uploadFile(String fileName, String username) throws IOException {
+    String preauthenticatedRequestName = username + "_upload_" + fileName;
+    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite);
+  }
+
+  public String readFile(String fileName, String username) throws IOException {
+    String preauthenticatedRequestName = username + "_read_" + fileName;
+    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, ObjectRead);
+  }
+
+  public void deleteFile(String fileName) throws IOException {
+    ObjectStorageClient client = createClient();
+
+    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest
+        .builder()
+        .namespaceName(privateObjectStorageConfigProperties.getNamespace())
+        .bucketName(privateObjectStorageConfigProperties.getBucketName())
+        .objectName(fileName)
+        .build();
+
+    client.deleteObject(deleteObjectRequest);
+    client.close();
+  }
+
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   public String createParToUploadCourseVideo(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException {
     String videoExtension = FileExtensionStringHandler.getViableExtension(fileName, privateObjectStorageConfigProperties.getViableVideoExtensions());
 
@@ -43,7 +107,7 @@ public class PrivateObjectStorageService {
     ObjectStorageClient client = new ObjectStorageClient(provider);
     String videoObjectName = "course_vid_" + incompleteCourseMaterials.getId() + "_c" + chapterIndex + "_s" + sectionIndex + "." + videoExtension;
 
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + videoObjectName).objectName(videoObjectName).accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + videoObjectName).objectName(videoObjectName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
 
     CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
 
@@ -60,7 +124,7 @@ public class PrivateObjectStorageService {
     ObjectStorageClient client = new ObjectStorageClient(provider);
     String handoutObjectName = "course_handout_" + incompleteCourseMaterials.getId() + "_c" + chapterIndex + "_s" + sectionIndex + "_" + fileName;
 
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + handoutObjectName).objectName(handoutObjectName).accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
+    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + handoutObjectName).objectName(handoutObjectName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
 
     CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
 
@@ -78,7 +142,7 @@ public class PrivateObjectStorageService {
         CreatePreauthenticatedRequestDetails.builder()
             .name(username + "_read_" + fileUri)
             .objectName(fileUri)
-            .accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead)
+            .accessType(ObjectRead)
             .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
             .build();
 
@@ -125,7 +189,7 @@ public class PrivateObjectStorageService {
           .builder()
           .name(fileName)
           .objectName(fileName)
-          .accessType(CreatePreauthenticatedRequestDetails.AccessType.ObjectRead)
+          .accessType(ObjectRead)
           .timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer()))
           .build();
 
@@ -172,7 +236,7 @@ public class PrivateObjectStorageService {
       String fileType = "." + answerRequest.getFileName().substring(answerRequest.getFileName().indexOf(".") + 1);
       String fileName = "answer" + studentId + courseId + chapterNo + no + fileType;
 
-      CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + fileName).objectName(fileName).accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
+      CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + fileName).objectName(fileName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
 
       CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
 

@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -79,7 +80,7 @@ public class ReviewService {
 
         List<Review> reviews = publishedCourse.getReviews();
 
-        List<ReviewResponse> reviewResponses = new ArrayList<ReviewResponse>();
+        List<ReviewResponse> reviewResponses = new ArrayList<>();
         Boolean isReview = false;
         Long myReviewId = null;
         for (Review review : reviews) {
