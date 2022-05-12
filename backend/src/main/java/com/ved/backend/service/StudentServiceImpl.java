@@ -13,9 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-@Transactional
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl {
 
   private final AppUserRepo appUserRepo;
   private final AppRoleRepo appRoleRepo;
@@ -25,13 +23,11 @@ public class StudentServiceImpl implements StudentService {
 
 
 
-  @Override
   public Student getStudent(String username) {
     log.info("Fetching student: {}", username);
     return appUserRepo.findByUsername(username).getStudent();
   }
 
-  @Override
   public void changeRoleFromStudentIntoInstructor(Instructor instructor, String username) {
     log.info("Changing role to student: {}", username);
     AppUser appUser = appUserRepo.findByUsername(username);
