@@ -23,7 +23,7 @@ public class StudentService {
   private final AppRoleRepo appRoleRepo;
   private final StudentRepo studentRepo;
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppUserServiceImpl.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StudentService.class);
 
   public void changeRoleFromStudentIntoInstructor(Instructor instructor, String username) {
     log.info("Changing role to student: {}", username);

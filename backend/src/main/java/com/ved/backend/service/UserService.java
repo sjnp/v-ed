@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
   private final AppRoleRepo appRoleRepo;
   private final PasswordEncoder passwordEncoder;
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AppUserServiceImpl.class);
+  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
