@@ -71,9 +71,9 @@ public class PostServiceImpl implements PostService {
         post.setStudentCourse(studentCourse);
 
         Course course = studentCourse.getCourse();
-        course.getQuestionBoards().add(post);
+        course.getPosts().add(post);
 
-        studentCourse.getQuestionBoards().add(post);
+        studentCourse.getPosts().add(post);
 
         postRepo.save(post);
         studentCourseRepo.save(studentCourse);
@@ -106,7 +106,7 @@ public class PostServiceImpl implements PostService {
         }
 
         Course course = courseOptional.get();
-        List<Post> posts = course.getQuestionBoards();
+        List<Post> posts = course.getPosts();
 
         List<PostResponse> response = new ArrayList<PostResponse>();
         for (Post post : posts) {
