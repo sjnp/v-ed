@@ -13,7 +13,7 @@ import BankingSelect from '../components/BankingSelect'
 import { Container, Box, Button, Typography } from '@mui/material'
 
 // url
-import { URL_OVERVIEW_COURSE_ID_CARD } from '../utils/url';
+import { URL_GET_OVERVIEW_COURSE_CARD } from '../utils/url';
 
 const Payment = () => {
 
@@ -35,7 +35,7 @@ const Payment = () => {
 
   useEffect(async () => {
 
-    const url = URL_OVERVIEW_COURSE_ID_CARD.replace('{courseId}', courseId)
+    const url = URL_GET_OVERVIEW_COURSE_CARD.replace('{courseId}', courseId)
     const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
     setCourseCard(result)
   

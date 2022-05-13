@@ -23,7 +23,7 @@ import { URL_GET_REVIEW } from '../utils/url'
 
 const StudentEditReview = () => {
 
-    const { reviewId } = useParams()
+    const { courseId, reviewId } = useParams()
 
     const axiosPrivate = useAxiosPrivate()
 
@@ -34,7 +34,10 @@ const StudentEditReview = () => {
 
     useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_REVIEW + reviewId)
+        const response = await apiPrivate.get(axiosPrivate,
+          URL_GET_REVIEW
+            .replace('{courseId}', courseId)
+            .replace('{reviewId}', reviewId))
 
         if (response.status === 200) {
             setRating(response.data.rating)

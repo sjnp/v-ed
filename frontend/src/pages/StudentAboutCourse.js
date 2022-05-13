@@ -34,7 +34,7 @@ const StudentAboutCourse = () => {
 
     useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_ABOUT_COURSE + courseId)
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_ABOUT_COURSE.replace('{courseId}', courseId))
 
         if (response.status === 200) {
             setOverview(response.data.overview)

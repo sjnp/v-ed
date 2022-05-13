@@ -2,7 +2,7 @@ import {Paper, StepLabel, Stepper, Step, Typography, StepContent, CircularProgre
 import {Box} from "@mui/system";
 import {useEffect, useState} from 'react';
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import {URL_GET_CREATED_COURSE} from "../utils/url";
+import {URL_GET_INCOMPLETE_COURSE} from "../utils/url";
 import {useDispatch} from "react-redux";
 import {resetCourse, setChapters, setName, setPictureUrl, setPrice} from "../features/createdCourseSlice";
 import UploadCoursePictureUrlForm from "./UploadCoursePictureUrlForm";
@@ -21,7 +21,9 @@ const UploadCourseMaterialForm = (props) => {
 
   useEffect(() => {
     dispatch(resetCourse());
-    axiosPrivate.get(`${URL_GET_CREATED_COURSE}?id=${courseId}`)
+    const url = URL_GET_INCOMPLETE_COURSE
+      .replace('{courseId}', courseId)
+    axiosPrivate.get(url)
       .then(response => {
         dispatch(setName({name: response.data.name}));
         dispatch(setPrice({price: response.data.price}));

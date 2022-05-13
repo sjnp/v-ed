@@ -15,7 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 // url
-import { URL_STUDENT_MY_COURSE } from "../utils/url";
+import { URL_GET_STUDENT_COURSES } from "../utils/url";
 
 const Student = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -34,7 +34,7 @@ const Student = () => {
   }
 
   useEffect(async () => {
-    const response = await axiosPrivate.get(URL_STUDENT_MY_COURSE).then(res => res).catch(err => err.response)
+    const response = await axiosPrivate.get(URL_GET_STUDENT_COURSES).then(res => res).catch(err => err.response)
     if (response.status === 200) {
       setMyCourse(response.data)
     }

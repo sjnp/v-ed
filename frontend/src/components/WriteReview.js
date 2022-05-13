@@ -22,7 +22,7 @@ import apiPrivate from '../api/apiPrivate'
 
 // url
 import { URL_CREATE_REVIEW } from '../utils/url'
-import { URL_PUT_EDIT_REVIEW } from '../utils/url'
+import { URL_EDIT_REVIEW } from '../utils/url'
 
 const WriteReview = ({ initRating, initReview, type }) => {
 
@@ -80,7 +80,7 @@ const WriteReview = ({ initRating, initReview, type }) => {
 
     const callApiEditReview = async (payload) => {
         console.log('select edit review')
-        const url = URL_PUT_EDIT_REVIEW.replace('{reviewId}', reviewId)
+        const url = URL_EDIT_REVIEW.replace('{reviewId}', reviewId)
         return await apiPrivate.put(axiosPrivate, url, payload)
     }
 

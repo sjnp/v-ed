@@ -30,7 +30,7 @@ import { URL_CREATE_COMMENT } from '../utils/url'
 
 const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
-    const { questionBoardId } = useParams()
+    const { courseId ,questionBoardId } = useParams()
 
     const axiosPrivate = useAxiosPrivate()
     
@@ -67,7 +67,9 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
             questionId: questionBoardId,
             comment: comment
         }
-        const response = await apiPrivate.post(axiosPrivate, URL_CREATE_COMMENT, payload)
+        const response = await apiPrivate.post(axiosPrivate,
+          URL_CREATE_COMMENT.replace('{courseId}', courseId),
+          payload)
 
         if (response.status === 201) {
             setComment('')

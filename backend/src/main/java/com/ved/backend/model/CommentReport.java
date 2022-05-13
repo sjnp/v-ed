@@ -1,9 +1,18 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class CommentReport {
@@ -25,45 +34,4 @@ public class CommentReport {
       inverseJoinColumns = {@JoinColumn(name = "report_state_id", referencedColumnName = "id")})
   private ReportState reportState;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
-  public Comment getComment() {
-    return comment;
-  }
-
-  public void setComment(Comment comment) {
-    this.comment = comment;
-  }
-
-  public ReportState getReportState() {
-    return reportState;
-  }
-
-  public void setReportState(ReportState reportState) {
-    this.reportState = reportState;
-  }
-
-  public CommentReport() {
-  }
-
-  public CommentReport(Long id, String description, Comment comment, ReportState reportState) {
-    this.id = id;
-    this.description = description;
-    this.comment = comment;
-    this.reportState = reportState;
-  }
 }

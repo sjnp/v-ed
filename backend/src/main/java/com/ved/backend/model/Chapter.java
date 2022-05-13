@@ -1,8 +1,17 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.HashMap;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Chapter {
 
   private String name;
@@ -11,36 +20,4 @@ public class Chapter {
 
   private List<HashMap<String, String>> assignments;
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<HashMap<String, Object>> getSections() {
-    return sections;
-  }
-
-  public void setSections(List<HashMap<String, Object>> sections) {
-    this.sections = sections;
-  }
-
-  public List<HashMap<String, String>> getAssignments() {
-    return assignments;
-  }
-
-  public void setAssignments(List<HashMap<String, String>> assignments) {
-    this.assignments = assignments;
-  }
-
-  public Chapter() {
-  }
-
-  public Chapter(String name, List<HashMap<String, Object>> sections, List<HashMap<String, String>> assignments) {
-    this.name = name;
-    this.sections = sections;
-    this.assignments = assignments;
-  }
 }

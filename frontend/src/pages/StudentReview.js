@@ -27,7 +27,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_REVIEW_COURSE } from '../utils/url'
+import { URL_GET_ALL_REVIEWS_BY_COURSE } from '../utils/url'
 
 const StudentReview = () => {
 
@@ -47,7 +47,7 @@ const StudentReview = () => {
 
     useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_REVIEW_COURSE + courseId)
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_REVIEWS_BY_COURSE.replace('{courseId}', courseId))
 
         if (response.status === 200) {
             setReviews(response.data.reviews)
