@@ -69,6 +69,7 @@ public class StudentServiceImpl implements StudentService {
               .collect(Collectors.toList());
       if (appUserRoles.contains("INSTRUCTOR")) {
         log.info("Fail, user: {} already is an instructor", username);
+        return "Fail, user: {} already is an instructor" + username;
       } else if (appUserRoles.contains("STUDENT")) {
 
         String recipientId = omiseService.createRecipient(finance); // Add a recipient with a bank account
@@ -83,7 +84,7 @@ public class StudentServiceImpl implements StudentService {
 //        student.setInstructor(instructor);
 //        studentRepo.save(student);
 //        log.info("Success, user: {} is now an instructor", username);
-//      }
+     }
 
       return String.valueOf("OK");
     }
