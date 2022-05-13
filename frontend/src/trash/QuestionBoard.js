@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 // component
-import QuestionTopic from './QuestionTopic'
-import QuestionComment from './QuestionComment'
-import QuestionWriteComment from './QuestionWriteComment'
+import QuestionTopic from '../components/QuestionTopic'
+import QuestionComment from '../components/QuestionComment'
+import QuestionWriteComment from '../components/QuestionWriteComment'
 
 // Material UI
 import Box from '@mui/material/Box'

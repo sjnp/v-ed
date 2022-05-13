@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 // Material UI component
 import List from '@mui/material/List'
@@ -9,26 +9,24 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider'
 
-// icon
+//  Material UI icon
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo'
-
-// feature slice
-import { setVideo } from '../features/videoCourseSlice'
 
 const ChapterVideoList = ({ videos }) => {
 
+    const { courseId } = useParams()
+
     const navigate = useNavigate()
 
-    const dispatch = useDispatch()
+    const handleClickVideoList = (courseId, video) => {
 
-    const courseId = useSelector(state => state.studentCourse.value.courseId)
+        const [ , , , chapter, sectionAndFileType ] = video.videoUri.split('_')
+        const [ section, ] = sectionAndFileType.split('.')
 
-    const handleClickVideoList = (courseId, videoUri) => {
-        dispatch( setVideo({ 
-            courseId: courseId, 
-            videoUri: videoUri 
-        }))
-        navigate(`/student/course/video/${courseId}`)
+        const chapterNo = chapter.replace('c', '')
+        const sectionNo = section.replace('s', '')
+
+        navigate(`/student/course/${courseId}/video/c/${chapterNo}/s/${sectionNo}`)
     } 
     
     return (
@@ -37,7 +35,7 @@ const ChapterVideoList = ({ videos }) => {
             {
                 videos.map((video, index) => (
                     <div key={index}>
-                        <ListItemButton onClick={() => handleClickVideoList(courseId, video.videoUri)}>
+                        <ListItemButton onClick={() => handleClickVideoList(courseId, video)}>
                             <ListItemIcon>
                                 <OndemandVideoIcon />
                             </ListItemIcon>

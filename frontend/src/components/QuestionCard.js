@@ -19,11 +19,11 @@ const QuestionCard = ({ topic, datetime, commentCount, onClickQuestionCard }) =>
                         {topic}
                     </Box>
                 </Grid>
-                <Grid item xs={1} textAlign='end' sx={{ color: 'gray' }}>
-                    <CommentIcon />
-                </Grid>
-                <Grid item xs={1} sx={{ pl: 1, fontSize: 15, color: 'gray' }}>
-                    {commentCount}
+                <Grid item xs={2} textAlign='end' sx={{ color: 'gray' }}>
+                    <Box display={'flex'} justifyContent='flex-end'>
+                        <CommentIcon />
+                        <Typography component='span' paddingLeft={1}>{commentCount}</Typography>
+                    </Box>
                 </Grid>
                 <Grid item>
                     <Typography variant="caption" color="text.secondary">

@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {URL_GET_CREATED_COURSE} from "../utils/url";
 import {useDispatch} from "react-redux";
-import {setChapters, setName, setPictureUrl, setPrice} from "../features/createdCourseSlice";
+import {resetCourse, setChapters, setName, setPictureUrl, setPrice} from "../features/createdCourseSlice";
 import UploadCoursePictureUrlForm from "./UploadCoursePictureUrlForm";
 import UploadVideoAndHandoutForm from "./UploadVideoAndHandoutForm";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -19,8 +19,9 @@ const UploadCourseMaterialForm = (props) => {
   const dispatch = useDispatch();
   const [isFinishFetching, setIsFinishFetching] = useState(false);
 
-  useEffect(async () => {
-    await axiosPrivate.get(`${URL_GET_CREATED_COURSE}?id=${courseId}`)
+  useEffect(() => {
+    dispatch(resetCourse());
+    axiosPrivate.get(`${URL_GET_CREATED_COURSE}?id=${courseId}`)
       .then(response => {
         dispatch(setName({name: response.data.name}));
         dispatch(setPrice({price: response.data.price}));
@@ -32,7 +33,7 @@ const UploadCourseMaterialForm = (props) => {
         console.error(err);
         navigate('/', { state: { from: location }, replace: true });
       })
-  }, []);
+  }, [axiosPrivate, courseId, dispatch, location, navigate]);
 
   const steps = [
     'Course Picture',

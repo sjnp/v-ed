@@ -14,7 +14,7 @@ public class Review {
   private Long id;
 
   @Column(nullable = false)
-  private double rating;
+  private Double rating;
 
   @Column(nullable = false, length = 1000)
   private String comment;
@@ -34,10 +34,25 @@ public class Review {
   @OneToMany(mappedBy = "review")
   private List<ReviewReport> reviewReports;
 
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinTable(name = "review_student",
+      joinColumns = { @JoinColumn(name = "review_id", referencedColumnName = "id") },
+      inverseJoinColumns = { @JoinColumn(name = "student_id", referencedColumnName = "id")})
+  private Student student;
+
   public Review() {
   }
 
-  public Review(Long id, double rating, String comment, LocalDateTime reviewDateTime, boolean visible, PublishedCourse publishedCourse, List<ReviewReport> reviewReports) {
+  public Review(
+    Long id, 
+    Double rating, 
+    String comment, 
+    LocalDateTime reviewDateTime, 
+    boolean visible, 
+    PublishedCourse publishedCourse, 
+    List<ReviewReport> reviewReports,
+    Student student
+  ) {
     this.id = id;
     this.rating = rating;
     this.comment = comment;
@@ -45,6 +60,7 @@ public class Review {
     this.visible = visible;
     this.publishedCourse = publishedCourse;
     this.reviewReports = reviewReports;
+    this.student = student;
   }
 
   public Long getId() {
@@ -55,11 +71,11 @@ public class Review {
     this.id = id;
   }
 
-  public double getRating() {
+  public Double getRating() {
     return rating;
   }
 
-  public void setRating(double rating) {
+  public void setRating(Double rating) {
     this.rating = rating;
   }
 
@@ -101,5 +117,13 @@ public class Review {
 
   public void setReviewReports(List<ReviewReport> reviewReports) {
     this.reviewReports = reviewReports;
+  }
+
+  public Student getStudent() {
+    return student;
+  }
+
+  public void setStudent(Student student) {
+    this.student = student;
   }
 }

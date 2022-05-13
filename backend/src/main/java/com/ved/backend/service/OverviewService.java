@@ -9,7 +9,7 @@ public interface OverviewService {
 
     public ArrayList<CourseCardResponse> getOverviewCategory(String categoryName);
 
-    public ArrayList<CourseCardResponse> getOverviewMyCouese(String username);
+    public ArrayList<CourseCardResponse> getOverviewMyCourse(String username);
     
     public OverviewResponse getOverviewCourse(Long courseId);
     

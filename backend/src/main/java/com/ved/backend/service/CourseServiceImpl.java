@@ -1,12 +1,15 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.MyException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Student;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
+import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,6 +30,21 @@ public class CourseServiceImpl implements CourseService {
 
     return courseResponse;
   }
+
+  public AboutCourseResponse getAboutCourse(Long courseId) {
+
+    Optional<Course> courseOptional = courseRepo.findById(courseId);
+
+    if (courseOptional.isEmpty()) {
+      throw new MyException("course.id.not.found", HttpStatus.NOT_FOUND);
+    }
+
+    Course course = courseOptional.get();
+    AboutCourseResponse response = new AboutCourseResponse(course);
+
+    return response;
+  }
+
 
   @Override
   public List<Map<String, Object>> getPendingCourses() {

@@ -16,6 +16,8 @@ public interface PrivateObjectStorageService {
 
   public String getAccessURI(String fileName);
 
+  public String getAccessVideoURI(String courseId, String chapterNo, String sectionNo);
+
   public String getUploadFileURI(AnswerRequest answerRequest, String username);
 
 }

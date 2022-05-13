@@ -37,6 +37,9 @@ public class Student {
   @OneToMany(mappedBy = "student")
   private List<StudentCourse> studentCourses;
 
+  @OneToOne(mappedBy = "student")
+  private Review review;
+
   @OneToOne(cascade = CascadeType.ALL, fetch = LAZY)
   @JoinTable(name = "student_instructor",
       joinColumns = {@JoinColumn(name = "student_id", referencedColumnName = "id")},
@@ -54,6 +57,8 @@ public class Student {
   public String getLastName() {
     return lastName;
   }
+
+  public String getFullName() { return firstName + " " + lastName; }
 
   public String getOccupation() {
     return occupation;
@@ -123,10 +128,30 @@ public class Student {
     this.comments = comments;
   }
 
+  public Review getReview() {
+    return review;
+  }
+
+  public void setReview(Review review) {
+    this.review = review;
+  }
+
   public Student() {
   }
 
-  public Student(Long id, String firstName, String lastName, String occupation, String biography, String profilePicUri, AppUser appUser, List<Comment> comments, List<StudentCourse> studentCourses, Instructor instructor) {
+  public Student(
+    Long id, 
+    String firstName, 
+    String lastName, 
+    String occupation,
+    String biography, 
+    String profilePicUri, 
+    AppUser appUser, 
+    List<Comment> comments, 
+    List<StudentCourse> studentCourses, 
+    Instructor instructor,
+    Review review
+  ) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -137,6 +162,7 @@ public class Student {
     this.comments = comments;
     this.studentCourses = studentCourses;
     this.instructor = instructor;
+    this.review = review;
   }
 
 }

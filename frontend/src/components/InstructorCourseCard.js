@@ -25,13 +25,16 @@ const InstructorCourseCard = ({pictureUrl, courseName, price, isIncomplete, rati
     onMouseOut={handleMouseOut}
     onClick={handleClickCourseCard}
   >
-    <CardMedia component="img" height="130" image={pictureUrl}/>
+    {pictureUrl
+      ? <CardMedia component="img" height="140" image={pictureUrl}/>
+      : <CardMedia component="img" height="140" sx={{backgroundColor: 'grey.200', border: 'none'}}/>
+    }
     <CardContent>
       <Typography variant="body1" color="text.primary" title={courseName}>
         {courseName}
       </Typography>
       <Typography variant="caption" color="text.secondary" title={price}>
-        {`${price} THB.`}
+        {price !== 0 ? `${price} THB.` : "free"}
       </Typography>
     </CardContent>
     {isIncomplete

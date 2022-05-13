@@ -1,6 +1,7 @@
 package com.ved.backend.service;
 
 import com.ved.backend.model.CourseState;
+import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
 
 import java.util.HashMap;
@@ -10,6 +11,8 @@ import java.util.Map;
 public interface CourseService {
  
     public CourseResponse getCourse(Long courseId);
+
+    public AboutCourseResponse getAboutCourse(Long courseId);
 
     public List<Map<String,Object>> getPendingCourses();
 

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import moment from 'moment'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
-import BetaCourseContent from '../components/BetaCourseContent';
+import LoadingCircle from '../components/LoadingCircle'
+import QuestionCard from '../components/QuestionCard'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -23,7 +24,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_COURSE_BY_ID } from "../utils/url"
+import { URL_GET_QUESTION_BOARD_BY_COURSE } from '../utils/url'
 
 const StudentQuestion = () => {
 
@@ -31,7 +32,32 @@ const StudentQuestion = () => {
     
     const navigate = useNavigate()
 
-    
+    const axiosPrivate = useAxiosPrivate()
+
+    const [ question, setQuestion ] = useState([])
+
+    const [ loading, setLoading ] = useState(true)
+
+    useEffect(async () => {
+
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_QUESTION_BOARD_BY_COURSE + courseId)
+
+        if (response.status === 200) {
+            setQuestion(response.data)
+        } else {
+            alert('Qeustion fail')
+        }
+        setLoading(false)
+
+    }, [])
+
+    const handleNavigateCreateQuestion = () => {
+        navigate(`/student/course/${courseId}/question-board/create`)
+    }
+
+    const handleNavigateQuestionCard = (questionBoardId) => {
+        navigate(`/student/course/${courseId}/question-board/${questionBoardId}`)
+    }
 
     return (
         <Container>
@@ -54,16 +80,28 @@ const StudentQuestion = () => {
                                 size="small" 
                                 color="primary"
                                 title='Create question'
-                                onClick={() => navigate(`/student/course/${courseId}/question-board/create`)}
+                                onClick={handleNavigateCreateQuestion}
+                                sx={{ position: 'fixed' }}
                             >
                                 <AddIcon />
                             </Fab>
                         </Grid>
                     </Grid>
-                    <Grid container>
-                        <Grid item xs={1}></Grid>
+                    <Grid container sx={{ mt: 2 }}>
+                        <Grid item xs={2}></Grid>
                         <Grid item xs={10}>
-                            
+                            {
+                                question?.map((item, index) => (
+                                    <QuestionCard 
+                                        key={index}
+                                        topic={item.topic}
+                                        datetime={moment(item.createDateTime).format("DD/MM/YYYY | kk:mm:ss")}
+                                        commentCount={item.comments.length}
+                                        onClickQuestionCard={() => handleNavigateQuestionCard(item.id)}
+                                    />
+                                ))
+                            }
+                            <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
                 </Grid>
