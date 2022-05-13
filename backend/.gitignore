@@ -7,6 +7,7 @@ target/
 ### Secrets ###
 src/main/resources/application.properties
 src/test/resources/application.properties
+src/test/resources/application-it.properties
 
 ### STS ###
 .apt_generated

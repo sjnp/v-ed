@@ -79,7 +79,7 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/posts/{postId}")
-  public ResponseEntity<PostResponse> getQuestionBoard(@PathVariable Long courseId,
+  public ResponseEntity<PostResponse> getPost(@PathVariable Long courseId,
                                                        @PathVariable Long postId,
                                                        Principal principal) {
     PostResponse response = postService.getPostById(postId);
