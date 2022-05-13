@@ -27,9 +27,9 @@ const AccountManageInstructor = () => {
     event.preventDefault();
     try {
       console.log('In')
-      // const test = await axiosPrivate.get('http://localhost:8080/api/instructors/test');
-      const response = await axiosPrivate.post('/api/students/active-instrustor', finance );
+      // const test = await axiosPrivate.get('http://localhost:8080/api/instructors/getFinance');
       // console.log(test)
+      const response = await axiosPrivate.post('/api/students/active-instrustor', finance );
       console.log(response.data)
     } catch (err) {
       console.error(err);

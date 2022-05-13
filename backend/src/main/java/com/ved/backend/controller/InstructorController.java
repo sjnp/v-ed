@@ -1,5 +1,6 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.service.InstructorService;
@@ -19,8 +20,16 @@ public class InstructorController {
   private final InstructorService instructorService;
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
+  private final OmiseConfigProperties omiseKey;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
+
+
+  @GetMapping(path = "/getFinance")
+  public ResponseEntity<?> getAccountData(Principal principal) {
+    String response = instructorService.getOmiseAccountData(principal.getName());
+    return ResponseEntity.ok(response);
+  }
 
 
   @PostMapping(path = "/course")
@@ -179,9 +188,12 @@ public class InstructorController {
     }
   }
 
-  public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService, PrivateObjectStorageService privateObjectStorageService) {
+
+
+  public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService, PrivateObjectStorageService privateObjectStorageService, OmiseConfigProperties omiseKey) {
     this.instructorService = instructorService;
     this.publicObjectStorageService = publicObjectStorageService;
     this.privateObjectStorageService = privateObjectStorageService;
+    this.omiseKey = omiseKey;
   }
 }

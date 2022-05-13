@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
@@ -16,8 +17,18 @@ public class InstructorServiceImpl implements InstructorService {
   private final CourseStateRepo courseStateRepo;
   private final InstructorRepo instructorRepo;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
+  private final OmiseConfigProperties omiseKey;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorServiceImpl.class);
+
+  @Override
+  public String getOmiseAccountData(String username){
+    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+    String recipientId = instructor.getRecipientId();
+    String base64Creds = omiseKey.getBase64SecretKey();
+
+    return recipientId;
+  }
 
   @Override
   public Long createCourse(Course course, String username) {
@@ -102,12 +113,13 @@ public class InstructorServiceImpl implements InstructorService {
   }
 
 
-  public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties) {
+  public InstructorServiceImpl(AppUserRepo appUserRepo, CourseRepo courseRepo, CourseStateRepo courseStateRepo, InstructorRepo instructorRepo, PublicObjectStorageConfigProperties publicObjectStorageConfigProperties, OmiseConfigProperties omiseKey) {
     this.appUserRepo = appUserRepo;
     this.courseRepo = courseRepo;
     this.courseStateRepo = courseStateRepo;
     this.instructorRepo = instructorRepo;
     this.publicObjectStorageConfigProperties = publicObjectStorageConfigProperties;
+    this.omiseKey = omiseKey;
   }
 
 }
