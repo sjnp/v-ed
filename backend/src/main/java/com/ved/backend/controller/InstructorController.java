@@ -88,11 +88,12 @@ public class InstructorController {
 
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
-    URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/instructors/course").toUriString());
-    Long courseId = instructorService.createCourse(course, principal.getName());
-    HashMap<String, Long> createdCourseId = new HashMap<>();
-    createdCourseId.put("id", courseId);
-    return ResponseEntity.created(uri).body(createdCourseId);
+    HashMap<String, Long> payload = instructorService.createCourse(course, principal.getName());
+    URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
+        .path("/api/instructors/incomplete-courses/" + payload.get("id"))
+        .toUriString()
+    );
+    return ResponseEntity.created(uri).body(payload);
   }
 
   @PostMapping(path = "/incomplete-courses/{courseId}/picture/pre-authenticated-request")

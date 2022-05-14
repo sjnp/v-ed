@@ -3,6 +3,7 @@ package com.ved.backend.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.exception.NotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
@@ -26,11 +27,13 @@ public class PublicService {
     private final CourseStateRepo courseStateRepo;
     private final CourseRepo courseRepo;
 
+    private final CourseStateProperties courseStateProperties;
+
     public List<CourseCardResponse> getOverviewCategory(String categoryName) {
         Category category = categoryRepo.findByName(categoryName)
             .orElseThrow(() -> new NotFoundException("Category " + categoryName + " not found"));
 
-        CourseState courseState = courseStateRepo.findCourseStateByName("PUBLISHED")
+        CourseState courseState = courseStateRepo.findCourseStateByName(courseStateProperties.getPublished())
             .orElseThrow(() -> new NotFoundException("Course state \"PUBLISHED\" not found"));
 
         List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState)

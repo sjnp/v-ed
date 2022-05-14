@@ -1,12 +1,12 @@
 package com.ved.backend.service;
 
+import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
+import com.ved.backend.exception.UnauthorizedException;
 import com.ved.backend.model.*;
-import com.ved.backend.repo.AppUserRepo;
-import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.CourseStateRepo;
-import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.repo.*;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,19 +23,29 @@ public class InstructorService {
   private final CourseRepo courseRepo;
   private final CourseStateRepo courseStateRepo;
   private final InstructorRepo instructorRepo;
+
+  private final UserService userService;
+
+  private final CourseStateProperties courseStateProperties;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorService.class);
 
-  public Long createCourse(Course course, String username) {
-    log.info("Creating course from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    course.setCourseState(courseStateRepo.findByName("INCOMPLETE"));
+  public HashMap<String, Long> createCourse(Course course, String username) {
+    Instructor instructor = userService.getInstructor(username);
+    course.setCourseState(courseStateRepo.findByName(courseStateProperties.getIncomplete()));
     course.setInstructor(instructor);
     instructor.getCourses().add(course);
-    courseRepo.save(course);
+    log.info("Creating course from user: {}", username);
+    try {
+      courseRepo.save(course);
+    } catch (Exception exception) {
+      log.error(exception.getMessage());
+    }
     instructorRepo.save(instructor);
-    return course.getId();
+    HashMap<String, Long> payload = new HashMap<>();
+    payload.put("id", course.getId());
+    return payload;
   }
 
   public CourseRepo.CourseMaterials getIncompleteCourse(Long courseId, String username) {

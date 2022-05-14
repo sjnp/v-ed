@@ -164,7 +164,7 @@ public class PublicServiceTest {
         given(courseStateRepo.findCourseStateByName(courseStateName)).willReturn(courseStateOptional);
         given(courseRepo.findCourseByCategoryAndCourseState(categoryAcademicOptional.get(), courseStateOptional.get())).willReturn(courseListOptional);
         // given(publicServiceTest.getOverviewCategory(categoryName)).willReturn()
-        // given(courses.stream().map((course2) -> new CourseCardResponse(course2)).collect(Collectors.toList())).willReturn(courseCardResponses);
+        given(courses.stream().map((course2) -> new CourseCardResponse(course2)).collect(Collectors.toList())).willReturn(courseCardResponses);
         // when
         List<CourseCardResponse> result = publicServiceTest.getOverviewCategory(categoryName);
 
