@@ -4,6 +4,7 @@ import com.ved.backend.model.CourseState;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 
 public interface CourseStateRepo extends JpaRepository<CourseState, Long> {
@@ -15,4 +16,6 @@ public interface CourseStateRepo extends JpaRepository<CourseState, Long> {
 
   CourseState findByName(String name);
   Collection<IdAndNameOnly> findAllBy();
+
+  Optional<CourseState> findCourseStateByName(String name);
 }

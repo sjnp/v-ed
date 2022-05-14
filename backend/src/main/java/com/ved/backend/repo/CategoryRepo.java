@@ -4,6 +4,7 @@ import com.ved.backend.model.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface CategoryRepo extends JpaRepository<Category, Long> {
 
@@ -12,6 +13,8 @@ public interface CategoryRepo extends JpaRepository<Category, Long> {
     String getName();
   }
 
-  Category findByName(String name);
   Collection<IdAndNameOnly> findAllBy();
+
+  Optional<Category> findByName(String name);
+
 }
