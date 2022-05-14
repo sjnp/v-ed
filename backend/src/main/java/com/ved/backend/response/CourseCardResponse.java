@@ -27,6 +27,8 @@ public class CourseCardResponse {
 
     private long price;
 
+    private String category;
+
     public CourseCardResponse(Course course) {
         this.courseId = course.getId();
         this.courseName = course.getName();
@@ -35,6 +37,7 @@ public class CourseCardResponse {
         this.reviewCount = course.getPublishedCourse().getTotalUser();
         this.pictureURL = course.getPictureUrl();
         this.price = course.getPrice();
+        this.category = course.getCategory().getName();
     }
     
 }
