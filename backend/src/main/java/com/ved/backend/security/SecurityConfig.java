@@ -42,65 +42,94 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.sessionManagement().sessionCreationPolicy(STATELESS);
 
     http.authorizeRequests()
-        .antMatchers("/api/login/**",
+        .antMatchers("/api/login",
             "/api/token/refresh/**",
             "/api/token/clear/**",
-            "/api/users/register-new-student/**",
+            "/api/users/new-student",
             "/api/course-states/**",
             "/api/categories/**",
-            "/api/overview/**",
-            "/api/course/**",
-            "/api/students/**",
-            "/api/question-board/**",
-            "/api/comment/**",
-            "/api/review/**",
-            "/api/student-course/**"
+            "/api/overviews/category/**",
+            "/api/overviews/courses/{\\d+}",
+            "/api/overviews/courses/{\\d+}/card",
+            "/api/overviews/video-example/**",
+
+
+            "/api/students/**"
         )
         .permitAll();
 
     http.authorizeRequests()
-        .antMatchers(PUT, "/api/students/instructor-feature/**")
+        .antMatchers(GET, "/api/students/course-samples",
+            "/api/students/courses",
+            "/api/students/courses/{\\d+}",
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video",
+            "/api/students/courses/{\\d+}/about",
+            "/api/students/courses/{\\d+}/posts",
+            "/api/students/courses/{\\d+}/posts/{\\d+}",
+            "/api/students/courses/{\\d+}/posts/comment",
+            "/api/students/courses/{\\d+}/reviews",
+            "/api/students/courses/{\\d+}/reviews/{\\d+}")
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(GET, "/api/instructors/incomplete-courses/**",
-            "/api/instructors/pending-courses/**",
-            "/api/instructors/approved-courses/**",
-            "/api/instructors/rejected-courses/**",
-            "/api/instructors/published-courses/**")
+        .antMatchers(POST, "/api/students/courses/{\\d+}",
+            "/api/students/courses/answers/pre-authenticated-request",
+            "/api/students/courses/{\\d+}/answer",
+            "/api/students/courses/post",
+            "/api/students/courses/review")
+        .hasAnyAuthority("STUDENT");
+
+    http.authorizeRequests()
+        .antMatchers(PUT, "/api/students/instructor-feature/**",
+            "/api/students/courses/reviews/{\\d+}")
+        .hasAnyAuthority("STUDENT");
+
+    http.authorizeRequests()
+        .antMatchers(DELETE, "/api/students/courses/{\\d+}/answer/{\\d+}")
+        .hasAnyAuthority("STUDENT");
+
+    http.authorizeRequests()
+        .antMatchers(GET, "/api/instructors/incomplete-courses/{\\d+}",
+            "/api/instructors/incomplete-courses",
+            "/api/instructors/pending-courses",
+            "/api/instructors/approved-courses",
+            "/api/instructors/rejected-courses",
+            "/api/instructors/published-courses")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
-        .antMatchers(POST, "/api/instructors/course/**",
-            "/api/instructors/incomplete-courses/picture/pre-authenticated-request/**",
-            "/api/instructors/incomplete-courses/video/pre-authenticated-request/**",
-            "/api/instructors/incomplete-courses/handout/pre-authenticated-request/**")
+        .antMatchers(POST, "/api/instructors/course",
+            "/api/instructors/incomplete-courses/{\\d+}/picture/pre-authenticated-request",
+            "/api/instructors/incomplete-courses/{\\d+}/video/pre-authenticated-request",
+            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
-        .antMatchers(PUT, "/api/instructors/incomplete-courses/picture/**",
-            "/api/instructors/incomplete-courses/chapters/**",
-            "/api/instructors/incomplete-courses/submission/**",
-            "/api/instructors/approved-courses/**")
+        .antMatchers(PUT, "/api/instructors/incomplete-courses/{\\d+}/picture/**",
+            "/api/instructors/incomplete-courses/{\\d+}/chapters",
+            "/api/instructors/incomplete-courses/{\\d+}/state",
+            "/api/instructors/approved-courses/{\\d+}")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
-        .antMatchers(DELETE, "/api/instructors/incomplete-courses/picture/**",
-            "/api/instructors/incomplete-courses/handout/**")
+        .antMatchers(DELETE, "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/**",
+
+            "/api/instructors/incomplete-courses/{\\d+}/picture")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
-        .antMatchers(GET, "/api/admins/pending-courses/**",
-            "/api/admins/pending-courses/video/**")
+        .antMatchers(GET, "/api/admins/pending-courses",
+            "/api/admins/pending-courses/{\\d+}",
+            "/api/admins/pending-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video",
+            "/api/admins/pending-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/**")
         .hasAnyAuthority("ADMIN");
 
     http.authorizeRequests()
-        .antMatchers(PUT, "/api/admins/pending-courses/**")
+        .antMatchers(PUT, "/api/admins/pending-courses/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
-    http.authorizeRequests()
-        .anyRequest()
-        .authenticated();
+//    http.authorizeRequests().anyRequest().authenticated();
+
     http.addFilter(customAuthenticationFilter);
     http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
   }
@@ -123,7 +152,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-
 
   public SecurityConfig(final UserDetailsService userDetailsService, final BCryptPasswordEncoder bCryptPasswordEncoder) {
     this.userDetailsService = userDetailsService;

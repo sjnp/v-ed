@@ -1,10 +1,19 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 
 import static javax.persistence.GenerationType.AUTO;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class AppRole {
@@ -15,27 +24,4 @@ public class AppRole {
   @Column(unique = true, nullable = false)
   private String name;
 
-  public Long getId() {
-    return id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public AppRole() {
-  }
-
-  public AppRole(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
 }

@@ -13,7 +13,7 @@ import {
 import {useEffect, useState} from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {useNavigate} from "react-router-dom";
-import {URL_GET_PENDING_COURSES} from "../utils/url";
+import {URL_GET_ALL_PENDING_COURSES} from "../utils/url";
 
 const PendingCourseList = () => {
 
@@ -28,7 +28,7 @@ const PendingCourseList = () => {
   const [isFinishFetching, setIsFinishFetching] = useState(false);
 
   useEffect(() => {
-    axiosPrivate.get(URL_GET_PENDING_COURSES)
+    axiosPrivate.get(URL_GET_ALL_PENDING_COURSES)
       .then(response => setPendingCourses(response.data))
       .then(() => setIsFinishFetching(true))
       .catch(err => console.error(err));

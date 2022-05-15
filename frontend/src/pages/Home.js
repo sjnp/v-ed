@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import overviewSerview from '../services/overview'
 
 // url
-import { URL_OVERVIEW_MY_COURSE } from "../utils/url";
+import { URL_GET_COURSE_SAMPLES } from "../utils/url";
 
 const Home = () => {
 
@@ -34,7 +34,7 @@ const Home = () => {
   useEffect(async () => {
 
     if (usernameRedux) {
-      await axiosPrivate.get(URL_OVERVIEW_MY_COURSE)
+      await axiosPrivate.get(URL_GET_COURSE_SAMPLES)
         .then(res => setMyCourse(res.data))
         .catch(err => err.response)
     } else {

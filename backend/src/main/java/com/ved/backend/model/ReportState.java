@@ -1,11 +1,20 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 import java.util.List;
 
 import static javax.persistence.GenerationType.AUTO;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class ReportState {
@@ -23,56 +32,6 @@ public class ReportState {
   private List<CommentReport> commentReports;
 
   @OneToMany(mappedBy = "reportState")
-  private List<QuestionReport> questionReports;
+  private List<PostReport> postReports;
 
-  public ReportState() {
-  }
-
-  public ReportState(Long id, String name, List<ReviewReport> reviewReports, List<CommentReport> commentReports, List<QuestionReport> questionReports) {
-    this.id = id;
-    this.name = name;
-    this.reviewReports = reviewReports;
-    this.commentReports = commentReports;
-    this.questionReports = questionReports;
-  }
-
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public List<ReviewReport> getReviewReports() {
-    return reviewReports;
-  }
-
-  public void setReviewReports(List<ReviewReport> reviewReports) {
-    this.reviewReports = reviewReports;
-  }
-
-  public List<CommentReport> getCommentReports() {
-    return commentReports;
-  }
-
-  public void setCommentReports(List<CommentReport> commentReports) {
-    this.commentReports = commentReports;
-  }
-
-  public List<QuestionReport> getQuestionReports() {
-    return questionReports;
-  }
-
-  public void setQuestionReports(List<QuestionReport> questionReports) {
-    this.questionReports = questionReports;
-  }
 }

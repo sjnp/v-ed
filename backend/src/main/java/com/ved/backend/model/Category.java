@@ -1,11 +1,20 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 import java.util.Set;
 
 import static javax.persistence.GenerationType.AUTO;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Category {
@@ -19,36 +28,4 @@ public class Category {
   @OneToMany(mappedBy = "category")
   private Set<Course> courses;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Set<Course> getCourses() {
-    return courses;
-  }
-
-  public void setCourses(Set<Course> courses) {
-    this.courses = courses;
-  }
-
-  public Category() {
-  }
-
-  public Category(Long id, String name, Set<Course> courses) {
-    this.id = id;
-    this.name = name;
-    this.courses = courses;
-  }
 }

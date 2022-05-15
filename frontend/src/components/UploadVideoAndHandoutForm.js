@@ -26,13 +26,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
 import React, {useEffect, useState} from "react";
-import Button from "@mui/material/Button";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {
-  URL_INCOMPLETE_COURSE_HANDOUT,
   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT,
   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
-  URL_UPDATE_COURSE_MATERIAL
+  URL_UPDATE_COURSE_MATERIAL, URL_DELETE_INCOMPLETE_COURSE_HANDOUT
 } from "../utils/url";
 import axios from "axios";
 import {removeHandoutUri, setHandoutUri, setVideoUri} from "../features/createdCourseSlice";
@@ -94,7 +92,8 @@ const UploadVideoAndHandoutForm = (props) => {
     const updateChapters = async () => {
       if (courseId && axiosPrivate && createdCourseChapters) {
         try {
-          await axiosPrivate.put(`${URL_UPDATE_COURSE_MATERIAL}?id=${courseId}`,
+          const url = URL_UPDATE_COURSE_MATERIAL.replace('{courseId}', courseId)
+          await axiosPrivate.put(url,
             {chapters: createdCourseChapters})
         } catch (err) {
           console.error(err);
@@ -336,8 +335,10 @@ const UploadVideoAndHandoutForm = (props) => {
         setSectionHandoutUploadStates(newSectionHandoutUploadStates);
         await deleteUtility.deleteCourseHandout(
           axiosPrivate,
-          URL_INCOMPLETE_COURSE_HANDOUT,
+          URL_DELETE_INCOMPLETE_COURSE_HANDOUT,
           courseId,
+          chapterIndex,
+          sectionIndex,
           handout.objectName
         );
         console.log(`Delete success: ${handout.objectName}`)
@@ -368,7 +369,8 @@ const UploadVideoAndHandoutForm = (props) => {
   const handleSubmit = async () => {
     if (createdCourseChapters.some(chapter => chapter.sections.some(section => !!section.videoUri === false)) === false) {
       try {
-        await axiosPrivate.put(`${URL_UPDATE_COURSE_MATERIAL}?id=${courseId}`,
+        const url = URL_UPDATE_COURSE_MATERIAL.replace('{courseId}', courseId)
+        await axiosPrivate.put(url,
           {chapters: createdCourseChapters})
         handleNext();
       } catch (err) {

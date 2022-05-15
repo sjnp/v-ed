@@ -4,7 +4,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Box, CircularProgress, Stack, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import {URL_GET_PENDING_COURSES} from "../utils/url";
+import {URL_GET_ALL_PENDING_COURSES, URL_GET_PENDING_COURSE, URL_PUT_PENDING_COURSE} from "../utils/url";
 import Grid from "@mui/material/Grid";
 import SchoolIcon from "@mui/icons-material/School";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -30,7 +30,8 @@ const PendingCourse = () => {
   const [isRejecting, setIsRejecting] = useState(false);
 
   useEffect(() => {
-    axiosPrivate.get(`${URL_GET_PENDING_COURSES}?id=${courseId}`)
+    const url = URL_GET_PENDING_COURSE.replace('{courseId}', courseId)
+    axiosPrivate.get(url)
       .then(response => {
         const newCourse = response.data;
         const newElements = [
@@ -70,11 +71,11 @@ const PendingCourse = () => {
   const handleApproval = async (isApproved) => {
     try {
       isApproved ? setIsApproving(true) : setIsRejecting(true)
-      await axiosPrivate.put(URL_GET_PENDING_COURSES,
+      const url = URL_PUT_PENDING_COURSE.replace('{courseId}', courseId)
+      await axiosPrivate.put(url,
         null,
         {
           params: {
-            id: courseId,
             isApproved: isApproved
           }
         }

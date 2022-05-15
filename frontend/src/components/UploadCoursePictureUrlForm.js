@@ -1,4 +1,4 @@
-import {Chip, Divider, IconButton, Input, Paper, Stack} from "@mui/material";
+import {Chip, Divider, Input, Paper, Stack} from "@mui/material";
 import React, {useState} from "react";
 import axios from "axios";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -101,8 +101,10 @@ const UploadCoursePictureUrlForm = (props) => {
 
   const saveCoursePictureUrl = async (objectName) => {
     try {
-      const response = await axiosPrivate.put(`${URL_SAVE_COURSE_PICTURE}?id=${courseId}`,
-        {objectName: objectName})
+      const url = URL_SAVE_COURSE_PICTURE
+        .replace('{courseId}', courseId)
+        .replace('{pictureName}', objectName)
+      const response = await axiosPrivate.put(url)
       return response.data.pictureUrl;
     } catch (err) {
       console.error(err);
@@ -111,7 +113,7 @@ const UploadCoursePictureUrlForm = (props) => {
 
   const handleDeletePicture = async () => {
     try {
-      await axiosPrivate.delete(`${URL_DELETE_COURSE_PICTURE}?id=${courseId}`)
+      await axiosPrivate.delete(URL_DELETE_COURSE_PICTURE.replace('{courseId}', courseId))
       setIsSuccess(false);
       setFile(null);
       dispatch(setPictureUrl({pictureUrl: ""}));

@@ -31,15 +31,13 @@ const PendingSectionContent = (props) => {
       setIsFinishFetching(false);
       handleBackToCourseContents();
     }
-    axiosPrivate.get(`${URL_GET_PENDING_COURSE_VIDEO}`,
-      {
-        params: {
-          id: courseId,
-          chapterIndex: selectedSection.chapterIndex,
-          sectionIndex: selectedSection.sectionIndex,
-          videoUri: selectedSection.section.videoUri
-        }
-      })
+
+    const url = URL_GET_PENDING_COURSE_VIDEO
+      .replace('{courseId}', courseId)
+      .replace('{chapterIndex}', selectedSection.chapterIndex)
+      .replace('{sectionIndex}', selectedSection.sectionIndex)
+
+    axiosPrivate.get(url)
       .then(response => {
         setVideoUrl(response.data.videoUrl);
         setIsFinishFetching(true);
@@ -57,17 +55,12 @@ const PendingSectionContent = (props) => {
   }
 
   const handleDownload = async (handoutUri) => {
-    const response = await axiosPrivate.get(
-      `${URL_GET_PENDING_COURSE_HANDOUT}`,
-      {
-        params: {
-          id: courseId,
-          chapterIndex: selectedSection.chapterIndex,
-          sectionIndex: selectedSection.sectionIndex,
-          handoutUri: handoutUri
-        }
-      }
-    );
+    const url = URL_GET_PENDING_COURSE_HANDOUT
+      .replace('{courseId}', courseId)
+      .replace('{chapterIndex}', selectedSection.chapterIndex)
+      .replace('{sectionIndex}', selectedSection.sectionIndex)
+      .replace('{handoutUri}', handoutUri)
+    const response = await axiosPrivate.get(url);
     const handoutUrl = response.data.handoutUrl;
     await saveAs(handoutUrl, handoutUri);
   }
