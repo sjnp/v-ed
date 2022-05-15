@@ -45,19 +45,19 @@ const Home = () => {
 
   useEffect(async () => {
 
-      let response = await overviewSerview.getOverviewCategory('Art')
+      let response = await overviewSerview.getOverviewCategory('ART')
       setArt(response)
     
-      response = await overviewSerview.getOverviewCategory('Business')
+      response = await overviewSerview.getOverviewCategory('BUSINESS')
       setBusiness(response)
     
-      response = await overviewSerview.getOverviewCategory('Academic')
+      response = await overviewSerview.getOverviewCategory('ACADEMIC')
       setAcademic(response)
     
-      response = await overviewSerview.getOverviewCategory('Design')
+      response = await overviewSerview.getOverviewCategory('DESIGN')
       setDesign(response)
     
-      response = await overviewSerview.getOverviewCategory('Programming')
+      response = await overviewSerview.getOverviewCategory('PROGRAMMING')
       setProgramming(response)
     
   }, [])

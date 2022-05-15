@@ -52,15 +52,15 @@ public class OverviewService {
         return courseCardResponse;
     }
 
-    public ArrayList<CourseCardResponse> getOverviewCategory(String categoryName) {
+    // public ArrayList<CourseCardResponse> getOverviewCategory(String categoryName) {
 
-        Category category = this.categoryRepo.findByName(categoryName.toUpperCase());
-        Set<Course> courseSet = category.getCourses();
+    //     Category category = this.categoryRepo.findByName(categoryName.toUpperCase());
+    //     Set<Course> courseSet = category.getCourses();
 
-        ArrayList<CourseCardResponse> courseCardResponses = getCourseCardResponseList(courseSet);
+    //     ArrayList<CourseCardResponse> courseCardResponses = getCourseCardResponseList(courseSet);
 
-        return courseCardResponses;
-    }
+    //     return courseCardResponses;
+    // }
 
     // TODO: move this to StudentService
     public ArrayList<CourseCardResponse> getOverviewMyCourse(String username) {
