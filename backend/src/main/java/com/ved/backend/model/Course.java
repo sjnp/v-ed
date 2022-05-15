@@ -41,7 +41,7 @@ public class Course {
   private String pictureUrl;
 
   @Convert(converter = ListConverter.class)
-  @Column(columnDefinition = "jsonb")
+  @Column(columnDefinition = "jsonb", nullable = false)
   private List<Chapter> chapters;
 
   @ManyToOne(fetch = EAGER)

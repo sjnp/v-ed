@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Instructor;
@@ -25,7 +26,20 @@ public class StudentService {
   private final StudentRepo studentRepo;
   private final OmiseService omiseService;
 
+  private final UserService userService;
+
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StudentService.class);
+
+  public Student getStudent(String username) {
+    AppUser appUser = userService.getAppUser(username);
+    log.info("Fetching student from user: {}", username);
+    return studentRepo.findByAppUser(appUser)
+        .orElseThrow(() -> {
+          String userIsNotStudent = "User with username: " + username + " is not a student";
+          log.error(userIsNotStudent);
+          return new UnauthorizedException(userIsNotStudent);
+        });
+  }
 
   public void changeRoleFromStudentIntoInstructor(Instructor instructor, String username) {
     log.info("Changing role to student: {}", username);
@@ -78,4 +92,5 @@ public class StudentService {
       return error.getMessage();
     }
   }
+  
 }

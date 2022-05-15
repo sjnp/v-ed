@@ -14,13 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "private-object-storage")
-public class PrivateObjectStorageConfigProperties {
+@ConfigurationProperties(prefix = "role")
+public class RoleProperties {
 
-  private String namespace;
-  private String bucketName;
-  private Long expiryTimer;
-  private List<String> viableVideoExtensions;
-  private String regionalObjectStorageUri;
+  private String student;
+  private String instructor;
+  private String admin;
 
 }

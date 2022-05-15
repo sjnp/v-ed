@@ -2,11 +2,13 @@ package com.ved.backend.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.OverviewResponse;
 import com.ved.backend.service.OverviewService;
 import com.ved.backend.service.PrivateObjectStorageService;
+import com.ved.backend.service.PublicService;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +25,11 @@ public class OverviewController {
     private final OverviewService overviewService;
     private final PrivateObjectStorageService privateObjectStorageService;
 
-    @GetMapping("/category/{categoryName}")
-    public ResponseEntity<ArrayList<CourseCardResponse>> getOverviewCategory(@PathVariable String categoryName) {
+    private final PublicService publicService;
 
-        ArrayList<CourseCardResponse> response = overviewService.getOverviewCategory(categoryName);
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<CourseCardResponse>> getOverviewCategory(@PathVariable String categoryName) {
+        List<CourseCardResponse> response = publicService.getOverviewCategory(categoryName);
         return ResponseEntity.ok().body(response);
     }
 

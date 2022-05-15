@@ -4,11 +4,16 @@ package com.ved.backend.service;
 
 import com.ved.backend.exception.ConflictException;
 import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 
+import com.ved.backend.model.Instructor;
+import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
+import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.repo.StudentRepo;
 import lombok.AllArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -30,6 +35,8 @@ public class UserService implements UserDetailsService {
 
   private final AppUserRepo appUserRepo;
   private final AppRoleRepo appRoleRepo;
+  private final StudentRepo studentRepo;
+  private final InstructorRepo instructorRepo;
   private final PasswordEncoder passwordEncoder;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
@@ -68,5 +75,27 @@ public class UserService implements UserDetailsService {
     return appUserRepo
         .findAppUserByUsername(username)
         .orElseThrow(() -> new NotFoundException("User with username: " + username + " does not exist"));
+  }
+
+  public Student getStudent(String username) {
+    AppUser appUser = getAppUser(username);
+    log.info("Fetching student from user: {}", username);
+    return studentRepo.findByAppUser(appUser)
+        .orElseThrow(() -> {
+          String userIsNotStudent = "User with username: " + username + " is not a student";
+          log.error(userIsNotStudent);
+          return new UnauthorizedException(userIsNotStudent);
+        });
+  }
+
+  public Instructor getInstructor(String username) {
+    Student student = getStudent(username);
+    log.info("Fetching instructor from user: {}", username);
+    return instructorRepo.findByStudent(student)
+        .orElseThrow(() -> {
+          String userIsNotInstructor = "User with username: " + username + " is not an instructor";
+          log.error(userIsNotInstructor);
+          return new UnauthorizedException(userIsNotInstructor);
+        });
   }
 }
