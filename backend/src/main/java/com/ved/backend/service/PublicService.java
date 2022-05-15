@@ -13,6 +13,8 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.CourseCardResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +31,32 @@ public class PublicService {
 
     private final CourseStateProperties courseStateProperties;
 
+    private static final Logger log = LoggerFactory.getLogger(PublicService.class);
+
     public List<CourseCardResponse> getOverviewCategory(String categoryName) {
+
+        log.info("Get overview category {}", categoryName);
+
         Category category = categoryRepo.findByName(categoryName)
-            .orElseThrow(() -> new NotFoundException("Category " + categoryName + " not found"));
+            .orElseThrow(() -> {
+                String message = String.format("Category %s not found.", categoryName);
+                log.error(message);
+                return new NotFoundException(message);
+            });
 
         CourseState courseState = courseStateRepo.findCourseStateByName(courseStateProperties.getPublished())
-            .orElseThrow(() -> new NotFoundException("Course state \"PUBLISHED\" not found"));
+            .orElseThrow(() -> {
+                String message = "Course state PUBLISHED not found.";
+                log.error(message);
+                return new NotFoundException(message);
+            });
 
         List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState)
-            .orElseThrow(() -> new NotFoundException("Course category " + categoryName + " not found"));
+            .orElseThrow(() -> {
+                String message = String.format("Course category %s not found.", categoryName);
+                log.error(message);
+                return new NotFoundException(message);
+            });
 
         List<CourseCardResponse> response = courses.stream()
             .map((course) -> new CourseCardResponse(course))
