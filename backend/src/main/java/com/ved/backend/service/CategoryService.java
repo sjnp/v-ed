@@ -23,7 +23,7 @@ public class CategoryService {
     private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
 
     public Category getByName(String name) {
-        log.info("Get category {} by name.", name);
+        log.info("Get category by name {}", name);
         return categoryRepo.findByName(name).orElseThrow(() -> NotFoundException.category(name));
     }
 

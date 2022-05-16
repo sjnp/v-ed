@@ -69,7 +69,7 @@ public class CategoryServiceTest {
 
     @Test
     @Order(3)
-    public void given_whenFindAllFound_thenReturnListCategory() {
+    public void given_whenFindAllFound_thenReturnCategoryList() {
         List<Category> categories = Arrays.asList("academic", "art", "business", "design", "programming")
             .stream()
             .map((name) -> mockData.getCategory(name))
@@ -84,7 +84,7 @@ public class CategoryServiceTest {
 
     @Test
     @Order(4)
-    public void given_whenFindAllNotFound_thenReturnEmptyListCategory() {
+    public void given_whenFindAllNotFound_thenReturnEmptyCategoryList() {
         List<Category> categories = Arrays.asList();
         // given
         given(categoryRepo.findAll()).willReturn(categories);
