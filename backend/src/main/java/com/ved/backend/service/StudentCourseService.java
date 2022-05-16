@@ -16,9 +16,9 @@ public class StudentCourseService {
 
     private final StudentCourseRepo studentCourseRepo;
     private final AppUserRepo appUserRepo;
-    private final StudentRepo studentRepo;
+    // private final StudentRepo studentRepo;
     private final CourseRepo courseRepo;
-    private final PublishedCourseRepo publishedCourseRepo;
+    // private final PublishedCourseRepo publishedCourseRepo;
 
     public void buyFreeCourse(Long courseId, String username) {
 
