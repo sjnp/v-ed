@@ -35,9 +35,8 @@ public class CourseService {
 
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
 
-    public List<Course> getPublishedCourseByCategory(Category category) {
+    public List<Course> getByCategoryAndCourseState(Category category, CourseState courseState) {
         log.info("Get course by published course satate and category {}", category.getName());
-        CourseState courseState = courseStateService.getByName("PUBLISHED");
         return courseRepo.findCourseByCategoryAndCourseState(category, courseState);
     }
 

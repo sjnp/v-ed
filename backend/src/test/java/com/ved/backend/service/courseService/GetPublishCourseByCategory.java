@@ -70,9 +70,8 @@ public class GetPublishCourseByCategory {
         CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
         given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
-        given(courseStateService.getByName("PUBLISHED")).willReturn(courseState);
         // when
-        List<Course> actualResult = courseServiceTest.getPublishedCourseByCategory(category);
+        List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
         // then
         assertEquals(courses, actualResult);
     }
@@ -85,9 +84,8 @@ public class GetPublishCourseByCategory {
         CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
         given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
-        given(courseStateService.getByName("PUBLISHED")).willReturn(courseState);
         // when
-        List<Course> actualResult = courseServiceTest.getPublishedCourseByCategory(category);
+        List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
         // then
         assertEquals(courses, actualResult);
         assertNotNull(actualResult);
