@@ -27,15 +27,13 @@ public class OverviewController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<CourseCardResponse>> getOverviewCategory(@PathVariable String categoryName) {
-        // List<CourseCardResponse> response = publicService.getOverviewCategory(categoryName);
         List<CourseCardResponse> response = publicService.getOverviewByCategory(categoryName);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/courses/{courseId}")
     public ResponseEntity<OverviewResponse> getOverviewCourse(@PathVariable Long courseId) {
-        
-        OverviewResponse response = overviewService.getOverviewCourse(courseId);
+        OverviewResponse response = publicService.getOverviewCourse(courseId);
         return ResponseEntity.ok().body(response);
     }
 
