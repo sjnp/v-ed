@@ -51,12 +51,12 @@ public class PublicService {
                 return new NotFoundException(message);
             });
 
-        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState)
-            .orElseThrow(() -> {
-                String message = String.format("Course category %s not found.", categoryName);
-                log.error(message);
-                return new NotFoundException(message);
-            });
+        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+            // .orElseThrow(() -> {
+            //     String message = String.format("Course category %s not found.", categoryName);
+            //     log.error(message);
+            //     return new NotFoundException(message);
+            // });
 
         List<CourseCardResponse> response = courses.stream()
             .map((course) -> new CourseCardResponse(course))

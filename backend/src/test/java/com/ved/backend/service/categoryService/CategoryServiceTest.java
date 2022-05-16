@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
 import java.util.Arrays;
@@ -92,6 +93,7 @@ public class CategoryServiceTest {
         List<Category> actualResult = categoryServiceTest.getAll();
         // then
         assertEquals(categories, actualResult);
+        assertNotNull(actualResult);
     }
 
 }
