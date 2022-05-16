@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class GetPublishCourseByCategory {
+public class GetOverviewByCategory {
 
     @Mock
     private CategoryRepo categoryRepo;
@@ -39,9 +39,6 @@ public class GetPublishCourseByCategory {
 
     @Mock
     private CourseRepo courseRepo;
-
-    @Mock
-    private CourseStateService courseStateService;
 
     @Mock
     private PrivateObjectStorageService privateObjectStorageService;
@@ -56,8 +53,7 @@ public class GetPublishCourseByCategory {
             courseRepo, 
             courseStateRepo, 
             categoryRepo, 
-            privateObjectStorageService, 
-            courseStateService
+            privateObjectStorageService
         );
         mockData = new MockData();
     }

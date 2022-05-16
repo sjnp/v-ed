@@ -1,7 +1,5 @@
 package com.ved.backend.controller;
 
-import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ved.backend.response.CourseCardResponse;
@@ -29,7 +27,8 @@ public class OverviewController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<CourseCardResponse>> getOverviewCategory(@PathVariable String categoryName) {
-        List<CourseCardResponse> response = publicService.getOverviewCategory(categoryName);
+        // List<CourseCardResponse> response = publicService.getOverviewCategory(categoryName);
+        List<CourseCardResponse> response = publicService.getOverviewByCategory(categoryName);
         return ResponseEntity.ok().body(response);
     }
 

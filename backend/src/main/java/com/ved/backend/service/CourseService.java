@@ -31,8 +31,6 @@ public class CourseService {
     private final CategoryRepo categoryRepo;
     private final PrivateObjectStorageService privateObjectStorageService;
 
-    private final CourseStateService courseStateService;
-
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
 
     public List<Course> getByCategoryAndCourseState(Category category, CourseState courseState) {
