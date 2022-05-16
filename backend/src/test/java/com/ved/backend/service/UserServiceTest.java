@@ -67,15 +67,15 @@ class UserServiceTest {
   void givenExistingUsername_whenLoadUser_thenReturnUserDetails() {
     //given
     String username = "test@test.com";
+    String password = "password";
     Collection<AppRole> appRoles = new ArrayList<>();
-    Optional<AppUser> appUser = Optional.of(new AppUser(
-        null,
-        username,
-        "password",
-        appRoles,
-        null
-    ));
-    given(appUserRepo.findAppUserByUsername(username)).willReturn(appUser);
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password("password")
+//        .appRoles(new ArrayList<>())
+        .build();
+
+    given(appUserRepo.findAppUserByUsername(username)).willReturn(Optional.of(appUser));
 
     //when
     UserDetails expected = underTest.loadUserByUsername(username);
@@ -160,7 +160,7 @@ class UserServiceTest {
 
     //then
     verify(appUserRepo).findAppUserByUsername(username);
-    assertThat(expected.getUsername()).isEqualTo(appUser.get().getUsername());
+    assertThat(expected.getUsername()).isEqualTo(username);
   }
 
   @Test
@@ -179,6 +179,7 @@ class UserServiceTest {
   void givenStudentUsername_whenGetStudent_thenReturnThatStudent() {
     //given
     UserService underThisTest = spy(underTest);
+    String username = "test@test.com";
     AppUser appUser = new AppUser();
     Student student = new Student();
 
@@ -190,7 +191,7 @@ class UserServiceTest {
         .willReturn(Optional.of(student));
 
     //when
-    Student expected = underThisTest.getStudent(anyString());
+    Student expected = underThisTest.getStudent(username);
 
     //then
     verify(studentRepo).findByAppUser(any(AppUser.class));

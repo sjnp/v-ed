@@ -1,6 +1,7 @@
 package com.ved.backend.util;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import com.ved.backend.model.Answer;
 import com.ved.backend.model.AppRole;
@@ -21,6 +22,7 @@ import com.ved.backend.model.Review;
 import com.ved.backend.model.ReviewReport;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
+import com.ved.backend.response.StudentCourseResponse;
 
 public class MockData {
     
@@ -44,14 +46,27 @@ public class MockData {
     }
 
     public AppUser getAppUser() {
-        AppUser appUser = new AppUser();
-        appUser.setId(20L);
-        appUser.setUsername("username@test.com");
-        appUser.setPassword("password");
-        appUser.setAppRoles(null);
-        appUser.setStudent(null);
-        return appUser;
+//        AppUser appUser = new AppUser();
+//        appUser.setId(20L);
+//        appUser.setUsername("username@test.com");
+//        appUser.setPassword("password");
+//        appUser.setAppRoles(null);
+//        appUser.setStudent(null);
+//        return appUser;
+        return AppUser.builder()
+            .id(20L)
+            .username("username@test.com")
+            .password("password")
+            .appRoles(new ArrayList<>())
+            .build();
     }
+
+    StudentCourseResponse test = StudentCourseResponse.builder()
+        .studentId(20L)
+        .chapterList(new ArrayList<>())
+        .build();
+
+    StudentCourseResponse test2 = new StudentCourseResponse(20L, new ArrayList<>());
 
     public Category getCategory(String categoryName) {
         

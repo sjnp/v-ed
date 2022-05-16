@@ -59,7 +59,6 @@ public class UserService implements UserDetailsService {
   public void registerStudent(AppUser appUser) {
     if (appUserRepo.existsByUsername(appUser.getUsername())) {
       String usernameAlreadyExist = "User with username: " + appUser.getUsername() + " already exists";
-      log.error(usernameAlreadyExist);
       throw new ConflictException(usernameAlreadyExist);
     }
 
