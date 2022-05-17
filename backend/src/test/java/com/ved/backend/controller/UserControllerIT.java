@@ -55,26 +55,17 @@ public class UserControllerIT {
     Collection<AppRole> appRoles = new ArrayList<>();
     String firstName = "First";
     String lastName = "Last";
-    Student student = new Student(
-        null,
-        firstName,
-        lastName,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-    );
-    AppUser appUser = new AppUser(
-        null,
-        username,
-        password,
-        appRoles,
-        student
-    );
+    Student student = Student.builder()
+        .firstName("First")
+        .lastName("Last")
+        .build();
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(new ArrayList<>())
+        .student(student)
+        .build();
+
 
     //when
     String json = objectMapper.writeValueAsString(appUser);

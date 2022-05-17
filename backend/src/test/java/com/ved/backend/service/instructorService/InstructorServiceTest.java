@@ -1,4 +1,4 @@
-package com.ved.backend.service;
+package com.ved.backend.service.instructorService;
 
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
@@ -7,6 +7,8 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.service.InstructorService;
+import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
