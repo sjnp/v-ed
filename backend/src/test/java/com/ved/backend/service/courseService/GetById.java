@@ -1,6 +1,6 @@
 package com.ved.backend.service.courseService;
 
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
@@ -78,7 +78,7 @@ public class GetById {
         given(courseRepo.findById(courseId)).willReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> courseServiceTest.getById(courseId))
-            .isInstanceOf(NotFoundException.class)
+            .isInstanceOf(CourseNotFoundException.class)
             .hasMessageContaining(String.format("Course id %s not found", courseId));
     }
 
