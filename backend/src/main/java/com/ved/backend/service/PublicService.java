@@ -25,13 +25,14 @@ public class PublicService {
     private final CategoryService categoryService;
     private final CourseStateService courseStateService;
     private final CourseService courseService;
+    private final PrivateObjectStorageService privateObjectStorageService;
 
     private final CourseStateProperties courseStateProperties;
     private static final Logger log = LoggerFactory.getLogger(PublicService.class);
 
     public List<CourseCardResponse> getOverviewByCategory(String categoryName) {
         log.info("Get overview by category {}", categoryName);
-        
+
         Category category = categoryService.getByName(categoryName);
         CourseState courseState = courseStateService.getByName(courseStateProperties.getPublished());
         List<Course> courses = courseService.getByCategoryAndCourseState(category, courseState);
@@ -43,6 +44,12 @@ public class PublicService {
         log.info("Get course id {}", courseId);
         Course course = courseService.getById(courseId);
         return new OverviewResponse(course);
+    }
+
+    public String getVideoExampleUrl(Long courseId) {
+        String fileName = String.format("course_vid_%s_c0_s0.mp4", courseId);
+        String username = "public_overview";
+        return privateObjectStorageService.readFile(fileName, username);
     }
 
     public void getCourseCard(Long courseId) {

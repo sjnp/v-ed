@@ -28,7 +28,7 @@ import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class GetOverviewByCategory {
+public class GetByCategoryAndCourseState {
 
     @Mock
     private CategoryRepo categoryRepo;

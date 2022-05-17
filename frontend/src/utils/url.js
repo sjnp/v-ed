@@ -31,7 +31,7 @@ export const URL_GET_PENDING_COURSE_HANDOUT = '/api/admins/pending-courses/{cour
 export const URL_GET_OVERVIEWS_FROM_CATEGORY = '/api/overviews/category/{name}'
 export const URL_GET_OVERVIEW_COURSE = '/api/overviews/courses/{courseId}'
 export const URL_GET_OVERVIEW_COURSE_CARD = '/api/overviews/courses/{courseId}/card'
-export const URL_GET_VIDEO_EXAMPLE = '/api/overviews/video-example/'
+export const URL_GET_VIDEO_EXAMPLE = '/api/overviews/video-example/courses/{courseId}'
 
 // student
 export const URL_GET_COURSE_SAMPLES = '/api/students/course-samples'

@@ -37,6 +37,14 @@ public class OverviewController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/video-example/courses/{courseId}")
+    public ResponseEntity<String> getVideoExampleUrl(@PathVariable Long courseId) {
+        String response = publicService.getVideoExampleUrl(courseId);
+        return ResponseEntity.ok().body(response);
+        // String response = privateObjectStorageService.getAccessURI(fileName);
+        // return ResponseEntity.ok().body(response);
+    }
+
     @GetMapping("/courses/{courseId}/card")
     public ResponseEntity<CourseCardResponse> getOverviewCourseCard(@PathVariable Long courseId) {
         
