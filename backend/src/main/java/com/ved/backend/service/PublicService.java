@@ -8,6 +8,7 @@ import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.response.CourseCardResponse;
+import com.ved.backend.response.OverviewResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,14 @@ public class PublicService {
     private final CategoryService categoryService;
     private final CourseStateService courseStateService;
     private final CourseService courseService;
+    private final PrivateObjectStorageService privateObjectStorageService;
 
     private final CourseStateProperties courseStateProperties;
     private static final Logger log = LoggerFactory.getLogger(PublicService.class);
 
     public List<CourseCardResponse> getOverviewByCategory(String categoryName) {
         log.info("Get overview by category {}", categoryName);
-        
+
         Category category = categoryService.getByName(categoryName);
         CourseState courseState = courseStateService.getByName(courseStateProperties.getPublished());
         List<Course> courses = courseService.getByCategoryAndCourseState(category, courseState);
@@ -38,40 +40,16 @@ public class PublicService {
         return courses.stream().map((c) -> new CourseCardResponse(c)).collect(Collectors.toList());
     }
 
-    // public List<CourseCardResponse> getOverviewCategory(String categoryName) {
+    public OverviewResponse getOverviewCourse(Long courseId) {
+        log.info("Get course id {}", courseId);
+        Course course = courseService.getById(courseId);
+        return new OverviewResponse(course);
+    }
 
-    //     log.info("Get overview category {}", categoryName);
-
-    //     Category category = categoryRepo.findByName(categoryName)
-    //         .orElseThrow(() -> {
-    //             String message = String.format("Category %s not found.", categoryName);
-    //             log.error(message);
-    //             return new NotFoundException(message);
-    //         });
-
-    //     CourseState courseState = courseStateRepo.findCourseStateByName(courseStateProperties.getPublished())
-    //         .orElseThrow(() -> {
-    //             String message = "Course state PUBLISHED not found.";
-    //             log.error(message);
-    //             return new NotFoundException(message);
-    //         });
-
-    //     List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
-    //         // .orElseThrow(() -> {
-    //         //     String message = String.format("Course category %s not found.", categoryName);
-    //         //     log.error(message);
-    //         //     return new NotFoundException(message);
-    //         // });
-
-    //     List<CourseCardResponse> response = courses.stream()
-    //         .map((course) -> new CourseCardResponse(course))
-    //         .collect(Collectors.toList());
-
-    //     return response;
-    // }
-
-    public void getOverviewCourse(Long courseId) {
-        
+    public String getVideoExampleUrl(Long courseId) {
+        String fileName = String.format("course_vid_%s_c0_s0.mp4", courseId);
+        String username = "public_overview";
+        return privateObjectStorageService.readFile(fileName, username);
     }
 
     public void getCourseCard(Long courseId) {

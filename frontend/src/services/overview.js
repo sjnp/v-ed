@@ -15,15 +15,15 @@ const getOverviewCourse = async (courseId) => {
     return axios.get(url).then(res => res).catch(err => err.response)
 }
 
-const getAccessURI = async (fileName) => {
-    const url = URL_GET_VIDEO_EXAMPLE + fileName
+const getExampleVideoCourse = async (courseId) => {
+    const url = URL_GET_VIDEO_EXAMPLE.replace('{courseId}', courseId)
     return axios.get(url).then(res => res).catch(err => err.response)
 }
 
 const overviewService = {
     getOverviewCategory,
     getOverviewCourse,
-    getAccessURI
+    getExampleVideoCourse
 }
 
 export default overviewService

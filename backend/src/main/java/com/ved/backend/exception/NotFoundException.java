@@ -23,4 +23,10 @@ public class NotFoundException extends ResponseStatusException {
     String message = String.format("Course state %s not found", courseStateName);
     return new NotFoundException(message);
   }
+
+  public static NotFoundException course(Long courseId) {
+    String message = String.format("Course id %s not found", courseId);
+    return new NotFoundException(message);
+  }
+
 }
