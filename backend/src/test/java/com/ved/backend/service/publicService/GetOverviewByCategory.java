@@ -21,6 +21,7 @@ import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.service.CategoryService;
 import com.ved.backend.service.CourseService;
 import com.ved.backend.service.CourseStateService;
+import com.ved.backend.service.PrivateObjectStorageService;
 import com.ved.backend.service.PublicService;
 import com.ved.backend.util.MockData;
 
@@ -49,6 +50,9 @@ public class GetOverviewByCategory {
     @Mock
     private CourseStateProperties courseStateProperties;
 
+    @Mock
+    private PrivateObjectStorageService privateObjectStorageService;
+
     private PublicService publicServiceTest;
     private MockData mockData;
 
@@ -58,6 +62,7 @@ public class GetOverviewByCategory {
             categoryService, 
             courseStateService, 
             courseService, 
+            privateObjectStorageService, 
             courseStateProperties
         );
         mockData = new MockData();
