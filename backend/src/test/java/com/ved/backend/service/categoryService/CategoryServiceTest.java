@@ -1,6 +1,6 @@
 package com.ved.backend.service.categoryService;
 
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CategoryNotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.service.CategoryService;
@@ -64,8 +64,8 @@ public class CategoryServiceTest {
         given(categoryRepo.findByName(categoryName)).willReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> categoryServiceTest.getByName(categoryName))
-            .isInstanceOf(NotFoundException.class)
-            .hasMessageContaining(String.format("Category %s not found.", categoryName));
+            .isInstanceOf(CategoryNotFoundException.class)
+            .hasMessageContaining(String.format("Category %s not found", categoryName));
     }
 
     @Test

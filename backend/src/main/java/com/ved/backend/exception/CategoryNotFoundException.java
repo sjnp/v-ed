@@ -7,4 +7,5 @@ public class CategoryNotFoundException extends NotFoundException {
   public CategoryNotFoundException(String categoryName) {
     super(String.format("Category %s not found", categoryName));
   }
+
 }
