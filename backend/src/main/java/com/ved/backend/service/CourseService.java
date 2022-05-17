@@ -1,7 +1,7 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.MyException;
-import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.tempException.MyException;
+import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
@@ -11,7 +11,6 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
-import com.ved.backend.response.OverviewResponse;
 
 import lombok.AllArgsConstructor;
 

@@ -3,7 +3,9 @@ package com.ved.backend.response;
 import java.util.ArrayList;
 
 import com.ved.backend.model.Chapter;
+import lombok.Builder;
 
+@Builder
 public class StudentCourseResponse {
  
     private Long studentId;

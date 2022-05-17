@@ -1,6 +1,6 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.Comment;
 import com.ved.backend.model.CommentState;
 import com.ved.backend.model.Post;

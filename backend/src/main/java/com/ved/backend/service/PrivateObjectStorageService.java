@@ -12,7 +12,7 @@ import com.oracle.bmc.objectstorage.requests.CreatePreauthenticatedRequestReques
 import com.oracle.bmc.objectstorage.requests.DeleteObjectRequest;
 import com.oracle.bmc.objectstorage.responses.CreatePreauthenticatedRequestResponse;
 import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;

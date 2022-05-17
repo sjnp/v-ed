@@ -7,10 +7,9 @@ import static org.mockito.BDDMockito.given;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.ved.backend.configuration.CourseStateProperties;
-import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;

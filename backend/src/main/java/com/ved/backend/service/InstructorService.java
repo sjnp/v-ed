@@ -2,11 +2,9 @@ package com.ved.backend.service;
 
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
-import com.ved.backend.exception.UnauthorizedException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
