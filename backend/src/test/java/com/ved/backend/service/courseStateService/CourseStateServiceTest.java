@@ -1,6 +1,6 @@
 package com.ved.backend.service.courseStateService;
 
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CourseStateNotFoundException;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.service.CourseStateService;
@@ -57,13 +57,13 @@ public class CourseStateServiceTest {
 
     @Test
     @Order(2)
-    public void givenCourseStateName_whenFindByNameNotFound_thenThrowNotFoundException() {
+    public void givenCourseStateName_whenFindByNameNotFound_thenThrowCourseStateNotFoundException() {
         String courseStateName = "FAIL";
         // given
         given(courseStateRepo.findCourseStateByName(courseStateName)).willReturn(Optional.empty());
         // when & then
         assertThatThrownBy(() -> courseStateServiceTest.getByName(courseStateName))
-            .isInstanceOf(NotFoundException.class)
+            .isInstanceOf(CourseStateNotFoundException.class)
             .hasMessageContaining(String.format("Course state %s not found", courseStateName));
     }
 
