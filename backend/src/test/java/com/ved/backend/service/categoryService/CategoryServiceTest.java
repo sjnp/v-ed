@@ -1,6 +1,6 @@
 package com.ved.backend.service.categoryService;
 
-import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.service.CategoryService;

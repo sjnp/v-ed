@@ -2,7 +2,7 @@ package com.ved.backend.service;
 
 import java.util.List;
 
-import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.repo.CourseStateRepo;
 

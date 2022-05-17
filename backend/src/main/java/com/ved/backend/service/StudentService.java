@@ -1,6 +1,6 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.UnauthorizedException;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Instructor;

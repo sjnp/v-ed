@@ -1,6 +1,6 @@
 package com.ved.backend.service.courseStateService;
 
-import com.ved.backend.exception.NotFoundException;
+import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.service.CourseStateService;

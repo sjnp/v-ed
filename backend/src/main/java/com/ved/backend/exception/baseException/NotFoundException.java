@@ -1,4 +1,4 @@
-package com.ved.backend.exception;
+package com.ved.backend.exception.baseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

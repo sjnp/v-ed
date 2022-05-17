@@ -2,7 +2,7 @@ package com.ved.backend.service;
 
 import java.util.*;
 
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 // import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 // import com.ved.backend.repo.CategoryRepo;

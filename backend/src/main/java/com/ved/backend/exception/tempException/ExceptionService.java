@@ -1,4 +1,4 @@
-package com.ved.backend.exception;
+package com.ved.backend.exception.tempException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

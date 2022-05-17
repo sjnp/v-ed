@@ -1,8 +1,8 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.ConflictException;
-import com.ved.backend.exception.NotFoundException;
-import com.ved.backend.exception.UnauthorizedException;
+import com.ved.backend.exception.baseException.ConflictException;
+import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Instructor;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
