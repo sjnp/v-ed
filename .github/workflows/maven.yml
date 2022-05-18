@@ -70,25 +70,25 @@ jobs:
           echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT >> application.properties
           echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL >> application.properties
           echo "
-role.student=STUDENT
-role.instructor=INSTRUCTOR
-role.admin=ADMIN
-category.academic=ACADEMIC
-category.art=ART
-category.business=BUSINESS
-category.design=DESIGN
-category.programming=PROGRAMMING
-comment-state.owner=OWNER
-comment-state.instructor=INSTRUCTOR
-comment-state.student=STUDENT
-course-state.incomplete=INCOMPLETE
-course-state.pending=PENDING
-course-state.approved=APPROVED
-course-state.rejected=REJECTED
-course-state.published=PUBLISHED
-report-state.pending=PENDING
-report-state.approved=APPROVED
-report-state.rejected=REJECTED" >> application.properties
+          role.student=STUDENT
+          role.instructor=INSTRUCTOR
+          role.admin=ADMIN
+          category.academic=ACADEMIC
+          category.art=ART
+          category.business=BUSINESS
+          category.design=DESIGN
+          category.programming=PROGRAMMING
+          comment-state.owner=OWNER
+          comment-state.instructor=INSTRUCTOR
+          comment-state.student=STUDENT
+          course-state.incomplete=INCOMPLETE
+          course-state.pending=PENDING
+          course-state.approved=APPROVED
+          course-state.rejected=REJECTED
+          course-state.published=PUBLISHED
+          report-state.pending=PENDING
+          report-state.approved=APPROVED
+          report-state.rejected=REJECTED" >> application.properties
       - name: Create secrets for integration tests
         env: 
           INTEGRATION_TEST: ${{ secrets.INTEGRATION_TEST }}
@@ -99,9 +99,9 @@ report-state.rejected=REJECTED" >> application.properties
           echo spring.datasource.username=$DATABASE_USERNAME >> application-it.properties
           echo spring.datasource.password=$DATABASE_PASSWORD >> application-it.properties
           echo "
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.check_nullability=true
-spring.jpa.properties.hibernate.format_sql=true" >> application-it.properties
+          spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=update
+          spring.jpa.properties.hibernate.check_nullability=true
+          spring.jpa.properties.hibernate.format_sql=true" >> application-it.properties
       - name: Run tests 
         run: mvn verify 
