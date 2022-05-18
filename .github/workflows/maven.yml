@@ -40,7 +40,14 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Unit Testing
+      - name: Create application.properties
+        env: UNIT_TEST: ${{ secrets.UNIT_TEST }}
+        run: |
+          mkdir src/test/resources
+          touch src/test/resources/application.properties
+          echo $UNIT_TEST >> application.properties
+          cat application.properties
+      - name: Unit testing
         run: mvn test
   integration_test:
       runs-on: ubuntu-latest
@@ -56,5 +63,5 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Integration Testing
+      - name: Integration testing
         run: mvn verify 
