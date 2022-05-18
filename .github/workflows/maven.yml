@@ -41,7 +41,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Create application.properties
-        env: UNIT_TEST: ${{ secrets.UNIT_TEST }}
+        env: 
+          UNIT_TEST: ${{ secrets.UNIT_TEST }}
         run: |
           mkdir src/test/resources
           touch src/test/resources/application.properties
