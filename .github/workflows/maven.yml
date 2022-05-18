@@ -26,7 +26,7 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn clean install -DskipTests
-  unit_test:
+  test:
       runs-on: ubuntu-latest
       defaults:
         run:
@@ -40,30 +40,14 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - name: Create application.properties
+      - name: Create secrets for unit tests
         env: 
           UNIT_TEST: ${{ secrets.UNIT_TEST }}
         run: |
           mkdir src/test/resources
           touch src/test/resources/application.properties
           echo $UNIT_TEST >> application.properties
-      - name: Unit testing
-        run: mvn test
-  integration_test:
-      runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./backend
-
-      steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
-      - name: Create application.properties
+      - name: Create secrets for integration tests
         env: 
           INTEGRATION_TEST: ${{ secrets.INTEGRATION_TEST }}
         run: |
