@@ -4,8 +4,9 @@ import com.ved.backend.exception.baseException.NotFoundException;
 
 public class CourseNotFoundException extends NotFoundException {
 
-  public CourseNotFoundException(String courseId) {
+  public CourseNotFoundException(Long courseId) {
 
     super(String.format("Course id %s not found", courseId));
   }
+
 }

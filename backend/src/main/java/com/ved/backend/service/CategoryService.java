@@ -2,7 +2,7 @@ package com.ved.backend.service;
 
 import java.util.List;
 
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CategoryNotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.repo.CategoryRepo;
 
@@ -24,7 +24,7 @@ public class CategoryService {
 
     public Category getByName(String name) {
         log.info("Get category by name {}", name);
-        return categoryRepo.findByName(name).orElseThrow(() -> NotFoundException.category(name));
+        return categoryRepo.findByName(name).orElseThrow(() -> new CategoryNotFoundException(name));
     }
 
     public List<Category> getAll() {
