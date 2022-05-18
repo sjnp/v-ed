@@ -1,0 +1,109 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Backend CI/CD
+
+on:
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn clean install -DskipTests
+  test:
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./backend
+
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - name: Create test resource directory
+        run: mkdir src/test/resources
+      - name: Create secrets for unit tests
+        env:
+          PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
+          PUB_OS_BUCKET_NAME: ${{ secrets.PUB_OS_BUCKET_NAME }}
+          PUB_OS_TIMER: ${{ secrets.PUB_OS_TIMER }}
+          PUB_OS_IMAGE_EXT: ${{ secrets.PUB_OS_TIMER }}
+          PUB_OS_URL: ${{ secrets.PUB_OS_TIMER }}
+          PRIV_OS_NAMESPACE: ${{ secrets.PRIV_OS_NAMESPACE }}
+          PRIV_OS_BUCKET_NAME: ${{ secrets.PRIV_OS_BUCKET_NAME }}
+          PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
+          PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
+          PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
+        run: |
+          touch src/test/resources/application.properties
+          echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> src/test/resources/application.properties
+          echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> src/test/resources/application.properties
+          echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> src/test/resources/application.properties
+          echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
+          >> src/test/resources/application.properties
+          echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
+          >> src/test/resources/application.properties
+          echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> src/test/resources/application.properties
+          echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> src/test/resources/application.properties
+          echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> src/test/resources/application.properties
+          echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
+          >> src/test/resources/application.properties
+          echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
+          >> src/test/resources/application.properties
+          echo "
+          role.student=STUDENT
+          role.instructor=INSTRUCTOR
+          role.admin=ADMIN
+          category.academic=ACADEMIC
+          category.art=ART
+          category.business=BUSINESS
+          category.design=DESIGN
+          category.programming=PROGRAMMING
+          comment-state.owner=OWNER
+          comment-state.instructor=INSTRUCTOR
+          comment-state.student=STUDENT
+          course-state.incomplete=INCOMPLETE
+          course-state.pending=PENDING
+          course-state.approved=APPROVED
+          course-state.rejected=REJECTED
+          course-state.published=PUBLISHED
+          report-state.pending=PENDING
+          report-state.approved=APPROVED
+          report-state.rejected=REJECTED" >> src/test/resources/application.properties
+      - name: Create secrets for integration tests
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        run: |
+          cp src/test/resources/application.properties src/test/resources/application-it.properties
+          echo spring.datasource.driver-class-name=org.postgresql.Driver \
+          >> src/test/resources/application-it.properties
+          echo spring.datasource.url=$DATABASE_URL >> src/test/resources/application-it.properties
+          echo spring.datasource.username=$DATABASE_USERNAME >> src/test/resources/application-it.properties
+          echo spring.datasource.password=$DATABASE_PASSWORD >> src/test/resources/application-it.properties
+          echo "
+          spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=update
+          spring.jpa.properties.hibernate.check_nullability=true
+          spring.jpa.properties.hibernate.format_sql=true" >> src/test/resources/application-it.properties
+      - name: Run tests 
+        run: mvn verify 

@@ -71,7 +71,7 @@ class UserServiceTest {
     AppUser appUser = AppUser.builder()
         .username(username)
         .password("password")
-//        .appRoles(new ArrayList<>())
+        .appRoles(new ArrayList<>())
         .build();
 
     given(appUserRepo.findAppUserByUsername(username)).willReturn(Optional.of(appUser));
