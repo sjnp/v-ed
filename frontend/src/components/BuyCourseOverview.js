@@ -57,12 +57,16 @@ const BuyCourseOverview = ({ data }) => {
             <Grid item xs={10}> <Skeleton variant="text" /> </Grid>
             <Grid item xs={8}> <Skeleton variant="text" /> </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} paddingTop={5}>
           <Grid container direction="row" alignItems="center" justifyContent="center">
-          { Array(5).fill(<Skeleton variant="circular" width={30} height={30} sx={{ m: 1 }} />).map(e => e) }
+          {
+            Array(5).fill().map((element, index) => (
+              <Skeleton key={index} variant="circular" width={30} height={30} sx={{ m: 0.5 }} />
+            ))
+          } 
           </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} paddingTop={5}>
           <Grid container direction="column" alignItems="center" justifyContent="center">
             <Skeleton variant='rectangular' width={70} height={30}  />
             <Skeleton variant='rectangular' width={100} height={30} sx={{ mt: 3, mb:2 }}/>
@@ -71,7 +75,7 @@ const BuyCourseOverview = ({ data }) => {
       </Grid>
      :
       <Grid container padding={3}>
-        <Grid item xs={2} direction="row" alignItems="center" justifyContent="center">
+        <Grid item xs={2}>
           <Avatar
             alt={instructorFirstname}
             src={instructorPictureURI || "/static/images/avatar/2.jpg"} 
@@ -84,7 +88,7 @@ const BuyCourseOverview = ({ data }) => {
               <Typography variant='body2' color='gray'>{instructorFirstname} {instructorLastname}</Typography>
             </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} paddingTop={5}>
           <Grid container direction="row" alignItems="center" justifyContent="center">
           {
             ratingCourse === 0 && totalReview === 0 ?
@@ -97,7 +101,7 @@ const BuyCourseOverview = ({ data }) => {
           }
           </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} paddingTop={5}>
           <Grid container direction="column" alignItems="center" justifyContent="center" marginBottom={2}>
             <Typography variant="h6" color='primary' sx={{ marginBottom: 3 }}>
               {price === 0 ? 'FREE' : `${price} THB`}
