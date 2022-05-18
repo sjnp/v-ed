@@ -2,7 +2,6 @@ package com.ved.backend.service;
 
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.exception.CourseNotFoundException;
-import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;

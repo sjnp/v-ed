@@ -32,12 +32,13 @@ public class PublicService {
 
     public List<CourseCardResponse> getOverviewByCategory(String categoryName) {
         log.info("Get overview by category {}", categoryName);
-
         Category category = categoryService.getByName(categoryName);
         CourseState courseState = courseStateService.getByName(courseStateProperties.getPublished());
         List<Course> courses = courseService.getByCategoryAndCourseState(category, courseState);
-        
-        return courses.stream().map((c) -> new CourseCardResponse(c)).collect(Collectors.toList());
+        return courses
+            .stream()
+            .map((c) -> new CourseCardResponse(c))
+            .collect(Collectors.toList());
     }
 
     public OverviewResponse getOverviewCourse(Long courseId) {
@@ -52,8 +53,10 @@ public class PublicService {
         return privateObjectStorageService.readFile(fileName, username);
     }
 
-    public void getCourseCard(Long courseId) {
-        
+    public CourseCardResponse getOverviewCourseCard(Long courseId) {
+        log.info("Get course card by id {}", courseId);
+        Course course = courseService.getById(courseId);
+        return new CourseCardResponse(course);
     }
 
 }
