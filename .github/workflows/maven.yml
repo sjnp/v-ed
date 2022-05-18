@@ -43,16 +43,65 @@ jobs:
       - name: Create test resource directory
         run: mkdir src/test/resources
       - name: Create secrets for unit tests
-        env: 
-          UNIT_TEST: ${{ secrets.UNIT_TEST }}
+        env:
+          PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
+          PUB_OS_BUCKET_NAME: ${{ secrets.PUB_OS_BUCKET_NAME }}
+          PUB_OS_TIMER: ${{ secrets.PUB_OS_TIMER }}
+          PUB_OS_IMAGE_EXT: ${{ secrets.PUB_OS_TIMER }}
+          PUB_OS_URL: ${{ secrets.PUB_OS_TIMER }}
+          PRIV_OS_NAMESPACE: ${{ secrets.PRIV_OS_NAMESPACE }}
+          PRIV_OS_BUCKET_NAME: ${{ secrets.PRIV_OS_BUCKET_NAME }}
+          PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
+          PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
+          PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         run: |
           touch src/test/resources/application.properties
-          echo $UNIT_TEST >> application.properties
+          echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> application.properties
+          echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> application.properties
+          echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> application.properties
+          echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT >> application.properties
+          echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL >> application.properties
+          echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> application.properties
+          echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> application.properties
+          echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> application.properties
+          echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT >> application.properties
+          echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL >> application.properties
+          echo "
+role.student=STUDENT
+role.instructor=INSTRUCTOR
+role.admin=ADMIN
+category.academic=ACADEMIC
+category.art=ART
+category.business=BUSINESS
+category.design=DESIGN
+category.programming=PROGRAMMING
+comment-state.owner=OWNER
+comment-state.instructor=INSTRUCTOR
+comment-state.student=STUDENT
+course-state.incomplete=INCOMPLETE
+course-state.pending=PENDING
+course-state.approved=APPROVED
+course-state.rejected=REJECTED
+course-state.published=PUBLISHED
+report-state.pending=PENDING
+report-state.approved=APPROVED
+report-state.rejected=REJECTED" >> application.properties
       - name: Create secrets for integration tests
         env: 
           INTEGRATION_TEST: ${{ secrets.INTEGRATION_TEST }}
         run: |
-          touch src/test/resources/application-it.properties
-          echo $INTEGRATION_TEST >> application-it.properties
+          cp src/test/resources/application.properties src/test/resources/application-it.properties
+          echo spring.datasource.driver-class-name=org.postgresql.Driver >> application-it.properties
+          echo spring.datasource.url=$DATABASE_URL >> application-it.properties
+          echo spring.datasource.username=$DATABASE_USERNAME >> application-it.properties
+          echo spring.datasource.password=$DATABASE_PASSWORD >> application-it.properties
+          echo "
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.check_nullability=true
+spring.jpa.properties.hibernate.format_sql=true" >> application-it.properties
       - name: Run tests 
         run: mvn verify 
