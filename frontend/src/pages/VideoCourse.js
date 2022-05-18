@@ -22,7 +22,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate';
 
 // url
-import { URL_COURSE_VIDEO_BY_COURSE_CHAPTER_SECTION } from '../utils/url'
+import { URL_GET_VIDEO } from '../utils/url'
 
 
 const VideoCourse = () => {
@@ -40,10 +40,10 @@ const VideoCourse = () => {
 
     useEffect(async () => {
 
-        const url = URL_COURSE_VIDEO_BY_COURSE_CHAPTER_SECTION
+        const url = URL_GET_VIDEO
             .replace('{courseId}', courseId)
-            .replace('{chapter}', chapterNo)
-            .replace('{section}', sectionNo)
+            .replace('{chapterIndex}', chapterNo)
+            .replace('{sectionIndex}', sectionNo)
             
         const response = await apiPrivate.get(axiosPrivate, url)
         

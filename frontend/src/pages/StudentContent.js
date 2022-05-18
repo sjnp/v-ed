@@ -19,7 +19,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_COURSE_BY_ID } from "../utils/url"
+import {URL_GET_COURSE} from "../utils/url"
 
 const StudentContent = () => {
 
@@ -32,7 +32,7 @@ const StudentContent = () => {
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
-        const url = URL_GET_COURSE_BY_ID + courseId
+        const url = URL_GET_COURSE.replace('{courseId}', courseId)
         const response = await apiPrivate.get(axiosPrivate, url)
 
         if (response.status === 200) {

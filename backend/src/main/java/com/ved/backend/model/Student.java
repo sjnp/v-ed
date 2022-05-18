@@ -1,5 +1,10 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
@@ -8,6 +13,10 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Student {
@@ -46,123 +55,6 @@ public class Student {
       inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")})
   private Instructor instructor;
 
-  public Long getId() {
-    return id;
-  }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
-
   public String getFullName() { return firstName + " " + lastName; }
-
-  public String getOccupation() {
-    return occupation;
-  }
-
-  public String getBiography() {
-    return biography;
-  }
-
-  public String getProfilePicUri() {
-    return profilePicUri;
-  }
-
-  public List<StudentCourse> getStudentCourses() {
-    return studentCourses;
-  }
-
-  public void setStudentCourses(List<StudentCourse> studentCourses) {
-    this.studentCourses = studentCourses;
-  }
-
-  public AppUser getAppUser() {
-    return appUser;
-  }
-
-  public Instructor getInstructor() {
-    return instructor;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
-  }
-
-  public void setLastName(String lastName) {
-    this.lastName = lastName;
-  }
-
-  public void setOccupation(String occupation) {
-    this.occupation = occupation;
-  }
-
-  public void setBiography(String biography) {
-    this.biography = biography;
-  }
-
-  public void setProfilePicUri(String profilePicUri) {
-    this.profilePicUri = profilePicUri;
-  }
-
-  public void setAppUser(AppUser appUser) {
-    this.appUser = appUser;
-  }
-
-  public void setInstructor(Instructor instructor) {
-    this.instructor = instructor;
-  }
-
-  public List<Comment> getComments() {
-    return comments;
-  }
-
-  public void setComments(List<Comment> comments) {
-    this.comments = comments;
-  }
-
-  public Review getReview() {
-    return review;
-  }
-
-  public void setReview(Review review) {
-    this.review = review;
-  }
-
-  public Student() {
-  }
-
-  public Student(
-    Long id, 
-    String firstName, 
-    String lastName, 
-    String occupation,
-    String biography, 
-    String profilePicUri, 
-    AppUser appUser, 
-    List<Comment> comments, 
-    List<StudentCourse> studentCourses, 
-    Instructor instructor,
-    Review review
-  ) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.occupation = occupation;
-    this.biography = biography;
-    this.profilePicUri = profilePicUri;
-    this.appUser = appUser;
-    this.comments = comments;
-    this.studentCourses = studentCourses;
-    this.instructor = instructor;
-    this.review = review;
-  }
 
 }

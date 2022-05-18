@@ -22,11 +22,11 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_QUESTION_BOARD_BY_ID } from '../utils/url'
+import { URL_GET_POST } from '../utils/url'
 
 const StudentBoard = () => {
 
-    const { questionBoardId } = useParams()
+    const { courseId, questionBoardId } = useParams()
 
     const axiosPrivate = useAxiosPrivate()
 
@@ -36,7 +36,9 @@ const StudentBoard = () => {
 
     useEffect(async () => {
 
-        const url = URL_GET_QUESTION_BOARD_BY_ID + questionBoardId
+        const url = URL_GET_POST
+          .replace('{courseId}', courseId)
+          .replace('{postId}', questionBoardId)
         const response = await apiPrivate.get(axiosPrivate, url)
 
         if (response.status === 200) {

@@ -1,6 +1,10 @@
 package com.ved.backend.model;
 
 import com.ved.backend.utility.ListConverter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -10,6 +14,10 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class Course {
@@ -33,7 +41,7 @@ public class Course {
   private String pictureUrl;
 
   @Convert(converter = ListConverter.class)
-  @Column(columnDefinition = "jsonb")
+  @Column(columnDefinition = "jsonb", nullable = false)
   private List<Chapter> chapters;
 
   @ManyToOne(fetch = EAGER)
@@ -64,128 +72,6 @@ public class Course {
   private PublishedCourse publishedCourse;
 
   @OneToMany(mappedBy = "course")
-  private List<QuestionBoard> questionBoards;
+  private List<Post> posts;
 
-  public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Long getPrice() {
-    return price;
-  }
-
-  public void setPrice(Long price) {
-    this.price = price;
-  }
-
-  public String getOverview() {
-    return overview;
-  }
-
-  public void setOverview(String overview) {
-    this.overview = overview;
-  }
-
-  public String getRequirement() {
-    return requirement;
-  }
-
-  public void setRequirement(String requirement) {
-    this.requirement = requirement;
-  }
-
-  public String getPictureUrl() {
-    return pictureUrl;
-  }
-
-  public void setPictureUrl(String pictureUrl) {
-    this.pictureUrl = pictureUrl;
-  }
-
-  public List<Chapter> getChapters() {
-    return chapters;
-  }
-
-  public void setChapters(List<Chapter> chapters) {
-    this.chapters = chapters;
-  }
-
-  public Category getCategory() {
-    return category;
-  }
-
-  public void setCategory(Category category) {
-    this.category = category;
-  }
-
-  public CourseState getCourseState() {
-    return courseState;
-  }
-
-  public void setCourseState(CourseState courseState) {
-    this.courseState = courseState;
-  }
-
-  public Instructor getInstructor() {
-    return instructor;
-  }
-
-  public void setInstructor(Instructor instructor) {
-    this.instructor = instructor;
-  }
-
-  public List<StudentCourse> getStudentCourses() {
-    return studentCourses;
-  }
-
-  public void setStudentCourses(List<StudentCourse> studentCourses) {
-    this.studentCourses = studentCourses;
-  }
-
-  public PublishedCourse getPublishedCourse() {
-    return publishedCourse;
-  }
-
-  public void setPublishedCourse(PublishedCourse publishedCourse) {
-    this.publishedCourse = publishedCourse;
-  }
-
-  public List<QuestionBoard> getQuestionBoards() {
-    return questionBoards;
-  }
-
-  public void setQuestionBoards(List<QuestionBoard> questionBoards) {
-    this.questionBoards = questionBoards;
-  }
-
-  public Course() {
-  }
-
-  public Course(Long id, String name, Long price, String overview, String requirement, String pictureUrl, List<Chapter> chapters, Category category, CourseState courseState, Instructor instructor, List<StudentCourse> studentCourses, PublishedCourse publishedCourse, List<QuestionBoard> questionBoards) {
-    this.id = id;
-    this.name = name;
-    this.price = price;
-    this.overview = overview;
-    this.requirement = requirement;
-    this.pictureUrl = pictureUrl;
-    this.chapters = chapters;
-    this.category = category;
-    this.courseState = courseState;
-    this.instructor = instructor;
-    this.studentCourses = studentCourses;
-    this.publishedCourse = publishedCourse;
-    this.questionBoards = questionBoards;
-  }
 }

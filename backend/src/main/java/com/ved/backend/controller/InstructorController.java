@@ -5,6 +5,7 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.service.InstructorService;
 import com.ved.backend.service.PrivateObjectStorageService;
 import com.ved.backend.service.PublicObjectStorageService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping(path = "/api/instructors")
 public class InstructorController {
@@ -24,18 +26,8 @@ public class InstructorController {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
-
-  @PostMapping(path = "/course")
-  public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
-    URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/instructors/course").toUriString());
-    Long courseId = instructorService.createCourse(course, principal.getName());
-    HashMap<String, Long> createdCourseId = new HashMap<>();
-    createdCourseId.put("id", courseId);
-    return ResponseEntity.created(uri).body(createdCourseId);
-  }
-
-  @GetMapping(path = "/incomplete-courses", params = "id")
-  public ResponseEntity<?> getIncompleteCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+  @GetMapping(path = "/incomplete-courses/{courseId}")
+  public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {
     try {
       CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourse(courseId, principal.getName());
       return ResponseEntity.ok().body(incompleteCourseMaterials);
@@ -45,7 +37,7 @@ public class InstructorController {
   }
 
   @GetMapping(path = "/incomplete-courses")
-  public ResponseEntity<?> getAllIncompleteCourse(Principal principal) {
+  public ResponseEntity<?> getAllIncompleteCourses(Principal principal) {
     try {
      HashMap<String, Object> incompleteCoursesJson = instructorService.getAllIncompleteCourses(principal.getName());
      return ResponseEntity.ok().body(incompleteCoursesJson);
@@ -55,7 +47,7 @@ public class InstructorController {
   }
 
   @GetMapping(path = "/pending-courses")
-  public ResponseEntity<?> getAllPendingCourse(Principal principal) {
+  public ResponseEntity<?> getAllPendingCourses(Principal principal) {
     try {
       HashMap<String, Object> pendingCoursesJson = instructorService.getAllPendingCourses(principal.getName());
       return ResponseEntity.ok().body(pendingCoursesJson);
@@ -65,7 +57,7 @@ public class InstructorController {
   }
 
   @GetMapping(path = "/approved-courses")
-  public ResponseEntity<?> getAllApprovedCourse(Principal principal) {
+  public ResponseEntity<?> getAllApprovedCourses(Principal principal) {
     try {
       HashMap<String, Object> approvedCoursesJson = instructorService.getAllApprovedCourses(principal.getName());
       return ResponseEntity.ok().body(approvedCoursesJson);
@@ -75,7 +67,7 @@ public class InstructorController {
   }
 
   @GetMapping(path = "/rejected-courses")
-  public ResponseEntity<?> getAllRejectedCourse(Principal principal) {
+  public ResponseEntity<?> getAllRejectedCourses(Principal principal) {
     try {
       HashMap<String, Object> rejectedCoursesJson = instructorService.getAllRejectedCourses(principal.getName());
       return ResponseEntity.ok().body(rejectedCoursesJson);
@@ -85,7 +77,7 @@ public class InstructorController {
   }
 
   @GetMapping(path = "/published-courses")
-  public ResponseEntity<?> getAllPublishedCourse(Principal principal) {
+  public ResponseEntity<?> getAllPublishedCourses(Principal principal) {
     try {
       List<HashMap<String, Object>> publishedCourses = instructorService.getAllPublishedCourses(principal.getName());
       return ResponseEntity.ok().body(publishedCourses);
@@ -94,10 +86,18 @@ public class InstructorController {
     }
   }
 
+  @PostMapping(path = "/course")
+  public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
+    HashMap<String, Long> payload = instructorService.createCourse(course, principal.getName());
+    URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath()
+        .path("/api/instructors/incomplete-courses/" + payload.get("id"))
+        .toUriString()
+    );
+    return ResponseEntity.created(uri).body(payload);
+  }
 
-
-  @PostMapping(path = "/incomplete-courses/picture/pre-authenticated-request")
-  public ResponseEntity<?> createParToCreatePicture(@RequestParam(name = "id") Long courseId, @RequestBody String fileName, Principal principal) {
+  @PostMapping(path = "/incomplete-courses/{courseId}/picture/pre-authenticated-request")
+  public ResponseEntity<?> createParToUploadPicture(@PathVariable Long courseId, @RequestBody String fileName, Principal principal) {
     try {
       String preauthenticatedRequestUrl = publicObjectStorageService.createParToUploadCoursePicture(courseId,
           fileName,
@@ -118,12 +118,11 @@ public class InstructorController {
     }
   }
 
-  @PostMapping(path = "/incomplete-courses/video/pre-authenticated-request")
-  public ResponseEntity<?> createParToCreateVideo(@RequestParam(name = "id") Long courseId,
+  @PostMapping(path = "/incomplete-courses/{courseId}/video/pre-authenticated-request")
+  public ResponseEntity<?> createParToUploadVideo(@PathVariable Long courseId,
                                                   @RequestBody HashMap<String, Object> requestData,
                                                   Principal principal) {
     try {
-
       String preauthenticatedRequestUrl = privateObjectStorageService.createParToUploadCourseVideo(courseId,
           Long.parseLong(String.valueOf(requestData.get("chapterIndex"))),
           Long.parseLong(String.valueOf(requestData.get("sectionIndex"))),
@@ -147,8 +146,8 @@ public class InstructorController {
     }
   }
 
-  @PostMapping(path = "/incomplete-courses/handout/pre-authenticated-request")
-  public ResponseEntity<?> createParToCreateHandout(@RequestParam(name = "id") Long courseId,
+  @PostMapping(path = "/incomplete-courses/{courseId}/handout/pre-authenticated-request")
+  public ResponseEntity<?> createParToUploadHandout(@PathVariable Long courseId,
                                                     @RequestBody HashMap<String, Object> requestData,
                                                     Principal principal) {
     try {
@@ -169,28 +168,16 @@ public class InstructorController {
     }
   }
 
-  @DeleteMapping(path = "/incomplete-courses/handout")
-  public ResponseEntity<?> deleteHandout(@RequestParam(name = "id") Long courseId,
-                                         @RequestParam(name = "objectName") String objectName,
-                                         Principal principal) {
-    try {
-      privateObjectStorageService.deleteHandout(courseId, objectName, principal.getName());
-      return ResponseEntity.noContent().build();
-    } catch (Exception exception) {
-      return ResponseEntity.notFound().build();
-    }
-  }
 
-  @PutMapping(path = "/incomplete-courses/picture")
-  public ResponseEntity<?> saveCoursePictureUrl(@RequestParam(name = "id") Long courseId, @RequestBody HashMap<String, String> objectData, Principal principal) {
+
+  @PutMapping(path = "/incomplete-courses/{courseId}/picture/{pictureName}")
+  public ResponseEntity<?> saveCoursePictureUrl(@PathVariable Long courseId, @PathVariable String pictureName, Principal principal) {
     try {
       URI uri = URI.create(ServletUriComponentsBuilder
           .fromCurrentContextPath()
           .path("/api/instructors/incomplete-courses/picture")
           .toUriString());
-      String pictureUrl = instructorService.saveCoursePictureUrl(courseId,
-          objectData.get("objectName"),
-          principal.getName());
+      String pictureUrl = instructorService.saveCoursePictureUrl(courseId, pictureName, principal.getName());
       HashMap<String, String> jsonBody = new HashMap<>();
       jsonBody.put("pictureUrl", pictureUrl);
       return ResponseEntity.created(uri).body(jsonBody);
@@ -199,13 +186,9 @@ public class InstructorController {
     }
   }
 
-  @PutMapping(path = "/incomplete-courses/chapters")
-  public ResponseEntity<?> updateCourseMaterial(@RequestParam(name = "id") Long courseId, @RequestBody Course course, Principal principal) {
+  @PutMapping(path = "/incomplete-courses/{courseId}/chapters")
+  public ResponseEntity<?> updateCourseMaterial(@PathVariable Long courseId, @RequestBody Course course, Principal principal) {
     try {
-      URI uri = URI.create(ServletUriComponentsBuilder
-          .fromCurrentContextPath()
-          .path("/api/instructors/incomplete-courses/video")
-          .toUriString());
       instructorService.updateCourseMaterials(courseId, course, principal.getName());
       return ResponseEntity.ok().build();
     } catch (Exception exception) {
@@ -213,8 +196,8 @@ public class InstructorController {
     }
   }
 
-  @PutMapping(path = "/incomplete-courses/submission")
-  public ResponseEntity<?> submitIncompleteCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+  @PutMapping(path = "/incomplete-courses/{courseId}/state")
+  public ResponseEntity<?> submitIncompleteCourse(@PathVariable Long courseId, Principal principal) {
     try {
       instructorService.submitIncompleteCourse(courseId, principal.getName());
       return ResponseEntity.ok().build();
@@ -223,8 +206,8 @@ public class InstructorController {
     }
   }
 
-  @PutMapping(path = "/approved-courses")
-  public ResponseEntity<?> publishApprovedCourse(@RequestParam(name = "id") Long courseId, Principal principal) {
+  @PutMapping(path = "/approved-courses/{courseId}")
+  public ResponseEntity<?> publishApprovedCourse(@PathVariable Long courseId, Principal principal) {
     try {
       instructorService.publishApprovedCourse(courseId, principal.getName());
       return ResponseEntity.ok().build();
@@ -233,8 +216,22 @@ public class InstructorController {
     }
   }
 
-  @DeleteMapping(path = "/incomplete-courses/picture")
-  public ResponseEntity<?> deleteCoursePictureUrl(@RequestParam(name = "id") Long courseId, Principal principal) {
+  @DeleteMapping(path = "/incomplete-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutUri}")
+  public ResponseEntity<?> deleteHandout(@PathVariable Long courseId,
+                                         @PathVariable Integer chapterIndex,
+                                         @PathVariable Integer sectionIndex,
+                                         @PathVariable String handoutUri,
+                                         Principal principal) {
+    try {
+      privateObjectStorageService.deleteHandout(courseId, handoutUri, principal.getName());
+      return ResponseEntity.noContent().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @DeleteMapping(path = "/incomplete-courses/{courseId}/picture")
+  public ResponseEntity<?> deleteCoursePictureUrl(@PathVariable Long courseId, Principal principal) {
     try {
       instructorService.deleteCoursePictureUrl(courseId, principal.getName());
       return ResponseEntity.ok().build();
@@ -243,9 +240,4 @@ public class InstructorController {
     }
   }
 
-  public InstructorController(InstructorService instructorService, PublicObjectStorageService publicObjectStorageService, PrivateObjectStorageService privateObjectStorageService) {
-    this.instructorService = instructorService;
-    this.publicObjectStorageService = publicObjectStorageService;
-    this.privateObjectStorageService = privateObjectStorageService;
-  }
 }

@@ -1,5 +1,10 @@
 package com.ved.backend.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,6 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table
 public class CommentState {
@@ -23,29 +32,5 @@ public class CommentState {
 
     @OneToMany(mappedBy = "commentState")
     private List<Comment> comments;
-    
-    public CommentState() {
-    }
-
-    public CommentState(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
     
 }

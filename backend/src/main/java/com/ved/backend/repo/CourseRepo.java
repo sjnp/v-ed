@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
+import java.util.Optional;
 
 public interface CourseRepo extends JpaRepository<Course, Long> {
 
@@ -43,4 +44,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
   List<CourseBasicInfo> findCoursesByInstructorAndCourseState(Instructor instructor, CourseState courseState);
 
   Course findCourseById(Long id);
+
+  // move new refactor optional below
+  List<Course> findCourseByCategoryAndCourseState(Category category, CourseState courseState);
 }

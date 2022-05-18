@@ -162,7 +162,7 @@ const SignInForm = () => {
         } else if (err.response?.status === 400) {
           setLoginErrorMsg('Missing Username or Password');
         } else if (err.response?.status === 401) {
-          setLoginErrorMsg('Unauthorized');
+          setLoginErrorMsg('Wrong Username or Password');
         } else if (err.response?.status === 403) {
           setLoginErrorMsg('Wrong Username or Password');
         } else {

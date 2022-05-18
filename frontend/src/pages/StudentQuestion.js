@@ -24,7 +24,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_QUESTION_BOARD_BY_COURSE } from '../utils/url'
+import { URL_GET_ALL_POSTS_BY_COURSE } from '../utils/url'
 
 const StudentQuestion = () => {
 
@@ -40,7 +40,7 @@ const StudentQuestion = () => {
 
     useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_QUESTION_BOARD_BY_COURSE + courseId)
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_POSTS_BY_COURSE.replace('{courseId}', courseId))
 
         if (response.status === 200) {
             setQuestion(response.data)
