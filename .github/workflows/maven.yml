@@ -95,14 +95,14 @@ jobs:
           report-state.rejected=REJECTED" >> src/test/resources/application.properties
       - name: Create secrets for integration tests
         env: 
-          INTEGRATION_TEST: ${{ secrets.INTEGRATION_TEST }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         run: |
           cp src/test/resources/application.properties src/test/resources/application-it.properties
           echo spring.datasource.driver-class-name=org.postgresql.Driver \
           >> src/test/resources/application-it.properties
-          echo spring.datasource.url=\
-          jdbc:postgresql://postgres.sjnp-dev.xyz:5432/test-postgres?ssl=true&sslmode=require&stringtype=unspecified\
-          >> src/test/resources/application-it.properties
+          echo spring.datasource.url=$DATABASE_URL >> src/test/resources/application-it.properties
           echo spring.datasource.username=$DATABASE_USERNAME >> src/test/resources/application-it.properties
           echo spring.datasource.password=$DATABASE_PASSWORD >> src/test/resources/application-it.properties
           echo "
