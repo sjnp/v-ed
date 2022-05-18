@@ -103,5 +103,7 @@ jobs:
           spring.jpa.hibernate.ddl-auto=update
           spring.jpa.properties.hibernate.check_nullability=true
           spring.jpa.properties.hibernate.format_sql=true" >> application-it.properties
+          pwd application-it.properties
+          cat application-it.properties
       - name: Run tests 
         run: mvn verify 
