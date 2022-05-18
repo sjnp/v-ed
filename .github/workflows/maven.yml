@@ -40,18 +40,18 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
+      - name: Create test resource directory
+        run: mkdir src/test/resources
       - name: Create secrets for unit tests
         env: 
           UNIT_TEST: ${{ secrets.UNIT_TEST }}
         run: |
-          mkdir src/test/resources
           touch src/test/resources/application.properties
           echo $UNIT_TEST >> application.properties
       - name: Create secrets for integration tests
         env: 
           INTEGRATION_TEST: ${{ secrets.INTEGRATION_TEST }}
         run: |
-          mkdir src/test/resources
           touch src/test/resources/application-it.properties
           echo $INTEGRATION_TEST >> application-it.properties
       - name: Integration testing
