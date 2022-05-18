@@ -4,10 +4,8 @@
 name: Backend CI/CD
 
 on:
-  push:
-    branches: [ cicd ]
   pull_request:
-    branches: [ cicd ]
+    branches: [ main, dev ]
 
 jobs:
   build:
@@ -54,9 +52,6 @@ jobs:
           PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
           PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
           PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
         run: |
           touch src/test/resources/application.properties
           echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> src/test/resources/application.properties
@@ -110,7 +105,5 @@ jobs:
           spring.jpa.hibernate.ddl-auto=update
           spring.jpa.properties.hibernate.check_nullability=true
           spring.jpa.properties.hibernate.format_sql=true" >> src/test/resources/application-it.properties
-          cat src/test/resources/application.properties
-          cat src/test/resources/application-it.properties
       - name: Run tests 
         run: mvn verify 
