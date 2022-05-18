@@ -2,7 +2,7 @@ package com.ved.backend.service;
 
 import java.util.List;
 
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CourseStateNotFoundException;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.repo.CourseStateRepo;
 
@@ -24,7 +24,7 @@ public class CourseStateService {
 
     public CourseState getByName(String name) {
         log.info("Get course state by name {}", name);
-        return courseStateRepo.findCourseStateByName(name).orElseThrow(() -> NotFoundException.courseState(name));
+        return courseStateRepo.findCourseStateByName(name).orElseThrow(() -> new CourseStateNotFoundException(name));
     }
 
     public List<CourseState> getAll() {

@@ -1,7 +1,7 @@
 package com.ved.backend.service;
 
 import com.ved.backend.exception.tempException.MyException;
-import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
@@ -41,7 +41,7 @@ public class CourseService {
 
     public Course getById(Long courseId) {
         log.info("Get course by id {}", courseId);
-        return courseRepo.findById(courseId).orElseThrow(() -> NotFoundException.course(courseId));
+        return courseRepo.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
     }
 
     public CourseResponse getCourse(Long courseId) {
