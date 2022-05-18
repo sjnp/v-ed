@@ -54,5 +54,5 @@ jobs:
         run: |
           touch src/test/resources/application-it.properties
           echo $INTEGRATION_TEST >> application-it.properties
-      - name: Integration testing
+      - name: Run tests 
         run: mvn verify 
