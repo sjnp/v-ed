@@ -5,16 +5,15 @@ import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppUserRepo;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.event.annotation.AfterTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,6 @@ public class UserControllerIT {
   }
 
   @Test
-  @Transactional
   void givenNewUsername_whenCreateNewStudent_thenReturnCreated() throws Exception {
     //given
     String username = "test@test.com";
@@ -55,26 +53,16 @@ public class UserControllerIT {
     Collection<AppRole> appRoles = new ArrayList<>();
     String firstName = "First";
     String lastName = "Last";
-    Student student = new Student(
-        null,
-        firstName,
-        lastName,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-    );
-    AppUser appUser = new AppUser(
-        null,
-        username,
-        password,
-        appRoles,
-        student
-    );
+    Student student = Student.builder()
+        .firstName(firstName)
+        .lastName(lastName)
+        .build();
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(appRoles)
+        .student(student)
+        .build();
 
     //when
     String json = objectMapper.writeValueAsString(appUser);
@@ -87,12 +75,6 @@ public class UserControllerIT {
     resultActions.andExpect(status().isCreated());
     Optional<AppUser> expected = appUserRepo.findAppUserByUsername(username);
     assertThat(expected.isPresent()).isEqualTo(true);
-    assertThat(expected.get().getUsername())
-        .isEqualTo(appUser.getUsername());
-    assertThat(expected.get().getStudent().getFirstName())
-        .isEqualTo(appUser.getStudent().getFirstName());
-    assertThat(expected.get().getStudent().getLastName())
-        .isEqualTo(appUser.getStudent().getLastName());
   }
 
   @Test
@@ -103,30 +85,23 @@ public class UserControllerIT {
     Collection<AppRole> appRoles = new ArrayList<>();
     String firstName = "First";
     String lastName = "Last";
-    Student student = new Student(
-        null,
-        firstName,
-        lastName,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-    );
-    AppUser appUser = new AppUser(
-        null,
-        username,
-        password,
-        appRoles,
-        student
-    );
-    appUserRepo.save(appUser);
+    Student student = Student.builder()
+        .firstName(firstName)
+        .lastName(lastName)
+        .build();
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(appRoles)
+        .student(student)
+        .build();
+    String json = objectMapper.writeValueAsString(appUser);
+    mockMvc.perform(post("/api/users/new-student")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isCreated());
 
     //when
-    String json = objectMapper.writeValueAsString(appUser);
     ResultActions resultActions = mockMvc
         .perform(post("/api/users/new-student")
             .contentType(MediaType.APPLICATION_JSON)
