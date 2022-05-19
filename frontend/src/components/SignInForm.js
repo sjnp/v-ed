@@ -1,22 +1,40 @@
-import { useState, useEffect } from 'react';
-// import useAuth from '../hooks/useAuth';
+import React,  { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 
+// Material UI component
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Grid from '@mui/material/Grid'
+import Link from '@mui/material/Link'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+
+// Matetail UI icon
+import Login from '@mui/icons-material/Login'
+import Visibility from '@mui/icons-material/Visibility'
+import VisibilityOff from '@mui/icons-material/VisibilityOff'
+
+// custom api
 import axios from '../api/axios';
-import { Alert, Box, Button, Checkbox, FormControlLabel, Grid, Link, Paper, TextField, Typography } from '@mui/material';
-import { Login } from '@mui/icons-material';
-import { useDispatch, useSelector } from 'react-redux';
+
+// feature slice
 import { setAuth, setPersist } from '../features/authSlice';
 
-import { URL_LOGIN } from '../utils/url' 
+// url
+import { URL_LOGIN } from '../utils/url'
 
-// const LOGIN_URL = '/api/login';
+// regex
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-// url
-
 const SignInForm = () => {
-  // const { setAuth, persist, setPersist } = useAuth();
+  
   const persist = useSelector((state) => state.auth.value.persist);
   const dispatch = useDispatch();
 
@@ -33,6 +51,8 @@ const SignInForm = () => {
   const [errorPassword, setErrorPassword] = useState(false);
   const [passwordDidBlur, setPasswordDidBlur] = useState(false);
   const [passwordHelperText, setPasswordHelperText] = useState('');
+
+  const [showPassword, setShowPassword] = useState(false)
 
   const [loginErrorMsg, setLoginErrorMsg] = useState('');
 
@@ -119,14 +139,8 @@ const SignInForm = () => {
   }
 
   const togglePersist = () => {
-    // setPersist(prev => !prev);
     dispatch(setPersist(!persist));
-
   }
-
-  // useEffect(() => {
-  //   localStorage.setItem("persist", persist)
-  // }, [persist])
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -151,7 +165,7 @@ const SignInForm = () => {
         );
         const access_token = response?.data?.access_token;
         const roles = response?.data?.roles;
-        // setAuth({ username, password, roles, access_token });
+
         dispatch(setAuth({ username, roles, access_token}))
         setUsername('');
         setPassword('');
@@ -173,120 +187,73 @@ const SignInForm = () => {
   }
 
   return (
-        <Paper elevation={3}>
-          <Box
-            sx={{
-              marginTop: 12,
-              marginLeft: 3,
-              marginRight: 3,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center'
+    <Paper elevation={3}>
+      <Box sx={{ mt: 12, ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Typography marginTop={3} component='h1' variant='h5'>Sign In</Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin='normal'
+            autoComplete='off'
+            autoFocus
+            required
+            fullWidth
+            id='username'
+            label='Email Address'
+            name='email'
+            type='email'
+            error={errorUsername}
+            helperText={usernameHelperText}
+            value={username}
+            onChange={handleUsernameChange}
+            onBlur={handleUsernameBlur}
+          />
+          <TextField
+            margin='normal'
+            sx={{ marginTop: 3 }}
+            required
+            fullWidth
+            id='password'
+            label='Password'
+            name='password'
+            type={showPassword ? 'text' : 'password'}
+            error={errorPassword}
+            helperText={passwordHelperText}
+            value={password}
+            onChange={handlePasswordChange}
+            onBlur={handlePasswordBlur}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge='end'>
+                    { showPassword ? <VisibilityOff /> : <Visibility /> }
+                  </IconButton>
+                </InputAdornment>
+              )
             }}
+          />
+          <FormControlLabel
+            sx={{ mt: 2 }}
+            control={<Checkbox value="persist" id='persist' onChange={togglePersist} checked={persist} /> }
+            label="Remember this device"
+          />
+          { loginErrorMsg ? <Alert sx={{ mt: 3 }} severity='error'>{loginErrorMsg}</Alert> : null }
+          <Button
+            type='submit' 
+            fullWidth 
+            variant='contained' 
+            size='large' 
+            sx={{ mt: 6, mb: 2 }}
+            startIcon={<Login />}
           >
-            <Typography
-              marginTop={3}
-              component='h1'
-              variant='h5'
-            >
-              Sign In
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{
-                marginTop: 1
-              }}
-            >
-              <TextField
-                margin='normal'
-                autoComplete='off'
-                autoFocus
-                required
-                fullWidth
-                id='username'
-                label='Email Address'
-                name='email'
-                type='email'
-                error={errorUsername}
-                helperText={usernameHelperText}
-                value={username}
-                onChange={handleUsernameChange}
-                onBlur={handleUsernameBlur}
-              />
-              <TextField
-                margin='normal'
-                sx={{
-                  marginTop: 3
-                }}
-                required
-                fullWidth
-                id='password'
-                label='Password'
-                name='password'
-                type='password'
-                error={errorPassword}
-                helperText={passwordHelperText}
-                value={password}
-                onChange={handlePasswordChange}
-                onBlur={handlePasswordBlur}
-              />
-              <FormControlLabel
-                sx={{
-                  marginTop: 2
-                }}
-                control={
-                  <Checkbox
-                    value="persist"
-                    id='persist'
-                    onChange={togglePersist}
-                    checked={persist}
-                  />
-                }
-                label="Remember this device"
-              />
-              {loginErrorMsg
-                ? (
-                  <Alert sx={{ marginTop: 3 }} severity='error'>
-                    {loginErrorMsg}
-                  </Alert>
-                ) : null
-              }
-              <Button
-                type='submit'
-                fullWidth
-                variant='contained'
-                size='large'
-                sx={{
-                  marginTop: 6,
-                  marginBottom: 2
-                }}
-                startIcon={<Login />}
-              >
-                sign in
-              </Button>
-            </Box>
-            <Grid
-              container
-              justifyContent="center"
-              marginTop={3}
-              marginBottom={3}
-              spacing={1}
-            >
-              <Typography>
-                Not have an account yet?&ensp;
-              </Typography>
-              <Link component={RouterLink} to="/register">
-                Sign up
-              </Link>
-            </Grid>
-          </Box>
-
-
-        </Paper>
-
-
+            sign in
+          </Button>
+        </Box>
+        <Grid container justifyContent="center" marginTop={3} marginBottom={3} spacing={1}>
+          <Typography>Not have an account yet?</Typography>
+          <Link component={RouterLink} to="/register">Sign up</Link>
+        </Grid>
+      </Box>
+    </Paper>
   )
 }
 
