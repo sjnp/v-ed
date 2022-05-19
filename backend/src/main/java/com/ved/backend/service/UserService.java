@@ -2,6 +2,7 @@ package com.ved.backend.service;
 
 // import com.ved.backend.exception.RegisterException;
 
+import com.ved.backend.exception.UserNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -72,7 +73,7 @@ public class UserService implements UserDetailsService {
     log.info("Fetching user: {}", username);
     return appUserRepo
         .findAppUserByUsername(username)
-        .orElseThrow(() -> new NotFoundException("User with username: " + username + " does not exist"));
+        .orElseThrow(() -> new UserNotFoundException(username));
   }
 
   public Student getStudent(String username) {

@@ -1,5 +1,6 @@
-package com.ved.backend.service;
+package com.ved.backend.service.userService;
 
+import com.ved.backend.exception.UserNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -11,6 +12,7 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,10 +69,9 @@ class UserServiceTest {
     //given
     String username = "test@test.com";
     String password = "password";
-    Collection<AppRole> appRoles = new ArrayList<>();
     AppUser appUser = AppUser.builder()
         .username(username)
-        .password("password")
+        .password(password)
         .appRoles(new ArrayList<>())
         .build();
 
@@ -81,6 +82,7 @@ class UserServiceTest {
 
     //then
     assertThat(expected.getUsername()).isEqualTo(username);
+//    assertThat(expected.getUsername()).isEqualTo("");
   }
 
   @Test
@@ -170,8 +172,8 @@ class UserServiceTest {
     //when
     //then
     assertThatThrownBy(() -> underTest.getAppUser(username))
-        .isInstanceOf(NotFoundException.class)
-        .hasMessageContaining("User with username: " + username + " does not exist");
+        .isInstanceOf(UserNotFoundException.class)
+        .hasMessageContaining("User: " + username + " not found");
   }
 
   @Test
