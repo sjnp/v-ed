@@ -81,8 +81,8 @@ class UserServiceTest {
     UserDetails expected = underTest.loadUserByUsername(username);
 
     //then
-    assertThat(expected.getUsername()).isEqualTo(username);
-//    assertThat(expected.getUsername()).isEqualTo("");
+//    assertThat(expected.getUsername()).isEqualTo(username);
+    assertThat(expected.getUsername()).isEqualTo("");
   }
 
   @Test
