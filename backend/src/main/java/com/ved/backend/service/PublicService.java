@@ -46,6 +46,7 @@ public class PublicService {
     }
 
     public String getVideoExampleUrl(Long courseId) {
+        courseService.getById(courseId);
         String fileName = String.format("course_vid_%s_c0_s0.mp4", courseId);
         String username = "public_overview";
         return privateObjectStorageService.readFile(fileName, username);
