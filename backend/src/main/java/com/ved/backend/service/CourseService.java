@@ -32,14 +32,14 @@ public class CourseService {
 
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
 
-    public List<Course> getByCategoryAndCourseState(Category category, CourseState courseState) {
-        log.info("Get course by published course satate and category {}", category.getName());
-        return courseRepo.findCourseByCategoryAndCourseState(category, courseState);
-    }
-
     public Course getById(Long courseId) {
         log.info("Get course by id {}", courseId);
         return courseRepo.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
+    }
+
+    public List<Course> getByCategoryAndCourseState(Category category, CourseState courseState) {
+        log.info("Get course by published course satate and category {}", category.getName());
+        return courseRepo.findCourseByCategoryAndCourseState(category, courseState);
     }
 
     public CourseResponse getCourse(Long courseId) {

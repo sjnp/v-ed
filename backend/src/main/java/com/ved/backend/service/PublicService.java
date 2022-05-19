@@ -52,8 +52,8 @@ public class PublicService {
         return privateObjectStorageService.readFile(fileName, username);
     }
 
-    public CourseCardResponse getOverviewCourseCard(Long courseId) {
-        log.info("Get course card by id {}", courseId);
+    public CourseCardResponse getCourseCard(Long courseId) {
+        log.info("Get course card by course id {}", courseId);
         Course course = courseService.getById(courseId);
         return new CourseCardResponse(course);
     }
