@@ -1,6 +1,6 @@
-import React,  { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
+import React,  { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 // Material UI component
 import IconButton from '@mui/material/IconButton'
@@ -11,7 +11,6 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -22,10 +21,10 @@ import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 
 // custom api
-import axios from '../api/axios';
+import axios from '../api/axios'
 
 // feature slice
-import { setAuth, setPersist } from '../features/authSlice';
+import { setAuth, setPersist } from '../features/authSlice'
 
 // url
 import { URL_LOGIN } from '../utils/url'
@@ -33,7 +32,7 @@ import { URL_LOGIN } from '../utils/url'
 // regex
 const USERNAME_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-const SignInForm = () => {
+const SignInForm = ({ onSignUp, onLoginSuccess }) => {
   
   const persist = useSelector((state) => state.auth.value.persist);
   const dispatch = useDispatch();
@@ -169,7 +168,8 @@ const SignInForm = () => {
         dispatch(setAuth({ username, roles, access_token}))
         setUsername('');
         setPassword('');
-        navigate(from, { replace: true });
+        // navigate(from, { replace: true });
+        onLoginSuccess()
       } catch (err) {
         if (!err?.response) {
           setLoginErrorMsg('No Server Response');
@@ -188,8 +188,8 @@ const SignInForm = () => {
 
   return (
     <Paper elevation={3}>
-      <Box sx={{ mt: 12, ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography marginTop={3} component='h1' variant='h5'>Sign In</Typography>
+      <Box mt={10} ml={3} mr={3} display='flex' flexDirection='column' alignItems='center'>
+        <Typography mt={3} component='h1' variant='h5'>Sign In</Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
             margin='normal'
@@ -209,7 +209,7 @@ const SignInForm = () => {
           />
           <TextField
             margin='normal'
-            sx={{ marginTop: 3 }}
+            sx={{ mt: 3 }}
             required
             fullWidth
             id='password'
@@ -248,9 +248,9 @@ const SignInForm = () => {
             sign in
           </Button>
         </Box>
-        <Grid container justifyContent="center" marginTop={3} marginBottom={3} spacing={1}>
-          <Typography>Not have an account yet?</Typography>
-          <Link component={RouterLink} to="/register">Sign up</Link>
+        <Grid container justifyContent="center" mt={3} mb={3} spacing={1}>
+          <Typography pr={1}>Not have an account yet?</Typography>
+          <Button variant='text' sx={{ p: 0 }} onClick={onSignUp}>Sign up</Button>
         </Grid>
       </Box>
     </Paper>

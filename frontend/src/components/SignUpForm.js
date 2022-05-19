@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
 // Material UI component
 import Box from '@mui/material/Box'
@@ -8,10 +8,12 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
+import Grid from '@mui/material/Grid'
 
 // Material UI icon
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff"
+import Visibility from "@mui/icons-material/Visibility"
+import CloseIcon from "@mui/icons-material/Close"
 
 // utils
 import { validation } from '../utils/validation'
@@ -19,7 +21,7 @@ import { validation } from '../utils/validation'
 // service
 import service from '../services/service'
 
-const SignUpForm = ({ success }) => {
+const SignUpForm = ({ onSuccess, onClose }) => {
 
   const [register, setRegister] = useState({
     email: '',
@@ -117,7 +119,7 @@ const SignUpForm = ({ success }) => {
     const result = await service.register(payLoad)
 
     if (result.status === 201) {
-      success()
+      onSuccess()
     } else if (result.status === 409) {
       setMessageError({
         ...messageError,
@@ -136,11 +138,21 @@ const SignUpForm = ({ success }) => {
   }
 
   return (
-    <Paper elevation={3}>
-      <Box sx={{ mt: 3, ml: 3, mr: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography marginTop={3} component='h1' variant='h5'>
-          Register
-        </Typography>
+    <Paper elevation={3} sx={{ mt: 3 }}>
+      <Grid container pt={3}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={8}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+            <Typography variant='h5'>Register</Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={2}>
+          <IconButton onClick={onClose} title='Close sign up form'>
+            <CloseIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+      <Box ml={3} mr={3} display='flex' flexDirection='column' alignItems='center'>
         <Box component="form" onSubmit={onRegister} noValidate sx={{ mt: 1 }}>
           <TextField
             margin='normal'
