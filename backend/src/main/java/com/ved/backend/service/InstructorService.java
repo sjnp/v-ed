@@ -35,11 +35,7 @@ public class InstructorService {
     course.setInstructor(instructor);
     instructor.getCourses().add(course);
     log.info("Creating course from user: {}", username);
-    try {
-      courseRepo.save(course);
-    } catch (Exception exception) {
-      log.error(exception.getMessage());
-    }
+    courseRepo.save(course);
     instructorRepo.save(instructor);
     HashMap<String, Long> payload = new HashMap<>();
     payload.put("id", course.getId());
