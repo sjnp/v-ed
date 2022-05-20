@@ -44,6 +44,17 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
+  /* *************************************************************** */
+
+  @PostMapping("/buy/courses/{courseId}")
+  public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
+    System.out.println("course id = " + courseId);
+    System.out.println("username = " + principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  /* *************************************************************** */
+
   // REFACTOR: moved from OverviewController
   @GetMapping("/course-samples")
   public ResponseEntity<ArrayList<CourseCardResponse>> getCourseSamples(Principal principal) {
@@ -100,11 +111,11 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @PostMapping("/courses/{courseId}")
-  public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourse(courseId, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
+  // @PostMapping("/courses/{courseId}")
+  // public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
+  //   studentCourseService.buyFreeCourse(courseId, principal.getName());
+  //   return ResponseEntity.status(HttpStatus.CREATED).build();
+  // }
 
   @PostMapping("/courses/answers/pre-authenticated-request")
   public ResponseEntity<String> createParToUploadAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {

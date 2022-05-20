@@ -61,13 +61,15 @@ const BuyCourseOverview = ({ data }) => {
     if (username) {
       setLoadingGetFreeCourse(true)
 
-      // const response = await apiPrivate.post(axiosPrivate, URL_BUY_COURSE.replace('{courseId}', courseId))
-    
-      // setLoadingGetFreeCourse(false)
+      const url = URL_BUY_COURSE.replace('{courseId}', courseId)
+      const response = await apiPrivate.post(axiosPrivate, url)
+      
+      setLoadingGetFreeCourse(false)
   
-      // if (response.status === 201) {
-      //   navigate(`/payment/course/${courseId}/success`)
-      // }
+      if (response.status === 201) {
+        navigate(`/payment/course/${courseId}/success`)
+      }
+      
     } else {
       setRequiredLogin(true)
     }
