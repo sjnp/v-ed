@@ -1,4 +1,4 @@
-package com.ved.backend.controller.studentController;
+package com.ved.backend.integration.student.course;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

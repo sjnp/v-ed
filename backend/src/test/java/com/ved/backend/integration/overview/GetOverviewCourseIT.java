@@ -1,4 +1,4 @@
-package com.ved.backend.controller.overviewController;
+package com.ved.backend.integration.overview;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
