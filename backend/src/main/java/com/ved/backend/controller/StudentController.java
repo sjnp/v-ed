@@ -44,22 +44,21 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  /* *************************************************************** */
-
   @GetMapping("/courses")
-  public ResponseEntity<ArrayList<CourseCardResponse>> getAllCourses(Principal principal) {
-    // fix latter.
-    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
+  public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
+    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   // REFACTOR: moved from OverviewController
+  // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
-  public ResponseEntity<ArrayList<CourseCardResponse>> getCourseSamples(Principal principal) {
-
-    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
+  public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
+    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
+
+  /* *************************************************************** */
 
   @GetMapping("/courses/{courseId}")
   public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId) {

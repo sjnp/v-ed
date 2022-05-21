@@ -10,6 +10,8 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.response.CourseCardResponse;
+
 import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
@@ -44,6 +46,15 @@ public class StudentService {
     studentCourseService.verifyCanBuyCourse(student, course);
     StudentCourse studentCourse = StudentCourse.builder().student(student).course(course).build();
     studentCourseService.save(studentCourse);
+  }
+
+  public List<CourseCardResponse> getMyCourse(String username) {
+    log.info("Get my course username {}", username);
+    Student student = userService.getStudent(username);
+    return studentCourseService.getByStudent(student)
+      .stream()
+      .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
+      .collect(Collectors.toList());
   }
 
   /* ************************************************************ */
