@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.ved.backend.exception.baseException.ConflictException;
@@ -34,6 +35,11 @@ public class StudentCourseService {
     public StudentCourse save(StudentCourse studentCourse) {
         log.info("Save student id {} and course id {}", studentCourse.getStudent().getId(), studentCourse.getCourse().getId());
         return studentCourseRepo.save(studentCourse);
+    }
+
+    public List<StudentCourse> getByStudent(Student student) {
+        log.info("Get my course of student id {}", student.getId());
+        return studentCourseRepo.findByStudent(student);
     }
 
 }
