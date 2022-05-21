@@ -1,5 +1,6 @@
 package com.ved.backend.service.studentCourseService;
 
+import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
@@ -17,14 +18,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import static org.mockito.BDDMockito.given;
 
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class IsStudentCourseTest {
-
+public class VerifyCanBuyCourseTest {
+ 
     @Mock
     private StudentCourseRepo studentCourseRepo;
 
@@ -39,15 +43,14 @@ public class IsStudentCourseTest {
 
     @Test
     @Order(1)
-    public void givenStudentAndCourse_whenFound_thenReturnTrue() {
+    public void givenStudentAndCourse_whenFound_thenSuccess() {
         Course course = mockData.getCourse();
         Student student = mockData.getStudent();
-        StudentCourse studentCourse = mockData.getStudentCourse();
-        Optional<StudentCourse> studentCourseOptional = Optional.of(studentCourse);
         // given
-        given(studentCourseRepo.findByStudentAndCourse(student, course)).willReturn(studentCourseOptional);
+        given(studentCourseRepo.findByStudentAndCourse(student, course)).willReturn(Optional.empty());
         // when
-        Boolean actual = studentCourseServiceTest.isStudentCourse(student, course);
+        Boolean actual = true;
+        studentCourseServiceTest.verifyCanBuyCourse(student, course);
         // then
         assertEquals(true, actual);
     }
@@ -57,12 +60,14 @@ public class IsStudentCourseTest {
     public void givenStudentAndCourse_whenNotFound_thenReturnFalse() {
         Course course = mockData.getCourse();
         Student student = mockData.getStudent();
+        StudentCourse studentCourse = mockData.getStudentCourse();
+        Optional<StudentCourse> studentCourseOptional = Optional.of(studentCourse);
         // given
-        given(studentCourseRepo.findByStudentAndCourse(student, course)).willReturn(Optional.empty());
-        // when
-        Boolean actual = studentCourseServiceTest.isStudentCourse(student, course);
-        // then
-        assertEquals(false, actual);
+        given(studentCourseRepo.findByStudentAndCourse(student, course)).willReturn(studentCourseOptional);
+        // when & then
+        assertThatThrownBy(() -> studentCourseServiceTest.verifyCanBuyCourse(student, course))
+            .isInstanceOf(ConflictException.class)
+            .hasMessageContaining("You have this course already");
     }
 
 }
