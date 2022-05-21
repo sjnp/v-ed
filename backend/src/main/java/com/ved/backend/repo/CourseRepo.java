@@ -47,4 +47,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
 
   // move new refactor optional below
   List<Course> findCourseByCategoryAndCourseState(Category category, CourseState courseState);
+
+  Optional<Course> findByIdAndPrice(Long courseId, Long price);
+
 }

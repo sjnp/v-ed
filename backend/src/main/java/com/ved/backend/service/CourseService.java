@@ -2,6 +2,7 @@ package com.ved.backend.service;
 
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.exception.CourseNotFoundException;
+import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
@@ -41,6 +42,12 @@ public class CourseService {
         log.info("Get course by published course satate and category {}", category.getName());
         return courseRepo.findCourseByCategoryAndCourseState(category, courseState);
     }
+
+    public Course getByIdAndPrice(Long courseId, Long price) {
+        log.info("Get course id {} and price ", courseId, price);
+        return courseRepo.findByIdAndPrice(courseId, price)
+            .orElseThrow(() -> new BadRequestException("Course id " + courseId + " not free"));
+    } 
 
     public CourseResponse getCourse(Long courseId) {
         Course course = courseRepo.getById(courseId);

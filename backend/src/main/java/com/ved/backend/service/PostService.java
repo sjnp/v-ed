@@ -47,24 +47,26 @@ public class PostService {
 
         AppUser appUser = appUserRepo.findByUsername(username);
         Long studentId = appUser.getStudent().getId();
-        StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
+
+        // REASON : remove -> studentCourseRepo.findByCourseIdAndStudentId in repository
+        // StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
 
         Post post = new Post();
         post.setTopic(topic);
         post.setDetail(detail);
         post.setCreateDateTime(LocalDateTime.now());
         post.setVisible(true);
-        post.setCourse(studentCourse.getCourse());
-        post.setStudentCourse(studentCourse);
+        // post.setCourse(studentCourse.getCourse());
+        // post.setStudentCourse(studentCourse);
 
-        Course course = studentCourse.getCourse();
-        course.getPosts().add(post);
+        // Course course = studentCourse.getCourse();
+        // course.getPosts().add(post);
 
-        studentCourse.getPosts().add(post);
+        // studentCourse.getPosts().add(post);
 
         postRepo.save(post);
-        studentCourseRepo.save(studentCourse);
-        courseRepo.save(course);
+        // studentCourseRepo.save(studentCourse);
+        // courseRepo.save(course);
 
         PostResponse response = new PostResponse(post);
         return response;

@@ -35,7 +35,8 @@ export const URL_GET_VIDEO_EXAMPLE = '/api/overviews/video-example/courses/{cour
 
 // student
 export const URL_GET_COURSE_SAMPLES = '/api/students/course-samples'
-export const URL_BUY_COURSE = '/api/students/buy/courses/{courseId}'
+export const URL_FREE_COURSE = '/api/students/free/course'
+export const URL_BUY_COURSE = '/api/students/buy/course'
 export const URL_GET_STUDENT_COURSES = '/api/students/courses'
 export const URL_GET_COURSE = '/api/students/courses/{courseId}'
 export const URL_GET_VIDEO = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video'

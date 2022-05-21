@@ -23,7 +23,6 @@ public class StudentController {
 
   private final StudentService studentService;
   private final OverviewService overviewService;
-  private final StudentCourseService studentCourseService;
   private final CourseService courseService;
   private final PrivateObjectStorageService privateObjectStorageService;
   private final AssignmentService assignmentService;
@@ -37,23 +36,22 @@ public class StudentController {
     return ResponseEntity.ok().build();
   }
 
+  /* *************************************************************** */
+
+  @PostMapping("/free/course")
+  public ResponseEntity<?> freeCourse(@RequestBody Long courseId, Principal principal) {
+    studentService.getFreeCourse(courseId, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  /* *************************************************************** */
+
   @GetMapping("/courses")
   public ResponseEntity<ArrayList<CourseCardResponse>> getAllCourses(Principal principal) {
     // fix latter.
     ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
-
-  /* *************************************************************** */
-
-  @PostMapping("/buy/courses/{courseId}")
-  public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
-    System.out.println("course id = " + courseId);
-    System.out.println("username = " + principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
-
-  /* *************************************************************** */
 
   // REFACTOR: moved from OverviewController
   @GetMapping("/course-samples")

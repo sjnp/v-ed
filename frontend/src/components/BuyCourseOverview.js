@@ -29,7 +29,8 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_BUY_COURSE } from "../utils/url";
+import { URL_BUY_COURSE } from "../utils/url"
+import { URL_FREE_COURSE } from '../utils/url'
 
 const BuyCourseOverview = ({ data }) => {
 
@@ -61,13 +62,19 @@ const BuyCourseOverview = ({ data }) => {
     if (username) {
       setLoadingGetFreeCourse(true)
 
-      const url = URL_BUY_COURSE.replace('{courseId}', courseId)
-      const response = await apiPrivate.post(axiosPrivate, url)
+      // const payload = {
+      //   courseId: courseId
+      // }
+      const payload = courseId
+      const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
       
       setLoadingGetFreeCourse(false)
-  
+      
       if (response.status === 201) {
-        navigate(`/payment/course/${courseId}/success`)
+        // navigate(`/payment/course/${courseId}/success`)
+        alert('success')
+      } else {
+        alert(JSON.stringify(response.message))
       }
       
     } else {
