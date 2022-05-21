@@ -15,4 +15,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "json-web-token")
 public class JsonWebTokenProperties {
   private String secret;
+  private Long accessTokenExpiresAt;
+  private Long refreshTokenExpiresAt;
 }
