@@ -75,14 +75,14 @@ public class StudentService {
         omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
 
         // Add INSTRUCTOR role to User
-//        AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
-//        appUser.getAppRoles().add(instructorRole);
-//        Student student = appUser.getStudent();
-//        Instructor instructor = new Instructor();
-//        instructor.setRecipientId(recipientId);
-//        student.setInstructor(instructor);
-//        studentRepo.save(student);
-//        log.info("Success, user: {} is now an instructor", username);
+        AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
+        appUser.getAppRoles().add(instructorRole);
+        Student student = appUser.getStudent();
+        Instructor instructor = new Instructor();
+        instructor.setRecipientId(recipientId);
+        student.setInstructor(instructor);
+        studentRepo.save(student);
+        log.info("Success, user: {} is now an instructor", username);
      }
 
       return String.valueOf("OK");

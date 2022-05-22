@@ -26,19 +26,18 @@ public class InstructorService {
   private final InstructorRepo instructorRepo;
 
   private final UserService userService;
+  private final OmiseService omiseService;
 
   private final CourseStateProperties courseStateProperties;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
-  private final OmiseConfigProperties omiseKey;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorService.class);
 
   public String getOmiseAccountData(String username){
     Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
     String recipientId = instructor.getRecipientId();
-    String base64Creds = omiseKey.getBase64SecretKey();
-
-    return recipientId;
+    String response = omiseService.getRecipientData(recipientId);
+    return response;
   }
 
   public HashMap<String, Long> createCourse(Course course, String username) {

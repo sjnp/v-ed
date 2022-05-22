@@ -1,5 +1,5 @@
 import { Box, Paper, Typography, TextField, Button } from '@mui/material';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import BankingRecipientSelect from "./BankingRecipientSelect";
@@ -9,6 +9,7 @@ const drawerWidth = 720;
 const AccountManageInstructor = () => {
   const axiosPrivate = useAxiosPrivate();
   const username = useSelector((state) => state.auth.value.username);
+  const [accountData,setAccountData] = useState({})
   const [finance, setFinance] = useState({
     bankBrand: '',
     bankAccountName: '',
@@ -17,9 +18,23 @@ const AccountManageInstructor = () => {
     type: 'individual'
   });
 
+  useEffect(async () => {
+    try {
+      const accountResponse = await axiosPrivate.get('http://localhost:8080/api/instructors/getFinance');
+      setFinance({...finance,
+        bankBrand : accountResponse.data.bank_code,
+        bankAccountName : accountResponse.data.name,
+        bankAccountNumber : "******" + accountResponse.data.last_digits
+      });
+      console.log(accountResponse);
+      console.log(finance);
+     } catch(error) {
+      console.error(error);
+    }
+  }, [])
+
   const handleTextField = (event) => {
     setFinance({ ...finance, [event.target.name]: event.target.value })
-    console.log(event.target)
     console.log(finance)
   }
 
@@ -28,7 +43,8 @@ const AccountManageInstructor = () => {
     try {
       console.log('In')
       // const test = await axiosPrivate.get('http://localhost:8080/api/instructors/getFinance');
-      // console.log(test)
+      // const json = test.data
+      // console.log(json)
       const response = await axiosPrivate.post('/api/students/active-instrustor', finance );
       console.log(response.data)
     } catch (err) {
@@ -60,7 +76,7 @@ const AccountManageInstructor = () => {
         >
           Instructor
         </Typography>
-        <BankingRecipientSelect handleEvent={handleTextField} />
+        <BankingRecipientSelect handleEvent={handleTextField} bankSelect = {finance.bankBrand} />
         <TextField
           margin='normal'
           sx={{
@@ -74,7 +90,7 @@ const AccountManageInstructor = () => {
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
-          // value={password}
+          value={finance.bankAccountName}
           onChange={handleTextField}
           // onBlur={handlePasswordBlur}
         />
@@ -91,7 +107,7 @@ const AccountManageInstructor = () => {
           type='text'
           // error={errorPassword}
           // helperText={passwordHelperText}
-          // value={password}
+          value={finance.bankAccountNumber}
           onChange={handleTextField}
           // onBlur={handlePasswordBlur}
         />

@@ -10,8 +10,7 @@ import Select from '@mui/material/Select';
 const logoUrl = "https://raw.githubusercontent.com/omise/banks-logo/master/th/";
 // const bankJson = fetch("https://raw.githubusercontent.com/omise/banks-logo/master/banks.json").then(response => response.json()).then((jsonData) => {return jsonData})
 
-export default function BankingRecipientSelect({ handleEvent }) {
-  const [bankSelect, setBankSelect] = useState('');
+export default function BankingRecipientSelect({ handleEvent, bankSelect }) {
   const [bankJson, setBankJson] = useState([]);
 
   useEffect(async () => {
@@ -32,7 +31,6 @@ export default function BankingRecipientSelect({ handleEvent }) {
 
   const handleBankSelect = (event) => {
     handleEvent(event);
-    setBankSelect(event.target.value);
   };
 
   const dropdown = (

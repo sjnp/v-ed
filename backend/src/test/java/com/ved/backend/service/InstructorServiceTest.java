@@ -53,15 +53,15 @@ class InstructorServiceTest {
 
   @BeforeEach
   void setup() {
-    underTest = new InstructorService(
-        appUserRepo,
-        courseRepo,
-        courseStateRepo,
-        instructorRepo,
-        userService,
-        courseStateProperties,
-        publicObjectStorageConfigProperties
-    );
+//    underTest = new InstructorService(
+//        appUserRepo,
+//        courseRepo,
+//        courseStateRepo,
+//        instructorRepo,
+//        userService,
+//        courseStateProperties,
+//        publicObjectStorageConfigProperties
+//    );
   }
 
   @Test

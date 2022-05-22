@@ -91,7 +91,7 @@ public class PublicServiceTest {
 
     @BeforeEach
     public void setUpBeforeEachTest() {
-        publicServiceTest = new PublicService(categoryRepo, courseStateRepo, courseRepo);
+//        publicServiceTest = new PublicService(categoryRepo, courseStateRepo, courseRepo);
 
         
 
