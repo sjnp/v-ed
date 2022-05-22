@@ -10,11 +10,11 @@ import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Post;
-import com.ved.backend.model.StudentCourse;
+// import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.PostRepo;
-import com.ved.backend.repo.StudentCourseRepo;
+// import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.response.PostResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,7 @@ public class PostService {
 
     private final PostRepo postRepo;
     private final AppUserRepo appUserRepo;
-    private final StudentCourseRepo studentCourseRepo;
+    // private final StudentCourseRepo studentCourseRepo;
     private final CourseRepo courseRepo;
 
     public PostResponse create(Long courseId, String topic, String detail, String username) {
@@ -46,25 +46,27 @@ public class PostService {
         }
 
         AppUser appUser = appUserRepo.findByUsername(username);
-        Long studentId = appUser.getStudent().getId();
-        StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
+        // Long studentId = appUser.getStudent().getId();
+
+        // REASON : remove -> studentCourseRepo.findByCourseIdAndStudentId in repository
+        // StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
 
         Post post = new Post();
         post.setTopic(topic);
         post.setDetail(detail);
         post.setCreateDateTime(LocalDateTime.now());
         post.setVisible(true);
-        post.setCourse(studentCourse.getCourse());
-        post.setStudentCourse(studentCourse);
+        // post.setCourse(studentCourse.getCourse());
+        // post.setStudentCourse(studentCourse);
 
-        Course course = studentCourse.getCourse();
-        course.getPosts().add(post);
+        // Course course = studentCourse.getCourse();
+        // course.getPosts().add(post);
 
-        studentCourse.getPosts().add(post);
+        // studentCourse.getPosts().add(post);
 
         postRepo.save(post);
-        studentCourseRepo.save(studentCourse);
-        courseRepo.save(course);
+        // studentCourseRepo.save(studentCourse);
+        // courseRepo.save(course);
 
         PostResponse response = new PostResponse(post);
         return response;

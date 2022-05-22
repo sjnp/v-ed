@@ -1,5 +1,5 @@
 import React from "react"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 // component
 import CourseCard from "./CourseCard"
@@ -11,30 +11,28 @@ import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 
-const CaroueselCourse = ({ data, labelCorousel, pathTo }) => {
+const CaroueselCourse = ({ data, label }) => {
 
     const navigate = useNavigate()
 
     const handleClickReadMore = () => {
-        if (labelCorousel === 'My Course') {
+        if (label === 'My Course') {
             navigate('/student/course')
         } else {
             navigate('/search')
         }
     }
 
+    const pathTo = label === 'My Course' ? '/student/course/' : '/overview/course/'
+
     return (
-        <Card sx={{ backgroundColor: '#f5f5f5', mb: 2, p: 1 }}>
+        <Card sx={{ backgroundColor: '#f5f5f5', mt: 2, p: 1 }}>
             <Grid container spacing={2} sx={{ pl: 5, pr: 5, justifyContent: 'center' }}>
                 <Grid item xs={12}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <Typography variant="h6" sx={{ pt: 1 }}>
-                            {labelCorousel}
-                        </Typography>
+                        <Typography variant="h6" sx={{ pt: 1 }}>{label}</Typography>
                         <Button varient="text" sx={{ mt: 1 }} onClick={handleClickReadMore}>
-                            <Typography variant="caption">
-                                Read more
-                            </Typography>
+                            <Typography variant="caption">Read more</Typography>
                         </Button>
                     </Box>
                 </Grid>

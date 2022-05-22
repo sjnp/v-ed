@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class GetByName {
+public class GetByNameTest {
  
     @Mock
     private CategoryRepo categoryRepo;
