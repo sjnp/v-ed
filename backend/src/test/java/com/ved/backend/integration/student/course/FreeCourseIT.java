@@ -17,8 +17,16 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ved.backend.repo.StudentCourseRepo;
+import com.ved.backend.model.Category;
+import com.ved.backend.model.Course;
+import com.ved.backend.model.CourseState;
+import com.ved.backend.repo.CategoryRepo;
+import com.ved.backend.repo.CourseRepo;
+import com.ved.backend.repo.CourseStateRepo;
+import com.ved.backend.util.MockDatabase;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-it.properties")
@@ -33,14 +41,39 @@ public class FreeCourseIT {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private StudentCourseRepo studentCourseRepo;
+    private MockDatabase mockDatabase;
+
+    @Autowired
+    private CategoryRepo categoryRepo;
+
+    @Autowired
+    private CourseStateRepo courseStateRepo;
+
+    @Autowired
+    private CourseRepo courseRepo;
 
     @Test
     @Order(1)
-    @WithMockUser(username = "supawet@gmail.com")
+    public void init() {
+        mockDatabase.clear();
+        mockDatabase.mock_app_role();
+        mockDatabase.mock_student();
+        mockDatabase.mock_instructor();
+        mockDatabase.mock_category();
+        mockDatabase.mock_course_state();
+        mockDatabase.mock_course(0L, "PUBLISHED", "BUSINESS");
+        mockDatabase.mock_course(200L, "PUBLISHED", "DESIGN");
+    }
+
+    @Test
+    @Order(2)
+    @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenCoursePriceNotZero_thenReturnBadRequestStatus() throws Exception {
         // given
-        Long courseId = 41L;
+        Category category = categoryRepo.findByName("DESIGN").get();
+        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
+        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
         ResultActions resultActions = mockMvc.perform(
@@ -55,11 +88,14 @@ public class FreeCourseIT {
     }
 
     @Test
-    @Order(2)
-    @WithMockUser(username = "supawet@gmail.com")
+    @Order(3)
+    @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenGetFreeCourseSuccess_thenReturnCreatedStatus() throws Exception {
         // given
-        Long courseId = 40L;
+        Category category = categoryRepo.findByName("BUSINESS").get();
+        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
+        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
         ResultActions resultActions = mockMvc.perform(
@@ -72,11 +108,14 @@ public class FreeCourseIT {
     }
 
     @Test
-    @Order(3)
-    @WithMockUser(username = "supawet@gmail.com")
+    @Order(4)
+    @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenHaveCourseAlready_thenReturnConflictStatus() throws Exception {
         // given
-        Long courseId = 40L;
+        Category category = categoryRepo.findByName("BUSINESS").get();
+        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
+        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
         ResultActions resultActions = mockMvc.perform(
@@ -91,9 +130,9 @@ public class FreeCourseIT {
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     public void clear() {
-        studentCourseRepo.deleteAll();
+        mockDatabase.clear();
     }
 
 }
