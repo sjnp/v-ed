@@ -1,5 +1,6 @@
 package com.ved.backend.integration.overview;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -52,6 +53,7 @@ public class GetVideoExampleUrlIT {
 
     @Test
     @Order(2)
+    @Disabled
     public void givenCourseId_whenFound_thenReturnOkStatusAndAccessUrlVideoExample() throws Exception {
         // given
         List<Course> courses = courseRepo.findAll();
