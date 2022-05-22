@@ -2,10 +2,10 @@ package com.ved.backend.service;
 
 import java.util.*;
 
-import com.ved.backend.exception.MyException;
-import com.ved.backend.model.Category;
+import com.ved.backend.exception.tempException.MyException;
+// import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
-import com.ved.backend.repo.CategoryRepo;
+// import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.OverviewResponse;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OverviewService {
 
-    private CategoryRepo categoryRepo;
+    // private CategoryRepo categoryRepo;
     private CourseRepo courseRepo;
 
     private ArrayList<CourseCardResponse> getCourseCardResponseList(Collection<Course> courses) {

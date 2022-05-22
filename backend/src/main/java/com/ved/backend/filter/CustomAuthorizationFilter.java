@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.Nonnull;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CustomAuthorizationFilter.class);
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
     if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
       filterChain.doFilter(request, response);
     } else {
@@ -43,9 +44,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
           String username = decodedJWT.getSubject();
           String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
           Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-          stream(roles).forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role));
-          });
+          stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
           UsernamePasswordAuthenticationToken authenticationToken = new
               UsernamePasswordAuthenticationToken(username, null, authorities);
           SecurityContextHolder.getContext().setAuthentication(authenticationToken);

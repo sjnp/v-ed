@@ -12,7 +12,7 @@ import com.oracle.bmc.objectstorage.requests.CreatePreauthenticatedRequestReques
 import com.oracle.bmc.objectstorage.requests.DeleteObjectRequest;
 import com.oracle.bmc.objectstorage.responses.CreatePreauthenticatedRequestResponse;
 import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
@@ -37,15 +37,19 @@ public class PrivateObjectStorageService {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PrivateObjectStorageService.class);
 
-  private ObjectStorageClient createClient() throws IOException {
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    return new ObjectStorageClient(provider);
+  private ObjectStorageClient createClient() {
+    try {
+      
+      ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
+      AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
+      return new ObjectStorageClient(provider);
+    
+    } catch(Exception ex) {
+      throw new RuntimeException("Private object storage error");
+    }
   }
 
-  private String createPreauthenticatedRequest(String fileName,
-                                               String preauthenticatedRequestName,
-                                               AccessType accessType) throws IOException {
+  private String createPreauthenticatedRequest(String fileName, String preauthenticatedRequestName, AccessType accessType) {
     ObjectStorageClient client = createClient();
 
     CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
@@ -67,22 +71,23 @@ public class PrivateObjectStorageService {
         .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
     client.close();
 
-    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() +
-        response.getPreauthenticatedRequest().getAccessUri() +
-        fileName;
+    String regionStorageUri = privateObjectStorageConfigProperties.getRegionalObjectStorageUri();
+    String accessUri = response.getPreauthenticatedRequest().getAccessUri();
+
+    return regionStorageUri + accessUri;
   }
 
-  public String uploadFile(String fileName, String username) throws IOException {
+  public String uploadFile(String fileName, String username) {
     String preauthenticatedRequestName = username + "_upload_" + fileName;
     return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite);
   }
 
-  public String readFile(String fileName, String username) throws IOException {
+  public String readFile(String fileName, String username) {
     String preauthenticatedRequestName = username + "_read_" + fileName;
     return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, ObjectRead);
   }
 
-  public void deleteFile(String fileName) throws IOException {
+  public void deleteFile(String fileName) {
     ObjectStorageClient client = createClient();
 
     DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest

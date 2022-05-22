@@ -2,9 +2,10 @@ package com.ved.backend.service;
 
 // import com.ved.backend.exception.RegisterException;
 
-import com.ved.backend.exception.ConflictException;
-import com.ved.backend.exception.NotFoundException;
-import com.ved.backend.exception.UnauthorizedException;
+import com.ved.backend.exception.UserNotFoundException;
+import com.ved.backend.exception.baseException.ConflictException;
+import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 
@@ -15,7 +16,6 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
 import lombok.AllArgsConstructor;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -59,7 +59,6 @@ public class UserService implements UserDetailsService {
   public void registerStudent(AppUser appUser) {
     if (appUserRepo.existsByUsername(appUser.getUsername())) {
       String usernameAlreadyExist = "User with username: " + appUser.getUsername() + " already exists";
-      log.error(usernameAlreadyExist);
       throw new ConflictException(usernameAlreadyExist);
     }
 
@@ -74,7 +73,7 @@ public class UserService implements UserDetailsService {
     log.info("Fetching user: {}", username);
     return appUserRepo
         .findAppUserByUsername(username)
-        .orElseThrow(() -> new NotFoundException("User with username: " + username + " does not exist"));
+        .orElseThrow(() -> new UserNotFoundException(username));
   }
 
   public Student getStudent(String username) {

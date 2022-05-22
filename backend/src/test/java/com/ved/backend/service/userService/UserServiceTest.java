@@ -1,8 +1,9 @@
-package com.ved.backend.service;
+package com.ved.backend.service.userService;
 
-import com.ved.backend.exception.ConflictException;
-import com.ved.backend.exception.NotFoundException;
-import com.ved.backend.exception.UnauthorizedException;
+import com.ved.backend.exception.UserNotFoundException;
+import com.ved.backend.exception.baseException.ConflictException;
+import com.ved.backend.exception.baseException.NotFoundException;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Instructor;
@@ -11,13 +12,13 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,21 +68,21 @@ class UserServiceTest {
   void givenExistingUsername_whenLoadUser_thenReturnUserDetails() {
     //given
     String username = "test@test.com";
-    Collection<AppRole> appRoles = new ArrayList<>();
-    Optional<AppUser> appUser = Optional.of(new AppUser(
-        null,
-        username,
-        "password",
-        appRoles,
-        null
-    ));
-    given(appUserRepo.findAppUserByUsername(username)).willReturn(appUser);
+    String password = "password";
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(new ArrayList<>())
+        .build();
+
+    given(appUserRepo.findAppUserByUsername(username)).willReturn(Optional.of(appUser));
 
     //when
     UserDetails expected = underTest.loadUserByUsername(username);
 
     //then
     assertThat(expected.getUsername()).isEqualTo(username);
+//    assertThat(expected.getUsername()).isEqualTo("");
   }
 
   @Test
@@ -160,7 +161,7 @@ class UserServiceTest {
 
     //then
     verify(appUserRepo).findAppUserByUsername(username);
-    assertThat(expected.getUsername()).isEqualTo(appUser.get().getUsername());
+    assertThat(expected.getUsername()).isEqualTo(username);
   }
 
   @Test
@@ -171,14 +172,15 @@ class UserServiceTest {
     //when
     //then
     assertThatThrownBy(() -> underTest.getAppUser(username))
-        .isInstanceOf(NotFoundException.class)
-        .hasMessageContaining("User with username: " + username + " does not exist");
+        .isInstanceOf(UserNotFoundException.class)
+        .hasMessageContaining("User: " + username + " not found");
   }
 
   @Test
   void givenStudentUsername_whenGetStudent_thenReturnThatStudent() {
     //given
     UserService underThisTest = spy(underTest);
+    String username = "test@test.com";
     AppUser appUser = new AppUser();
     Student student = new Student();
 
@@ -190,7 +192,7 @@ class UserServiceTest {
         .willReturn(Optional.of(student));
 
     //when
-    Student expected = underThisTest.getStudent(anyString());
+    Student expected = underThisTest.getStudent(username);
 
     //then
     verify(studentRepo).findByAppUser(any(AppUser.class));

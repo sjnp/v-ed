@@ -3,11 +3,9 @@ package com.ved.backend.service;
 import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
-import com.ved.backend.exception.UnauthorizedException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,11 +44,7 @@ public class InstructorService {
     course.setInstructor(instructor);
     instructor.getCourses().add(course);
     log.info("Creating course from user: {}", username);
-    try {
-      courseRepo.save(course);
-    } catch (Exception exception) {
-      log.error(exception.getMessage());
-    }
+    courseRepo.save(course);
     instructorRepo.save(instructor);
     HashMap<String, Long> payload = new HashMap<>();
     payload.put("id", course.getId());

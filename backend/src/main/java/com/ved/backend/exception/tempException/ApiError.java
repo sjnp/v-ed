@@ -1,4 +1,4 @@
-package com.ved.backend.exception;
+package com.ved.backend.exception.tempException;
 
 import java.util.Arrays;
 import java.util.List;

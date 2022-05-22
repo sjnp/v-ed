@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-// Material UI
+// component
+import stringToColor from './stringToColor';
+
+// Material UI component
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import CardHeader from '@mui/material/CardHeader'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Rating from "@mui/material/Rating"
 import StarIcon from '@mui/icons-material/Star'
 import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Grid'
 import LoadingButton from '@mui/lab/LoadingButton'
+import Skeleton from '@mui/material/Skeleton';
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -21,95 +25,97 @@ import {URL_BUY_COURSE} from "../utils/url";
 
 const BuyCourseOverview = ({ data }) => {
 
-  // const { instructorPictureURI, courseName, instructorFirstname, instructorLastname, price } = data
-  // const { ratingCourse, totalReview } = data
-  // const { courseId } = data
-
-  const {
-    instructorPictureURI, 
-    courseName, 
-    instructorFirstname, 
-    instructorLastname, 
-    price,
-    ratingCourse, 
-    totalReview, 
-    courseId
-  } = data
+  const { instructorPictureURI, courseName, instructorFirstname, instructorLastname} = data
+  const { price, ratingCourse, totalReview, courseId } = data
 
   const navigate = useNavigate()
 
   const axiosPrivate = useAxiosPrivate()
 
-  // const handleClickBuyCourse = () => {
-  //   navigate(`/payment/course/${courseId}`)
-  // }
+  const [ loading, setLoading ] = useState(false)
 
-  const [ isBuyFree, setIsBuyFree ] = useState(false)
-
-  const handleClickGetCourse = async () => {
-    setIsBuyFree(true)
-    const response = await apiPrivate.post(axiosPrivate, URL_BUY_COURSE.replace('{courseId}', courseId))
+  const handleClickGetFreeCourse = async () => {
+    setLoading(true)
+    // const response = await apiPrivate.post(axiosPrivate, URL_BUY_COURSE.replace('{courseId}', courseId))
     
-    if (response.status === 201) {
-      navigate(`/payment/course/${courseId}/success`)
-    }
-    setIsBuyFree(false)
-    
+    // if (response.status === 201) {
+    //   navigate(`/payment/course/${courseId}/success`)
+    // }
+    // setLoading(false)
   }
-
-  const imageURL = 'https://www.cats.org.uk/media/2297/tabby-cat-looking-up.jpg?width=1600'
-
+  
   return (
     <Paper>
-      <CardHeader
-        avatar={ <Avatar src={instructorPictureURI || imageURL} /> } 
-        title={courseName}
-        subheader={`${instructorFirstname || ''} ${instructorLastname || ''}`}
-      />
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {
-        ratingCourse === 0 && totalReview === 0 ?
-          <Typography variant='button' color='gray' marginBottom={5} marginTop={2}>
-            No review now
-          </Typography>
-          :
-          <Box>
-            <Rating
-              value={ratingCourse} 
-              size="large" 
-              readOnly 
-              precision={0.1} 
-              emptyIcon={<StarIcon fontSize="inherit" />}
-              sx={{ marginTop: 2, marginBottom: 1 }}
-            />
-            <Typography variant="body1" marginBottom={3} textAlign='center'>
-              {ratingCourse} ({totalReview})
+    {
+      courseId === undefined ? 
+
+      <Grid container padding={3}>
+        <Grid item xs={2}>
+          <Skeleton variant="circular" width={40} height={40} />
+        </Grid>
+        <Grid item xs={10}>
+            <Grid item xs={10}> <Skeleton variant="text" /> </Grid>
+            <Grid item xs={8}> <Skeleton variant="text" /> </Grid>
+        </Grid>
+        <Grid xs={12} paddingTop={5}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+          { Array(5).fill(<Skeleton variant="circular" width={30} height={30} sx={{ m: 1 }} />).map(e => e) }
+          </Grid>
+        </Grid>
+        <Grid xs={12} paddingTop={5}>
+          <Grid container direction="column" alignItems="center" justifyContent="center">
+            <Skeleton variant='rectangular' width={70} height={30}  />
+            <Skeleton variant='rectangular' width={100} height={30} sx={{ mt: 3, mb:2 }}/>
+          </Grid>
+        </Grid>
+      </Grid>
+     :
+      <Grid container padding={3}>
+        <Grid item xs={2} direction="row" alignItems="center" justifyContent="center">
+          <Avatar
+            alt={instructorFirstname}
+            src={instructorPictureURI || "/static/images/avatar/2.jpg"} 
+            sx={{ bgcolor: stringToColor(instructorFirstname), mt: 0.3 }}
+          /> 
+        </Grid>
+        <Grid item xs={10}>
+            <Grid item xs={10}>{courseName}</Grid>
+            <Grid item xs={8}>
+              <Typography variant='body2' color='gray'>{instructorFirstname} {instructorLastname}</Typography>
+            </Grid>
+        </Grid>
+        <Grid xs={12} paddingTop={5}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+          {
+            ratingCourse === 0 && totalReview === 0 ?
+            <Typography variant='button' color='gray' marginTop={2}>No review now</Typography>
+            :
+            <Box>
+              <Rating value={ratingCourse} size="large" readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
+              <Typography variant="body1" marginTop={2}>{ratingCourse} {totalReview}</Typography>
+            </Box>
+          }
+          </Grid>
+        </Grid>
+        <Grid xs={12} paddingTop={5}>
+          <Grid container direction="column" alignItems="center" justifyContent="center" marginBottom={2}>
+            <Typography variant="h6" color='primary' sx={{ marginBottom: 3 }}>
+              {price === 0 ? 'FREE' : `${price} THB`}
             </Typography>
-          </Box>
-      }
-        <Typography variant="h6" sx={{ marginBottom: 3 }}>
-            {price === 0 ? 'FREE' : `${price} THB`}
-        </Typography>
-      {
-        price === 0 ?
-          <LoadingButton
-            loading={isBuyFree} 
-            variant='contained' 
-            sx={{ mb: 5 }} 
-            onClick={handleClickGetCourse}
-          >
-            GET COURSE NOW
-          </LoadingButton>
-          :
-          <Button 
-            variant="contained" 
-            onClick={() => navigate(`/payment/course/${courseId}`)} 
-            sx={{ mb: 5 }}
-          >
-            BUY NOW
-          </Button>
-      }
-      </Box>
+            {
+              price === 0 ?
+              <LoadingButton loading={loading} variant='contained' onClick={handleClickGetFreeCourse}>
+                GET COURSE NOW
+              </LoadingButton>
+              :
+              <Button variant="contained" onClick={() => navigate(`/payment/course/${courseId}`)}>
+                BUY NOW
+              </Button>
+            }
+          </Grid>
+        </Grid>
+      </Grid>
+    }
     </Paper>
   )
 }

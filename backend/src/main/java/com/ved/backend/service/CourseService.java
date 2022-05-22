@@ -1,6 +1,8 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
+import com.ved.backend.exception.CourseNotFoundException;
+import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Student;
@@ -9,22 +11,38 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
+
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@AllArgsConstructor
 @Service
 @Transactional
+@AllArgsConstructor
 public class CourseService {
 
     private final CourseRepo courseRepo;
     private final CourseStateRepo courseStateRepo;
     private final CategoryRepo categoryRepo;
     private final PrivateObjectStorageService privateObjectStorageService;
+
+    private static final Logger log = LoggerFactory.getLogger(CourseService.class);
+
+    public List<Course> getByCategoryAndCourseState(Category category, CourseState courseState) {
+        log.info("Get course by published course satate and category {}", category.getName());
+        return courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+    }
+
+    public Course getById(Long courseId) {
+        log.info("Get course by id {}", courseId);
+        return courseRepo.findById(courseId).orElseThrow(() -> new CourseNotFoundException(courseId));
+    }
 
     public CourseResponse getCourse(Long courseId) {
         Course course = courseRepo.getById(courseId);

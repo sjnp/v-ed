@@ -1,6 +1,6 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import com.ved.backend.exception.MyException;
+import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Post;
