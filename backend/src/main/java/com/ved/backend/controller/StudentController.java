@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
-  private final OverviewService overviewService;
   private final CourseService courseService;
   private final PrivateObjectStorageService privateObjectStorageService;
   private final AssignmentService assignmentService;

@@ -3,7 +3,6 @@ package com.ved.backend.repo;
 import com.ved.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
