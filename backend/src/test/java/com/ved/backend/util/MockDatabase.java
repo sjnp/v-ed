@@ -15,6 +15,7 @@ import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Instructor;
 import com.ved.backend.model.PublishedCourse;
 import com.ved.backend.model.Student;
+import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CategoryRepo;
@@ -22,6 +23,7 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
+import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,24 +40,10 @@ public class MockDatabase {
     @Autowired private CategoryRepo categoryRepo;
     @Autowired private CourseRepo courseRepo;
     @Autowired private PublishedCourseRepo publishedCourseRepo;
-
-    public void init() {
-        // app role
-        mock_app_role();
-        // student
-        mock_student();
-        // instructor
-        mock_instructor();
-        // course state
-        mock_course_state();
-        // category
-        mock_category();
-        // course
-        mock_course_all_category(0L, "PUBLISHED");
-        mock_course_all_category(500L, "PUBLISHED");
-    }
+    @Autowired private StudentCourseRepo studentCourseRepo;
 
     public void clear() {
+        studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
         courseRepo.deleteAll();
         categoryRepo.deleteAll();
@@ -66,7 +54,7 @@ public class MockDatabase {
         appRoleRepo.deleteAll();
     }
     
-    private void mock_app_role() {
+    public void mock_app_role() {
         List<String> roles = Arrays.asList("ADMIN", "STUDENT", "INSTRUCTOR");
         for(String role : roles) {
             AppRole appRole = AppRole.builder().name(role).build();
@@ -74,7 +62,7 @@ public class MockDatabase {
         }
     }
 
-    private void mock_student() {
+    public void mock_student() {
         AppRole studentRole = appRoleRepo.findByName("STUDENT");
         Collection<AppRole> appRoles = new ArrayList<>();
         appRoles.add(studentRole);
@@ -100,7 +88,7 @@ public class MockDatabase {
         studentRepo.save(student);
     }
 
-    private void mock_instructor() {
+    public void mock_instructor() {
         AppRole studentRole = appRoleRepo.findByName("STUDENT");
         AppRole instructoRole = appRoleRepo.findByName("INSTRUCTOR");
         Collection<AppRole> appRoles = new ArrayList<>();
@@ -135,7 +123,7 @@ public class MockDatabase {
         instructorRepo.save(instructor);
     }
 
-    private void mock_course_state() {
+    public void mock_course_state() {
         List<String> names = Arrays.asList("INCOMPLETE", "PENDING", "APPROVED", "REJECTED", "PUBLISHED");
         for(String name : names) {
             CourseState courseState = CourseState.builder().name(name).build();
@@ -143,7 +131,7 @@ public class MockDatabase {
         }
     }
 
-    private void mock_category() {
+    public void mock_category() {
         List<String> names = Arrays.asList("ACADEMIC", "ART", "BUSINESS", "DESIGN", "PROGRAMMING");
         for(String name : names) {
             Category category = Category.builder().name(name).build();
@@ -151,7 +139,7 @@ public class MockDatabase {
         }
     }
 
-    private void mock_course_all_category(Long price, String courseStateName) {
+    public void mock_course(Long price, String courseStateName, String categoryName) {
         AppUser appUser = appUserRepo.findByUsername("instructor@test.com");
         Student student = studentRepo.findById(appUser.getStudent().getId()).get();
         Instructor instructor = student.getInstructor();
@@ -177,34 +165,40 @@ public class MockDatabase {
 
         CourseState courseState = courseStateRepo.findByName(courseStateName);
 
-        List<Category> categories = categoryRepo.findAll();
+        Category category = categoryRepo.findByName(categoryName).get();
 
-        for(Category category : categories) {
-            Course course = Course.builder()
-                .instructor(instructor)
-                .name("course " + category.getName())
-                .overview("overview course " + category.getName())
-                .requirement("requirement course " + category.getName())
-                .price(price)
-                .chapters(chapters)
-                .pictureUrl("course_picture.jpg")
-                .category(category)
-                .courseState(courseState)
-                .build();
+        Course course = Course.builder()
+            .instructor(instructor)
+            .name("course " + category.getName())
+            .overview("overview course " + category.getName())
+            .requirement("requirement course " + category.getName())
+            .price(price)
+            .chapters(chapters)
+            .pictureUrl("course_picture.jpg")
+            .category(category)
+            .courseState(courseState)
+            .build();
 
-            PublishedCourse publishedCourse = PublishedCourse.builder()
-                .course(course)
-                .star(0D)
-                .totalScore(0D)
-                .totalUser(0L)
-                .build();
+        PublishedCourse publishedCourse = PublishedCourse.builder()
+            .course(course)
+            .star(0D)
+            .totalScore(0D)
+            .totalUser(0L)
+            .build();
 
-            instructor.getCourses().add(course);
-            course.setPublishedCourse(publishedCourse);
+        instructor.getCourses().add(course);
+        course.setPublishedCourse(publishedCourse);
 
-            courseRepo.save(course);
-            instructorRepo.save(instructor);
-        }
+        courseRepo.save(course);
+        instructorRepo.save(instructor);
+    }
+
+    public void mock_student_course(Student student, Course course) {
+        StudentCourse studentCourse = StudentCourse.builder()
+            .student(student)
+            .course(course)
+            .build();
+        studentCourseRepo.save(studentCourse);
     }
 
 }
