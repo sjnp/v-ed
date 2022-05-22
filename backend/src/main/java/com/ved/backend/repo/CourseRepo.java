@@ -3,7 +3,6 @@ package com.ved.backend.repo;
 import com.ved.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,4 +46,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
 
   // move new refactor optional below
   List<Course> findCourseByCategoryAndCourseState(Category category, CourseState courseState);
+
+  Optional<Course> findByIdAndPrice(Long courseId, Long price);
+
 }

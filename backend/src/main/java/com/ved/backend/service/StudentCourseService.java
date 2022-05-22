@@ -1,11 +1,17 @@
 package com.ved.backend.service;
 
-import com.ved.backend.model.AppUser;
+import java.util.List;
+import java.util.Optional;
+
+import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.*;
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,24 +21,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentCourseService {
 
     private final StudentCourseRepo studentCourseRepo;
-    private final AppUserRepo appUserRepo;
-    // private final StudentRepo studentRepo;
-    private final CourseRepo courseRepo;
-    // private final PublishedCourseRepo publishedCourseRepo;
 
-    public void buyFreeCourse(Long courseId, String username) {
+    private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
-        AppUser appUser = appUserRepo.findByUsername(username);
-        Student student = appUser.getStudent();
-
-        // Optional<Course> courseOptional = courseRepo.findById(courseId);
-        // Course course = courseOptional.get();
-        Course course = courseRepo.findCourseById(courseId);
-
-        StudentCourse studentCourse = new StudentCourse();
-        studentCourse.setCourse(course);
-        studentCourse.setStudent(student);
-
-        studentCourseRepo.save(studentCourse);
+    public void verifyCanBuyCourse(Student student, Course course) {
+        log.info("Veriry student id {} and course id {}", student.getId(), course.getId());
+        Optional<StudentCourse> studentCourseOpt = studentCourseRepo.findByStudentAndCourse(student, course);
+        if (studentCourseOpt.isPresent()) {
+            throw new ConflictException("You have this course already");
+        }
     }
+
+    public StudentCourse save(StudentCourse studentCourse) {
+        log.info("Save student id {} and course id {}", studentCourse.getStudent().getId(), studentCourse.getCourse().getId());
+        return studentCourseRepo.save(studentCourse);
+    }
+
+    public List<StudentCourse> getByStudent(Student student) {
+        log.info("Get my course of student id {}", student.getId());
+        return studentCourseRepo.findByStudent(student);
+    }
+
 }

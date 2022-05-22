@@ -13,12 +13,10 @@ import com.ved.backend.response.OverviewResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 
 @Service
-@Transactional
 @AllArgsConstructor
 public class PublicService {
 
@@ -48,13 +46,14 @@ public class PublicService {
     }
 
     public String getVideoExampleUrl(Long courseId) {
+        courseService.getById(courseId);
         String fileName = String.format("course_vid_%s_c0_s0.mp4", courseId);
         String username = "public_overview";
         return privateObjectStorageService.readFile(fileName, username);
     }
 
-    public CourseCardResponse getOverviewCourseCard(Long courseId) {
-        log.info("Get course card by id {}", courseId);
+    public CourseCardResponse getCourseCard(Long courseId) {
+        log.info("Get course card by course id {}", courseId);
         Course course = courseService.getById(courseId);
         return new CourseCardResponse(course);
     }

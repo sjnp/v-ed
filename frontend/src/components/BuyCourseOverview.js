@@ -1,8 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 // component
-import stringToColor from './stringToColor';
+import stringToColor from './stringToColor'
+import SignInForm from './SignInForm'
+import LoadingBuyCourseOverview from './LoadingBuyCourseOverview'
+import SignUpForm from './SignUpForm';
+import SuccessAlertBox from './SuccessAlertBox';
 
 // Material UI component
 import Box from '@mui/material/Box'
@@ -14,64 +19,85 @@ import StarIcon from '@mui/icons-material/Star'
 import Paper from '@mui/material/Paper'
 import Grid from '@mui/material/Grid'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Skeleton from '@mui/material/Skeleton';
+import Container from '@mui/material/Container'
+import Modal from '@mui/material/Modal'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
 // custom api
 import apiPrivate from '../api/apiPrivate'
-import {URL_BUY_COURSE} from "../utils/url";
+
+// url
+import { URL_BUY_COURSE } from "../utils/url"
+import { URL_FREE_COURSE } from '../utils/url'
 
 const BuyCourseOverview = ({ data }) => {
-
-  const { instructorPictureURI, courseName, instructorFirstname, instructorLastname} = data
-  const { price, ratingCourse, totalReview, courseId } = data
 
   const navigate = useNavigate()
 
   const axiosPrivate = useAxiosPrivate()
 
-  const [ loading, setLoading ] = useState(false)
+  const { instructorPictureURI, courseName, instructorFirstname, instructorLastname} = data
+  const { price, ratingCourse, totalReview, courseId } = data
+
+  const [ loadingGetFreeCourse, setLoadingGetFreeCourse ] = useState(false)
+
+  const username = useSelector(state => state.auth.value.username)
+  const [ requiredLogin, setRequiredLogin ] = useState(false)
+  const [ callSignUpForm, setCallSignUpForm ] = useState(false)
+  const [ openSignUpSuccess, setOpenSignUpSuccess ] = useState(false)
+
+  const handleClickCallSignUpForm = () => {
+    setRequiredLogin(false)
+    setCallSignUpForm(true)
+  }
+
+  const handleSignUpSuccess = () => {
+    setCallSignUpForm(false)
+    setOpenSignUpSuccess(true)
+  }
 
   const handleClickGetFreeCourse = async () => {
-    setLoading(true)
-    // const response = await apiPrivate.post(axiosPrivate, URL_BUY_COURSE.replace('{courseId}', courseId))
-    
-    // if (response.status === 201) {
-    //   navigate(`/payment/course/${courseId}/success`)
-    // }
-    // setLoading(false)
+    if (username) {
+      setLoadingGetFreeCourse(true)
+
+      // const payload = {
+      //   courseId: courseId
+      // }
+      const payload = courseId
+      const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
+      
+      setLoadingGetFreeCourse(false)
+      
+      if (response.status === 201) {
+        // navigate(`/payment/course/${courseId}/success`)
+        alert('success')
+      } else {
+        alert(JSON.stringify(response.message))
+      }
+      
+    } else {
+      setRequiredLogin(true)
+    }
+  }
+
+  const handleClickBuyNow = async () => {
+    if (username) {
+      navigate(`/payment/course/${courseId}`)
+    } else {
+      setRequiredLogin(true)
+    }
   }
   
   return (
     <Paper>
     {
       courseId === undefined ? 
-
-      <Grid container padding={3}>
+      <LoadingBuyCourseOverview />
+      :
+      <Grid container p={3}>
         <Grid item xs={2}>
-          <Skeleton variant="circular" width={40} height={40} />
-        </Grid>
-        <Grid item xs={10}>
-            <Grid item xs={10}> <Skeleton variant="text" /> </Grid>
-            <Grid item xs={8}> <Skeleton variant="text" /> </Grid>
-        </Grid>
-        <Grid xs={12} paddingTop={5}>
-          <Grid container direction="row" alignItems="center" justifyContent="center">
-          { Array(5).fill(<Skeleton variant="circular" width={30} height={30} sx={{ m: 1 }} />).map(e => e) }
-          </Grid>
-        </Grid>
-        <Grid xs={12} paddingTop={5}>
-          <Grid container direction="column" alignItems="center" justifyContent="center">
-            <Skeleton variant='rectangular' width={70} height={30}  />
-            <Skeleton variant='rectangular' width={100} height={30} sx={{ mt: 3, mb:2 }}/>
-          </Grid>
-        </Grid>
-      </Grid>
-     :
-      <Grid container padding={3}>
-        <Grid item xs={2} direction="row" alignItems="center" justifyContent="center">
           <Avatar
             alt={instructorFirstname}
             src={instructorPictureURI || "/static/images/avatar/2.jpg"} 
@@ -81,34 +107,36 @@ const BuyCourseOverview = ({ data }) => {
         <Grid item xs={10}>
             <Grid item xs={10}>{courseName}</Grid>
             <Grid item xs={8}>
-              <Typography variant='body2' color='gray'>{instructorFirstname} {instructorLastname}</Typography>
+              <Typography variant='body2' color='gray'>
+                {`${instructorFirstname} ${instructorLastname}`}
+              </Typography>
             </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} pt={5}>
           <Grid container direction="row" alignItems="center" justifyContent="center">
           {
             ratingCourse === 0 && totalReview === 0 ?
-            <Typography variant='button' color='gray' marginTop={2}>No review now</Typography>
+            <Typography variant='button' color='gray' mt={2}>No review now</Typography>
             :
             <Box>
               <Rating value={ratingCourse} size="large" readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
-              <Typography variant="body1" marginTop={2}>{ratingCourse} {totalReview}</Typography>
+              <Typography variant="body1" mt={2}>{ratingCourse} {totalReview}</Typography>
             </Box>
           }
           </Grid>
         </Grid>
-        <Grid xs={12} paddingTop={5}>
+        <Grid item xs={12} pt={5}>
           <Grid container direction="column" alignItems="center" justifyContent="center" marginBottom={2}>
-            <Typography variant="h6" color='primary' sx={{ marginBottom: 3 }}>
+            <Typography variant="h6" color='primary' sx={{ mb: 3 }}>
               {price === 0 ? 'FREE' : `${price} THB`}
             </Typography>
             {
               price === 0 ?
-              <LoadingButton loading={loading} variant='contained' onClick={handleClickGetFreeCourse}>
+              <LoadingButton variant='contained' loading={loadingGetFreeCourse} onClick={handleClickGetFreeCourse}>
                 GET COURSE NOW
               </LoadingButton>
               :
-              <Button variant="contained" onClick={() => navigate(`/payment/course/${courseId}`)}>
+              <Button variant="contained" onClick={handleClickBuyNow}>
                 BUY NOW
               </Button>
             }
@@ -116,6 +144,23 @@ const BuyCourseOverview = ({ data }) => {
         </Grid>
       </Grid>
     }
+      <Modal open={requiredLogin} onClose={() => setRequiredLogin(false)}>
+        <Container component='main' maxWidth='xs'>
+          <SignInForm onLoginSuccess={() => setRequiredLogin(false)} onSignUp={handleClickCallSignUpForm} />
+        </Container>
+      </Modal>
+
+      <Modal open={callSignUpForm}>
+        <Container component='main' maxWidth='xs'>
+          <SignUpForm onClose={() => setCallSignUpForm(false)} onSuccess={handleSignUpSuccess} />
+        </Container>
+      </Modal>
+      
+      <Modal open={openSignUpSuccess} onClose={() => setOpenSignUpSuccess(false)}>
+        <Container component="main" maxWidth="xs">
+          <SuccessAlertBox handleClick={() => setOpenSignUpSuccess(false)} text='Register successful' />
+        </Container>
+      </Modal>
     </Paper>
   )
 }

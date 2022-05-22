@@ -2,7 +2,6 @@ package com.ved.backend.service.userService;
 
 import com.ved.backend.exception.UserNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
-import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
