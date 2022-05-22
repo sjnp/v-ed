@@ -2,6 +2,8 @@ package com.ved.backend.security;
 
 import com.ved.backend.filter.CustomAuthenticationFilter;
 import com.ved.backend.filter.CustomAuthorizationFilter;
+import com.ved.backend.utility.TokenUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,11 +24,14 @@ import java.util.List;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@AllArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final UserDetailsService userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  private final TokenUtil tokenUtil;
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -35,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
+    CustomAuthenticationFilter customAuthenticationFilter =
+        new CustomAuthenticationFilter(authenticationManagerBean(), tokenUtil);
     customAuthenticationFilter.setFilterProcessesUrl("/api/login");
     http.cors();
     http.csrf().disable();
@@ -72,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(POST, "/api/students/courses/{\\d+}",
+        .antMatchers(POST, "/api/students/free/course",
+            "/api/students/buy/course",
             "/api/students/courses/answers/pre-authenticated-request",
             "/api/students/courses/{\\d+}/answer",
             "/api/students/courses/post",
@@ -131,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    http.authorizeRequests().anyRequest().authenticated();
 
     http.addFilter(customAuthenticationFilter);
-    http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+    http.addFilterBefore(new CustomAuthorizationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class);
   }
 
   @Bean
@@ -152,10 +159,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
-
-  public SecurityConfig(final UserDetailsService userDetailsService, final BCryptPasswordEncoder bCryptPasswordEncoder) {
-    this.userDetailsService = userDetailsService;
-    this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-  }
-
 }

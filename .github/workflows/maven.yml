@@ -52,6 +52,9 @@ jobs:
           PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
           PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
           PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_ACCESS_EXPIRE: ${{ secrets.JWT_ACCESS_EXPIRE }}
+          JWT_REFRESH_EXPIRE: ${{ secrets.JWT_REFRESH_EXPIRE }}
         run: |
           touch src/test/resources/application.properties
           echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> src/test/resources/application.properties
@@ -68,6 +71,9 @@ jobs:
           >> src/test/resources/application.properties
           echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
           >> src/test/resources/application.properties
+          echo json-web-token.secret=$JWT_SECRET >> src/test/resources/application.properties
+          echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> src/test/resources/application.properties 
+          echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> src/test/resources/application.properties
           echo "
           role.student=STUDENT
           role.instructor=INSTRUCTOR

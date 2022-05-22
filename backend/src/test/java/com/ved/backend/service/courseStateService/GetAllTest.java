@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class GetAll {
+public class GetAllTest {
 
     @Mock
     private CourseStateRepo courseStateRepo;

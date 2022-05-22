@@ -3,12 +3,19 @@ package com.ved.backend.service;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
+import com.ved.backend.model.Course;
 import com.ved.backend.model.Instructor;
 import com.ved.backend.model.Student;
+import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.response.CourseCardResponse;
+
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +32,32 @@ public class StudentService {
   private final StudentRepo studentRepo;
 
   private final UserService userService;
+  private final CourseService courseService;
+  private final StudentCourseService studentCourseService;
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(StudentService.class);
+  private static final Logger log = LoggerFactory.getLogger(StudentService.class);
+
+  /* ************************************************************ */
+
+  public void getFreeCourse(Long courseId, String username) {
+    log.info("Username {} get free course id {}", username, courseId);
+    Course course = courseService.getByIdAndPrice(courseId, 0L);
+    Student student = userService.getStudent(username);
+    studentCourseService.verifyCanBuyCourse(student, course);
+    StudentCourse studentCourse = StudentCourse.builder().student(student).course(course).build();
+    studentCourseService.save(studentCourse);
+  }
+
+  public List<CourseCardResponse> getMyCourse(String username) {
+    log.info("Get my course username {}", username);
+    Student student = userService.getStudent(username);
+    return studentCourseService.getByStudent(student)
+      .stream()
+      .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
+      .collect(Collectors.toList());
+  }
+
+  /* ************************************************************ */
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);
@@ -56,6 +87,5 @@ public class StudentService {
       log.info("Success, user: {} is now an instructor", username);
     }
   }
-
 
 }

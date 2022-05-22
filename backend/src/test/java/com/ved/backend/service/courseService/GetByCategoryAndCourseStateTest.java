@@ -1,7 +1,11 @@
 package com.ved.backend.service.courseService;
 
-import com.ved.backend.exception.CourseNotFoundException;
+import java.util.Arrays;
+import java.util.List;
+
+import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
+import com.ved.backend.model.CourseState;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
@@ -18,24 +22,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
-
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(OrderAnnotation.class)
-public class GetById {
-    
+public class GetByCategoryAndCourseStateTest {
+
     @Mock
-    private CourseRepo courseRepo;
+    private CategoryRepo categoryRepo;
 
     @Mock
     private CourseStateRepo courseStateRepo;
 
     @Mock
-    private CategoryRepo categoryRepo;
+    private CourseRepo courseRepo;
 
     @Mock
     private PrivateObjectStorageService privateObjectStorageService;
@@ -56,30 +58,31 @@ public class GetById {
 
     @Test
     @Order(1)
-    public void givenCourseId_whenFound_thenReturnCourse() {
-        Long courseId = 70L;
-        Course course = mockData.getCourse();
+    public void givenCategoryAndPublishedCourseState_whenFound_thenReturnCourseList() {
+        List<Course> courses = Arrays.asList(mockData.getCourse());
+        Category category = mockData.getCategory("ART");
+        CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
-        given(courseRepo.findById(courseId)).willReturn(Optional.of(course));
+        given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
         // when
-        Course actualResult = courseServiceTest.getById(courseId);
+        List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
         // then
-        assertEquals(course, actualResult);
-        assertEquals(course.getId(), actualResult.getId());
-        assertEquals(course.getName(), actualResult.getName());
-        assertEquals(course.getPrice(), actualResult.getPrice());
+        assertEquals(courses, actualResult);
     }
 
     @Test
     @Order(2)
-    public void givenCourseId_whenNotFound_thenThrowNotFoundException() {
-        Long courseId = 0L;
+    public void givenCategoryAndPublishedCourseState_whenNotFound_thenReturnEmptyCourseList() {
+        List<Course> courses = Arrays.asList();
+        Category category = mockData.getCategory("BUSINESS");
+        CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
-        given(courseRepo.findById(courseId)).willReturn(Optional.empty());
-        // when & then
-        assertThatThrownBy(() -> courseServiceTest.getById(courseId))
-            .isInstanceOf(CourseNotFoundException.class)
-            .hasMessageContaining(String.format("Course id %s not found", courseId));
+        given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
+        // when
+        List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
+        // then
+        assertEquals(courses, actualResult);
+        assertNotNull(actualResult);
     }
 
 }

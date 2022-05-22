@@ -12,11 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @NoArgsConstructor
 @Configuration
-@ConfigurationProperties(prefix = "role")
-public class RoleProperties {
-
-  private String student;
-  private String instructor;
-  private String admin;
-
+@ConfigurationProperties(prefix = "json-web-token")
+public class JsonWebTokenProperties {
+  private String secret;
+  private Long accessTokenExpiresAt;
+  private Long refreshTokenExpiresAt;
 }

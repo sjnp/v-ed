@@ -1,15 +1,15 @@
 package com.ved.backend.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.utility.TokenUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.annotation.Nonnull;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +25,13 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@AllArgsConstructor
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CustomAuthorizationFilter.class);
 
+  private final TokenUtil tokenUtil;
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
     if (request.getServletPath().equals("/api/login") || request.getServletPath().equals("/api/token/refresh")) {
       filterChain.doFilter(request, response);
     } else {
@@ -37,20 +39,15 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
       if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
         try {
           String token = authorizationHeader.substring("Bearer ".length());
-          Algorithm algorithm = Algorithm.HMAC256("TODO: Need to put this somewhere safe".getBytes());
-          JWTVerifier verifier = JWT.require(algorithm).build();
-          DecodedJWT decodedJWT = verifier.verify(token);
+          DecodedJWT decodedJWT = tokenUtil.verify(token);
           String username = decodedJWT.getSubject();
           String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
           Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-          stream(roles).forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role));
-          });
+          stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
           UsernamePasswordAuthenticationToken authenticationToken = new
               UsernamePasswordAuthenticationToken(username, null, authorities);
           SecurityContextHolder.getContext().setAuthentication(authenticationToken);
           filterChain.doFilter(request, response);
-
         } catch (Exception exception) {
           log.error("Error logging in: {}", exception.getMessage());
           response.setHeader("error", exception.getMessage());
