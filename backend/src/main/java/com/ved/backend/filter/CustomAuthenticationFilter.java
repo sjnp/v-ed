@@ -2,6 +2,7 @@ package com.ved.backend.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.utility.TokenUtil;
 import com.ved.backend.utility.RefreshTokenCookieBuilder;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -37,8 +40,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     String username, password;
     try {
       Map<String, String> requestMap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
-      username = requestMap.get("username").toLowerCase();
-      password = requestMap.get("password");
+      username = Optional.ofNullable(requestMap.get("username"))
+          .map(String::toLowerCase)
+          .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Username is missing"));
+      password = Optional.ofNullable(requestMap.get("password"))
+          .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Password is missing"));
     } catch (IOException exception) {
       throw new AuthenticationServiceException(exception.getMessage(), exception);
     }
@@ -55,8 +61,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                                           Authentication authentication)
       throws IOException, ServletException {
     User user = (User) authentication.getPrincipal();
-    String access_token = tokenUtil.generateAccessToken(user, request.getRequestURL().toString());
-    String refresh_token = tokenUtil.generateRefreshToken(user, request.getRequestURL().toString());
+    String requestURL = request.getRequestURL().toString();
+    String access_token = tokenUtil.generateAccessToken(user, requestURL);
+    String refresh_token = tokenUtil.generateRefreshToken(user, requestURL);
     Cookie refreshTokenCookie = new RefreshTokenCookieBuilder(refresh_token).build();
     response.addCookie(refreshTokenCookie);
     Map<String, Object> jsonMessage = new HashMap<>();
