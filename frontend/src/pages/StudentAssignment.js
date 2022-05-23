@@ -27,40 +27,40 @@ import { URL_GET_COURSE_BY_ID } from '../utils/url'
 
 const StudentAssignment = () => {
 
-    const { courseId } = useParams()
+    // const { courseId } = useParams()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    // const dispatch = useDispatch()
+    // const navigate = useNavigate()
 
-    const [ assignments, setAssignments ] = useState([])
+    // const [ assignments, setAssignments ] = useState([])
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
-        const url = URL_GET_COURSE_BY_ID + courseId
-        const response = await apiPrivate.get(axiosPrivate, url)
+    // useEffect(async () => {
+    //     const url = URL_GET_COURSE_BY_ID + courseId
+    //     const response = await apiPrivate.get(axiosPrivate, url)
 
-        if (response.status === 200) {
-            const assignmentList = response.data.content.map(item => item.assignments)
-            setAssignments(assignmentList)
-        } else {
-            alert('Fail')
-        }
-        setLoading(false)
-    }, [])
+    //     if (response.status === 200) {
+    //         const assignmentList = response.data.content.map(item => item.assignments)
+    //         setAssignments(assignmentList)
+    //     } else {
+    //         alert('Fail')
+    //     }
+    //     setLoading(false)
+    // }, [])
 
-    const handleClickAssignmentChapter = (assignment, index) => {
-        const chapterNo = index + 1
+    // const handleClickAssignmentChapter = (assignment, index) => {
+    //     const chapterNo = index + 1
 
-        dispatch( setAssignment({
-            chapterNo: chapterNo,
-            assignments: assignment
-        }))
+    //     dispatch( setAssignment({
+    //         chapterNo: chapterNo,
+    //         assignments: assignment
+    //     }))
 
-        navigate(`/student/course/${courseId}/assignment/chapter/${chapterNo}`)
-    }
+    //     navigate(`/student/course/${courseId}/assignment/chapter/${chapterNo}`)
+    // }
 
     return (
         <Container>
@@ -70,7 +70,7 @@ const StudentAssignment = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='assignment' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
@@ -94,7 +94,7 @@ const StudentAssignment = () => {
                         <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

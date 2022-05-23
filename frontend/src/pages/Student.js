@@ -42,9 +42,7 @@ const Student = () => {
   // }
   
   const [ myCourse, setMyCourse ] = useState([])
-
   const [ loading, setLoading ] = useState(true)
-
   const [ viewTable, setViewTable ] = useState(true)
   const [ viewList, setViewList ] = useState(false)
 

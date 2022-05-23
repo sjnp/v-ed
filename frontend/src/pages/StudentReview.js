@@ -31,44 +31,44 @@ import { URL_GET_ALL_REVIEWS_BY_COURSE } from '../utils/url'
 
 const StudentReview = () => {
 
-    const { courseId } = useParams()
+    // const { courseId } = useParams()
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ reviews, setReviews ] = useState([])
-    const [ isReview, setIsReview ] = useState(false)
-    const [ myReviewId, setMyReviewId ] = useState(null)
-    const [ rating, setRating ] = useState(null)
-    const [ totalReview, setTotalReview ] = useState('')
+    // const [ reviews, setReviews ] = useState([])
+    // const [ isReview, setIsReview ] = useState(false)
+    // const [ myReviewId, setMyReviewId ] = useState(null)
+    // const [ rating, setRating ] = useState(null)
+    // const [ totalReview, setTotalReview ] = useState('')
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_REVIEWS_BY_COURSE.replace('{courseId}', courseId))
+    //     const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_REVIEWS_BY_COURSE.replace('{courseId}', courseId))
 
-        if (response.status === 200) {
-            setReviews(response.data.reviews)
-            setIsReview(response.data.isReview)
-            setMyReviewId(response.data.myReviewId)
-            setRating(response.data.star)
-            setTotalReview(`(${response.data.totalReviewUser})`)
-        } else {
-            alert('fail')
-        }
-        setLoading(false)
+    //     if (response.status === 200) {
+    //         setReviews(response.data.reviews)
+    //         setIsReview(response.data.isReview)
+    //         setMyReviewId(response.data.myReviewId)
+    //         setRating(response.data.star)
+    //         setTotalReview(`(${response.data.totalReviewUser})`)
+    //     } else {
+    //         alert('fail')
+    //     }
+    //     setLoading(false)
 
-    }, [])
+    // }, [])
 
-    const handleClickCreateReview = () => {
-        navigate(`/student/course/${courseId}/review/create`)
-    }
+    // const handleClickCreateReview = () => {
+    //     navigate(`/student/course/${courseId}/review/create`)
+    // }
 
-    const handleClickEditReview = () => {
-        navigate(`/student/course/${courseId}/review/${myReviewId}`)
-    }
+    // const handleClickEditReview = () => {
+    //     navigate(`/student/course/${courseId}/review/${myReviewId}`)
+    // }
 
     return (
         <Container>
@@ -78,7 +78,7 @@ const StudentReview = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='review' /> 
                 </Grid>
-                <Grid item xs={9} marginBottom={5}>
+                {/* <Grid item xs={9} marginBottom={5}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={3}>
@@ -143,7 +143,7 @@ const StudentReview = () => {
                             <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

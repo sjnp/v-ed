@@ -20,7 +20,7 @@ const StudentCreateReview = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='review' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={2}></Grid>
                         <Grid item xs={10}>
@@ -33,7 +33,7 @@ const StudentCreateReview = () => {
                             <WriteReview type='create' />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

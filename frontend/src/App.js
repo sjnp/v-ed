@@ -3,20 +3,17 @@ import Student from './pages/Student';
 import Instructor from './pages/Instructor';
 import Admin from './pages/Admin';
 import Overview from './pages/Overview';
-import Review from './pages/Review';
 import Search from './pages/Search';
 import Payment from './pages/Payment';
 
 import RequireAuth from './components/RequireAuth';
 import PersistLogin from './components/PersistLogin';
 
-
 import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
 
-import StudentCourse from './pages/StudentCourse';
 import AccountManage from './pages/AccountManage';
-import VideoCourse from './pages/VideoCourse';
+import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
 import PendingCourse from "./pages/PendingCourse";
@@ -26,62 +23,48 @@ import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
 import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
-import StudentAssignmentAnswer from './pages/StudentAssignmentAnswer';
+import StudentAnswer from './pages/StudentAnswer';
 import StudentCreateQuestion from './pages/StudentCreateQuestion';
 import StudentBoard from './pages/StudentBoard';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
 
-// import Logout from './pages/Logout';
-function App() {
+const App = () => {
   return (
     <Routes>
 
-      <Route path='/' element={<Home/>}/>
-
-      <Route path='overview/course/:courseId' element={<Overview/>}/>
-
-      <Route path='search' element={<Search/>}/>
-      
-
       {/* public routes */}
-      {/* <Route path='login' element={<MuiLogin />} /> */}
-      {/* <Route path='register' element={<Register />} /> */}
-      <Route path='unauthorized' element={<Unauthorized/>}/>
-
-      {/* public testing routes */}
-
-
+      <Route path='/' element={ <Home /> } />
+      <Route path='overview/course/:courseId' element={ <Overview /> } />
+      <Route path='search' element={ <Search /> } />
+      <Route path='unauthorized' element={ <Unauthorized /> } />
+      
       {/* private routes */}
-      <Route element={<PersistLogin/>}>
-
-        {/* <Route element={<RequireAuth allowRoles={["STUDENT", "INSTRUCTOR", "ADMIN"]} />}>
-          <Route path='logout' element={<Logout />} />
-        </Route> */}
+      <Route element={ <PersistLogin/> }>
         
+        {/* student role */}
         <Route element={<RequireAuth allowRoles={["STUDENT"]}/>}>
 
-          <Route path='student/course/:courseId' element={<StudentCourse/>}/>          
-          <Route path='review' element={<Review/>}/>
-          <Route path='account-manage' element={<AccountManage/>}/>
+          {/* account management */}
+          <Route path='account-manage' element={ <AccountManage/> } />
 
           {/* payment */}
-          <Route path='payment/course/:courseId' element={<Payment />} />
-          <Route path='payment/course/:courseId/success' element={<PaymentSuccess />} />
+          <Route path='payment/course/:courseId' element={ <Payment /> } />
+          <Route path='payment/course/:courseId/success' element={ <PaymentSuccess /> } />
 
           {/* student my course */}
-          <Route path='student/course' element={<Student/>}/>
+          <Route path='student/course' element={ <Student/> } />
 
           {/* student video course */}
-          <Route path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' element={ <VideoCourse/> } />
+          <Route path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' element={ <StudentVideoCourse/> } />
 
           {/* student content */}
           <Route path='student/course/:courseId/content' element={ <StudentContent /> } />
 
           {/* student assignment */}
           <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
-          <Route path='student/course/:courseId/assignment/chapter/:chapterNo' element={ <StudentAssignmentAnswer /> } />
+          <Route path='student/course/:courseId/assignment/chapter/:chapterNo' element={ <StudentAnswer /> } />
           
           {/* student question board */}
           <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />
@@ -98,19 +81,21 @@ function App() {
           
           {/* student about course */}
           <Route path='student/course/:courseId/about-course' element={ <StudentAboutCourse /> } />
-
         </Route>
 
+        {/* instructor role */}
         <Route element={<RequireAuth allowRoles={["INSTRUCTOR"]}/>}>
-          <Route path='instructor' element={<Instructor/>}/>
-          <Route path='instructor/create-course' element={<CreateCourse/>}/>
-          <Route path='instructor/create-course/:id' element={<UploadCourseMaterials/>}/>
+          <Route path='instructor' element={ <Instructor /> } />
+          <Route path='instructor/create-course' element={ <CreateCourse/> } />
+          <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
         </Route>
 
+        {/* admin role */}
         <Route element={<RequireAuth allowRoles={["ADMIN"]}/>}>
-          <Route path='admin' element={<Admin/>}/>
-          <Route path='admin/pending-course/:courseId' element={<PendingCourse/>}/>
+          <Route path='admin' element={ <Admin/> } />
+          <Route path='admin/pending-course/:courseId' element={ <PendingCourse/> } />
         </Route>
+
       </Route>
 
     </Routes>
