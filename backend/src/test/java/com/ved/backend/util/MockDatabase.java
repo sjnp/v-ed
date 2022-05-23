@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Arrays;
 
+import com.ved.backend.configuration.CategoryProperties;
+import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
@@ -44,6 +47,10 @@ public class MockDatabase {
     @Autowired private PublishedCourseRepo publishedCourseRepo;
     @Autowired private StudentCourseRepo studentCourseRepo;
 
+    @Autowired private RoleProperties roleProperties;
+    @Autowired private CourseStateProperties courseStateProperties;
+    @Autowired private CategoryProperties categoryProperties;
+
     public void clear() {
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
@@ -57,7 +64,12 @@ public class MockDatabase {
     }
     
     public void mock_app_role() {
-        List<String> roles = Arrays.asList("ADMIN", "STUDENT", "INSTRUCTOR");
+        List<String> roles = Arrays.asList(
+            roleProperties.getAdmin(),
+            roleProperties.getStudent(),
+            roleProperties.getInstructor()
+        );
+
         for(String role : roles) {
             AppRole appRole = AppRole.builder().name(role).build();
             appRoleRepo.save(appRole);
@@ -126,7 +138,14 @@ public class MockDatabase {
     }
 
     public void mock_course_state() {
-        List<String> names = Arrays.asList("INCOMPLETE", "PENDING", "APPROVED", "REJECTED", "PUBLISHED");
+        List<String> names = Arrays.asList(
+            courseStateProperties.getIncomplete(),
+            courseStateProperties.getPending(),
+            courseStateProperties.getApproved(),
+            courseStateProperties.getRejected(),
+            courseStateProperties.getPublished()
+        );
+
         for(String name : names) {
             CourseState courseState = CourseState.builder().name(name).build();
             courseStateRepo.save(courseState);
@@ -134,7 +153,14 @@ public class MockDatabase {
     }
 
     public void mock_category() {
-        List<String> names = Arrays.asList("ACADEMIC", "ART", "BUSINESS", "DESIGN", "PROGRAMMING");
+        List<String> names = Arrays.asList(
+            categoryProperties.getAcademic(),
+            categoryProperties.getArt(),
+            categoryProperties.getBusiness(),
+            categoryProperties.getDesign(),
+            categoryProperties.getProgramming()
+        );
+
         for(String name : names) {
             Category category = Category.builder().name(name).build();
             categoryRepo.save(category);
