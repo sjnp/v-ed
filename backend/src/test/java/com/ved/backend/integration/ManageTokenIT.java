@@ -152,4 +152,22 @@ public class ManageTokenIT {
     //then
     resultActions.andExpect(status().isForbidden());
   }
+
+  @Test
+  void givenValidRefreshToken_whenClearToken_thenReturnEmptyToken() throws Exception {
+    //given
+    MockHttpServletResponse logInResponse = logInActions.andReturn().getResponse();
+    Cookie refreshTokenCookie = logInResponse.getCookie("refresh_token");
+    assertThat(refreshTokenCookie).isNotNull();
+
+    //when
+    ResultActions resultActions = mockMvc.perform(get("/api/token/clear")
+        .cookie(refreshTokenCookie));
+
+    //then
+    resultActions.andExpect(status().isNoContent());
+    Cookie emptyTokenCookie = resultActions.andReturn().getResponse().getCookie("refresh_token");
+    assertThat(emptyTokenCookie).isNotNull();
+    assertThat(emptyTokenCookie.getValue()).isEmpty();
+  }
 }
