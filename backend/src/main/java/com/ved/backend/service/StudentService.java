@@ -10,12 +10,9 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
-<<<<<<< HEAD
 import com.ved.backend.storeClass.Finance;
-=======
 import com.ved.backend.response.CourseCardResponse;
 
->>>>>>> 00e7b346a0cda890131e793c14867638c2284339
 import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
@@ -93,7 +90,6 @@ public class StudentService {
     }
   }
 
-<<<<<<< HEAD
   public String activeInstructor(Finance finance, String username) {
     try {
       AppUser appUser = appUserRepo.findByUsername(username);
@@ -128,6 +124,4 @@ public class StudentService {
     }
   }
   
-=======
->>>>>>> 00e7b346a0cda890131e793c14867638c2284339
 }
