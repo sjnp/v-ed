@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ved.backend.exception.baseException.ConflictException;
+import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
@@ -40,6 +41,12 @@ public class StudentCourseService {
     public List<StudentCourse> getByStudent(Student student) {
         log.info("Get my course of student id {}", student.getId());
         return studentCourseRepo.findByStudent(student);
+    }
+
+    public StudentCourse getByStudentAndCourseId(Student student, Long courseId) {
+        log.info("Student id {} get course id {}", student.getId(), courseId);
+        return studentCourseRepo.findByStudentAndCourseId(student, courseId)
+            .orElseThrow(() -> new UnauthorizedException("You have not authorized this course"));
     }
 
 }
