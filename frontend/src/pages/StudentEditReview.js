@@ -23,31 +23,31 @@ import { URL_GET_REVIEW } from '../utils/url'
 
 const StudentEditReview = () => {
 
-    const { courseId, reviewId } = useParams()
+    // const { courseId, reviewId } = useParams()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ rating, setRating ] = useState(null)
-    const [ review, setReview ] = useState('')
+    // const [ rating, setRating ] = useState(null)
+    // const [ review, setReview ] = useState('')
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate,
-          URL_GET_REVIEW
-            .replace('{courseId}', courseId)
-            .replace('{reviewId}', reviewId))
+    //     const response = await apiPrivate.get(axiosPrivate,
+    //       URL_GET_REVIEW
+    //         .replace('{courseId}', courseId)
+    //         .replace('{reviewId}', reviewId))
 
-        if (response.status === 200) {
-            setRating(response.data.rating)
-            setReview(response.data.comment)
-        } else {
-            alert('call api get review by id ERROR!!!')
-        }
-        setLoading(false)
+    //     if (response.status === 200) {
+    //         setRating(response.data.rating)
+    //         setReview(response.data.comment)
+    //     } else {
+    //         alert('call api get review by id ERROR!!!')
+    //     }
+    //     setLoading(false)
     
-    }, [])
+    // }, [])
 
     return (
         <Container>
@@ -57,7 +57,7 @@ const StudentEditReview = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='review' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={2}></Grid>
                         <Grid item xs={10}>
@@ -76,7 +76,7 @@ const StudentEditReview = () => {
                             <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

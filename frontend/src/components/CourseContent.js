@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 // component
-import ChapterVideoList from '../components/ChapterVideoList';
+import ChapterVideoList from './ChapterVideoList';
 
 const BetaCourseContent = ({ chapters }) => {
 

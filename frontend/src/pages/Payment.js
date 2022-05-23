@@ -63,7 +63,7 @@ const Payment = () => {
           courseName={courseCard.courseName}
           instructorName={courseCard.instructorName}
           rating={courseCard.rating}
-          reviewTotal={courseCard.reviewCount}
+          reviewCount={courseCard.reviewCount}
           pathOnClick={`/overview/course/${courseCard.courseId}`}
           price={courseCard.price}
         />

@@ -26,38 +26,38 @@ import { URL_GET_POST } from '../utils/url'
 
 const StudentBoard = () => {
 
-    const { courseId, questionBoardId } = useParams()
+    // const { courseId, questionBoardId } = useParams()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ questionBoard, setQuestionBoard ] = useState(null)
+    // const [ questionBoard, setQuestionBoard ] = useState(null)
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const url = URL_GET_POST
-          .replace('{courseId}', courseId)
-          .replace('{postId}', questionBoardId)
-        const response = await apiPrivate.get(axiosPrivate, url)
+    //     const url = URL_GET_POST
+    //       .replace('{courseId}', courseId)
+    //       .replace('{postId}', questionBoardId)
+    //     const response = await apiPrivate.get(axiosPrivate, url)
 
-        if (response.status === 200) {
-            setQuestionBoard(response.data)
-        } else {
-            alert('fail')
-        }
-        setLoading(false)
+    //     if (response.status === 200) {
+    //         setQuestionBoard(response.data)
+    //     } else {
+    //         alert('fail')
+    //     }
+    //     setLoading(false)
 
-    }, [])
+    // }, [])
 
-    const handleCreateCommentSuccess = (data) => {
-        const newComment = questionBoard.comments
-        newComment.push(data)
-        setQuestionBoard({
-            ...questionBoard, 
-            comments: newComment
-        })
-    }
+    // const handleCreateCommentSuccess = (data) => {
+    //     const newComment = questionBoard.comments
+    //     newComment.push(data)
+    //     setQuestionBoard({
+    //         ...questionBoard, 
+    //         comments: newComment
+    //     })
+    // }
 
     return (
         <Container>
@@ -67,7 +67,7 @@ const StudentBoard = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='question board' />
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
@@ -94,7 +94,7 @@ const StudentBoard = () => {
                             <QuestionWriteComment onCreateCommentSuccess={handleCreateCommentSuccess} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

@@ -3,131 +3,89 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AppBarSearchHeader from "../components/AppBarSearchHeader";
 
 // component
-import CourseCard from "../components/CourseCard";
+import MyCourseCardTable from "../components/MyCourseCardTable"
+import MyCourseCardList from "../components/MyCourseCardList"
+import LoadingCircle from '../components/LoadingCircle'
 
-// Material UI
+// Material UI component
 import Typography from "@mui/material/Typography"
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+
+// Material UI icon
+import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
+import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 
 // custom hook
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+
+// custom api
+import apiPrivate from '../api/apiPrivate'
 
 // url
 import { URL_GET_STUDENT_COURSES } from "../utils/url";
 
 const Student = () => {
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  const location = useLocation();
+  
+  const axiosPrivate = useAxiosPrivate()
 
-  const [ myCourses, setMyCourse ] = useState([])
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const upgradeToInstructor = async () => {
+  //   try {
+  //     const response = await axiosPrivate.put('/api/students/instructor-feature', { recipientId: 'placeholder-omise-recipient-id'});
+  //   } catch (err) {
+  //     console.error(err);
+  //     navigate('/', { state: { from: location }, replace: true });
+  //   }
+  // }
+  
+  const [ myCourse, setMyCourse ] = useState([])
+  const [ loading, setLoading ] = useState(true)
+  const [ viewTable, setViewTable ] = useState(true)
+  const [ viewList, setViewList ] = useState(false)
 
-  const upgradeToInstructor = async () => {
-    try {
-      const response = await axiosPrivate.put('/api/students/instructor-feature', { recipientId: 'placeholder-omise-recipient-id'});
-    } catch (err) {
-      console.error(err);
-      navigate('/', { state: { from: location }, replace: true });
-    }
+  const handleChangeView = () => {
+    setViewTable(!viewTable)
+    setViewList(!viewList)
   }
 
   useEffect(async () => {
-    const response = await axiosPrivate.get(URL_GET_STUDENT_COURSES).then(res => res).catch(err => err.response)
+    const response = await apiPrivate.get(axiosPrivate, URL_GET_STUDENT_COURSES)
     if (response.status === 200) {
       setMyCourse(response.data)
+      setLoading(false)
     }
   }, [])
-
-  const handleData = () => {
-    let key = 0
-    let column = 0
-    let result = []
-    for (const myCourse of myCourses) {
-      
-      if (column === 0) result.push(<Grid item xs={1.5} key={++key}></Grid>)
-
-      result.push(
-        <Grid item xs={3} key={++key}>
-          <CourseCard
-            key={key}
-            image={myCourse.pictureURL}
-            courseName={myCourse.courseName}
-            instructorName={myCourse.instructorName}
-            rating={myCourse.rating}
-            reviewCount={myCourse.reviewCount}
-            pathOnClick={'/student/course/' + myCourse.courseId}
-          />
-        </Grid>
-      )
-      ++column
-
-      if (column === 3) {
-        result.push(<Grid item xs={1.5} key={++key}></Grid>)
-        column = 0
-      }
-    }
-    return result
-  }
-
-  const handleDataBeta = () => {
-    let key = 0
-    let column = 0
-    let result = []
-    for (const myCourse of myCourses) {
-      
-      if (column === 0) result.push(<Grid item xs={1.5} key={++key}></Grid>)
-
-      result.push(
-        <Grid item xs={3} key={++key}>
-          <CourseCard
-            key={key}
-            image={myCourse.pictureURL}
-            courseName={myCourse.courseName}
-            instructorName={myCourse.instructorName}
-            rating={myCourse.rating}
-            reviewCount={myCourse.reviewCount}
-            pathOnClick={'/student/course/' + myCourse.courseId + '/content'}
-          />
-        </Grid>
-      )
-      ++column
-
-      if (column === 3) {
-        result.push(<Grid item xs={1.5} key={++key}></Grid>)
-        column = 0
-      }
-    }
-    return result
-  }
 
   return (
     <Container maxWidth="lg">
       <AppBarSearchHeader />
-      <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-        Student home
-      </Typography>
-      <button onClick={() => upgradeToInstructor()}>
-        to be instructor
-      </button>
-      <hr/>
-      <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
-        My Course
-      </Typography>
-      <Grid container spacing={1} >
-      {
-        handleData().map(item => item)
-      }
-      <Grid item xs={12}>
-        <hr/>
-        (Beta)
+      <Grid container pt={5} mb={10}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={2}>
+          <Typography variant="h5" fontWeight='bold'>My Course</Typography>
+        </Grid>
+        <Grid item xs={7}>
+        </Grid>
+        <Grid item xs={2}>
+          <IconButton onClick={handleChangeView}>
+            <GridViewSharpIcon color={ viewTable ? 'primary' : 'default' } />
+          </IconButton>
+          <IconButton onClick={handleChangeView}>
+            <TableRowsSharpIcon color={ viewList ? 'primary' : 'default' } />
+          </IconButton>
+        </Grid>
+        <Grid container pt={5} spacing={2}>
+        {
+          loading ? <LoadingCircle loading={loading} centerY={true} /> : null 
+        }
+        {
+          viewTable ? <MyCourseCardTable data={myCourse} /> : <MyCourseCardList data={myCourse} />
+        }
+        </Grid>
       </Grid>
-      {
-        handleDataBeta().map(item => item)
-      }
-      </Grid>
-      <Toolbar />
     </Container>
   )
 }

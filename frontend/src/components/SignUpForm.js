@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 
-import { Box, Button, Paper, TextField, Typography } from '@mui/material';
+// Material UI component
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import InputAdornment from '@mui/material/InputAdornment'
+import Grid from '@mui/material/Grid'
 
+// Material UI icon
+import VisibilityOff from "@mui/icons-material/VisibilityOff"
+import Visibility from "@mui/icons-material/Visibility"
+import CloseIcon from "@mui/icons-material/Close"
+
+// utils
 import { validation } from '../utils/validation'
+
+// service
 import service from '../services/service'
 
-const SignUpForm = ({ success }) => {
+const SignUpForm = ({ onSuccess, onClose }) => {
 
   const [register, setRegister] = useState({
     email: '',
@@ -30,6 +46,9 @@ const SignUpForm = ({ success }) => {
     firstname: false,
     lastname: false
   })
+
+  const [ showPassword, setShowPassword ] = useState(false)
+  const [ showConfirmPassword, setShowConfirmPassword ] = useState(false)
 
   const onChange = async (event) => {
     handleChange(event.target.name, event.target.value)
@@ -100,7 +119,7 @@ const SignUpForm = ({ success }) => {
     const result = await service.register(payLoad)
 
     if (result.status === 201) {
-      success()
+      onSuccess()
     } else if (result.status === 409) {
       setMessageError({
         ...messageError,
@@ -119,12 +138,22 @@ const SignUpForm = ({ success }) => {
   }
 
   return (
-    <Paper elevation={3}>
-      <Box sx={{ marginTop: 3, marginLeft: 3, marginRight: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography marginTop={3} component='h1' variant='h5'>
-          Register
-        </Typography>
-        <Box component="form" onSubmit={onRegister} noValidate sx={{ marginTop: 1 }}>
+    <Paper elevation={3} sx={{ mt: 3 }}>
+      <Grid container pt={3}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={8}>
+          <Grid container direction="row" alignItems="center" justifyContent="center">
+            <Typography variant='h5'>Register</Typography>
+          </Grid>
+        </Grid>
+        <Grid item xs={2}>
+          <IconButton onClick={onClose} title='Close sign up form'>
+            <CloseIcon />
+          </IconButton>
+        </Grid>
+      </Grid>
+      <Box ml={3} mr={3} display='flex' flexDirection='column' alignItems='center'>
+        <Box component="form" onSubmit={onRegister} noValidate sx={{ mt: 1 }}>
           <TextField
             margin='normal'
             autoComplete='off'
@@ -176,11 +205,20 @@ const SignUpForm = ({ success }) => {
             id='password'
             label='Password'
             name='password'
-            type='password'
+            type={showPassword ? 'text' : 'password'}
             error={error.password}
             helperText={messageError.password}
             value={register.password}
             onChange={onChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge='end'>
+                    { showPassword ? <VisibilityOff /> : <Visibility /> }
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
           <TextField
             margin='normal'
@@ -190,13 +228,22 @@ const SignUpForm = ({ success }) => {
             id='confirmPassword'
             label='Confrim Password'
             name='confirmPassword'
-            type='password'
+            type={showConfirmPassword ? 'text' : 'password'}
             error={error.confirmPassword}
             helperText={messageError.confirmPassword}
             value={register.confirmPassword}
             onChange={onChange}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge='end'>
+                    { showConfirmPassword ? <VisibilityOff /> : <Visibility /> }
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
-          <Button type='submit' fullWidth variant='contained' sx={{ marginTop: 6, marginBottom: 2 }}>
+          <Button type='submit' fullWidth variant='contained' sx={{ mt: 6, mb: 2 }}>
             Register
           </Button>
         </Box>

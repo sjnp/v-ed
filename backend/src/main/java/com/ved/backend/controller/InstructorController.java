@@ -90,8 +90,12 @@ public class InstructorController {
 
   @GetMapping(path = "/getFinance")
   public ResponseEntity<?> getAccountData(Principal principal) {
-    String response = instructorService.getOmiseAccountData(principal.getName());
-    return ResponseEntity.ok(response);
+    try {
+      String response = instructorService.getOmiseAccountData(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
   }
 
 

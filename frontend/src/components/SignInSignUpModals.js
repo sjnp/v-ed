@@ -1,78 +1,57 @@
-import { Button, ClickAwayListener, Container, Grid, Modal } from "@mui/material";
-import { useState } from "react";
-import SignInForm from "./SignInForm";
-import SignUpForm from "./SignUpForm";
+import React, { useState } from "react"
+
+// Material UI component
+import  Button from "@mui/material/Button"
+import  Container from "@mui/material/Container"
+import  Grid from "@mui/material/Grid"
+import  Modal from "@mui/material/Modal"
+
+// component
+import SignInForm from "./SignInForm"
+import SignUpForm from "./SignUpForm"
 import SuccessAlertBox from "./SuccessAlertBox"
 
 const SignInSignUpModals = () => {
-  const [openSignIn, setOpenSignIn] = useState(false);
-  const handleOpenSignIn = () => setOpenSignIn(true);
-  const handleCloseSignIn = () => {
-    setOpenSignIn(false);
+
+  const [ openSignIn, setOpenSignIn ] = useState(false)
+  const [ openSignUp, setOpenSignUp ] = useState(false)
+
+  const [ openSignUpSuccess, setOpenSignUpSuccess ] = useState(false)
+
+  const handleSignUpSuccess = () => {
+    setOpenSignUp(false)
+    setOpenSignUpSuccess(true)
   }
 
-  const [openSignUp, setOpenSignUp] = useState(false)
-  const [registerSuccess, setRegisterSuccess] = useState(false)
-
-  const handleToggleOpenSignUp = () => setOpenSignUp(!openSignUp)
-  const toggleRegisterSuccess = () => setRegisterSuccess(!registerSuccess)
-
-  const onRegisterSuccess = () => {
-    handleToggleOpenSignUp()
-    toggleRegisterSuccess()
+  const handClickSignUpLoginForm = () => {
+    setOpenSignIn(false)
+    setOpenSignUp(true)
   }
 
   return (
-      <Grid
-        container
-        alignItems='center'
-        justifyContent='flex-end'
-        spacing={2}
-      >
-        <Grid item>
-          <Button onClick={handleOpenSignIn}>Sign In</Button>
-          <Modal
-            open={openSignIn}
-            onClose={handleCloseSignIn}
-          >
-            <div>
-              <ClickAwayListener onClickAway={handleCloseSignIn}>
-                <Container component="main" maxWidth="xs">
-                  <SignInForm />
-                </Container>
-              </ClickAwayListener>
-            </div>
-          </Modal>
-        </Grid>
-        <Grid item>
-          <Button onClick={handleToggleOpenSignUp} variant="contained">
-            Sign Up
-          </Button>
-          <Modal open={openSignUp} onClose={handleToggleOpenSignUp}>
-            <div>
-              <ClickAwayListener onClickAway={handleToggleOpenSignUp}>
-                <Container component="main" maxWidth="xs">
-                  <SignUpForm success={onRegisterSuccess} />
-                </Container>
-              </ClickAwayListener>
-            </div>
-          </Modal>
-          <Modal open={registerSuccess} onClose={toggleRegisterSuccess}>
-            <div>
-              <ClickAwayListener onClickAway={toggleRegisterSuccess}>
-                <Container component="main" maxWidth="xs">
-                  <SuccessAlertBox
-                    handleClick={toggleRegisterSuccess}
-                    text={"Register successful."}
-                    labelButton="Done"
-                  />
-                </Container>
-              </ClickAwayListener>
-            </div>
-          </Modal>
-        </Grid>
-
+    <Grid container alignItems='center' justifyContent='flex-end' spacing={2}>
+      <Grid item>
+        <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+        <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
+          <Container component="main" maxWidth="xs">
+            <SignInForm onSignIn={handClickSignUpLoginForm} />
+          </Container>
+        </Modal>
       </Grid>
+      <Grid item>
+        <Button onClick={() => setOpenSignUp(true)} variant="contained">Sign Up</Button>
+        <Modal open={openSignUp}>
+          <Container component="main" maxWidth="xs">
+            <SignUpForm onSuccess={handleSignUpSuccess} onClose={() => setOpenSignUp(false)} />
+          </Container>
+        </Modal>
+        <Modal open={openSignUpSuccess} onClose={() => setOpenSignUpSuccess(false)}>
+          <Container component="main" maxWidth="xs">
+            <SuccessAlertBox handleClick={() => setOpenSignUpSuccess(false)} text='Register successful' />
+          </Container>
+        </Modal>
+      </Grid>
+    </Grid>
   )
 }
 

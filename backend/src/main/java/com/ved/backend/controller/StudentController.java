@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,8 +22,6 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
-  private final OverviewService overviewService;
-  private final StudentCourseService studentCourseService;
   private final CourseService courseService;
   private final PrivateObjectStorageService privateObjectStorageService;
   private final AssignmentService assignmentService;
@@ -38,10 +35,17 @@ public class StudentController {
     return ResponseEntity.ok().build();
   }
 
+  /* *************************************************************** */
+
+  @PostMapping("/free/course")
+  public ResponseEntity<?> freeCourse(@RequestBody Long courseId, Principal principal) {
+    studentService.getFreeCourse(courseId, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
   @GetMapping("/courses")
-  public ResponseEntity<ArrayList<CourseCardResponse>> getAllCourses(Principal principal) {
-    // fix latter.
-    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
+  public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
+    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
@@ -53,12 +57,14 @@ public class StudentController {
   }
 
   // REFACTOR: moved from OverviewController
+  // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
-  public ResponseEntity<ArrayList<CourseCardResponse>> getCourseSamples(Principal principal) {
-
-    ArrayList<CourseCardResponse> response = overviewService.getOverviewMyCourse(principal.getName());
+  public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
+    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
   }
+
+  /* *************************************************************** */
 
   @GetMapping("/courses/{courseId}")
   public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId) {
@@ -108,11 +114,11 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @PostMapping("/courses/{courseId}")
-  public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourse(courseId, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
+  // @PostMapping("/courses/{courseId}")
+  // public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
+  //   studentCourseService.buyFreeCourse(courseId, principal.getName());
+  //   return ResponseEntity.status(HttpStatus.CREATED).build();
+  // }
 
   @PostMapping("/courses/answers/pre-authenticated-request")
   public ResponseEntity<String> createParToUploadAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {

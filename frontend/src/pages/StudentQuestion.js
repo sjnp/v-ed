@@ -28,36 +28,36 @@ import { URL_GET_ALL_POSTS_BY_COURSE } from '../utils/url'
 
 const StudentQuestion = () => {
 
-    const { courseId } = useParams()
+    // const { courseId } = useParams()
     
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ question, setQuestion ] = useState([])
+    // const [ question, setQuestion ] = useState([])
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_POSTS_BY_COURSE.replace('{courseId}', courseId))
+    //     const response = await apiPrivate.get(axiosPrivate, URL_GET_ALL_POSTS_BY_COURSE.replace('{courseId}', courseId))
 
-        if (response.status === 200) {
-            setQuestion(response.data)
-        } else {
-            alert('Qeustion fail')
-        }
-        setLoading(false)
+    //     if (response.status === 200) {
+    //         setQuestion(response.data)
+    //     } else {
+    //         alert('Qeustion fail')
+    //     }
+    //     setLoading(false)
 
-    }, [])
+    // }, [])
 
-    const handleNavigateCreateQuestion = () => {
-        navigate(`/student/course/${courseId}/question-board/create`)
-    }
+    // const handleNavigateCreateQuestion = () => {
+    //     navigate(`/student/course/${courseId}/question-board/create`)
+    // }
 
-    const handleNavigateQuestionCard = (questionBoardId) => {
-        navigate(`/student/course/${courseId}/question-board/${questionBoardId}`)
-    }
+    // const handleNavigateQuestionCard = (questionBoardId) => {
+    //     navigate(`/student/course/${courseId}/question-board/${questionBoardId}`)
+    // }
 
     return (
         <Container>
@@ -67,7 +67,7 @@ const StudentQuestion = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='question board' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={9}>
@@ -104,7 +104,7 @@ const StudentQuestion = () => {
                             <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

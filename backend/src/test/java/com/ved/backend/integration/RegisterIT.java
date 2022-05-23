@@ -1,9 +1,11 @@
 package com.ved.backend.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Student;
+import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +39,25 @@ public class RegisterIT {
   private AppUserRepo appUserRepo;
 
   @Autowired
+  private AppRoleRepo appRoleRepo;
+
+  @Autowired
+  private RoleProperties roleProperties;
+
+  @Autowired
   private ObjectMapper objectMapper;
+
+  @BeforeEach
+  void setStudentRole() {
+    appRoleRepo.save(AppRole.builder()
+        .name(roleProperties.getStudent())
+        .build());
+  }
 
   @AfterEach
   void tearDown() {
     appUserRepo.deleteAll();
+    appRoleRepo.deleteAll();
   }
 
   @Test
@@ -65,10 +81,9 @@ public class RegisterIT {
 
     //when
     String json = objectMapper.writeValueAsString(appUser);
-    ResultActions resultActions = mockMvc
-        .perform(post("/api/users/new-student")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json));
+    ResultActions resultActions = mockMvc.perform(post("/api/users/new-student")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(json));
 
     //then
     resultActions.andExpect(status().isCreated());

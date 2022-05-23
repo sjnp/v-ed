@@ -1,20 +1,23 @@
 import React from "react"
-import { Box, Button, Paper, Alert, AlertTitle } from '@mui/material';
 
-const SuccessAlertBox = (props) => {
+// Material UI component
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
-
-  const { handleClick, text, labelButton } = props
+const SuccessAlertBox = ({ handleClick, text }) => {
 
   return (
-    <Paper sx={{ marginTop: 25, padding: 2 }}>
-      <Alert severity="success" sx={{ margin: 1, marginBottom: 2 }} >
+    <Paper sx={{ mt: 25, p: 2 }}>
+      <Alert severity="success" sx={{ m: 1, mb: 2 }} >
         <AlertTitle>Success</AlertTitle>
         {text}
       </Alert>
       <Box textAlign="center">
         <Button onClick={handleClick} type="button" variant="contained" color="success">
-          {labelButton}
+          Done
         </Button>
       </Box>
     </Paper>

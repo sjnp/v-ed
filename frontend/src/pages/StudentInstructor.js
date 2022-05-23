@@ -20,9 +20,9 @@ const StudentInstructor = () => {
                 <Grid item xs={3}>
                     <StudentMenu active='instructor' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     Instructor
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )
