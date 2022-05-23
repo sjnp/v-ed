@@ -88,13 +88,13 @@ public class LogInIT {
         .andExpect(status().isCreated());
 
     Map<String, String> credentialContents = new HashMap<>();
-    credentialContents.put("username", username);
+    credentialContents.put("username", username.toUpperCase());
     credentialContents.put("password", password);
 
     //when
     ResultActions resultActions = mockMvc.perform(post("/api/login")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(credentialContents)));
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(credentialContents)));
 
     //then
     resultActions.andExpect(status().isOk());
@@ -105,5 +105,115 @@ public class LogInIT {
     assertThat(refreshTokenCookie.isHttpOnly()).isTrue();
     assertThat(content).contains("access_token");
     assertThat(content).contains(roleProperties.getStudent());
+  }
+
+  @Test
+  void givenWrongPassword_whenLogIn_thenReturnUnauthorized() throws Exception {
+    //given
+    String username = "test@test.com";
+    String password = "password";
+    Collection<AppRole> appRoles = new ArrayList<>();
+    String firstName = "First";
+    String lastName = "Last";
+    Student student = Student.builder()
+        .firstName(firstName)
+        .lastName(lastName)
+        .build();
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(appRoles)
+        .student(student)
+        .build();
+    String json = objectMapper.writeValueAsString(appUser);
+    mockMvc.perform(post("/api/users/new-student")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isCreated());
+
+    String wrongPassword = "p4sSw0rD";
+    Map<String, String> credentialContents = new HashMap<>();
+    credentialContents.put("username", username);
+    credentialContents.put("password", wrongPassword);
+
+    //when
+    ResultActions resultActions = mockMvc.perform(post("/api/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(credentialContents)));
+
+    //then
+    resultActions.andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void givenUnknownUsername_whenLogIn_thenReturnUnauthorized() throws Exception {
+    //given
+    String username = "test@test.com";
+    String password = "password";
+
+    Map<String, String> credentialContents = new HashMap<>();
+    credentialContents.put("username", username);
+    credentialContents.put("password", password);
+
+    //when
+    ResultActions resultActions = mockMvc.perform(post("/api/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(credentialContents)));
+
+    //then
+    resultActions.andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void givenOnlyUsername_whenLogIn_thenReturnUnauthorized() throws Exception {
+    //given
+    String username = "test@test.com";
+    String password = "password";
+    Collection<AppRole> appRoles = new ArrayList<>();
+    String firstName = "First";
+    String lastName = "Last";
+    Student student = Student.builder()
+        .firstName(firstName)
+        .lastName(lastName)
+        .build();
+    AppUser appUser = AppUser.builder()
+        .username(username)
+        .password(password)
+        .appRoles(appRoles)
+        .student(student)
+        .build();
+    String json = objectMapper.writeValueAsString(appUser);
+    mockMvc.perform(post("/api/users/new-student")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isCreated());
+
+    Map<String, String> credentialContents = new HashMap<>();
+    credentialContents.put("username", username);
+
+    //when
+    ResultActions resultActions = mockMvc.perform(post("/api/login")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(credentialContents)));
+
+    //then
+    resultActions.andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  void givenOnlyPassword_whenLogIn_thenReturnUnauthorized() throws Exception {
+    //given
+    String password = "password";
+
+    Map<String, String> credentialContents = new HashMap<>();
+    credentialContents.put("password", password);
+
+    //when
+    ResultActions resultActions = mockMvc.perform(post("/api/login")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(credentialContents)));
+
+    //then
+    resultActions.andExpect(status().isUnauthorized());
   }
 }
