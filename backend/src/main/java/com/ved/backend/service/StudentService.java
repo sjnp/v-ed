@@ -11,6 +11,7 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.response.CourseCardResponse;
+import com.ved.backend.response.CourseResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -55,6 +56,13 @@ public class StudentService {
       .stream()
       .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
       .collect(Collectors.toList());
+  }
+
+  @Transactional
+  public CourseResponse getCourse(Long courseId, String username) {
+    Student student = userService.getStudent(username);
+    StudentCourse studentCourse = studentCourseService.getByStudentAndCourseId(student, courseId);
+    return new CourseResponse(studentCourse.getCourse());
   }
 
   /* ************************************************************ */
