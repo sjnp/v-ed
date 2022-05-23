@@ -81,12 +81,10 @@ const Student = () => {
         </Grid>
         <Grid container pt={5} spacing={2}>
         {
-          loading ? <LoadingCircle loading={loading} centerY={true} />
-          :
-          viewTable ? 
-          <MyCourseCardTable data={myCourse} /> 
-          : 
-          <MyCourseCardList data={myCourse} />
+          loading ? <LoadingCircle loading={loading} centerY={true} /> : null 
+        }
+        {
+          viewTable ? <MyCourseCardTable data={myCourse} /> : <MyCourseCardList data={myCourse} />
         }
         </Grid>
       </Grid>
