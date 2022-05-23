@@ -14,8 +14,8 @@ const UserMenu = () => {
   const settings = roles.includes('ADMIN')
     ? ['Admin', 'Logout']
     : roles.includes('INSTRUCTOR')
-      ? ['Student', 'Student (Beta)', 'Instructor', 'Account Settings', 'Logout']
-      : ['Student', 'Student (Beta)', 'Account Settings', 'Logout'];
+      ? ['Student', 'Instructor', 'Account Settings', 'Logout']
+      : ['Student', 'Account Settings', 'Logout'];
 
   const [anchorElUser, setAnchorElUser] = useState(null);
   const handleOpenUserMenu = (event) => {
@@ -41,9 +41,6 @@ const UserMenu = () => {
         break;
       case 'Account Settings':
         navigate('/account-manage');
-        break;
-      case 'Student (Beta)':
-        navigate('/student/course');
         break;
       case 'Logout':
         signOut();

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { useNavigate } from "react-router-dom";
 
-// Material UI
+// Material UI component
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
 import CardMedia from "@mui/material/CardMedia";
@@ -42,8 +42,8 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
                     {instructorName}
                 </Typography>
             </CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1.5, alignItems: 'center' }}>
-                <Box sx={{ display: "flex", alignItems: 'center' }}>
+            <Box display='flex' justifyContent='space-between' p={1.5} alignItems='center'>
+                <Box display='flex' alignItems='center'>
                 {
                     rating === 0 && reviewCount === 0 ?
                     <Typography variant="caption" color='gray'>{'No review now'}</Typography>
@@ -53,7 +53,6 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
                             value={rating}
                             size="small"
                             readOnly
-                            precision={0.1}
                             emptyIcon={<StarIcon fontSize="inherit" />}
                         />
                         <Typography variant="caption" textAlign='center'>{rating} ({reviewCount})</Typography>
@@ -61,7 +60,7 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
                 }    
                 </Box>
                 <Box>
-                    <Typography variant="caption" color="primary" sx={{ fontWeight: 'bold', fontSize: 14, textAlign: 'center' }} >
+                    <Typography variant="caption" color="primary" fontWeight='bold' fontSize={14} textAlign='center'>
                         {showPrice}
                     </Typography>
                 </Box>

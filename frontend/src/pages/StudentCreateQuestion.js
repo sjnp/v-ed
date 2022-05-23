@@ -7,7 +7,7 @@ import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import QuestionCreate from '../components/QuestionCreate'
 
-import BetaCourseContent from '../components/BetaCourseContent';
+import CourseContent from '../components/CourseContent';
 
 // Material UI component
 import Container from '@mui/material/Container'

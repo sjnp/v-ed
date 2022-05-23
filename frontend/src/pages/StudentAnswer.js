@@ -13,11 +13,11 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Toolbar from '@mui/material/Toolbar'
 
-const StudentAssignmentAnswer = () => {
+const StudentAnswer = () => {
 
-    const { chapterNo } = useParams()
+    // const { chapterNo } = useParams()
 
-    const assignments = useSelector(state => state.assignmentStudent.value.assignments)
+    // const assignments = useSelector(state => state.assignmentStudent.value.assignments)
 
     return (
         <Container>
@@ -27,7 +27,7 @@ const StudentAssignmentAnswer = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='assignment' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
@@ -50,10 +50,10 @@ const StudentAssignmentAnswer = () => {
                         }
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )
 }
 
-export default StudentAssignmentAnswer
+export default StudentAnswer

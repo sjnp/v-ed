@@ -23,7 +23,7 @@ const CaroueselCourse = ({ data, label }) => {
         }
     }
 
-    const pathTo = label === 'My Course' ? '/student/course/' : '/overview/course/'
+    const pathTo = label === 'My Course' ? '/student/course/{courseId}/content' : '/overview/course/{courseId}'
 
     return (
         <Card sx={{ backgroundColor: '#f5f5f5', mt: 2, p: 1 }}>
@@ -45,8 +45,8 @@ const CaroueselCourse = ({ data, label }) => {
                                 instructorName={element.instructorName}
                                 rating={element.rating}
                                 reviewCount={element.reviewCount}
-                                pathOnClick={pathTo + element.courseId}
-                                price={element.price}
+                                pathOnClick={pathTo?.replace('{courseId}', element.courseId)}
+                                price={label === 'My Course' ? '' : element.price}
                             />
                         </Grid>
                     ))

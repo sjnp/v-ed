@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
-import BetaCourseContent from '../components/BetaCourseContent';
+import CourseContent from '../components/CourseContent';
 import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
@@ -23,25 +23,25 @@ import {URL_GET_COURSE} from "../utils/url"
 
 const StudentContent = () => {
 
-    const { courseId } = useParams()
+    // const { courseId } = useParams()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ content, setContent ] = useState([])
+    // const [ content, setContent ] = useState([])
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
-        const url = URL_GET_COURSE.replace('{courseId}', courseId)
-        const response = await apiPrivate.get(axiosPrivate, url)
+    // useEffect(async () => {
+    //     const url = URL_GET_COURSE.replace('{courseId}', courseId)
+    //     const response = await apiPrivate.get(axiosPrivate, url)
 
-        if (response.status === 200) {
-            setContent(response.data.content)
-        } else {
-            alert('Fail')
-        }
-        setLoading(false)
-    }, [])
+    //     if (response.status === 200) {
+    //         setContent(response.data.content)
+    //     } else {
+    //         alert('Fail')
+    //     }
+    //     setLoading(false)
+    // }, [])
 
     return (
         <Container>
@@ -51,7 +51,7 @@ const StudentContent = () => {
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='content' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
@@ -63,11 +63,11 @@ const StudentContent = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} sx={{ pt: 4 }}>
-                            <BetaCourseContent chapters={content} />
+                            <CourseContent chapters={content} />
                             <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )
