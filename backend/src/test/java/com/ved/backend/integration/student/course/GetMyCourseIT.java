@@ -7,6 +7,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,27 +22,28 @@ import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
+import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
+import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.StudentCourseRepo;
-import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.util.MockDatabase;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class GetMyCourse {
+public class GetMyCourseIT {
  
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private CourseRepo courseRepo;
+    private AppUserRepo appUserRepo;
 
     @Autowired
-    private StudentRepo studentRepo;
+    private CourseRepo courseRepo;
 
     @Autowired
     private StudentCourseRepo studentCourseRepo;
@@ -51,17 +53,20 @@ public class GetMyCourse {
 
     @Test
     @Order(1)
-    public void init() {
+    public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-        mockDatabase.mock_student();
+        
+        mockDatabase.mock_register_student();
+
         mockDatabase.mock_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
         mockDatabase.mock_course(0L, "PUBLISHED", "BUSINESS");
         mockDatabase.mock_course(200L, "PUBLISHED", "DESIGN");
         
-        Student student = studentRepo.findAll().get(0);
+        AppUser appUser = appUserRepo.findByUsername("student@test.com");
+        Student student = appUser.getStudent();
         List<Course> courses = courseRepo.findAll();
         for(Course course : courses) {
             mockDatabase.mock_student_course(student, course);
@@ -70,13 +75,17 @@ public class GetMyCourse {
 
     @Test
     @Order(2)
-    @WithMockUser(username = "student@test.com")
     public void givenUsername_whenMyCourseHaveData_thenReturnOkstatusAndCourseCardResponseList() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
         List<Course> courses = courseRepo.findAll();
         int actualSize = courses.size();
         // when
-        ResultActions resultActions = mockMvc.perform(get("/api/students/courses"));
+        ResultActions resultActions = mockMvc.perform(
+            get("/api/students/courses")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+        );
         // then
         resultActions
             .andExpect(status().isOk())
@@ -88,10 +97,15 @@ public class GetMyCourse {
     @Order(3)
     @WithMockUser(username = "student@test.com")
     public void givenUsername_whenMyCourseNoHaveData_thenReturnOkstatusAndEmptyCourseCardResponseList() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
         studentCourseRepo.deleteAll();
         // when
-        ResultActions resultActions = mockMvc.perform(get("/api/students/courses"));
+        ResultActions resultActions = mockMvc.perform(
+            get("/api/students/courses")
+            .header(HttpHeaders.AUTHORIZATION, accessToken)
+        );
         // then
         resultActions
             .andExpect(status().isOk())
