@@ -28,14 +28,13 @@ import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.StudentCourseRepo;
-import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.util.MockDatabase;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class GetMyCourse {
+public class GetMyCourseIT {
  
     @Autowired
     private MockMvc mockMvc;
@@ -45,9 +44,6 @@ public class GetMyCourse {
 
     @Autowired
     private CourseRepo courseRepo;
-
-    @Autowired
-    private StudentRepo studentRepo;
 
     @Autowired
     private StudentCourseRepo studentCourseRepo;
