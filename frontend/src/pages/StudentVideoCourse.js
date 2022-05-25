@@ -24,14 +24,29 @@ import apiPrivate from '../api/apiPrivate';
 // url
 import { URL_GET_VIDEO } from '../utils/url'
 
-
 const VideoCourse = () => {
 
-    // const { courseId, chapterNo, sectionNo } = useParams()
+    const { courseId, chapterIndex, sectionIndex } = useParams()
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
-    // const axiosPrivate = useAxiosPrivate()
+    const axiosPrivate = useAxiosPrivate()
+
+    const [ videoUrl, setVideoUrl ] = useState('')
+
+    useEffect(async () => {
+        const url = URL_GET_VIDEO
+            .replace('{courseId}', courseId)
+            .replace('{chapterIndex}', chapterIndex)
+            .replace('{sectionIndex}', sectionIndex)
+
+        const response = await apiPrivate.get(axiosPrivate, url)
+
+        if (response.status === 200) {
+            console.log('video page', response.data)
+            // setVideoUrl(response.data)
+        }
+    }, [])
 
     // const [ videoUrl, setVideoUrl ] = useState('')
     // const [ materials, setMaterials ] = useState([])
@@ -42,8 +57,8 @@ const VideoCourse = () => {
 
     //     const url = URL_GET_VIDEO
     //         .replace('{courseId}', courseId)
-    //         .replace('{chapterIndex}', chapterNo)
-    //         .replace('{sectionIndex}', sectionNo)
+    //         .replace('{chapterIndex}', chapterIndex)
+    //         .replace('{sectionIndex}', sectionIndex)
             
     //     const response = await apiPrivate.get(axiosPrivate, url)
         
@@ -56,27 +71,27 @@ const VideoCourse = () => {
 
     // }, [])
 
-    // const handleClickArrowBack = () => {
-    //     navigate(`/student/course/${courseId}/content`)
-    // }
+    const handleClickArrowBack = () => {
+        navigate(`/student/course/${courseId}/content`)
+    }
 
     return (
         <Container>
             <AppBarSearchHeader />
-            {/* <Grid container>
-                <Grid item xs={12} sx={{ mt: 4, mb: 1 }}>
+            <Grid container>
+                <Grid item xs={12} mt={4} mb={1} >
                     <IconButton onClick={handleClickArrowBack} title='Back to course page'>
                         <ArrowBackIcon  />
                     </IconButton>
                 </Grid>
                 <Grid item xs={8}>
                     <ReactPlayer url={videoUrl} controls={true} style={{ margin: 'auto' }} />
-                    <LoadingCircle loading={videoLoading} layoutLeft={35} />
+                    {/* <LoadingCircle loading={videoLoading} layoutLeft={35} /> */}
                 </Grid>
                 <Grid item xs={4}>
                     <MaterialFileDownload />
                 </Grid>
-            </Grid> */}
+            </Grid>
         </Container>
     )
 }
