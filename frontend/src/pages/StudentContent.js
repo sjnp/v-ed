@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
-import BetaCourseContent from '../components/BetaCourseContent';
+import CourseContent from '../components/CourseContent';
 import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
@@ -28,7 +28,6 @@ const StudentContent = () => {
     const axiosPrivate = useAxiosPrivate()
 
     const [ content, setContent ] = useState([])
-
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
@@ -46,8 +45,7 @@ const StudentContent = () => {
     return (
         <Container>
             <AppBarSearchHeader />
-            <br/>
-            <Grid container>
+            <Grid container mt={3} mb={5}>
                 <Grid item xs={3} md={3}>
                     <StudentMenu active='content' /> 
                 </Grid>
@@ -55,16 +53,14 @@ const StudentContent = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
-                            <Typography variant='h6'>
-                                Course content
-                            </Typography>
+                            <Typography variant='h6'>Course content</Typography>
                         </Grid>
                     </Grid>
                     <Grid container>
                         <Grid item xs={1}></Grid>
-                        <Grid item xs={10} sx={{ pt: 4 }}>
-                            <BetaCourseContent chapters={content} />
-                            <LoadingCircle loading={loading} layoutLeft={60} />
+                        <Grid item xs={10} pt={4}>
+                            <CourseContent chapters={content} />
+                            <LoadingCircle loading={loading} centerY={true} />
                         </Grid>
                     </Grid>
                 </Grid>

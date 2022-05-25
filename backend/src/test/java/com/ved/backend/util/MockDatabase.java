@@ -4,8 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Arrays;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.configuration.CategoryProperties;
+import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
@@ -27,7 +32,12 @@ import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -44,6 +54,15 @@ public class MockDatabase {
     @Autowired private PublishedCourseRepo publishedCourseRepo;
     @Autowired private StudentCourseRepo studentCourseRepo;
 
+    @Autowired private RoleProperties roleProperties;
+    @Autowired private CourseStateProperties courseStateProperties;
+    @Autowired private CategoryProperties categoryProperties;
+
+    @Autowired private MockMvc mockMvc;
+
+    private String usernameStudent = "student@test.com";
+    private String passwordStudent = "Password123";
+
     public void clear() {
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
@@ -57,7 +76,12 @@ public class MockDatabase {
     }
     
     public void mock_app_role() {
-        List<String> roles = Arrays.asList("ADMIN", "STUDENT", "INSTRUCTOR");
+        List<String> roles = Arrays.asList(
+            roleProperties.getAdmin(),
+            roleProperties.getStudent(),
+            roleProperties.getInstructor()
+        );
+
         for(String role : roles) {
             AppRole appRole = AppRole.builder().name(role).build();
             appRoleRepo.save(appRole);
@@ -126,7 +150,14 @@ public class MockDatabase {
     }
 
     public void mock_course_state() {
-        List<String> names = Arrays.asList("INCOMPLETE", "PENDING", "APPROVED", "REJECTED", "PUBLISHED");
+        List<String> names = Arrays.asList(
+            courseStateProperties.getIncomplete(),
+            courseStateProperties.getPending(),
+            courseStateProperties.getApproved(),
+            courseStateProperties.getRejected(),
+            courseStateProperties.getPublished()
+        );
+
         for(String name : names) {
             CourseState courseState = CourseState.builder().name(name).build();
             courseStateRepo.save(courseState);
@@ -134,7 +165,14 @@ public class MockDatabase {
     }
 
     public void mock_category() {
-        List<String> names = Arrays.asList("ACADEMIC", "ART", "BUSINESS", "DESIGN", "PROGRAMMING");
+        List<String> names = Arrays.asList(
+            categoryProperties.getAcademic(),
+            categoryProperties.getArt(),
+            categoryProperties.getBusiness(),
+            categoryProperties.getDesign(),
+            categoryProperties.getProgramming()
+        );
+
         for(String name : names) {
             Category category = Category.builder().name(name).build();
             categoryRepo.save(category);
@@ -201,6 +239,57 @@ public class MockDatabase {
             .course(course)
             .build();
         studentCourseRepo.save(studentCourse);
+    }
+
+    public AppUser getAppUserRoleStudent() {
+        List<AppRole> appRoles = new ArrayList<>();
+        Student student = Student.builder()
+            .firstName("Firstname")
+            .lastName("Lastname")
+            .biography("Biography")
+            .occupation("Occupation")
+            .build();
+        AppUser appUser = AppUser.builder()
+            .username(this.usernameStudent)
+            .password(this.passwordStudent)
+            .appRoles(appRoles)
+            .student(student)
+            .build();
+        return appUser;
+    }
+
+    public void mock_register_student() throws Exception {
+        AppUser appUser = getAppUserRoleStudent();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(appUser);
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/users/new-student")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        );
+    }
+
+    public ResultActions mock_login_student() throws Exception {
+        Map<String, String> request = Map.of(
+            "username", this.usernameStudent, 
+            "password", this.passwordStudent
+        );
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(request);
+        ResultActions resultActions = mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        );
+        return resultActions;
+    }
+
+    public String getCredential(ResultActions resultActions, String name) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        MockHttpServletResponse response = resultActions.andReturn().getResponse();
+        String json = response.getContentAsString();
+        Map<String, Object> credentials = objectMapper.readValue(json, Map.class);
+        return credentials.get(name).toString();
     }
 
 }

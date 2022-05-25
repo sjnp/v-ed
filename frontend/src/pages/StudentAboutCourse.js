@@ -23,28 +23,28 @@ import { URL_GET_ABOUT_COURSE } from "../utils/url"
 
 const StudentAboutCourse = () => {
 
-    const { courseId } = useParams()
+    // const { courseId } = useParams()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ overview, setOverview ] = useState('')
-    const [ requirement, setRequirement ] = useState('')
+    // const [ overview, setOverview ] = useState('')
+    // const [ requirement, setRequirement ] = useState('')
 
-    const [ loading, setLoading ] = useState(true)
+    // const [ loading, setLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_ABOUT_COURSE.replace('{courseId}', courseId))
+    //     const response = await apiPrivate.get(axiosPrivate, URL_GET_ABOUT_COURSE.replace('{courseId}', courseId))
 
-        if (response.status === 200) {
-            setOverview(response.data.overview)
-            setRequirement(response.data.requirement)
-        } else {
-            alert('GET about course fail')
-        }
-        setLoading(false)
+    //     if (response.status === 200) {
+    //         setOverview(response.data.overview)
+    //         setRequirement(response.data.requirement)
+    //     } else {
+    //         alert('GET about course fail')
+    //     }
+    //     setLoading(false)
 
-    }, [])
+    // }, [])
 
     return (
         <Container>
@@ -54,7 +54,7 @@ const StudentAboutCourse = () => {
                 <Grid item xs={3}>
                     <StudentMenu active='about course' /> 
                 </Grid>
-                <Grid item xs={9}>
+                {/* <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
@@ -69,7 +69,7 @@ const StudentAboutCourse = () => {
                             <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
                     </Grid>
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
     )

@@ -27,43 +27,43 @@ import { URL_GET_VIDEO } from '../utils/url'
 
 const VideoCourse = () => {
 
-    const { courseId, chapterNo, sectionNo } = useParams()
+    // const { courseId, chapterNo, sectionNo } = useParams()
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    const axiosPrivate = useAxiosPrivate()
+    // const axiosPrivate = useAxiosPrivate()
 
-    const [ videoUrl, setVideoUrl ] = useState('')
-    const [ materials, setMaterials ] = useState([])
+    // const [ videoUrl, setVideoUrl ] = useState('')
+    // const [ materials, setMaterials ] = useState([])
 
-    const [ videoLoading, setVideoLoading ] = useState(true)
+    // const [ videoLoading, setVideoLoading ] = useState(true)
 
-    useEffect(async () => {
+    // useEffect(async () => {
 
-        const url = URL_GET_VIDEO
-            .replace('{courseId}', courseId)
-            .replace('{chapterIndex}', chapterNo)
-            .replace('{sectionIndex}', sectionNo)
+    //     const url = URL_GET_VIDEO
+    //         .replace('{courseId}', courseId)
+    //         .replace('{chapterIndex}', chapterNo)
+    //         .replace('{sectionIndex}', sectionNo)
             
-        const response = await apiPrivate.get(axiosPrivate, url)
+    //     const response = await apiPrivate.get(axiosPrivate, url)
         
-        if (response.status === 200) {
-            setVideoUrl(response.data)
-        } else {
-            alert('Error api video')
-        }
-        setVideoLoading(false)
+    //     if (response.status === 200) {
+    //         setVideoUrl(response.data)
+    //     } else {
+    //         alert('Error api video')
+    //     }
+    //     setVideoLoading(false)
 
-    }, [])
+    // }, [])
 
-    const handleClickArrowBack = () => {
-        navigate(`/student/course/${courseId}/content`)
-    }
+    // const handleClickArrowBack = () => {
+    //     navigate(`/student/course/${courseId}/content`)
+    // }
 
     return (
         <Container>
             <AppBarSearchHeader />
-            <Grid container>
+            {/* <Grid container>
                 <Grid item xs={12} sx={{ mt: 4, mb: 1 }}>
                     <IconButton onClick={handleClickArrowBack} title='Back to course page'>
                         <ArrowBackIcon  />
@@ -76,7 +76,7 @@ const VideoCourse = () => {
                 <Grid item xs={4}>
                     <MaterialFileDownload />
                 </Grid>
-            </Grid>
+            </Grid> */}
         </Container>
     )
 }
