@@ -62,10 +62,15 @@ public class StudentService {
   }
 
   @Transactional
-  public CourseResponse getCourse(Long courseId, String username) {
+  public StudentCourse authStudentCourse(String username, Long courseId) {
     Student student = userService.getStudent(username);
     Course course = courseService.getById(courseId);
-    StudentCourse studentCourse = studentCourseService.getByStudentAndCourse(student, course);
+    return studentCourseService.getByStudentAndCourse(student, course);
+  }
+
+  @Transactional
+  public CourseResponse getCourse(Long courseId, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
     return new CourseResponse(studentCourse.getCourse());
   }
 

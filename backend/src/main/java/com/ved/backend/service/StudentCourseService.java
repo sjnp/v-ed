@@ -30,8 +30,7 @@ public class StudentCourseService {
 
     public void verifyCanBuyCourse(Student student, Course course) {
         log.info("Veriry student id {} and course id {}", student.getId(), course.getId());
-        Boolean isStudentCourse = this.existsByStudentAndCourse(student, course);
-        if (isStudentCourse) {
+        if (this.existsByStudentAndCourse(student, course)) {
             throw new ConflictException("You have this course already");
         }
     }
