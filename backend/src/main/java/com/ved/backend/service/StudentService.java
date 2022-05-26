@@ -40,12 +40,15 @@ public class StudentService {
 
   /* ************************************************************ */
 
-  public void getFreeCourse(Long courseId, String username) {
+  public void buyFreeCourse(Long courseId, String username) {
     log.info("Username {} get free course id {}", username, courseId);
     Course course = courseService.getByIdAndPrice(courseId, 0L);
     Student student = userService.getStudent(username);
     studentCourseService.verifyCanBuyCourse(student, course);
-    StudentCourse studentCourse = StudentCourse.builder().student(student).course(course).build();
+    StudentCourse studentCourse = StudentCourse.builder()
+      .student(student)
+      .course(course)
+      .build();
     studentCourseService.save(studentCourse);
   }
 
@@ -61,7 +64,8 @@ public class StudentService {
   @Transactional
   public CourseResponse getCourse(Long courseId, String username) {
     Student student = userService.getStudent(username);
-    StudentCourse studentCourse = studentCourseService.getByStudentAndCourseId(student, courseId);
+    Course course = courseService.getById(courseId);
+    StudentCourse studentCourse = studentCourseService.getByStudentAndCourse(student, course);
     return new CourseResponse(studentCourse.getCourse());
   }
 

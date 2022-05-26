@@ -22,7 +22,6 @@ public class StudentController {
 
   private final StudentService studentService;
   private final CourseService courseService;
-  private final PrivateObjectStorageService privateObjectStorageService;
   private final AssignmentService assignmentService;
   private final PostService postService;
   private final CommentService commentService;
@@ -37,8 +36,8 @@ public class StudentController {
   /* *************************************************************** */
 
   @PostMapping("/free/course")
-  public ResponseEntity<?> freeCourse(@RequestBody Long courseId, Principal principal) {
-    studentService.getFreeCourse(courseId, principal.getName());
+  public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
+    studentService.buyFreeCourse(courseId, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 

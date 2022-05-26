@@ -46,9 +46,9 @@ public class StudentCourseService {
         return studentCourseRepo.findByStudent(student);
     }
 
-    public StudentCourse getByStudentAndCourseId(Student student, Long courseId) {
-        log.info("Student id {} get course id {}", student.getId(), courseId);
-        return studentCourseRepo.findByStudentAndCourseId(student, courseId)
+    public StudentCourse getByStudentAndCourse(Student student, Course course) {
+        log.info("Student id {} get course id {}", student.getId(), course.getId());
+        return studentCourseRepo.findByStudentAndCourse(student, course)
             .orElseThrow(() -> new UnauthorizedException("You have not authorized this course"));
     }
 
