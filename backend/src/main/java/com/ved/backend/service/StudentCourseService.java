@@ -1,7 +1,6 @@
 package com.ved.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -25,10 +24,14 @@ public class StudentCourseService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
+    public Boolean existsByStudentAndCourse(Student student, Course course) {
+        return studentCourseRepo.existsByStudentAndCourse(student, course);
+    }
+
     public void verifyCanBuyCourse(Student student, Course course) {
         log.info("Veriry student id {} and course id {}", student.getId(), course.getId());
-        Optional<StudentCourse> studentCourseOpt = studentCourseRepo.findByStudentAndCourse(student, course);
-        if (studentCourseOpt.isPresent()) {
+        Boolean isStudentCourse = this.existsByStudentAndCourse(student, course);
+        if (isStudentCourse) {
             throw new ConflictException("You have this course already");
         }
     }
