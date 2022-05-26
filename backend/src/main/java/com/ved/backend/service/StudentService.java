@@ -35,6 +35,7 @@ public class StudentService {
   private final UserService userService;
   private final CourseService courseService;
   private final StudentCourseService studentCourseService;
+  private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
 
@@ -74,7 +75,17 @@ public class StudentService {
     return new CourseResponse(studentCourse.getCourse());
   }
 
+  public String getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    this.authStudentCourse(username, courseId);
+    String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+    return privateObjectStorageService.readFile(fileName, username);
+  }
+
   /* ************************************************************ */
+
+  
+
+  // ----------------------------------------------------
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);

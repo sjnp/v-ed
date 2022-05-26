@@ -64,14 +64,8 @@ public class StudentController {
   /* *************************************************************** */
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
-  public ResponseEntity<String> getVideoUrl(
-    @PathVariable String courseId, 
-    @PathVariable String chapterIndex, 
-    @PathVariable String sectionIndex, 
-    Principal principal
-  ) {
-    // String response = privateObjectStorageService.getAccessVideoURI(courseId, chapterIndex, sectionIndex);
-    String response = "video url success";
+  public ResponseEntity<String> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
+    String response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 

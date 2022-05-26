@@ -11,7 +11,6 @@ import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
-import com.ved.backend.response.CourseResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -47,17 +46,9 @@ public class CourseService {
         log.info("Get course id {} and price ", courseId, price);
         return courseRepo.findByIdAndPrice(courseId, price)
             .orElseThrow(() -> new BadRequestException("Course id " + courseId + " not free"));
-    } 
-
-    public CourseResponse getCourse(Long courseId) {
-        Course course = courseRepo.getById(courseId);
-
-        CourseResponse courseResponse = new CourseResponse();
-        courseResponse.setCourseId(course.getId());
-        courseResponse.setContent(course.getChapters());
-
-        return courseResponse;
     }
+
+    /* ****************************************************************************************** */
 
     public AboutCourseResponse getAboutCourse(Long courseId) {
 
