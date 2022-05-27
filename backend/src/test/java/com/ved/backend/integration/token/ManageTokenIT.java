@@ -1,4 +1,4 @@
-package com.ved.backend.integration;
+package com.ved.backend.integration.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.RoleProperties;
@@ -143,7 +143,6 @@ public class ManageTokenIT {
     Cookie refreshTokenCookie = logInResponse.getCookie("refresh_token");
     assertThat(refreshTokenCookie).isNotNull();
     refreshTokenCookie.setValue("ThisIsGibberishRefreshToken");
-
 
     //when
     ResultActions resultActions = mockMvc.perform(get("/api/token/refresh")

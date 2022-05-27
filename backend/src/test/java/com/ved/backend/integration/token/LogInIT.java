@@ -1,4 +1,4 @@
-package com.ved.backend.integration;
+package com.ved.backend.integration.token;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.RoleProperties;
