@@ -7,6 +7,7 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.service.CourseStateService;
 import com.ved.backend.service.InstructorService;
 import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,9 @@ class InstructorServiceTest {
   private UserService userService;
 
   @Mock
+  private CourseStateService courseStateService;
+
+  @Mock
   private CourseStateProperties courseStateProperties;
 
   @Mock
@@ -59,6 +63,7 @@ class InstructorServiceTest {
         courseStateRepo,
         instructorRepo,
         userService,
+        courseStateService,
         courseStateProperties,
         publicObjectStorageConfigProperties
     );
@@ -79,7 +84,7 @@ class InstructorServiceTest {
     Long courseId = 1L;
 
     given(userService.getInstructor(username)).willReturn(instructor);
-    given(courseStateRepo.findByName(courseStateProperties.getIncomplete()))
+    given(courseStateService.getByName(courseStateProperties.getIncomplete()))
         .willReturn(incompleteState);
     given(courseRepo.save(newCourse))
         .will(i -> {

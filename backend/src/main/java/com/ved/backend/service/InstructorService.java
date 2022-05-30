@@ -2,8 +2,11 @@ package com.ved.backend.service;
 
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
+import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
+import com.ved.backend.response.IncompleteCourseResponse;
+import com.ved.backend.utility.FileExtensionStringHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -23,6 +27,8 @@ public class InstructorService {
   private final InstructorRepo instructorRepo;
 
   private final UserService userService;
+  private final CourseStateService courseStateService;
+  private final PublicObjectStorageService publicObjectStorageService;
 
   private final CourseStateProperties courseStateProperties;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
@@ -31,7 +37,8 @@ public class InstructorService {
 
   public HashMap<String, Long> createCourse(Course course, String username) {
     Instructor instructor = userService.getInstructor(username);
-    course.setCourseState(courseStateRepo.findByName(courseStateProperties.getIncomplete()));
+    CourseState incompleteState = courseStateService.getByName(courseStateProperties.getIncomplete());
+    course.setCourseState(incompleteState);
     course.setInstructor(instructor);
     instructor.getCourses().add(course);
     log.info("Creating course from user: {}", username);
@@ -42,76 +49,75 @@ public class InstructorService {
     return payload;
   }
 
-  public CourseRepo.CourseMaterials getIncompleteCourse(Long courseId, String username) {
+  public Course getIncompleteCourse(Long courseId, String username) {
+    Instructor instructor = userService.getInstructor(username);
+    CourseState incompleteState = courseStateService.getByName(courseStateProperties.getIncomplete());
     log.info("Finding course from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
-    CourseRepo.CourseMaterials incompleteCourseMaterials = courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId);
-    if (incompleteCourseMaterials == null) {
-      throw new RuntimeException("Course not found");
-    }
+    return courseRepo
+        .findByInstructorAndCourseStateAndId(instructor, incompleteState, courseId)
+        .orElseThrow(() -> new CourseNotFoundException(courseId));
 
-    return incompleteCourseMaterials;
   }
 
-  public String saveCoursePictureUrl(Long courseId, String objectName, String username) {
+  public IncompleteCourseResponse getIncompleteCourseDetails(Long courseId, String username) {
+    Course incompleteCourse = getIncompleteCourse(courseId, username);
+    return IncompleteCourseResponse.builder()
+        .id(incompleteCourse.getId())
+        .name(incompleteCourse.getName())
+        .price(incompleteCourse.getPrice())
+        .pictureUrl(incompleteCourse.getPictureUrl())
+        .chapters(incompleteCourse.getChapters())
+        .build();
+  }
+
+  public Map<String, String> createParToUploadCoursePicture(Long courseId, String fileName, String username) {
+    String pictureExtension = FileExtensionStringHandler.getViableExtension(fileName,
+        publicObjectStorageConfigProperties.getViableImageExtensions());
+    IncompleteCourseResponse incompleteCourseResponse = getIncompleteCourseDetails(courseId, username);
+    String objectName = "course_pic_" + incompleteCourseResponse.getId() + "." + pictureExtension;
+    String preauthenticatedRequestUrl = publicObjectStorageService.uploadFile(objectName, username);
+    return Map.of("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
+  }
+
+  public Map<String, String> saveCoursePictureUrl(Long courseId, String objectName, String username) {
+    Course incompleteCourse = getIncompleteCourse(courseId, username);
+
     log.info("Updating course picture from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
-    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
-      throw new RuntimeException("Course not found");
-    }
     String pictureUrl = publicObjectStorageConfigProperties.getRegionalObjectStorageUri() +
         "/n/" + publicObjectStorageConfigProperties.getNamespace() +
         "/b/" + publicObjectStorageConfigProperties.getBucketName() +
         "/o/" + objectName;
-    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
     incompleteCourse.setPictureUrl(pictureUrl);
     courseRepo.save(incompleteCourse);
-    return pictureUrl;
+    return Map.of("pictureUrl", pictureUrl);
   }
 
-
   public void updateCourseMaterials(Long courseId, Course course, String username) {
+    Course incompleteCourse = getIncompleteCourse(courseId, username);
+
     log.info("Updating course materials from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
-    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
-      throw new RuntimeException("Course not found");
-    }
-    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
     incompleteCourse.setChapters(course.getChapters());
     courseRepo.save(incompleteCourse);
   }
 
-  public void uploadCoursePicture() {
-
-  }
-
   public void deleteCoursePictureUrl(Long courseId, String username) {
+    Course incompleteCourse = getIncompleteCourse(courseId, username);
+
     log.info("Deleting course picture from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
-    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
-      throw new RuntimeException("Course not found");
-    }
-    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
     incompleteCourse.setPictureUrl("");
     courseRepo.save(incompleteCourse);
   }
 
   public void submitIncompleteCourse(Long courseId, String username) {
+    Course incompleteCourse = getIncompleteCourse(courseId, username);
+    CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
+
     log.info("Submitting course from instructor: {}", username);
-    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
-    CourseState incompleteState = courseStateRepo.findByName("INCOMPLETE");
-    if (courseRepo.findCourseByInstructorAndCourseStateAndId(instructor, incompleteState, courseId) == null) {
-      throw new RuntimeException("Course not found");
-    }
-    Course incompleteCourse = courseRepo.findById(courseId).orElseThrow(() -> new RuntimeException("Course not found"));
-    incompleteCourse.setCourseState(courseStateRepo.findByName("PENDING"));
+    incompleteCourse.setCourseState(pendingState);
     courseRepo.save(incompleteCourse);
   }
 
+  // TODO: REFACTOR THIS
   public HashMap<String, Object> getAllIncompleteCourses(String username) {
     log.info("Finding all incomplete courses from instructor: {}", username);
     try {
@@ -196,7 +202,7 @@ public class InstructorService {
       CourseState publishedState = courseStateRepo.findByName("PUBLISHED");
       List<Course> publishedCourses = courseRepo.findCoursesByCourseStateAndInstructor(publishedState, instructor);
       List<HashMap<String, Object>> publishedCoursesJson = new ArrayList<>();
-      for(Course course: publishedCourses) {
+      for (Course course : publishedCourses) {
         HashMap<String, Object> courseMap = new HashMap<>();
         courseMap.put("id", course.getId());
         courseMap.put("name", course.getName());
