@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses",
             "/api/students/courses/{\\d+}",
             "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video",
-            "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout",
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/{\\d+}",
             "/api/students/courses/{\\d+}/about",
             "/api/students/courses/{\\d+}/posts",
             "/api/students/courses/{\\d+}/posts/{\\d+}",

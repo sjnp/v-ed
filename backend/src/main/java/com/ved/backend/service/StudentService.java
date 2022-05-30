@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -81,11 +82,21 @@ public class StudentService {
     return privateObjectStorageService.readFile(fileName, username);
   }
 
+  @Transactional
+  public String getHandoutUrl(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    @SuppressWarnings("unchecked")
+    List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse.getCourse()
+      .getChapters()
+      .get(chapterIndex)
+      .getSections()
+      .get(sectionIndex)
+      .get("handouts");
+    String fileName = handouts.get(handoutIndex).get("handoutUri");
+    return privateObjectStorageService.readFile(fileName, username);
+  }
+
   /* ************************************************************ */
-
-  
-
-  // ----------------------------------------------------
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);
