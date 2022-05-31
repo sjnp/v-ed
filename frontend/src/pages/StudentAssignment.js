@@ -54,7 +54,7 @@ const StudentAssignment = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
                             <Breadcrumbs>
-                                <Typography>Assignment</Typography>
+                                <Typography color='black'>Assignment</Typography>
                             </Breadcrumbs>
                         </Grid>
                     </Grid>
