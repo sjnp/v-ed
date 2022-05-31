@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
 // Material UI component
 import Paper from '@mui/material/Paper'
@@ -13,7 +14,20 @@ import LoadingButton from '@mui/lab/LoadingButton'
 // Material UI icon
 import UploadFileIcon from '@mui/icons-material/UploadFile'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
+// custom api
+import apiPrivate from '../api/apiPrivate'
+
+// url
+import { URL_GET_UPLOAD_ANSWER_URL } from '../utils/url'
+
 const Answer = ({ question, index }) => {
+
+    const { courseId, chapterIndex } = useParams()
+
+    const axiosPrivate = useAxiosPrivate()
 
     const questionText = `${Number(index) + 1}. ${question}`
 
@@ -25,11 +39,23 @@ const Answer = ({ question, index }) => {
         setFileName(event.target.files[0].name)
     }
 
-    const handleUploadAnswer = () => {
+    const handleUploadAnswer = async () => {
         setUploading(true)
         setTimeout(() => setUploading(false), 3000)
 
         // TODO : send file name to server for get preauthenticated
+        const url = URL_GET_UPLOAD_ANSWER_URL
+            .replace('{courseId}', courseId)
+            .replace('{chapterIndex}', chapterIndex)
+            .replace('{noIndex}', index)
+            .replace('{fileName}', fileName)
+        
+        const response = await apiPrivate.get(axiosPrivate, url)
+
+        if (response.status === 200) {
+            alert(response.data)
+        }
+
 
         // TODO : using preauthenticated upload file to brucket
 
