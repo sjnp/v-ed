@@ -1,7 +1,6 @@
 package com.ved.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -25,10 +24,13 @@ public class StudentCourseService {
 
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
+    public Boolean existsByStudentAndCourse(Student student, Course course) {
+        return studentCourseRepo.existsByStudentAndCourse(student, course);
+    }
+
     public void verifyCanBuyCourse(Student student, Course course) {
         log.info("Veriry student id {} and course id {}", student.getId(), course.getId());
-        Optional<StudentCourse> studentCourseOpt = studentCourseRepo.findByStudentAndCourse(student, course);
-        if (studentCourseOpt.isPresent()) {
+        if (this.existsByStudentAndCourse(student, course)) {
             throw new ConflictException("You have this course already");
         }
     }
@@ -43,9 +45,9 @@ public class StudentCourseService {
         return studentCourseRepo.findByStudent(student);
     }
 
-    public StudentCourse getByStudentAndCourseId(Student student, Long courseId) {
-        log.info("Student id {} get course id {}", student.getId(), courseId);
-        return studentCourseRepo.findByStudentAndCourseId(student, courseId)
+    public StudentCourse getByStudentAndCourse(Student student, Course course) {
+        log.info("Student id {} get course id {}", student.getId(), course.getId());
+        return studentCourseRepo.findByStudentAndCourse(student, course)
             .orElseThrow(() -> new UnauthorizedException("You have not authorized this course"));
     }
 

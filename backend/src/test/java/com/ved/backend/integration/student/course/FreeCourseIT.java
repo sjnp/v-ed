@@ -58,7 +58,7 @@ public class FreeCourseIT {
     public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-        // mockDatabase.mock_student();
+        
         mockDatabase.mock_register_student();
 
         mockDatabase.mock_instructor();
