@@ -107,8 +107,8 @@ public class GetCourseIT {
         );
         // then
         resultActions
-            .andExpect(status().isUnauthorized())
-            .andExpect(status().reason(containsString("You have not authorized this course")));
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason(containsString(String.format("Course id %s not found", courseId))));
     }
 
     @Test
