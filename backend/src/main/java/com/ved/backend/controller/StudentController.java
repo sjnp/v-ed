@@ -64,8 +64,8 @@ public class StudentController {
   /* *************************************************************** */
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
-  public ResponseEntity<String> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
-    String response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
+  public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
+    VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 

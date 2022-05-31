@@ -12,6 +12,7 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -39,7 +40,7 @@ public class StudentService {
   private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
-
+  
   /* ************************************************************ */
 
   public void buyFreeCourse(Long courseId, String username) {
@@ -76,10 +77,16 @@ public class StudentService {
     return new CourseResponse(studentCourse.getCourse());
   }
 
-  public String getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
-    this.authStudentCourse(username, courseId);
+  @Transactional
+  public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
     String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
-    return privateObjectStorageService.readFile(fileName, username);
+    return VideoResponse.builder()
+      .videoUrl(privateObjectStorageService.readFile(fileName, username))
+      .pictureUrl(studentCourse.getCourse().getPictureUrl())
+      .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+      .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+      .build();
   }
 
   @Transactional
