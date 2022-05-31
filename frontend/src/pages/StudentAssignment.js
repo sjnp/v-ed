@@ -38,7 +38,6 @@ const StudentAssignment = () => {
         if (response.status === 200) {
             const result = response.data.content.map((element => element.assignments))
             setAssignments(result)
-            
         }
         setLoading(false)
     }, [])
@@ -77,42 +76,6 @@ const StudentAssignment = () => {
                 </Grid>
             </Grid>
         </Container>
-
-
-        // <Container>
-        //     <AppBarSearchHeader />
-        //     <br/>
-        //     <Grid container>
-        //         <Grid item xs={3} md={3}>
-        //             <StudentMenu active='assignment' /> 
-        //         </Grid>
-        //         <Grid item xs={9}>
-        //             <Grid container>
-        //                 <Grid item xs={1}></Grid>
-        //                 <Grid item xs={11}>
-        //                     <Typography variant='h6'>
-        //                         Assignment
-        //                     </Typography>
-        //                 </Grid>
-        //             </Grid>
-        //             <Grid container>
-        //                 <Grid item xs={1}></Grid>
-        //                 <Grid item xs={10} sx={{ pt: 1 }}>
-        //                 {
-        //                     assignments?.map((assignment, index) => (
-        //                         <AssignmentChapter
-        //                             key={index}
-        //                             chapterNo={index + 1}
-        //                             onClick={() => handleClickAssignmentChapter(assignment, index)}
-        //                         />
-        //                     ))
-        //                 }
-        //                 <LoadingCircle loading={loading} layoutLeft={60} />
-        //                 </Grid>
-        //             </Grid>
-        //         </Grid>
-        //     </Grid>
-        // </Container>
     )
 }
 
