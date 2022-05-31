@@ -5,13 +5,13 @@ import ReactPlayer from 'react-player'
 // component
 import AppBarSearchHeader from "../components/AppBarSearchHeader"
 import MaterialFileDownload from '../components/MaterialFileDownload'
+import ChipHover from '../components/ChipHover'
 
 // Material UI component
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
 import Grid from '@mui/material/Grid'
 import Skeleton from '@mui/material/Skeleton'
-import Chip from '@mui/material/Chip'
 
 // Material UI icon
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
@@ -64,36 +64,43 @@ const VideoCourse = () => {
     return (
         <Container>
             <AppBarSearchHeader />
-            <Grid container>
-                <Grid item xs={1} mt={4} mb={1}>
-                    <IconButton onClick={handleClickArrowBack} title='Back to course page'>
-                        <ArrowBackIcon  />
-                    </IconButton>
+            <Grid container mt={4}>
+                <Grid item xs={12}>
+                    <Grid container>
+                        <Grid item xs={1}>
+                            <IconButton onClick={handleClickArrowBack} title='Back to course page'>
+                                <ArrowBackIcon  />
+                            </IconButton>
+                        </Grid>
+                        <Grid item mr={1}>
+                            <ChipHover
+                                defaultLabel={`Chapter ${Number(chapterIndex) + 1}`}
+                                hoverLabel={`Chapter ${Number(chapterIndex) + 1} : ${chapterName}`}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <ChipHover
+                                defaultLabel={`Section ${Number(sectionIndex) + 1}`}
+                                hoverLabel={`Section ${Number(sectionIndex) + 1} : ${sectionName}`}
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
-                <Grid item xs={11} mt={4} mb={1}>
-                    <Chip
-                        variant='outlined' 
-                        label={`Chapter ${Number(chapterIndex) + 1}`} 
-                        title={`Chapter ${Number(chapterIndex) + 1} : ${chapterName}`}
-                    />
-                    <Chip
-                        variant='outlined' 
-                        label={`Section ${Number(sectionIndex) + 1}`}
-                        title={`Section ${Number(sectionIndex) + 1} : ${sectionName}`}
-                        sx={{ ml: 1 }}
-                    />
-                </Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={7} height='70vh'>
-                {
-                    loadingVideo ?
-                    <Skeleton variant='rectangular' width='95%' height='80%'  />
-                    :
-                    <ReactPlayer url={videoUrl} light={pictureUrl} playing controls={true} />
-                }
-                </Grid>
-                <Grid item xs={4}>
-                    <MaterialFileDownload />
+                <Grid item xs={12}>
+                    <Grid container mt={2}>
+                        <Grid item xs={1}></Grid>
+                        <Grid item xs={7} height='70vh'>
+                        {
+                            loadingVideo ?
+                            <Skeleton variant='rectangular' width='95%' height='80%'  />
+                            :
+                            <ReactPlayer url={videoUrl} light={pictureUrl} playing controls={true} />
+                        }
+                        </Grid>
+                        <Grid item xs={4}>
+                            <MaterialFileDownload />
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
         </Container>
