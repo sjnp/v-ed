@@ -76,8 +76,9 @@ public class StudentController {
   /* *************************************************************************************************** */
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
-  public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName) {
-    String response = String.format("^^ Success url for upload answer | course id %d | chapter index %d | no index %d | file name %s", courseId, chapterIndex, noIndex, fileName);
+  public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
+    // String response = String.format("^^ Success url for upload answer | course id %d | chapter index %d | no index %d | file name %s", courseId, chapterIndex, noIndex, fileName);
+    String response = studentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 

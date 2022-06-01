@@ -79,7 +79,7 @@ public class PrivateObjectStorageService {
 
   public String uploadFile(String fileName, String username) {
     String preauthenticatedRequestName = username + "_upload_" + fileName;
-    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite);
+    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite) + fileName;
   }
 
   public String readFile(String fileName, String username) {

@@ -103,6 +103,12 @@ public class StudentService {
     return privateObjectStorageService.readFile(fileName, username);
   }
 
+  public String getUploadAnswerUrl(Long courseId, int chapterIndex, int noIndex, String clientFileName, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    String fileName = "answer_sid_" + studentCourse.getStudent().getId() + "_cid_" + courseId + "_c" + chapterIndex + "_no." + noIndex + "_" + clientFileName;
+    return privateObjectStorageService.uploadFile(fileName, username);
+  }
+
   /* ************************************************************ */
 
   public Student getStudent(String username) {
