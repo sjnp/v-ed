@@ -1,6 +1,7 @@
 package com.ved.backend.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table
 public class Answer {
@@ -28,7 +30,7 @@ public class Answer {
   private Integer chapterIndex;
 
   @Column(nullable = false)
-  private Integer sectionIndex;
+  private Integer noIndex;
 
   @Column(nullable = false)
   private LocalDateTime datetime;

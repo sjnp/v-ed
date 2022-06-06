@@ -30,7 +30,7 @@ public class MockData {
         Answer answer = new Answer();
         answer.setId(100L);
         answer.setChapterIndex(0);
-        answer.setSectionIndex(0);
+        answer.setNoIndex(0);
         answer.setFileName("answer_cid_0_c0_s0.txt");
         answer.setDatetime(LocalDateTime.now());
         answer.setCommentInstructor("comment from instructor test");
