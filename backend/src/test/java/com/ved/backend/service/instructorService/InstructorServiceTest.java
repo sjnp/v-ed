@@ -1,15 +1,14 @@
 package com.ved.backend.service.instructorService;
 
 import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
-import com.ved.backend.service.CourseStateService;
-import com.ved.backend.service.InstructorService;
-import com.ved.backend.service.UserService;
+import com.ved.backend.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,9 +29,6 @@ import static org.mockito.Mockito.*;
 class InstructorServiceTest {
 
   @Mock
-  private AppUserRepo appUserRepo;
-
-  @Mock
   private CourseRepo courseRepo;
 
   @Mock
@@ -48,24 +44,35 @@ class InstructorServiceTest {
   private CourseStateService courseStateService;
 
   @Mock
+  private PublicObjectStorageService publicObjectStorageService;
+
+  @Mock
+  private PrivateObjectStorageService privateObjectStorageService;
+
+  @Mock
   private CourseStateProperties courseStateProperties;
 
   @Mock
   private PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
+
+  @Mock
+  private PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
 
   private InstructorService underTest;
 
   @BeforeEach
   void setup() {
     underTest = new InstructorService(
-        appUserRepo,
         courseRepo,
         courseStateRepo,
         instructorRepo,
         userService,
         courseStateService,
+        publicObjectStorageService,
+        privateObjectStorageService,
         courseStateProperties,
-        publicObjectStorageConfigProperties
+        publicObjectStorageConfigProperties,
+        privateObjectStorageConfigProperties
     );
   }
 

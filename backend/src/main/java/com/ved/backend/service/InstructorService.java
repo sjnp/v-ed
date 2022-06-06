@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class InstructorService {
 
-  private final AppUserRepo appUserRepo;
   private final CourseRepo courseRepo;
   private final CourseStateRepo courseStateRepo;
   private final InstructorRepo instructorRepo;

@@ -30,8 +30,6 @@ import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDe
 @Service
 @Transactional
 public class PrivateObjectStorageService {
-
-  private final InstructorService instructorService;
   private final ObjectStorageClientService objectStorageClientService;
 
   private final PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
