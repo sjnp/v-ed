@@ -1,14 +1,14 @@
 package com.ved.backend.service.instructorService;
 
 import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
-import com.ved.backend.service.InstructorService;
-import com.ved.backend.service.UserService;
+import com.ved.backend.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,9 +29,6 @@ import static org.mockito.Mockito.*;
 class InstructorServiceTest {
 
   @Mock
-  private AppUserRepo appUserRepo;
-
-  @Mock
   private CourseRepo courseRepo;
 
   @Mock
@@ -44,25 +41,40 @@ class InstructorServiceTest {
   private UserService userService;
 
   @Mock
+  private CourseStateService courseStateService;
+
+  @Mock
+  private PublicObjectStorageService publicObjectStorageService;
+
+  @Mock
+  private PrivateObjectStorageService privateObjectStorageService;
+
+  @Mock
   private CourseStateProperties courseStateProperties;
 
   @Mock
   private PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
 
+  @Mock
+  private PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
+
   private InstructorService underTest;
 
   @BeforeEach
-  void setup() {
-//    underTest = new InstructorService(
-//        appUserRepo,
-//        courseRepo,
-//        courseStateRepo,
-//        instructorRepo,
-//        userService,
-//        courseStateProperties,
-//        publicObjectStorageConfigProperties
-//    );
-  }
+  // void setup() {
+  //   underTest = new InstructorService(
+  //       courseRepo,
+  //       courseStateRepo,
+  //       instructorRepo,
+  //       userService,
+  //       courseStateService,
+  //       publicObjectStorageService,
+  //       privateObjectStorageService,
+  //       courseStateProperties,
+  //       publicObjectStorageConfigProperties,
+  //       privateObjectStorageConfigProperties
+  //   );
+  // }
 
   @Test
   void givenNewCourse_whenCreateCourse_thenReturnPayload() {
@@ -79,7 +91,7 @@ class InstructorServiceTest {
     Long courseId = 1L;
 
     given(userService.getInstructor(username)).willReturn(instructor);
-    given(courseStateRepo.findByName(courseStateProperties.getIncomplete()))
+    given(courseStateService.getByName(courseStateProperties.getIncomplete()))
         .willReturn(incompleteState);
     given(courseRepo.save(newCourse))
         .will(i -> {

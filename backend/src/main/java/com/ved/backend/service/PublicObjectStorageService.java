@@ -1,94 +1,51 @@
 package com.ved.backend.service;
 
-import com.oracle.bmc.ConfigFileReader;
-import com.oracle.bmc.auth.AuthenticationDetailsProvider;
-import com.oracle.bmc.auth.ConfigFileAuthenticationDetailsProvider;
 import com.oracle.bmc.objectstorage.ObjectStorageClient;
 import com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails;
 import com.oracle.bmc.objectstorage.requests.CreatePreauthenticatedRequestRequest;
 import com.oracle.bmc.objectstorage.responses.CreatePreauthenticatedRequestResponse;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
-import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.utility.FileExtensionStringHandler;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.Date;
+import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails.AccessType.ObjectWrite;
 
 @AllArgsConstructor
 @Service
 @Transactional
 public class PublicObjectStorageService {
 
-  private final InstructorService instructorService;
+  private final ObjectStorageClientService objectStorageClientService;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PublicObjectStorageService.class);
 
-  public String createParToUploadCoursePicture(Long courseId, String fileName, String username) throws IOException {
+  private String createPreauthenticatedRequestToWrite(String objectName,
+                                               String preauthenticatedRequestName) {
+    ObjectStorageClient client = objectStorageClientService.createClient();
+    CreatePreauthenticatedRequestDetails parDetails = objectStorageClientService
+        .createParDetails(preauthenticatedRequestName,
+            objectName,
+            ObjectWrite,
+            publicObjectStorageConfigProperties.getExpiryTimer());
 
-    String pictureExtension = FileExtensionStringHandler.getViableExtension(fileName,
-        publicObjectStorageConfigProperties.getViableImageExtensions());
+    CreatePreauthenticatedRequestRequest parRequest = objectStorageClientService
+        .createParRequest(publicObjectStorageConfigProperties.getNamespace(),
+            publicObjectStorageConfigProperties.getBucketName(),
+            parDetails);
 
-    CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourse(courseId, username);
-
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    ObjectStorageClient client = new ObjectStorageClient(provider);
-    String pictureObjectName = "course_pic_" + incompleteCourseMaterials.getId() + "." + pictureExtension;
-
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
-        .builder()
-        .name(username + "_upload_course_picture_" + incompleteCourseMaterials.getId())
-        .objectName(pictureObjectName)
-        .accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite)
-        .timeExpires(new Date(System.currentTimeMillis() + publicObjectStorageConfigProperties.getExpiryTimer()))
-        .build();
-
-    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest
-        .builder()
-        .namespaceName(publicObjectStorageConfigProperties.getNamespace())
-        .bucketName(publicObjectStorageConfigProperties.getBucketName())
-        .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
-
-    CreatePreauthenticatedRequestResponse response = client
-        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
-    client.close();
+    CreatePreauthenticatedRequestResponse parResponse = objectStorageClientService
+        .createParResponse(parRequest, client);
 
     return publicObjectStorageConfigProperties.getRegionalObjectStorageUri() +
-        response.getPreauthenticatedRequest().getAccessUri() +
-        pictureObjectName;
+        parResponse.getPreauthenticatedRequest().getAccessUri();
   }
 
-  public String createPreauthenticatedRequestToUpload(String fileName, String preauthenticatedRequestName) throws IOException {
-
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    ObjectStorageClient client = new ObjectStorageClient(provider);
-
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails
-        .builder()
-        .name(preauthenticatedRequestName)
-        .objectName(fileName)
-        .accessType(CreatePreauthenticatedRequestDetails.AccessType.AnyObjectReadWrite)
-        .timeExpires(new Date(System.currentTimeMillis() + publicObjectStorageConfigProperties.getExpiryTimer()))
-        .build();
-
-    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest
-        .builder()
-        .namespaceName(publicObjectStorageConfigProperties.getNamespace())
-        .bucketName(publicObjectStorageConfigProperties.getBucketName())
-        .createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
-
-    CreatePreauthenticatedRequestResponse response = client
-        .createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
-    client.close();
-
-    return publicObjectStorageConfigProperties.getRegionalObjectStorageUri() +
-        response.getPreauthenticatedRequest().getAccessUri() +
-        fileName;
+  public String uploadFile(String objectName, String username) {
+    log.info("Create PAR to upload file from user: {}", username);
+    String preauthenticatedRequestName = username + "_upload_" + objectName;
+    return createPreauthenticatedRequestToWrite(objectName, preauthenticatedRequestName);
   }
-
 }
