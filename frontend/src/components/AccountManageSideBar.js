@@ -12,6 +12,7 @@ const drawerWidth = 240;
 const AccountManageSideBar = () => {
   const username = useSelector((state) => state.auth.value.username);
   const page = useSelector((state) => state.page.value.accountManagePage);
+  const roles = useSelector((state) => state.auth.value.roles);
   const dispatch = useDispatch();
   
   const handleClickSidebar = (index) => {
@@ -32,7 +33,7 @@ const AccountManageSideBar = () => {
         icon: <KeyIcon />
     },
     {
-        text: 'Active Instructor',
+        text: roles.includes('INSTRUCTOR') ? "Instructor" : "Active Instructor" ,
         icon: <SchoolIcon />
     }
   ]

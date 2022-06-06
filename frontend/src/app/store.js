@@ -8,6 +8,7 @@ import videoCourseReducer from '../features/videoCourseSlice'
 import studentAssignmentReducer from '../features/studentAssignmentSlice'
 import questionBoardReducer from '../features/questionBoardSlice'
 import commentReducer from '../features/commentSlice'
+import financeReducer from '../features/financeAccountSlice'
 
 // beta
 import assignmentReducer from "../features/assignmentSlice";
@@ -22,7 +23,7 @@ export const store = configureStore({
     studentAssignment: studentAssignmentReducer,
     questionBoard: questionBoardReducer,
     comment: commentReducer,
-    
+    finance: financeReducer,
     // beta
     assignmentStudent: assignmentReducer
 

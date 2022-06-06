@@ -15,8 +15,8 @@ export default function BankingRecipientSelect({ handleEvent, bankSelect }) {
 
   useEffect(async () => {
     try {
-      let bankData = await fetch('https://raw.githubusercontent.com/omise/banks-logo/master/banks.json');
-      let bankDataJson = await bankData.json();
+      const bankData = await fetch('https://raw.githubusercontent.com/omise/banks-logo/master/banks.json');
+      const bankDataJson = await bankData.json();
       const codeArray = ['bbl','kbank','ktb','tmb','scb','citi','cimb','uob','bay','gsb','tbank','kk'];
       const bankBrandMerge = codeArray.map(brand => { 
         bankDataJson.th[brand]['brand'] = brand 
@@ -64,7 +64,7 @@ export default function BankingRecipientSelect({ handleEvent, bankSelect }) {
           // labelId="demo-simple-select-label"
           // id="demo-simple-select"
           size=''
-          value={bankSelect}
+          value= {bankSelect}
           label="Banking"
           name="bankBrand"
           onChange={handleBankSelect}
