@@ -12,6 +12,8 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.storeClass.Finance;
 import com.ved.backend.response.CourseCardResponse;
+import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -36,17 +39,21 @@ public class StudentService {
   private final UserService userService;
   private final CourseService courseService;
   private final StudentCourseService studentCourseService;
+  private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
-
+  
   /* ************************************************************ */
 
-  public void getFreeCourse(Long courseId, String username) {
+  public void buyFreeCourse(Long courseId, String username) {
     log.info("Username {} get free course id {}", username, courseId);
     Course course = courseService.getByIdAndPrice(courseId, 0L);
     Student student = userService.getStudent(username);
     studentCourseService.verifyCanBuyCourse(student, course);
-    StudentCourse studentCourse = StudentCourse.builder().student(student).course(course).build();
+    StudentCourse studentCourse = StudentCourse.builder()
+      .student(student)
+      .course(course)
+      .build();
     studentCourseService.save(studentCourse);
   }
 
@@ -57,6 +64,45 @@ public class StudentService {
       .stream()
       .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
       .collect(Collectors.toList());
+  }
+
+  @Transactional
+  public StudentCourse authStudentCourse(String username, Long courseId) {
+    Student student = userService.getStudent(username);
+    Course course = courseService.getById(courseId);
+    return studentCourseService.getByStudentAndCourse(student, course);
+  }
+
+  @Transactional
+  public CourseResponse getCourse(Long courseId, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    return new CourseResponse(studentCourse.getCourse());
+  }
+
+  @Transactional
+  public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+    return VideoResponse.builder()
+      .videoUrl(privateObjectStorageService.readFile(fileName, username))
+      .pictureUrl(studentCourse.getCourse().getPictureUrl())
+      .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+      .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+      .build();
+  }
+
+  @Transactional
+  public String getHandoutUrl(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    @SuppressWarnings("unchecked")
+    List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse.getCourse()
+      .getChapters()
+      .get(chapterIndex)
+      .getSections()
+      .get(sectionIndex)
+      .get("handouts");
+    String fileName = handouts.get(handoutIndex).get("handoutUri");
+    return privateObjectStorageService.readFile(fileName, username);
   }
 
   /* ************************************************************ */

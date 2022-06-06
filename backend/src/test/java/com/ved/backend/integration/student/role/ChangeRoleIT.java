@@ -1,12 +1,15 @@
-package com.ved.backend.integration;
+package com.ved.backend.integration.student.role;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
+import com.ved.backend.model.Instructor;
 import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
+import com.ved.backend.service.InstructorService;
+import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -36,7 +38,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     locations = "classpath:application-it.properties"
 )
 @AutoConfigureMockMvc
-public class ManageTokenIT {
+public class ChangeRoleIT {
+
   @Autowired
   private MockMvc mockMvc;
 
@@ -52,13 +55,24 @@ public class ManageTokenIT {
   @Autowired
   private RoleProperties roleProperties;
 
+  @Autowired
+  private UserService userService;
+
   private ResultActions logInActions;
 
   @BeforeEach
   void createStudentAndLogin() throws Exception {
+    // Build STUDENT role
     appRoleRepo.save(AppRole.builder()
         .name(roleProperties.getStudent())
         .build());
+
+    // Build INSTRUCTOR role
+    appRoleRepo.save(AppRole.builder()
+        .name(roleProperties.getInstructor())
+        .build());
+
+    // Create new student
     String username = "test@test.com";
     String password = "password";
     Collection<AppRole> appRoles = new ArrayList<>();
@@ -80,10 +94,10 @@ public class ManageTokenIT {
             .content(json))
         .andExpect(status().isCreated());
 
+    // Log in with new student
     Map<String, String> credentialContents = new HashMap<>();
     credentialContents.put("username", username);
     credentialContents.put("password", password);
-
     logInActions = mockMvc.perform(post("/api/login")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(credentialContents)))
@@ -98,58 +112,24 @@ public class ManageTokenIT {
   }
 
   @Test
-  void givenValidRefreshToken_whenRefreshNewAccessToken_thenReturnNewAccessToken() throws Exception {
+  void givenLoggedInStudent_whenChangeRole_thenReturnOk() throws Exception {
     //given
     String username = "test@test.com";
     MockHttpServletResponse logInResponse = logInActions.andReturn().getResponse();
-    Cookie refreshTokenCookie = logInResponse.getCookie("refresh_token");
-    assertThat(refreshTokenCookie).isNotNull();
+    String credentialJson = logInResponse.getContentAsString();
+    Map<String, Object> credentials = objectMapper.readValue(credentialJson, Map.class);
+    String accessToken = "Bearer " + credentials.get("access_token").toString();
+    Instructor instructor = Instructor.builder()
+        .recipientId("test_recipientId_112").build();
 
     //when
-    ResultActions resultActions = mockMvc.perform(get("/api/token/refresh")
-        .cookie(refreshTokenCookie));
+    ResultActions resultActions = mockMvc.perform(put("/api/students/instructor-feature")
+        .header(AUTHORIZATION, accessToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsString(instructor)));
 
     //then
     resultActions.andExpect(status().isOk());
-    MockHttpServletResponse response = resultActions.andReturn().getResponse();
-    String content = response.getContentAsString();
-    assertThat(content).contains("access_token");
-    assertThat(content).contains(roleProperties.getStudent());
-    assertThat(content).contains(username);
-  }
-
-  @Test
-  void givenNoRefreshToken_whenRefreshNewAccessToken_thenReturnBadRequest() throws Exception {
-    //given
-    MockHttpServletResponse logInResponse = logInActions.andReturn().getResponse();
-    Cookie refreshTokenCookie = logInResponse.getCookie("refresh_token");
-    assertThat(refreshTokenCookie).isNotNull();
-    refreshTokenCookie.setValue("");
-
-
-    //when
-    ResultActions resultActions = mockMvc.perform(get("/api/token/refresh")
-            .cookie(refreshTokenCookie));
-
-    //then
-    resultActions.andExpect(status().isBadRequest())
-        .andExpect(status().reason(containsString("Refresh token is missing")));
-  }
-
-  @Test
-  void givenInvalidRefreshToken_whenRefreshNewAccessToken_thenReturnForbidden() throws Exception {
-    //given
-    MockHttpServletResponse logInResponse = logInActions.andReturn().getResponse();
-    Cookie refreshTokenCookie = logInResponse.getCookie("refresh_token");
-    assertThat(refreshTokenCookie).isNotNull();
-    refreshTokenCookie.setValue("ThisIsGibberishRefreshToken");
-
-
-    //when
-    ResultActions resultActions = mockMvc.perform(get("/api/token/refresh")
-        .cookie(refreshTokenCookie));
-
-    //then
-    resultActions.andExpect(status().isForbidden());
+    assertThat(userService.getInstructor(username)).isNotNull();
   }
 }

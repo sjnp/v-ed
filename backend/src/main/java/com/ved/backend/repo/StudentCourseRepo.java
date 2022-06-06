@@ -15,4 +15,6 @@ public interface StudentCourseRepo extends JpaRepository<StudentCourse, Long> {
 
     List<StudentCourse> findByStudent(Student student);
 
+    Boolean existsByStudentAndCourse(Student student, Course course);
+
 }

@@ -79,7 +79,8 @@ class InstructorServiceTest {
     Long courseId = 1L;
 
     given(userService.getInstructor(username)).willReturn(instructor);
-    given(courseStateRepo.findByName(courseStateProperties.getIncomplete())).willReturn(incompleteState);
+    given(courseStateRepo.findByName(courseStateProperties.getIncomplete()))
+        .willReturn(incompleteState);
     given(courseRepo.save(newCourse))
         .will(i -> {
           newCourse.setId(courseId);

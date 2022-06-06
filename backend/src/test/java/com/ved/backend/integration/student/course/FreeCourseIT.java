@@ -7,6 +7,7 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
@@ -54,10 +55,12 @@ public class FreeCourseIT {
 
     @Test
     @Order(1)
-    public void init() {
+    public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-        mockDatabase.mock_student();
+        
+        mockDatabase.mock_register_student();
+
         mockDatabase.mock_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
@@ -67,8 +70,9 @@ public class FreeCourseIT {
 
     @Test
     @Order(2)
-    @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenCoursePriceNotZero_thenReturnBadRequestStatus() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
         Category category = categoryRepo.findByName("DESIGN").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
@@ -79,6 +83,7 @@ public class FreeCourseIT {
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
         // then
@@ -91,6 +96,8 @@ public class FreeCourseIT {
     @Order(3)
     @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenGetFreeCourseSuccess_thenReturnCreatedStatus() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
         Category category = categoryRepo.findByName("BUSINESS").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
@@ -101,6 +108,7 @@ public class FreeCourseIT {
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
         // then
@@ -111,6 +119,8 @@ public class FreeCourseIT {
     @Order(4)
     @WithMockUser(username = "student@test.com")
     public void givenUsernameAndCourseId_whenHaveCourseAlready_thenReturnConflictStatus() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
         Category category = categoryRepo.findByName("BUSINESS").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
@@ -121,6 +131,7 @@ public class FreeCourseIT {
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
         // then

@@ -39,7 +39,7 @@ const ChapterVideoList = ({ videos }) => {
                             <ListItemIcon>
                                 <OndemandVideoIcon />
                             </ListItemIcon>
-                            <ListItemText primary={`Chapter ${index + 1} : ${video.name}`} />
+                            <ListItemText primary={`Section ${index + 1} : ${video.name}`} />
                         </ListItemButton>
                         <Divider />
                     </div>

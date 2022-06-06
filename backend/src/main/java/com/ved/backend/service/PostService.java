@@ -7,11 +7,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import com.ved.backend.exception.tempException.MyException;
-import com.ved.backend.model.AppUser;
+// import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Post;
 // import com.ved.backend.model.StudentCourse;
-import com.ved.backend.repo.AppUserRepo;
+// import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.PostRepo;
 // import com.ved.backend.repo.StudentCourseRepo;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepo postRepo;
-    private final AppUserRepo appUserRepo;
+    // private final AppUserRepo appUserRepo;
     // private final StudentCourseRepo studentCourseRepo;
     private final CourseRepo courseRepo;
 
@@ -45,7 +45,7 @@ public class PostService {
             throw new MyException("question.board.detail.null", HttpStatus.BAD_REQUEST);
         }
 
-        AppUser appUser = appUserRepo.findByUsername(username);
+        // AppUser appUser = appUserRepo.findByUsername(username);
         // Long studentId = appUser.getStudent().getId();
 
         // REASON : remove -> studentCourseRepo.findByCourseIdAndStudentId in repository
