@@ -22,7 +22,6 @@ public class StudentController {
 
   private final StudentService studentService;
   private final CourseService courseService;
-  private final PrivateObjectStorageService privateObjectStorageService;
   private final AssignmentService assignmentService;
   private final PostService postService;
   private final CommentService commentService;
@@ -37,8 +36,8 @@ public class StudentController {
   /* *************************************************************** */
 
   @PostMapping("/free/course")
-  public ResponseEntity<?> freeCourse(@RequestBody Long courseId, Principal principal) {
-    studentService.getFreeCourse(courseId, principal.getName());
+  public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
+    studentService.buyFreeCourse(courseId, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
@@ -64,15 +63,19 @@ public class StudentController {
 
   /* *************************************************************** */
 
-  
-
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
-  public ResponseEntity<String> getVideoURI(@PathVariable String courseId,
-                                            @PathVariable String chapterIndex,
-                                            @PathVariable String sectionIndex) {
-    String response = privateObjectStorageService.getAccessVideoURI(courseId, chapterIndex, sectionIndex);
+  public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
+    VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}")
+  public ResponseEntity<String> getHandoutUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, @PathVariable int handoutIndex, Principal principal) {
+    String response = studentService.getHandoutUrl(courseId, chapterIndex, sectionIndex, handoutIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  // ---------------------------------------------
 
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
