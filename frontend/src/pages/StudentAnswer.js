@@ -61,13 +61,13 @@ const StudentAnswer = () => {
                             <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
                                 <Link
                                     underline='hover' 
-                                    color='inherit' 
+                                    color='default' 
                                     sx={{ cursor: 'pointer' }} 
                                     onClick={() => navigate(`/student/course/${courseId}/assignment`)}
                                 >
                                     Assignment
                                 </Link>
-                                <Typography color='black'>Chapter {Number(chapterIndex) + 1}</Typography>
+                                <Typography color='text.primary'>Chapter {Number(chapterIndex) + 1}</Typography>
                             </Breadcrumbs>
                         </Grid>
                     </Grid>
@@ -75,13 +75,15 @@ const StudentAnswer = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} pt={4}>
                             {
-                                assignments?.map((assignment, index) => (
-                                    <Answer
-                                        key={index}
-                                        question={assignment.detail}
-                                        index={index}
-                                    />
-                                ))
+                                assignments?.map((assignment, index) => {
+                                    return (
+                                        <Answer
+                                            key={index}
+                                            question={assignment.detail}
+                                            noIndex={index}
+                                        />
+                                    )
+                                })
                             }
                             <LoadingCircle loading={loading} centerY={true} />
                         </Grid>
