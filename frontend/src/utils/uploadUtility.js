@@ -37,7 +37,7 @@ const splitFile = (newFile) => {
 }
 
 const commit = async (url) => {
-  await axios.post(url).then(() => true).catch(() => false)
+  return axios.post(url).then((res) => res).catch((err) => err)
 }
 
 export const uploadUtility = {
