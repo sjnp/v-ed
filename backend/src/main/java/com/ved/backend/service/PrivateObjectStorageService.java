@@ -66,7 +66,7 @@ public class PrivateObjectStorageService {
 
   public String uploadFile(String fileName, String username) {
     String preauthenticatedRequestName = username + "_upload_" + fileName;
-    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite);
+    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, ObjectWrite);
   }
 
   public String readFile(String fileName, String username) {
@@ -88,44 +88,8 @@ public class PrivateObjectStorageService {
     client.close();
   }
 
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  public String createParToUploadCourseVideo(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException {
-    String videoExtension = FileExtensionStringHandler.getViableExtension(fileName, privateObjectStorageConfigProperties.getViableVideoExtensions());
-
-    CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourseDetails(courseId, username);
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    ObjectStorageClient client = new ObjectStorageClient(provider);
-    String videoObjectName = "course_vid_" + incompleteCourseMaterials.getId() + "_c" + chapterIndex + "_s" + sectionIndex + "." + videoExtension;
-
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + videoObjectName).objectName(videoObjectName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
-
-    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
-
-    CreatePreauthenticatedRequestResponse response = client.createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
-    client.close();
-
-    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() + response.getPreauthenticatedRequest().getAccessUri() + videoObjectName;
-  }
-
-  public String createParToUploadCourseHandout(Long courseId, Long chapterIndex, Long sectionIndex, String fileName, String username) throws IOException {
-    CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourseDetails(courseId, username);
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    ObjectStorageClient client = new ObjectStorageClient(provider);
-    String handoutObjectName = "course_handout_" + incompleteCourseMaterials.getId() + "_c" + chapterIndex + "_s" + sectionIndex + "_" + fileName;
-
-    CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + handoutObjectName).objectName(handoutObjectName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
-
-    CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
-
-    CreatePreauthenticatedRequestResponse response = client.createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
-    client.close();
-
-    return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() + response.getPreauthenticatedRequest().getAccessUri() + handoutObjectName;
-  }
-
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // TODO: this
   public String createParToReadFile(String fileUri, String username) throws IOException {
     ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
     AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
@@ -151,23 +115,6 @@ public class PrivateObjectStorageService {
 
     return privateObjectStorageConfigProperties.getRegionalObjectStorageUri() +
         response.getPreauthenticatedRequest().getAccessUri();
-  }
-
-  public void deleteHandout(Long courseId, String objectName, String username) throws IOException {
-    CourseRepo.CourseMaterials incompleteCourseMaterials = instructorService.getIncompleteCourseDetails(courseId, username);
-    String handoutPrefixName = "course_handout_" + incompleteCourseMaterials.getId();
-    if (!objectName.startsWith(handoutPrefixName)) {
-      throw new RuntimeException("Object not found");
-    }
-    ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-    AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-    ObjectStorageClient client = new ObjectStorageClient(provider);
-
-    DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).objectName(objectName).build();
-
-    /* Send request to the Client */
-    client.deleteObject(deleteObjectRequest);
-    client.close();
   }
 
   public String getAccessURI(String fileName) {
