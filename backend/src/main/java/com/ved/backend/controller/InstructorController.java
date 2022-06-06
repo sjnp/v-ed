@@ -6,6 +6,7 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.service.InstructorService;
 import com.ved.backend.service.PrivateObjectStorageService;
 import com.ved.backend.service.PublicObjectStorageService;
+import com.ved.backend.storeClass.Finance;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -248,6 +249,16 @@ public class InstructorController {
     try {
       instructorService.deleteCoursePictureUrl(courseId, principal.getName());
       return ResponseEntity.ok().build();
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @PatchMapping(path = "/finance/updateAccount")
+  public ResponseEntity<?> updateAccount(@RequestBody Finance finance, Principal principal) {
+    try {
+      String response = instructorService.updateFinanceAccount(finance, principal.getName());
+      return ResponseEntity.ok().body(response);
     } catch (Exception exception) {
       return ResponseEntity.notFound().build();
     }

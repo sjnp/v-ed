@@ -34,6 +34,12 @@ public class StudentController {
     return ResponseEntity.ok().build();
   }
 
+  @PostMapping(path = "/finance/active-instrustor")
+  public ResponseEntity<?> activeInstructor(@RequestBody Finance finance, Principal principal) {
+    String response = studentService.activeInstructor(finance, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   /* *************************************************************** */
 
   @PostMapping("/free/course")
@@ -46,13 +52,6 @@ public class StudentController {
   public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
     List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
     return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping(path = "/active-instrustor")
-  public ResponseEntity<?> activeInstructor(@RequestBody Finance finance, Principal principal) {
-    String result = studentService.activeInstructor(finance, principal.getName());
-
-    return ResponseEntity.ok(result);
   }
 
   // REFACTOR: moved from OverviewController

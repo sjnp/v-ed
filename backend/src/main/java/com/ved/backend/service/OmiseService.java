@@ -40,7 +40,7 @@ public class OmiseService {
     public String createRecipient(Finance finance) {
         try {
             String base64Creds = getBase64SecretKey();
-            String recipientUrl = omiseKey.getRecipientUrl();
+            String url = omiseKey.getRecipientUrl();
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -52,7 +52,7 @@ public class OmiseService {
             body.add("name", finance.getRecipientName());
             body.add("type", finance.getType());
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
-            ResponseEntity<?> responseJson = restTemplate.postForEntity(recipientUrl, request, Map.class);
+            ResponseEntity<?> responseJson = restTemplate.postForEntity(url, request, Map.class);
             HashMap<String, Object> response = (HashMap<String, Object>) responseJson.getBody();
             return response.get("id").toString();
         }
@@ -65,16 +65,16 @@ public class OmiseService {
     public String verifyRecipient(String recipientId){
         try {
             String base64Creds = getBase64SecretKey();
-            String verifyUrl = omiseKey.getRecipientUrl() + '/' + recipientId + "/verify";
+            String url = omiseKey.getRecipientUrl() + '/' + recipientId + "/verify";
             RestTemplate patchRestTemplate = new RestTemplate();
             patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            HttpHeaders verifyHeaders = new HttpHeaders();
-            verifyHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            verifyHeaders.add("Authorization", "Basic " + base64Creds);
-            HttpEntity<?> verifyRequest = new HttpEntity<Object>(verifyHeaders);
-            HashMap<String, Object> verifyResponseJson = patchRestTemplate.patchForObject(verifyUrl, verifyRequest, HashMap.class);
-            log.info(verifyResponseJson.toString());
-            return verifyResponseJson.toString();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            HashMap<String, Object> responseJson = patchRestTemplate.patchForObject(url, request, HashMap.class);
+            log.info(responseJson.toString());
+            return responseJson.toString();
         }
         catch (Exception error) {
             System.out.println(error.getMessage());
@@ -89,15 +89,42 @@ public class OmiseService {
             String url = omiseKey.getRecipientUrl() + '/' + recipientId;
             RestTemplate patchRestTemplate = new RestTemplate();
             patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            HttpHeaders verifyHeaders = new HttpHeaders();
-            verifyHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            verifyHeaders.add("Authorization", "Basic " + base64Creds);
-            HttpEntity<?> request = new HttpEntity<Object>(verifyHeaders);
-            HashMap<String, Object> dataResponse = patchRestTemplate.patchForObject(url, request, HashMap.class);
-            JSONObject dataResponseJson = new JSONObject(dataResponse);
-            String bankAccountData = dataResponseJson.get("bank_account").toString();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            HashMap<String, Object> response = patchRestTemplate.patchForObject(url, request, HashMap.class);
+            JSONObject responseJson = new JSONObject(response);
+            String bankAccountData = responseJson.get("bank_account").toString();
             log.info(bankAccountData);
             return bankAccountData;
+        }
+        catch (Exception error) {
+            System.out.println(error.getMessage());
+            return error.getMessage();
+        }
+    }
+
+
+    public String updateRecipient(Finance finance,String recipientId){
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = omiseKey.getRecipientUrl() + '/' + recipientId;
+            RestTemplate patchRestTemplate = new RestTemplate();
+            patchRestTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+            body.add("bank_account[bank_code]", finance.getBankBrand());
+            body.add("bank_account[name]", finance.getBankAccountName());
+            body.add("bank_account[number]", finance.getBankAccountNumber());
+//            body.add("name", finance.getRecipientName());
+//            body.add("type", finance.getType());
+            HttpEntity<?> request = new HttpEntity<Object>(body, headers);
+            HashMap<String, Object> responseJson = patchRestTemplate.patchForObject(url, request, HashMap.class);
+            log.info(responseJson.toString());
+            return responseJson.toString();
         }
         catch (Exception error) {
             System.out.println(error.getMessage());

@@ -5,6 +5,7 @@ import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
+import com.ved.backend.storeClass.Finance;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,13 @@ public class InstructorService {
     Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
     String recipientId = instructor.getRecipientId();
     String response = omiseService.getRecipientData(recipientId);
+    return response;
+  }
+
+  public String updateFinanceAccount(Finance finance,String username){
+    Instructor instructor = appUserRepo.findByUsername(username).getStudent().getInstructor();
+    String recipientId = instructor.getRecipientId();
+    String response = omiseService.updateRecipient(finance, recipientId);
     return response;
   }
 
