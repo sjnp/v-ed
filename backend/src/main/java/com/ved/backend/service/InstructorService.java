@@ -136,6 +136,7 @@ public class InstructorService {
         + chapterIndex
         + "_s"
         + sectionIndex
+        + "_"
         + fileName;
     String preauthenticatedRequestUrl = privateObjectStorageService.uploadFile(handoutObjectName, username);
     return Map.of("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
