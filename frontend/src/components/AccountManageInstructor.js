@@ -15,9 +15,8 @@ const AccountManageInstructor = () => {
   const [tiggerInputRecipient,setTiggerInputRecipient] = useState(false)
   const [addOrChange,setAddOrChange] = useState('')
   
-  const handleAddRecipent = (event) => {
-    event.target.value === 'cancel' ? setTiggerInputRecipient(false) : setTiggerInputRecipient(true);
-    
+  const handleAddRecipent = () => {
+    tiggerInputRecipient ? setTiggerInputRecipient(false) : setTiggerInputRecipient(true);
   }
 
   return (

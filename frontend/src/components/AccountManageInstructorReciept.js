@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import BankingRecipientSelect from "./BankingRecipientSelect";
 import AccountManageInstructorSkeleton from "./AccountManageInstructorSkeleton"
+import moment from "moment"
 
 const logoUrl = "https://raw.githubusercontent.com/omise/banks-logo/master/th/";
 
@@ -23,17 +24,17 @@ const AccountManageInstructorReciept = ({drawerWidth,handleAddRecipent}) => {
     try {
       const [bankData, accountResponse] = await Promise.all([
         fetch('https://raw.githubusercontent.com/omise/banks-logo/master/banks.json'), 
-        axiosPrivate.get('http://localhost:8080/api/instructors/getFinance')
+        axiosPrivate.get('http://localhost:8080/api/instructors/finance/getAccount')
       ])
       const timeCreate = new Date(accountResponse.data.created_at)
-      const timeCreateFormat = timeCreate.toString()
+      const timeCreateFormat = moment(timeCreate).format("DD/MM/YYYY | kk:mm:ss")
       setFinance({...finance,
         bankBrand : accountResponse.data.bank_code,
         bankAccountName : accountResponse.data.name,
         bankAccountNumber : "******" + accountResponse.data.last_digits,
         activatedTime: timeCreateFormat
       });
-      // console.log(accountResponse);
+      // console.log(timeCreateFormat);
       // console.log(finance);
 
       const bankDataJson = await bankData.json();
@@ -130,6 +131,7 @@ const AccountManageInstructorReciept = ({drawerWidth,handleAddRecipent}) => {
           name='activatedTime'
           type='text'
           value={finance.activatedTime}
+          // value={moment(finance.activatedTime).format("DD/MM/YYYY | kk:mm:ss")}
           onChange={handleTextField}
           // onBlur={handlePasswordBlur}
         />

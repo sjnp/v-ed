@@ -29,17 +29,33 @@ const AccountManageInstructorInput = ({drawerWidth,handleAddRecipent,addOrChange
     // console.log(finance.bankBrand)
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const createRecipient = async () => {
     try {
-      console.log('In')
+      // console.log('create')
       const response = await axiosPrivate.post('/api/students/active-instrustor', finance );
-
-      console.log(response.data)
+      // console.log(response.data)
+      handleAddRecipent()
     } catch (err) {
       console.error(err);
       // navigate('/', { state: { from: location }, replace: true });
     }
+  }
+
+  const updateRecipient = async () => {
+    try {
+      // console.log('update')
+      const response = await axiosPrivate.patch('/api/instructors/finance/updateAccount', finance );
+      // console.log(response.data)
+      handleAddRecipent()
+    } catch (err) {
+      console.error(err);
+      // navigate('/', { state: { from: location }, replace: true });
+    }
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    { addOrChange === "add" ? createRecipient() : updateRecipient() }
   }
   
   return (

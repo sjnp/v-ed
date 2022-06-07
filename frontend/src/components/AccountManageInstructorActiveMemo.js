@@ -46,6 +46,7 @@ const AccountManageInstructor = ({drawerWidth,handleAddRecipent}) => {
           fullWidth
           variant='contained'
           size='large'
+          value='add'
           sx={{
             marginTop: 6,
             marginBottom: 2

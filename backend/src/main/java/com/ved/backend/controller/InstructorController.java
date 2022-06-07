@@ -30,6 +30,28 @@ public class InstructorController {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
+  @GetMapping(path = "/finance/getAccount")
+  public ResponseEntity<?> getAccountData(Principal principal) {
+    try {
+      String response = instructorService.getOmiseAccountData(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @PatchMapping(path = "/finance/updateAccount")
+  public ResponseEntity<?> updateAccount(@RequestBody Finance finance, Principal principal) {
+    try {
+      String response = instructorService.updateFinanceAccount(finance, principal.getName());
+      return ResponseEntity.ok().body(response);
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  
+
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {
     IncompleteCourseResponse incompleteCourseMaterials = instructorService.getIncompleteCourseDetails(courseId, principal.getName());
@@ -65,17 +87,6 @@ public class InstructorController {
     List<PublishedCourseInfoResponse> publishedCourseInfo = instructorService.getAllPublishedCourses(principal.getName());
     return ResponseEntity.ok().body(publishedCourseInfo);
   }
-
-  @GetMapping(path = "/getFinance")
-  public ResponseEntity<?> getAccountData(Principal principal) {
-    try {
-      String response = instructorService.getOmiseAccountData(principal.getName());
-      return ResponseEntity.ok(response);
-    } catch (Exception exception) {
-      return ResponseEntity.badRequest().body(exception.getMessage());
-    }
-  }
-
 
   @PostMapping(path = "/course")
   public ResponseEntity<?> createCourse(@RequestBody Course course, Principal principal) {
@@ -179,15 +190,5 @@ public class InstructorController {
                                                   Principal principal) {
     instructorService.deleteCoursePictureUrl(courseId, principal.getName());
     return ResponseEntity.ok().build();
-  }
-
-  @PatchMapping(path = "/finance/updateAccount")
-  public ResponseEntity<?> updateAccount(@RequestBody Finance finance, Principal principal) {
-    try {
-      String response = instructorService.updateFinanceAccount(finance, principal.getName());
-      return ResponseEntity.ok().body(response);
-    } catch (Exception exception) {
-      return ResponseEntity.notFound().build();
-    }
   }
 }

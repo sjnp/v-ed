@@ -55,6 +55,7 @@ public class InstructorService {
     Instructor instructor = userService.getInstructor(username);
     String recipientId = instructor.getRecipientId();
     String response = omiseService.updateRecipient(finance, recipientId);
+    omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
     return response;
   }
 
