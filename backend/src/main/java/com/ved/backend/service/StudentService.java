@@ -143,6 +143,10 @@ public class StudentService {
     assignmentService.saveAnswer(answer);
   }
 
+  public String getAssignmentAnswer(Long courseId, int chapterIndex, String username) {
+    return "api assignment answer successful";
+  }
+
   // -----------------------------------------------------------------
 
   public Student getStudent(String username) {

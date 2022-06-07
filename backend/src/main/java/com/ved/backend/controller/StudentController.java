@@ -85,6 +85,12 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
+  public ResponseEntity<String> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
+    String response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   // ------------------------------------------------------------------------------------------------------
 
   @GetMapping("/courses/{courseId}/about")

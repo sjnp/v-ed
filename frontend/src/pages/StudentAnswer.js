@@ -37,7 +37,11 @@ const StudentAnswer = () => {
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
-        const url = URL_GET_COURSE.replace('{courseId}', courseId)
+        // const url = URL_GET_COURSE.replace('{courseId}', courseId)
+
+        const url = "/api/students/courses/{courseId}/chapter/{chapterIndex}/answer"
+            .replace('{courseId}', courseId)
+            .replace('{chapterIndex}', chapterIndex)
         const response = await apiPrivate.get(axiosPrivate, url)
 
         if (response.status === 200) {
