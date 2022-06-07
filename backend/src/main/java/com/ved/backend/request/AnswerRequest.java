@@ -1,44 +1,24 @@
 package com.ved.backend.request;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class AnswerRequest {
  
+    private Long courseId;
+
+    private int chapterIndex;
+
+    private int noIndex;
+
     private String fileName;
-    private int courseId;
-    private int chapterNo;
-    private int no;
-    
-    public AnswerRequest() {}
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public int getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
-    }
-
-    public int getChapterNo() {
-        return chapterNo;
-    }
-
-    public void setChapterNo(int chapterNo) {
-        this.chapterNo = chapterNo;
-    }
-
-    public int getNo() {
-        return no;
-    }
-
-    public void setNo(int no) {
-        this.no = no;
-    }
 
 }
