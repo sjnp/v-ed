@@ -1,6 +1,8 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
+import com.ved.backend.model.Answer;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
@@ -10,6 +12,7 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.VideoResponse;
@@ -21,8 +24,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -37,6 +42,7 @@ public class StudentService {
   private final UserService userService;
   private final CourseService courseService;
   private final StudentCourseService studentCourseService;
+  private final AssignmentService assignmentService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
@@ -110,6 +116,34 @@ public class StudentService {
   }
 
   /* ************************************************************ */
+
+  @Transactional
+  public void createAnswer(AnswerRequest answerRequest, String username) {
+    
+    if (Objects.isNull(answerRequest.getChapterIndex())) {
+      throw new BadRequestException("Chapter index is required");
+    }
+
+    if (Objects.isNull(answerRequest.getNoIndex())) {
+      throw new BadRequestException("No index is required");
+    }
+
+    if (Objects.isNull(answerRequest.getFileName())) {
+      throw new BadRequestException("File name is required");
+    }
+
+    StudentCourse studentCourse = this.authStudentCourse(username, answerRequest.getCourseId());
+    Answer answer = Answer.builder()
+      .chapterIndex(answerRequest.getChapterIndex())
+      .noIndex(answerRequest.getNoIndex())
+      .fileName(answerRequest.getFileName())
+      .datetime(LocalDateTime.now())
+      .studentCourse(studentCourse)
+      .build();
+    assignmentService.saveAnswer(answer);
+  }
+
+  // -----------------------------------------------------------------
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);

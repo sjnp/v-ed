@@ -95,7 +95,6 @@ const Answer = ({ question, noIndex, instructorComment }) => {
             response = await apiPrivate.post(axiosPrivate, createAnswerUrl, payload)
             if (response.status === 201) {
                 setState('Finish')
-                alert(response.data)
             }
         }
     }
