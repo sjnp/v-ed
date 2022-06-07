@@ -63,7 +63,7 @@ public class GetByCategoryAndCourseStateTest {
         Category category = mockData.getCategory("ART");
         CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
-        given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
+        given(courseRepo.findCoursesByCategoryAndCourseState(category, courseState)).willReturn(courses);
         // when
         List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
         // then
@@ -77,7 +77,7 @@ public class GetByCategoryAndCourseStateTest {
         Category category = mockData.getCategory("BUSINESS");
         CourseState courseState = mockData.getCourseState("PUBLISHED");
         // given
-        given(courseRepo.findCourseByCategoryAndCourseState(category, courseState)).willReturn(courses);
+        given(courseRepo.findCoursesByCategoryAndCourseState(category, courseState)).willReturn(courses);
         // when
         List<Course> actualResult = courseServiceTest.getByCategoryAndCourseState(category, courseState);
         // then
