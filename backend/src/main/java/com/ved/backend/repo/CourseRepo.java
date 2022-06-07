@@ -14,11 +14,11 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
 
   List<Course> findCoursesByCourseStateAndInstructor(CourseState courseState, Instructor instructor);
 
-  Course findCourseByCourseStateAndId(CourseState courseState, Long id);
-
   // move new refactor optional below
-  List<Course> findCourseByCategoryAndCourseState(Category category, CourseState courseState);
+  List<Course> findCoursesByCategoryAndCourseState(Category category, CourseState courseState);
 
   Optional<Course> findByIdAndPrice(Long courseId, Long price);
+
+  Optional<Course> findByIdAndCourseState(Long courseId, CourseState courseState);
 
 }

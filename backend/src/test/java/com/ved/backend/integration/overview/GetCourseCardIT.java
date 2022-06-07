@@ -67,7 +67,7 @@ public class GetCourseCardIT {
         // given
         Category category = categoryRepo.findByName("ART").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
         Long courseId = courses.get(0).getId();
         // when
         ResultActions resultActions = mockMvc.perform(get("/api/overviews/courses/" + courseId + "/card"));
