@@ -80,7 +80,7 @@ public class StudentController {
   }
 
   @PostMapping("/courses/{courseId}/answer")
-  public ResponseEntity<?> saveAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
+  public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
     studentService.createAnswer(answerRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }

@@ -15,9 +15,9 @@ public class AnswerRequest {
  
     private Long courseId;
 
-    private int chapterIndex;
+    private Integer chapterIndex;
 
-    private int noIndex;
+    private Integer noIndex;
 
     private String fileName;
 
