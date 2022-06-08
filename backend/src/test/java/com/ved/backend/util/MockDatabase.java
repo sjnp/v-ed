@@ -1,5 +1,6 @@
 package com.ved.backend.util;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CategoryProperties;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.RoleProperties;
+import com.ved.backend.model.Answer;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
@@ -21,6 +23,7 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.model.PublishedCourse;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
+import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CategoryRepo;
@@ -53,6 +56,7 @@ public class MockDatabase {
     @Autowired private CourseRepo courseRepo;
     @Autowired private PublishedCourseRepo publishedCourseRepo;
     @Autowired private StudentCourseRepo studentCourseRepo;
+    @Autowired private AnswerRepo answerRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
@@ -288,8 +292,25 @@ public class MockDatabase {
         ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = resultActions.andReturn().getResponse();
         String json = response.getContentAsString();
+        @SuppressWarnings("unchecked")
         Map<String, Object> credentials = objectMapper.readValue(json, Map.class);
         return credentials.get(name).toString();
+    }
+
+    public void mock_answer(Long courseId, int chapterIndex, int noIndex, String fileName) {
+        Course course = courseRepo.findById(courseId).get();
+        Student student = appUserRepo.findAppUserByUsername(usernameStudent).get().getStudent();
+        StudentCourse studentCourse = studentCourseRepo.findByStudentAndCourse(student, course).get();
+        
+        Answer answer = Answer.builder()
+            .chapterIndex(chapterIndex)
+            .noIndex(noIndex)
+            .fileName(fileName)
+            .datetime(LocalDateTime.now())
+            .studentCourse(studentCourse)
+            .build();
+        
+        answerRepo.save(answer);
     }
 
 }
