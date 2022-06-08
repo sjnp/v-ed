@@ -143,7 +143,11 @@ public class StudentService {
     assignmentService.saveAnswer(answer);
   }
 
-  public List<AssignmentAnswerResponse> getAssignmentAnswer(Long courseId, int chapterIndex, String username) {
+  public List<AssignmentAnswerResponse> getAssignmentAnswer(Long courseId, Integer chapterIndex, String username) {
+    if (Objects.isNull(chapterIndex)) {
+      throw new BadRequestException("Chapter index is required");
+    }
+    
     StudentCourse studentCourse = this.authStudentCourse(username, courseId);
 
     List<AssignmentAnswerResponse> assignmentAnswerResponses = studentCourse.getCourse()

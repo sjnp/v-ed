@@ -84,7 +84,7 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
-  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
+  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
     List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
