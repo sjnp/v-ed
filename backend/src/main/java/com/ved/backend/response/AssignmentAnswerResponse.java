@@ -1,4 +1,4 @@
-package com.ved.backend.request;
+package com.ved.backend.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,14 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class AnswerRequest {
- 
-    private Long courseId;
+public class AssignmentAnswerResponse {
 
-    private Integer chapterIndex;
+    private String assignment;
 
-    private Integer noIndex;
-
-    private String fileName;
+    private AnswerResponse answer;
 
 }

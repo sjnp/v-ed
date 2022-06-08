@@ -41,6 +41,10 @@ export const URL_GET_STUDENT_COURSES = '/api/students/courses'
 export const URL_GET_COURSE = '/api/students/courses/{courseId}'
 export const URL_GET_VIDEO = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video'
 export const URL_GET_HANDOUT = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}'
+export const URL_GET_UPLOAD_ANSWER_URL = '/api/students/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}'
+export const URL_CREATE_ANSWER = '/api/students/courses/{courseId}/answer'
+export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapter/{chapterIndex}/answer'
+
 export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
 export const URL_CREATE_POST = '/api/students/courses/post'
 export const URL_GET_ALL_POSTS_BY_COURSE = '/api/students/courses/{courseId}/posts'
@@ -53,7 +57,7 @@ export const URL_EDIT_REVIEW = '/api/students/courses/reviews/{reviewId}'
 
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'
-export const URL_SAVE_ANSWER = '/api/students/courses/{courseId}/answer'
+// export const URL_SAVE_ANSWER = '/api/students/courses/{courseId}/answer'
 export const URL_DELETE_ANSWER = '/api/students/courses/{courseId}/answer/{answerId}'
 
 export const URL_GET_COURSE_BY_ID = ''
@@ -63,9 +67,3 @@ export const URL_GET_COURSE_BY_ID = ''
 // question board
 
 export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
-
-
-// comment
-
-
-// review

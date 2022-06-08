@@ -13,9 +13,12 @@ import com.oracle.bmc.objectstorage.requests.DeleteObjectRequest;
 import com.oracle.bmc.objectstorage.responses.CreatePreauthenticatedRequestResponse;
 import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
 import com.ved.backend.exception.tempException.MyException;
+import com.ved.backend.repo.CourseRepo;
+import com.ved.backend.utility.FileExtensionStringHandler;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.request.AnswerRequest;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,7 +34,6 @@ public class PrivateObjectStorageService {
   private final ObjectStorageClientService objectStorageClientService;
 
   private final PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
-  private final AppUserRepo appUserRepo;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PrivateObjectStorageService.class);
 
@@ -62,7 +64,7 @@ public class PrivateObjectStorageService {
 
   public String uploadFile(String fileName, String username) {
     String preauthenticatedRequestName = username + "_upload_" + fileName;
-    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, ObjectWrite);
+    return createPreauthenticatedRequest(fileName, preauthenticatedRequestName, AnyObjectWrite) + fileName;
   }
 
   public String readFile(String fileName, String username) {
@@ -85,38 +87,5 @@ public class PrivateObjectStorageService {
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  public String getUploadFileURI(AnswerRequest answerRequest, String username) {
-    try {
-
-      ConfigFileReader.ConfigFile configFile = ConfigFileReader.parseDefault();
-      AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
-      ObjectStorageClient client = new ObjectStorageClient(provider);
-
-      AppUser appUser = appUserRepo.findByUsername(username);
-      String studentId = "_sid" + appUser.getStudent().getId();
-      String courseId = "_cid" + answerRequest.getCourseId();
-      String chapterNo = "_c" + answerRequest.getChapterNo();
-      String no = "_no" + answerRequest.getNo();
-      String fileType = "." + answerRequest.getFileName().substring(answerRequest.getFileName().indexOf(".") + 1);
-      String fileName = "answer" + studentId + courseId + chapterNo + no + fileType;
-
-      CreatePreauthenticatedRequestDetails createPreauthenticatedRequestDetails = CreatePreauthenticatedRequestDetails.builder().name(username + "_upload_" + fileName).objectName(fileName).accessType(AnyObjectReadWrite).timeExpires(new Date(System.currentTimeMillis() + privateObjectStorageConfigProperties.getExpiryTimer())).build();
-
-      CreatePreauthenticatedRequestRequest createPreauthenticatedRequestRequest = CreatePreauthenticatedRequestRequest.builder().namespaceName(privateObjectStorageConfigProperties.getNamespace()).bucketName(privateObjectStorageConfigProperties.getBucketName()).createPreauthenticatedRequestDetails(createPreauthenticatedRequestDetails).build();
-
-      CreatePreauthenticatedRequestResponse response = client.createPreauthenticatedRequest(createPreauthenticatedRequestRequest);
-      client.close();
-
-      String regionObjectStorage = privateObjectStorageConfigProperties.getRegionalObjectStorageUri();
-      String accessURI = response.getPreauthenticatedRequest().getAccessUri();
-
-      return regionObjectStorage + accessURI + fileName;
-
-    } catch (Exception e) {
-      log.error("Preauthenticate uri example video fail, response error {}", e.getMessage());
-      throw new MyException("pre.authentication.fail", HttpStatus.UNAUTHORIZED);
-    }
-  }
 
 }
