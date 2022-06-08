@@ -76,7 +76,7 @@ public class FreeCourseIT {
         // given
         Category category = categoryRepo.findByName("DESIGN").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
         Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
@@ -101,7 +101,7 @@ public class FreeCourseIT {
         // given
         Category category = categoryRepo.findByName("BUSINESS").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
         Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
@@ -124,7 +124,7 @@ public class FreeCourseIT {
         // given
         Category category = categoryRepo.findByName("BUSINESS").get();
         CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCourseByCategoryAndCourseState(category, courseState);
+        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
         Long courseId = courses.get(0).getId();
         // when
         String payload = objectMapper.writeValueAsString(courseId);
