@@ -24,7 +24,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import apiPrivate from '../api/apiPrivate'
 
 // url
-import { URL_GET_COURSE } from '../utils/url'
+import { URL_GET_ASSIGNMENT_ANSWER } from '../utils/url'
 
 const StudentAnswer = () => {
 
@@ -33,20 +33,17 @@ const StudentAnswer = () => {
 
     const axiosPrivate = useAxiosPrivate()
 
-    const [ assignments, setAssignment ] = useState([])
+    const [ assignmentAnswers, setAssignmentAnswers ] = useState([])
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
-        // const url = URL_GET_COURSE.replace('{courseId}', courseId)
-
-        const url = "/api/students/courses/{courseId}/chapter/{chapterIndex}/answer"
+        const url = URL_GET_ASSIGNMENT_ANSWER
             .replace('{courseId}', courseId)
             .replace('{chapterIndex}', chapterIndex)
         const response = await apiPrivate.get(axiosPrivate, url)
 
         if (response.status === 200) {
-            const result = response.data.content.map(element => element.assignments)
-            setAssignment(result[chapterIndex])
+            setAssignmentAnswers(response.data)
         }
         setLoading(false)
     }, [])
@@ -79,12 +76,14 @@ const StudentAnswer = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} pt={4}>
                             {
-                                assignments?.map((assignment, index) => {
+                                assignmentAnswers?.map((assignmentAnswer, index) => {
                                     return (
                                         <Answer
                                             key={index}
-                                            question={assignment.detail}
+                                            assignment={assignmentAnswer.assignment}
+                                            answer={assignmentAnswer.answer}
                                             noIndex={index}
+
                                         />
                                     )
                                 })

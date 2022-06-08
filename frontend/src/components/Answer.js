@@ -30,13 +30,13 @@ import { URL_CREATE_ANSWER } from '../utils/url'
 // utils
 import { uploadUtility } from '../utils/uploadUtility'
 
-const Answer = ({ question, noIndex, instructorComment }) => {
+const Answer = ({ assignment, answer, noIndex, instructorComment }) => {
 
     const { courseId, chapterIndex } = useParams()
     const axiosPrivate = useAxiosPrivate()
 
-    const [ file, setFile ] = useState(null)
-    const [ state, setState ] = useState('Start')
+    const [ file, setFile ] = useState(answer ? { name: answer.fileName } : null)
+    const [ state, setState ] = useState(answer ? 'Finish' : 'Start')
     const [ uploading, setUploading ] = useState(false)
     const [ progressUploading, setProgressUploading ] = useState(0)
 
@@ -65,11 +65,8 @@ const Answer = ({ question, noIndex, instructorComment }) => {
         
         setState('Uploading...')
         const preauthenticatedUrl = response.data
-
-        // create url from oracle for upload split file
         const multipartUploadUri = await uploadUtility.createMultipartUploadUri(preauthenticatedUrl)
 
-        // split file & PUT to bucket
         const chunks = uploadUtility.splitFile(file)
         let percent = 0
         for (let i = 0; i < chunks.length; ++i) {
@@ -80,7 +77,6 @@ const Answer = ({ question, noIndex, instructorComment }) => {
                 .catch(() => console.log(`item ${i+1} fail`))
         }
 
-        // commit when PUT file success
         response = await uploadUtility.commit(multipartUploadUri)
         if (response.status === 200) {
             setState('Saving...')
@@ -104,7 +100,7 @@ const Answer = ({ question, noIndex, instructorComment }) => {
             <Grid container pt={2} pl={2} pr={2} pb={1}>
                 <Grid item xs={12}>
                     <Typography fontWeight='bold'>
-                        {`${parseInt(noIndex) + 1}. ${question}`}
+                        {`${parseInt(noIndex) + 1}. ${assignment}`}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} mt={1}>

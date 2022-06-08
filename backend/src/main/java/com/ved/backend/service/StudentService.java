@@ -13,6 +13,8 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.response.AnswerResponse;
+import com.ved.backend.response.AssignmentAnswerResponse;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.VideoResponse;
@@ -115,8 +117,6 @@ public class StudentService {
     return privateObjectStorageService.uploadFile(fileName, username);
   }
 
-  /* ************************************************************ */
-
   @Transactional
   public void createAnswer(AnswerRequest answerRequest, String username) {
     
@@ -143,11 +143,35 @@ public class StudentService {
     assignmentService.saveAnswer(answer);
   }
 
-  public String getAssignmentAnswer(Long courseId, int chapterIndex, String username) {
-    return "api assignment answer successful";
+  public List<AssignmentAnswerResponse> getAssignmentAnswer(Long courseId, int chapterIndex, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+
+    List<AssignmentAnswerResponse> assignmentAnswerResponses = studentCourse.getCourse()
+      .getChapters()
+      .get(chapterIndex)
+      .getAssignments()
+      .stream()
+      .map(assignment -> AssignmentAnswerResponse.builder().assignment(assignment.get("detail")).build())
+      .collect(Collectors.toList());
+
+    List<Answer> answers = studentCourse.getAnswers()
+      .stream()
+      .filter(answer -> answer.getChapterIndex() == chapterIndex)
+      .collect(Collectors.toList());
+
+    for(int i = 0; i < assignmentAnswerResponses.size(); ++i) {
+      for(Answer answer : answers) {
+        if (answer.getNoIndex() == i) {
+          assignmentAnswerResponses.get(i).setAnswer(new AnswerResponse(answer));
+          break;
+        }
+      }
+    }
+
+    return assignmentAnswerResponses;
   }
 
-  // -----------------------------------------------------------------
+  /* ************************************************************************************************** */
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);

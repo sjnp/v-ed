@@ -43,6 +43,7 @@ export const URL_GET_VIDEO = '/api/students/courses/{courseId}/chapter/{chapterI
 export const URL_GET_HANDOUT = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}'
 export const URL_GET_UPLOAD_ANSWER_URL = '/api/students/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}'
 export const URL_CREATE_ANSWER = '/api/students/courses/{courseId}/answer'
+export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapter/{chapterIndex}/answer'
 
 export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
 export const URL_CREATE_POST = '/api/students/courses/post'
@@ -66,9 +67,3 @@ export const URL_GET_COURSE_BY_ID = ''
 // question board
 
 export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
-
-
-// comment
-
-
-// review

@@ -71,8 +71,6 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************************************************** */
-
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
   public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
     String response = studentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
@@ -86,12 +84,12 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
-  public ResponseEntity<String> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
-    String response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
+  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
+    List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
-  // ------------------------------------------------------------------------------------------------------
+  /* *************************************************************************************************** */
 
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
