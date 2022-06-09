@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
@@ -14,6 +14,11 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Toolbar from '@mui/material/Toolbar'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Link from '@mui/material/Link'
+
+// Material UI icon
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -26,7 +31,9 @@ import { URL_GET_POST } from '../utils/url'
 
 const StudentBoard = () => {
 
-    // const { courseId, questionBoardId } = useParams()
+    const { courseId, postId } = useParams()
+    const navigate = useNavigate()
+
 
     // const axiosPrivate = useAxiosPrivate()
 
@@ -62,41 +69,75 @@ const StudentBoard = () => {
     return (
         <Container>
             <AppBarSearchHeader />
-            <br />
-            <Grid container>
-                <Grid item xs={3} md={3}>
+            <Grid container mt={3} mb={5}>
+                <Grid item xs={3}>
                     <StudentMenu active='question board' />
                 </Grid>
-                {/* <Grid item xs={9}>
+                <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
-                            <Typography variant='h6'>
-                                Question board
-                            </Typography>
+                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+                                <Link
+                                    underline='hover' 
+                                    color='default' 
+                                    sx={{ cursor: 'pointer' }} 
+                                    onClick={() => navigate(`/student/course/${courseId}/question-board`)}
+                                >
+                                    Question
+                                </Link>
+                                <Typography color='text.primary'>Board</Typography>
+                            </Breadcrumbs>
                         </Grid>
                     </Grid>
-                    <Grid container sx={{ pt: 3 }}>
+                    <Grid container>
                         <Grid item xs={1}></Grid>
-                        <Grid item xs={9}>
-                            {
-                                questionBoard ? <QuestionTopic data={questionBoard} /> : null
-                            }
-                            {
-                                questionBoard?.comments.map((comment, index) => (
-                                    <QuestionComment key={index} data={comment} />
-                                ))
-                            }
-                            <Toolbar />
-                            <LoadingCircle loading={loading} layoutLeft={60} />
+                        <Grid item xs={10} pt={3}>
+                            {/* <QuestionCreate /> */}
                         </Grid>
-                        <Grid item xs={1}>
-                            <QuestionWriteComment onCreateCommentSuccess={handleCreateCommentSuccess} />
-                        </Grid>
+                        <Grid item xs={1}></Grid>
                     </Grid>
-                </Grid> */}
+                </Grid>
             </Grid>
         </Container>
+
+        // <Container>
+        //     <AppBarSearchHeader />
+        //     <br />
+        //     <Grid container>
+        //         <Grid item xs={3} md={3}>
+        //             <StudentMenu active='question board' />
+        //         </Grid>
+        //         {/* <Grid item xs={9}>
+        //             <Grid container>
+        //                 <Grid item xs={1}></Grid>
+        //                 <Grid item xs={11}>
+        //                     <Typography variant='h6'>
+        //                         Question board
+        //                     </Typography>
+        //                 </Grid>
+        //             </Grid>
+        //             <Grid container sx={{ pt: 3 }}>
+        //                 <Grid item xs={1}></Grid>
+        //                 <Grid item xs={9}>
+        //                     {
+        //                         questionBoard ? <QuestionTopic data={questionBoard} /> : null
+        //                     }
+        //                     {
+        //                         questionBoard?.comments.map((comment, index) => (
+        //                             <QuestionComment key={index} data={comment} />
+        //                         ))
+        //                     }
+        //                     <Toolbar />
+        //                     <LoadingCircle loading={loading} layoutLeft={60} />
+        //                 </Grid>
+        //                 <Grid item xs={1}>
+        //                     <QuestionWriteComment onCreateCommentSuccess={handleCreateCommentSuccess} />
+        //                 </Grid>
+        //             </Grid>
+        //         </Grid> */}
+        //     </Grid>
+        // </Container>
     )
 }
 

@@ -21,11 +21,9 @@ import { URL_CREATE_POST } from '../utils/url'
 
 const QuestionCreate = () => {
 
-    const axiosPrivate = useAxiosPrivate()
-
-    const navigate = useNavigate()
-
     const { courseId } = useParams()
+    const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate()
 
     const maxLengthTopic = 200
     const maxLengthDetail = 1000
@@ -74,7 +72,6 @@ const QuestionCreate = () => {
     }
 
     const handleClickCreate = async () => {
-        
         let invalid = false
 
         if (topic.length === 0) {
@@ -92,7 +89,6 @@ const QuestionCreate = () => {
         if (invalid) return
 
         setLoading(true)
-        
         const payLoad = {
             courseId: courseId,
             topic: topic,
@@ -102,7 +98,7 @@ const QuestionCreate = () => {
         setLoading(false)
 
         if (response.status === 201) {
-            navigate(`/student/course/${courseId}/question-board/${response.data.id}`)
+            navigate(`/student/course/${courseId}/question-board/${'hard-code-post-id'}`)
         } else {
             alert('Error, please try again')
         }
@@ -115,6 +111,7 @@ const QuestionCreate = () => {
                 label="Topic"
                 variant="outlined"
                 margin="normal"
+                size='small'
                 required 
                 fullWidth
                 multiline
@@ -129,6 +126,7 @@ const QuestionCreate = () => {
                 label="Detail"
                 variant="outlined"
                 margin="normal"
+                size='small'
                 required 
                 fullWidth
                 multiline

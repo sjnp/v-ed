@@ -91,6 +91,22 @@ public class StudentController {
 
   /* *************************************************************************************************** */
 
+  @PostMapping("/courses/post")
+  public ResponseEntity<String> createPost(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
+    Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
+    String topic = bodyRequest.get("topic").toString();
+    String detail = bodyRequest.get("detail").toString();
+    String response = "create post successful course id " + courseId + " | topic " + topic + " | detail " + detail;
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    
+
+    // PostResponse response = postService.create(courseId, topic, detail, principal.getName());
+    // return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  // ------------------------------------------------------------------------------------------------------
+
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
     AboutCourseResponse response = courseService.getAboutCourse(courseId);
@@ -123,17 +139,6 @@ public class StudentController {
                                                   Principal principal) {
     ReviewResponse response = reviewService.getReview(reviewId);
     return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping("/courses/post")
-  public ResponseEntity<PostResponse> createPost(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
-
-    Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
-    String topic = bodyRequest.get("topic").toString();
-    String detail = bodyRequest.get("detail").toString();
-
-    PostResponse response = postService.create(courseId, topic, detail, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PostMapping("/courses/{courseId}/posts/comment")

@@ -13,6 +13,7 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Fab from '@mui/material/Fab'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 
 // Material UI icon
 import AddIcon from '@mui/icons-material/Add'
@@ -28,9 +29,9 @@ import { URL_GET_ALL_POSTS_BY_COURSE } from '../utils/url'
 
 const StudentQuestion = () => {
 
-    // const { courseId } = useParams()
+    const { courseId } = useParams()
     
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     // const axiosPrivate = useAxiosPrivate()
 
@@ -59,54 +60,91 @@ const StudentQuestion = () => {
     //     navigate(`/student/course/${courseId}/question-board/${questionBoardId}`)
     // }
 
+    const handleClickCreateQuestion = () => {
+        navigate(`/student/course/${courseId}/question-board/create`)
+    }
+
+
     return (
         <Container>
             <AppBarSearchHeader />
-            <br/>
-            <Grid container>
-                <Grid item xs={3} md={3}>
-                    <StudentMenu active='question board' /> 
+            <Grid container mt={3} mb={5}>
+                <Grid item xs={3}>
+                    <StudentMenu active='question board' />
                 </Grid>
-                {/* <Grid item xs={9}>
+                <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={9}>
-                            <Typography variant='h6'>
-                                Question board
-                            </Typography>
+                            <Breadcrumbs>
+                                <Typography color='black'>Question</Typography>
+                            </Breadcrumbs>
                         </Grid>
                         <Grid item xs={2}>
-                            <Fab
-                                size="small" 
-                                color="primary"
-                                title='Create question'
-                                onClick={handleNavigateCreateQuestion}
-                                sx={{ position: 'fixed' }}
-                            >
-                                <AddIcon />
+                            <Fab size='small' color='primary' onClick={handleClickCreateQuestion} sx={{ position: 'fixed' }}>
+                                <AddIcon titleAccess='Create question' />
                             </Fab>
                         </Grid>
                     </Grid>
-                    <Grid container sx={{ mt: 2 }}>
-                        <Grid item xs={2}></Grid>
+                    <Grid container>
+                        <Grid item xs={1}></Grid>
                         <Grid item xs={10}>
-                            {
-                                question?.map((item, index) => (
-                                    <QuestionCard 
-                                        key={index}
-                                        topic={item.topic}
-                                        datetime={moment(item.createDateTime).format("DD/MM/YYYY | kk:mm:ss")}
-                                        commentCount={item.comments.length}
-                                        onClickQuestionCard={() => handleNavigateQuestionCard(item.id)}
-                                    />
-                                ))
-                            }
-                            <LoadingCircle loading={loading} layoutLeft={60} />
+                        
                         </Grid>
+                        
+                        
                     </Grid>
-                </Grid> */}
+                </Grid>
             </Grid>
         </Container>
+
+        // <Container>
+        //     <AppBarSearchHeader />
+        //     <br/>
+        //     <Grid container>
+        //         <Grid item xs={3} md={3}>
+        //             <StudentMenu active='question board' /> 
+        //         </Grid>
+        //         {/* <Grid item xs={9}>
+        //             <Grid container>
+        //                 <Grid item xs={1}></Grid>
+        //                 <Grid item xs={9}>
+        //                     <Typography variant='h6'>
+        //                         Question board
+        //                     </Typography>
+        //                 </Grid>
+        //                 <Grid item xs={2}>
+        //                     <Fab
+        //                         size="small" 
+        //                         color="primary"
+        //                         title='Create question'
+        //                         onClick={handleNavigateCreateQuestion}
+        //                         sx={{ position: 'fixed' }}
+        //                     >
+        //                         <AddIcon />
+        //                     </Fab>
+        //                 </Grid>
+        //             </Grid>
+        //             <Grid container sx={{ mt: 2 }}>
+        //                 <Grid item xs={2}></Grid>
+        //                 <Grid item xs={10}>
+        //                     {
+        //                         question?.map((item, index) => (
+        //                             <QuestionCard 
+        //                                 key={index}
+        //                                 topic={item.topic}
+        //                                 datetime={moment(item.createDateTime).format("DD/MM/YYYY | kk:mm:ss")}
+        //                                 commentCount={item.comments.length}
+        //                                 onClickQuestionCard={() => handleNavigateQuestionCard(item.id)}
+        //                             />
+        //                         ))
+        //                     }
+        //                     <LoadingCircle loading={loading} layoutLeft={60} />
+        //                 </Grid>
+        //             </Grid>
+        //         </Grid> */}
+        //     </Grid>
+        // </Container>
     )
 }
 
