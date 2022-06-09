@@ -7,16 +7,19 @@ import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Instructor;
+import com.ved.backend.model.Post;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.PostRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.CreatePostResponse;
 import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
@@ -45,6 +48,7 @@ public class StudentService {
   private final CourseService courseService;
   private final StudentCourseService studentCourseService;
   private final AssignmentService assignmentService;
+  private final PostService postService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
@@ -176,6 +180,38 @@ public class StudentService {
   }
 
   /* ************************************************************************************************** */
+
+  public CreatePostResponse createPost(PostRequest postRequest, String username) {
+    if (Objects.isNull(postRequest.getCourseId())) {
+      throw new BadRequestException("Course id is required");
+    }
+
+    if (Objects.isNull(postRequest.getTopic())) {
+        throw new BadRequestException("Topic is required");
+    }
+
+    if (Objects.isNull(postRequest.getDetail())) {
+        throw new BadRequestException("Detail is required");
+    }
+
+    StudentCourse studentCourse = this.authStudentCourse(username, postRequest.getCourseId());
+
+    Post post = Post.builder()
+      .course(studentCourse.getCourse())
+      .studentCourse(studentCourse)
+      .topic(postRequest.getTopic())
+      .detail(postRequest.getDetail())
+      .createDateTime(LocalDateTime.now())
+      .visible(true)
+      .build();
+
+    Post resultPost = postService.savePost(post);
+    return CreatePostResponse.builder()
+      .postId(resultPost.getId())
+      .build();
+  }
+
+  // ----------------------------------------------------------------------------------------------------
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);

@@ -98,7 +98,7 @@ const QuestionCreate = () => {
         setLoading(false)
 
         if (response.status === 201) {
-            navigate(`/student/course/${courseId}/question-board/${'hard-code-post-id'}`)
+            navigate(`/student/course/${courseId}/question-board/${response.data.postId}`)
         } else {
             alert('Error, please try again')
         }

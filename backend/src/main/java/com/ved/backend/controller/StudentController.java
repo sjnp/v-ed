@@ -2,6 +2,7 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.PostRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
@@ -92,17 +93,9 @@ public class StudentController {
   /* *************************************************************************************************** */
 
   @PostMapping("/courses/post")
-  public ResponseEntity<String> createPost(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
-    Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
-    String topic = bodyRequest.get("topic").toString();
-    String detail = bodyRequest.get("detail").toString();
-    String response = "create post successful course id " + courseId + " | topic " + topic + " | detail " + detail;
+  public ResponseEntity<CreatePostResponse> createPost(@RequestBody PostRequest postRequest, Principal principal) {
+    CreatePostResponse response = studentService.createPost(postRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-    
-
-    // PostResponse response = postService.create(courseId, topic, detail, principal.getName());
-    // return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   // ------------------------------------------------------------------------------------------------------
