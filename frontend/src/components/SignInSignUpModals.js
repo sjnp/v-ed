@@ -34,7 +34,7 @@ const SignInSignUpModals = () => {
         <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
         <Modal open={openSignIn} onClose={() => setOpenSignIn(false)}>
           <Container component="main" maxWidth="xs">
-            <SignInForm onSignIn={handClickSignUpLoginForm} />
+            <SignInForm onSignIn={handClickSignUpLoginForm} onSignUp={handClickSignUpLoginForm} />
           </Container>
         </Modal>
       </Grid>
