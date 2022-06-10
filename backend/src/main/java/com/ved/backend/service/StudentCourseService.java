@@ -10,6 +10,7 @@ import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.*;
 import com.ved.backend.response.CourseCardResponse;
+import com.ved.backend.response.CourseResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -60,6 +61,19 @@ public class StudentCourseService {
 
 
     /////////////////////////
+
+    public StudentCourse auth(Long courseId, String username) {
+        Course course = courseService.getById(courseId);
+        Student student = userService.getStudent(username);
+        return this.getByStudentAndCourse(student, course);
+    }
+
+    public CourseResponse getCourse(Long courseId, String username) {
+        StudentCourse studentCourse = this.auth(courseId, username);
+        return new CourseResponse(studentCourse.getCourse());
+    }
+
+    ///////////////////////////////
 
     public Boolean existsByStudentAndCourse(Student student, Course course) {
         return studentCourseRepo.existsByStudentAndCourse(student, course);

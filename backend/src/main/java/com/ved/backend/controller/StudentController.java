@@ -58,15 +58,18 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @GetMapping("/courses/{courseId}")
+  public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
+    // CourseResponse response = studentService.getCourse(courseId, principal.getName());
+    CourseResponse response = studentCourseService.getCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   /* *************************************************************** */
 
   
 
-  @GetMapping("/courses/{courseId}")
-  public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
-    CourseResponse response = studentService.getCourse(courseId, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
   public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
