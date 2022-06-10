@@ -11,6 +11,7 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.*;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -28,6 +29,9 @@ public class StudentCourseService {
     private final CourseService courseService;
 
     private final StudentCourseRepo studentCourseRepo;
+
+    private final PrivateObjectStorageService privateObjectStorageService;
+
 
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
@@ -74,6 +78,19 @@ public class StudentCourseService {
     }
 
     ///////////////////////////////
+
+    public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+        StudentCourse studentCourse = this.auth(courseId, username);
+        String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+        return VideoResponse.builder()
+            .videoUrl(privateObjectStorageService.readFile(fileName, username))
+            .pictureUrl(studentCourse.getCourse().getPictureUrl())
+            .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+            .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+            .build();
+    }
+
+    //////////////////////////////
 
     public Boolean existsByStudentAndCourse(Student student, Course course) {
         return studentCourseRepo.existsByStudentAndCourse(student, course);

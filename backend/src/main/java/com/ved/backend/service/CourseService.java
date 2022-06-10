@@ -6,10 +6,12 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
+import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
+import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -27,9 +29,29 @@ public class CourseService {
     private final CourseRepo courseRepo;
     private final CourseStateRepo courseStateRepo;
     private final CategoryRepo categoryRepo;
+
+    // private final StudentCourseService studentCourseService;
     private final PrivateObjectStorageService privateObjectStorageService;
 
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
+
+
+
+    //////////////////////////////////////////////////////////
+
+    // public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    //     StudentCourse studentCourse = studentCourseService.auth(courseId, username);
+    //     String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+    //     return VideoResponse.builder()
+    //         .videoUrl(privateObjectStorageService.readFile(fileName, username))
+    //         .pictureUrl(studentCourse.getCourse().getPictureUrl())
+    //         .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+    //         .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+    //         .build();
+    // }
+
+
+    //////////////////////////////////////////////////////////
 
     public Course getById(Long courseId) {
         log.info("Get course by id {}", courseId);
