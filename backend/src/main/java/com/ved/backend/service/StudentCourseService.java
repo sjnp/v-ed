@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentCourseService {
 
     private final UserService userService;
+    private final CourseService courseService;
 
     private final StudentCourseRepo studentCourseRepo;
 
@@ -37,6 +38,24 @@ public class StudentCourseService {
             .stream()
             .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
             .collect(Collectors.toList());
+    }
+
+    //////////////////////
+
+    public void buyFreeCourse(Long courseId, String username) {
+        Course course = courseService.getByIdAndPrice(courseId, 0L);
+        Student student = userService.getStudent(username);
+        Boolean isExists = studentCourseRepo.existsByStudentAndCourse(student, course);
+        if (isExists) {
+            throw new ConflictException("You have this course already");
+        }
+
+        StudentCourse studentCourse = StudentCourse.builder()
+            .student(student)
+            .course(course)
+            .build();
+            
+        studentCourseRepo.save(studentCourse);
     }
 
 

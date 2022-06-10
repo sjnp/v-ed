@@ -51,13 +51,16 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************** */
-
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentService.buyFreeCourse(courseId, principal.getName());
+    studentCourseService.buyFreeCourse(courseId, principal.getName());
+    // studentService.buyFreeCourse(courseId, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
+
+  /* *************************************************************** */
+
+  
 
   @GetMapping("/courses/{courseId}")
   public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
