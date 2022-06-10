@@ -26,6 +26,7 @@ public class StudentController {
   private final CommentService commentService;
   private final ReviewService reviewService;
   private final StudentCourseService studentCourseService;
+  private final AssignmentService assignmentService;
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
@@ -65,18 +66,34 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************** */
-
-  
-
-  
-
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
   public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
     // VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     VideoResponse response = studentCourseService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
+
+
+
+
+
+
+  
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
+  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
+    // List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
+    List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  /* *************************************************************** */
+
+  
+
+  
+
+  
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}")
   public ResponseEntity<String> getHandoutUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, @PathVariable int handoutIndex, Principal principal) {
@@ -96,11 +113,7 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
-  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
-    List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   /* *************************************************************************************************** */
 
