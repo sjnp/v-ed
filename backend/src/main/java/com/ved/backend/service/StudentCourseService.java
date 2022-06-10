@@ -1,6 +1,7 @@
 package com.ved.backend.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -8,6 +9,8 @@ import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.*;
+import com.ved.backend.response.CourseCardResponse;
+
 import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
@@ -20,9 +23,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentCourseService {
 
+    private final UserService userService;
+
     private final StudentCourseRepo studentCourseRepo;
 
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
+
+
+    public List<CourseCardResponse> getMyCourses(String username) {
+        Student student = userService.getStudent(username);
+        return studentCourseRepo
+            .findByStudent(student)
+            .stream()
+            .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
+            .collect(Collectors.toList());
+    }
+
+
+    /////////////////////////
 
     public Boolean existsByStudentAndCourse(Student student, Course course) {
         return studentCourseRepo.existsByStudentAndCourse(student, course);

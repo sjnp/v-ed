@@ -25,11 +25,30 @@ public class StudentController {
   private final PostService postService;
   private final CommentService commentService;
   private final ReviewService reviewService;
+  private final StudentCourseService studentCourseService;
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
     return ResponseEntity.ok().build();
+  }
+
+  //////////////////////////////////////////////////////////////////
+
+  @GetMapping("/courses")
+  public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
+    // List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  // REFACTOR: moved from OverviewController
+  // TODO: Add logic for show overview my course 4 course card response 
+  @GetMapping("/course-samples")
+  public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
+    // List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
+    return ResponseEntity.ok().body(response);
   }
 
   /* *************************************************************** */
@@ -38,20 +57,6 @@ public class StudentController {
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
     studentService.buyFreeCourse(courseId, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
-
-  @GetMapping("/courses")
-  public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
-    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
-
-  // REFACTOR: moved from OverviewController
-  // TODO: Add logic for show overview my course 4 course card response 
-  @GetMapping("/course-samples")
-  public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
-    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
-    return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}")
