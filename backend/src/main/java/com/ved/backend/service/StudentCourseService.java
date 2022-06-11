@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
-import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
@@ -42,18 +41,18 @@ public class StudentCourseService {
             .orElseThrow(() -> new CourseNotFoundException(courseId));
     }
 
-    public StudentCourse getByStudentAndCourse(Student student, Course course) {
-        return studentCourseRepo
-            .findByStudentAndCourse(student, course)
-            .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course"));
-    }
-
     public StudentCourse authentication(String username, Long courseId) {
         Student student = userService.getStudent(username);
         Course course = this.getCourse(courseId);
-        return this.getByStudentAndCourse(student, course);
+        return studentCourseRepo
+            .findByStudentAndCourse(student, course)
+            .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course")); 
     }
 
+    public List<StudentCourse> getByUsername(String username) {
+        Student student = userService.getStudent(username);
+        return studentCourseRepo.findByStudent(student);
+    }
 
     ///////////////////////////////////////////////////////
 
@@ -140,10 +139,10 @@ public class StudentCourseService {
         return studentCourseRepo.findByStudent(student);
     }
 
-    // public StudentCourse getByStudentAndCourse(Student student, Course course) {
-    //     log.info("Student id {} get course id {}", student.getId(), course.getId());
-    //     return studentCourseRepo.findByStudentAndCourse(student, course)
-    //         .orElseThrow(() -> new UnauthorizedException("You have not authorized this course"));
-    // }
+    public StudentCourse getByStudentAndCourse(Student student, Course course) {
+        log.info("Student id {} get course id {}", student.getId(), course.getId());
+        return studentCourseRepo.findByStudentAndCourse(student, course)
+            .orElseThrow(() -> new UnauthorizedException("You have not authorized this course"));
+    }
 
 }
