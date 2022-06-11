@@ -78,13 +78,20 @@ public class StudentController {
 
 
 
-  
+
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
   public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
     // List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/answer")
+  public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
+    // studentService.createAnswer(answerRequest, principal.getName());
+    assignmentService.createAnswer(answerRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   /* *************************************************************** */
@@ -107,11 +114,7 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @PostMapping("/courses/{courseId}/answer")
-  public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
-    studentService.createAnswer(answerRequest, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
+  
 
   
 

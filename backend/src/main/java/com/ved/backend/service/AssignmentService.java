@@ -4,11 +4,13 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Answer;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
+import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
 
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -70,6 +72,33 @@ public class AssignmentService {
         }
         return assignmentAnswerResponses;
     }
+
+    /////////////////////////////
+
+    public void createAnswer(AnswerRequest answerRequest, String username) {
+        if (Objects.isNull(answerRequest.getChapterIndex())) {
+            throw new BadRequestException("Chapter index is required");
+        }
+      
+        if (Objects.isNull(answerRequest.getNoIndex())) {
+            throw new BadRequestException("No index is required");
+        }
+    
+        if (Objects.isNull(answerRequest.getFileName())) {
+            throw new BadRequestException("File name is required");
+        }
+
+        StudentCourse studentCourse = studentCourseService.auth(answerRequest.getCourseId(), username);
+        Answer answer = Answer.builder()
+            .chapterIndex(answerRequest.getChapterIndex())
+            .noIndex(answerRequest.getNoIndex())
+            .fileName(answerRequest.getFileName())
+            .datetime(LocalDateTime.now())
+            .studentCourse(studentCourse)
+            .build();
+        answerRepo.save(answer);
+    }
+
 
     /////////////////////////////
 
