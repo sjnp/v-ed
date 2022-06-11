@@ -30,7 +30,7 @@ public class StudentCourseService {
 
     private final StudentCourseRepo studentCourseRepo;
 
-    private final PrivateObjectStorageService privateObjectStorageService;
+    // private final PrivateObjectStorageService privateObjectStorageService;
 
 
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
@@ -81,9 +81,9 @@ public class StudentCourseService {
 
     public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
         StudentCourse studentCourse = this.auth(courseId, username);
-        String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+        String videoUrl = courseService.getVideoUrl(courseId, chapterIndex, sectionIndex, username);
         return VideoResponse.builder()
-            .videoUrl(privateObjectStorageService.readFile(fileName, username))
+            .videoUrl(videoUrl)
             .pictureUrl(studentCourse.getCourse().getPictureUrl())
             .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
             .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())

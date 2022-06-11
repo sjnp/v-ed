@@ -6,12 +6,12 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
-import com.ved.backend.model.StudentCourse;
+// import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
-import com.ved.backend.response.VideoResponse;
+// import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -50,6 +50,11 @@ public class CourseService {
     //         .build();
     // }
 
+
+    public String getVideoUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+        String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+        return privateObjectStorageService.readFile(fileName, username);
+    }
 
     //////////////////////////////////////////////////////////
 
