@@ -21,12 +21,13 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
-  private final CourseService courseService;
-  private final PostService postService;
   private final CommentService commentService;
   private final ReviewService reviewService;
+
   private final StudentCourseService studentCourseService;
+  private final CourseService courseService;
   private final AssignmentService assignmentService;
+  private final PostService postService;
 
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
@@ -87,7 +88,7 @@ public class StudentController {
 
   @PostMapping("/courses/post")
   public ResponseEntity<CreatePostResponse> createPost(@RequestBody PostRequest postRequest, Principal principal) {
-    CreatePostResponse response = studentService.createPost(postRequest, principal.getName());
+    CreatePostResponse response = postService.createPost(postRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
