@@ -24,7 +24,7 @@ const QuestionCard = ({ postId, topic, datetime, commentCount }) => {
         <Paper sx={{ m: 2, p: 2, width: '70%', cursor: 'pointer' }} onClick={handleClickPost}>
             <Grid container>
                 <Grid item xs={10}>
-                    <Box fontWeight='bold'>{topic}</Box>
+                    <Typography noWrap fontWeight='bold' title={topic}>{topic}</Typography>
                 </Grid>
                 <Grid item xs={2} textAlign='end' sx={{ color: 'gray' }}>
                     <Box display='flex' justifyContent='flex-end'>
