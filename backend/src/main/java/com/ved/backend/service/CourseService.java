@@ -6,12 +6,16 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
+import com.ved.backend.model.StudentCourse;
 // import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
 // import com.ved.backend.response.VideoResponse;
+// import com.ved.backend.response.CourseCardResponse;
+import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -26,12 +30,63 @@ import java.util.*;
 @AllArgsConstructor
 public class CourseService {
 
+    private final AuthService authService;
+    private final PrivateObjectStorageService privateObjectStorageService;
+
     private final CourseRepo courseRepo;
+
+    public CourseResponse getCourseNew(Long courseId, String username) {
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        return new CourseResponse(studentCourse.getCourse());
+    }
+
+    public VideoResponse getVideoUrlNew(Long courseId, int chapterIndex, int sectionIndex, String username) {
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+        String videoUrl = privateObjectStorageService.readFile(fileName, username);
+        return VideoResponse.builder()
+            .videoUrl(videoUrl)
+            .pictureUrl(studentCourse.getCourse().getPictureUrl())
+            .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+            .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+            .build();
+    }
+
+    public String getHandoutUrlNew(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse
+            .getCourse()
+            .getChapters()
+            .get(chapterIndex)
+            .getSections()
+            .get(sectionIndex)
+            .get("handouts");
+        String fileName = handouts.get(handoutIndex).get("handoutUri");
+        return privateObjectStorageService.readFile(fileName, username);
+    }
+
+    ///
+    // StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    // @SuppressWarnings("unchecked")
+    // List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse.getCourse()
+    //   .getChapters()
+    //   .get(chapterIndex)
+    //   .getSections()
+    //   .get(sectionIndex)
+    //   .get("handouts");
+    // String fileName = handouts.get(handoutIndex).get("handoutUri");
+    // return privateObjectStorageService.readFile(fileName, username);
+
+    /////////////////////////////////////////////////////
+
+
+
+
     private final CourseStateRepo courseStateRepo;
     private final CategoryRepo categoryRepo;
 
     // private final StudentCourseService studentCourseService;
-    private final PrivateObjectStorageService privateObjectStorageService;
 
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
 
@@ -51,10 +106,10 @@ public class CourseService {
     // }
 
 
-    public String getVideoUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
-        String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
-        return privateObjectStorageService.readFile(fileName, username);
-    }
+    // public String getVideoUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    //     String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
+    //     String videoUrl = privateObjectStorageService.readFile(fileName, username);
+    // }
 
     //////////////////////////////////////////////////////////
 

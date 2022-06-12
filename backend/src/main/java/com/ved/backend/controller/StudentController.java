@@ -30,6 +30,8 @@ public class StudentController {
 
   ///////////////////////////// New Controller /////////////////////////////////
 
+  // Using student course service
+
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
     studentCourseService.buyFreeCourseNew(principal.getName(), courseId);
@@ -46,6 +48,28 @@ public class StudentController {
   @GetMapping("/courses")
   public ResponseEntity<List<CourseCardResponse>> getMyCourses(Principal principal) {
     List<CourseCardResponse> response = studentCourseService.getMyCoursesNew(principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  ////////////////////////////////////////////
+
+  // Using course service
+
+  @GetMapping("/courses/{courseId}")
+  public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
+    CourseResponse response = courseService.getCourseNew(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
+  public ResponseEntity<VideoResponse> getVideoUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
+    VideoResponse response = courseService.getVideoUrlNew(courseId, chapterIndex, sectionIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}")
+  public ResponseEntity<String> getHandoutUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, @PathVariable int handoutIndex, Principal principal) {
+    String response = courseService.getHandoutUrlNew(courseId, chapterIndex, sectionIndex, handoutIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
@@ -67,19 +91,9 @@ public class StudentController {
 
   
 
-  @GetMapping("/courses/{courseId}")
-  public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
-    // CourseResponse response = studentService.getCourse(courseId, principal.getName());
-    CourseResponse response = studentCourseService.getCourse(courseId, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
-  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
-  public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
-    // VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
-    VideoResponse response = studentCourseService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
 
 
@@ -110,11 +124,7 @@ public class StudentController {
 
   
 
-  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}")
-  public ResponseEntity<String> getHandoutUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, @PathVariable int handoutIndex, Principal principal) {
-    String response = studentService.getHandoutUrl(courseId, chapterIndex, sectionIndex, handoutIndex, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
   public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {

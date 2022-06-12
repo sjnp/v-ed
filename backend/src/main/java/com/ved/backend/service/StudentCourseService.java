@@ -3,7 +3,7 @@ package com.ved.backend.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ved.backend.exception.CourseNotFoundException;
+// import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -14,7 +14,7 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
-import com.ved.backend.response.VideoResponse;
+// import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
 
@@ -33,15 +33,15 @@ public class StudentCourseService {
     
     private final UserService userService;
 
-    public StudentCourse authenticationNew(String username, Long courseId) {
-        Student student = userService.getStudent(username);
-        Course course = courseRepo
-            .findById(courseId)
-            .orElseThrow(() -> new CourseNotFoundException(courseId));
-        return studentCourseRepo
-            .findByStudentAndCourse(student, course)
-            .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course"));
-    }
+    // public StudentCourse authenticationNew(String username, Long courseId) {
+    //     Student student = userService.getStudent(username);
+    //     Course course = courseRepo
+    //         .findById(courseId)
+    //         .orElseThrow(() -> new CourseNotFoundException(courseId));
+    //     return studentCourseRepo
+    //         .findByStudentAndCourse(student, course)
+    //         .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course"));
+    // }
 
     public void buyFreeCourseNew(String username, Long courseId) {
         Student student = userService.getStudent(username);
@@ -150,16 +150,16 @@ public class StudentCourseService {
 
     ///////////////////////////////
 
-    public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
-        StudentCourse studentCourse = this.auth(courseId, username);
-        String videoUrl = courseService.getVideoUrl(courseId, chapterIndex, sectionIndex, username);
-        return VideoResponse.builder()
-            .videoUrl(videoUrl)
-            .pictureUrl(studentCourse.getCourse().getPictureUrl())
-            .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
-            .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
-            .build();
-    }
+    // public VideoResponse getVideoCourseUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    //     StudentCourse studentCourse = this.auth(courseId, username);
+    //     String videoUrl = courseService.getVideoUrl(courseId, chapterIndex, sectionIndex, username);
+    //     return VideoResponse.builder()
+    //         .videoUrl(videoUrl)
+    //         .pictureUrl(studentCourse.getCourse().getPictureUrl())
+    //         .chapterName(studentCourse.getCourse().getChapters().get(chapterIndex).getName())
+    //         .sectionName(studentCourse.getCourse().getChapters().get(chapterIndex).getSections().get(sectionIndex).get("name").toString())
+    //         .build();
+    // }
 
     //////////////////////////////
 

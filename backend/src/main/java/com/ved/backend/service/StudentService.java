@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -101,19 +101,19 @@ public class StudentService {
       .build();
   }
 
-  @Transactional
-  public String getHandoutUrl(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
-    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
-    @SuppressWarnings("unchecked")
-    List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse.getCourse()
-      .getChapters()
-      .get(chapterIndex)
-      .getSections()
-      .get(sectionIndex)
-      .get("handouts");
-    String fileName = handouts.get(handoutIndex).get("handoutUri");
-    return privateObjectStorageService.readFile(fileName, username);
-  }
+  // @Transactional
+  // public String getHandoutUrl(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+  //   StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+  //   @SuppressWarnings("unchecked")
+  //   List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse.getCourse()
+  //     .getChapters()
+  //     .get(chapterIndex)
+  //     .getSections()
+  //     .get(sectionIndex)
+  //     .get("handouts");
+  //   String fileName = handouts.get(handoutIndex).get("handoutUri");
+  //   return privateObjectStorageService.readFile(fileName, username);
+  // }
 
   public String getUploadAnswerUrl(Long courseId, int chapterIndex, int noIndex, String clientFileName, String username) {
     StudentCourse studentCourse = this.authStudentCourse(username, courseId);
