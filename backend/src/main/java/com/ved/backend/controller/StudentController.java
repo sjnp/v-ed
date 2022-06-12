@@ -28,10 +28,6 @@ public class StudentController {
   private final StudentCourseService studentCourseService;
   private final AssignmentService assignmentService;
 
-  ///////////////////////////// New Controller /////////////////////////////////
-
-  // Using student course service
-
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
     studentCourseService.buyFreeCourseNew(principal.getName(), courseId);
@@ -51,10 +47,6 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  ////////////////////////////////////////////
-
-  // Using course service
-
   @GetMapping("/courses/{courseId}")
   public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
     CourseResponse response = courseService.getCourseNew(courseId, principal.getName());
@@ -73,84 +65,23 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  ////////////////////////////////
-
-  // Assignment service
-
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
   public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
-    // List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
-    // List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswerNew(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
   public ResponseEntity<String> getUploadAnswerUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
-    // String response = studentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
     String response = assignmentService.getUploadAnswerUrlNew(courseId, chapterIndex, noIndex, fileName, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @PostMapping("/courses/{courseId}/answer")
   public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
-    // studentService.createAnswer(answerRequest, principal.getName());
-    // assignmentService.createAnswer(answerRequest, principal.getName());
     assignmentService.createAnswerNew(answerRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
-
-
-
-
-
-  ///////////////////////////// -------------- /////////////////////////////////
-  
-  
-  @PutMapping(path = "/instructor-feature")
-  public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
-    studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
-    return ResponseEntity.ok().build();
-  }
-
-  //////////////////////////////////////////////////////////////////
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-
-
-
-
-
-  
-
-  
-
-  /* *************************************************************** */
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
 
   /* *************************************************************************************************** */
 
@@ -217,6 +148,12 @@ public class StudentController {
   public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest) {
     reviewService.edit(reviewId, reviewRequest);
     return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @PutMapping(path = "/instructor-feature")
+  public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
+    studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
+    return ResponseEntity.ok().build();
   }
 
 }
