@@ -1,11 +1,13 @@
 package com.ved.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.Course;
@@ -29,6 +31,8 @@ public class PostService {
     private final AuthService authService;
 
     private final PostRepo postRepo;
+    private final CourseRepo courseRepo;
+
 
     public CreatePostResponse createPost(PostRequest postRequest, String username) {
         if (Objects.isNull(postRequest.getCourseId())) {
@@ -59,8 +63,15 @@ public class PostService {
             .build();
     }
 
-    public void getPosts() {
-
+    public List<PostResponse> getPostsByCourseIdNew(String username, Long courseId) {
+        authService.authorized(username, courseId);
+        Course course = courseRepo.findById(courseId)
+            .orElseThrow(() -> new CourseNotFoundException(courseId));
+        return course
+            .getPosts()
+            .stream()
+            .map(post -> new PostResponse(post))
+            .collect(Collectors.toList());
     }
 
     public void createComment() {
@@ -68,8 +79,6 @@ public class PostService {
     }
 
     /* ********************************************************************************************* */
-
-    private final CourseRepo courseRepo;
 
     public PostResponse getPostById(Long questionBoardId) {
 
@@ -83,26 +92,6 @@ public class PostService {
         PostResponse postResponse = new PostResponse(post);
 
         return postResponse;
-    }
-
-    public List<PostResponse> getPostByCourseId(Long courseId) {
-
-        Optional<Course> courseOptional = courseRepo.findById(courseId);
-
-        if (courseOptional.isEmpty()) {
-            throw new MyException("question.baord.course.id.not.found", HttpStatus.BAD_REQUEST);
-        }
-
-        Course course = courseOptional.get();
-        List<Post> posts = course.getPosts();
-
-        List<PostResponse> response = new ArrayList<PostResponse>();
-        for (Post post : posts) {
-            PostResponse postResponse = new PostResponse(post);
-            response.add(postResponse);
-        }
-
-        return response;
     }
 
 }

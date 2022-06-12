@@ -1,4 +1,6 @@
 import React from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import moment from 'moment'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
@@ -9,25 +11,30 @@ import Typography from '@mui/material/Typography'
 // Material UI icon
 import CommentIcon from '@mui/icons-material/Comment'
 
-const QuestionCard = ({ topic, datetime, commentCount, onClickQuestionCard }) => {
+const QuestionCard = ({ postId, topic, datetime, commentCount }) => {
+
+    const { courseId } = useParams()
+    const navigate = useNavigate()
+
+    const handleClickPost = () => {
+        navigate(`/student/course/${courseId}/question-board/${postId}`)
+    }
     
     return (
-        <Paper sx={{ m: 2, p: 2, width: '70%', cursor: 'pointer' }} onClick={onClickQuestionCard}>
+        <Paper sx={{ m: 2, p: 2, width: '70%', cursor: 'pointer' }} onClick={handleClickPost}>
             <Grid container>
                 <Grid item xs={10}>
-                    <Box sx={{ fontWeight: 'bold' }}>
-                        {topic}
-                    </Box>
+                    <Box fontWeight='bold'>{topic}</Box>
                 </Grid>
                 <Grid item xs={2} textAlign='end' sx={{ color: 'gray' }}>
-                    <Box display={'flex'} justifyContent='flex-end'>
+                    <Box display='flex' justifyContent='flex-end'>
                         <CommentIcon />
-                        <Typography component='span' paddingLeft={1}>{commentCount}</Typography>
+                        <Typography variant='body2' component='span' paddingLeft={1}>{commentCount}</Typography>
                     </Box>
                 </Grid>
                 <Grid item>
                     <Typography variant="caption" color="text.secondary">
-                        {datetime}
+                        {moment(datetime).format("DD/MM/YYYY | kk:mm:ss")}
                     </Typography>
                 </Grid>
             </Grid>

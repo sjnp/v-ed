@@ -92,6 +92,12 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
+  @GetMapping("/courses/{courseId}/posts")
+  public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
+    List<PostResponse> response = postService.getPostsByCourseIdNew(principal.getName(), courseId);
+    return ResponseEntity.ok().body(response);
+  }
+
   // ------------------------------------------------------------------------------------------------------
 
   @GetMapping("/courses/{courseId}/about")
@@ -100,11 +106,7 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @GetMapping("/courses/{courseId}/posts")
-  public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long courseId) {
-    List<PostResponse> response = postService.getPostByCourseId(courseId);
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @GetMapping("/courses/{courseId}/posts/{postId}")
   public ResponseEntity<PostResponse> getPost(@PathVariable Long courseId,
