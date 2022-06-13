@@ -93,8 +93,14 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/posts")
-  public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
-    List<PostResponse> response = postService.getPostsByCourseIdNew(principal.getName(), courseId);
+  public ResponseEntity<List<PostCardResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
+    List<PostCardResponse> response = postService.getPostsByCourseIdNew(principal.getName(), courseId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts/{postId}")
+  public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
+    PostCommentResponse response = postService.getPostById(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
   }
 
@@ -108,13 +114,7 @@ public class StudentController {
 
   
 
-  @GetMapping("/courses/{courseId}/posts/{postId}")
-  public ResponseEntity<PostResponse> getPost(@PathVariable Long courseId,
-                                                       @PathVariable Long postId,
-                                                       Principal principal) {
-    PostResponse response = postService.getPostById(postId);
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getAllReviews(@PathVariable Long courseId, Principal principal) {

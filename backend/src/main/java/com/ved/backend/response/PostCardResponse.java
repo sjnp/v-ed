@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PostResponse {
+public class PostCardResponse {
  
     private Long id;
 
@@ -22,7 +22,7 @@ public class PostResponse {
     
     private boolean visible;
 
-    public PostResponse(Post post) {
+    public PostCardResponse(Post post) {
         this.id = post.getId();
         this.topic = post.getTopic();
         this.createDateTime = post.getCreateDateTime();
