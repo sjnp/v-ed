@@ -1,4 +1,4 @@
-package com.ved.backend.storeClass;
+package com.ved.backend.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Finance {
+public class FinanceDataRequest {
     private String bankBrand;
     private String bankAccountName;
     private String bankAccountNumber;

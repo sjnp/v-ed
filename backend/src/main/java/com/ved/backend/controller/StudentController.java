@@ -2,7 +2,8 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Answer;
 import com.ved.backend.model.Instructor;
-import com.ved.backend.storeClass.Finance;
+import com.ved.backend.request.ChargeDataRequest;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
@@ -35,7 +36,7 @@ public class StudentController {
   }
 
   @PostMapping(path = "/finance/active-instrustor")
-  public ResponseEntity<?> activeInstructor(@RequestBody Finance finance, Principal principal) {
+  public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
     String response = studentService.activeInstructor(finance, principal.getName());
     return ResponseEntity.ok().body(response);
   }
@@ -47,6 +48,13 @@ public class StudentController {
     studentService.buyFreeCourse(courseId, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
+
+  @PostMapping(path = "/purchase/course")
+  public ResponseEntity<?> buyCourse(@RequestBody ChargeDataRequest chargeData, Principal principal) {
+    String authorizeUri = studentService.buyCourse(chargeData, principal.getName());
+    return ResponseEntity.ok().body(authorizeUri);
+  }
+
 
   @GetMapping("/courses")
   public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {

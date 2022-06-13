@@ -1,6 +1,5 @@
 package com.ved.backend.service;
 
-import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
@@ -9,7 +8,7 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
-import com.ved.backend.storeClass.Finance;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.utility.FileExtensionStringHandler;
@@ -17,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +49,10 @@ public class InstructorService {
     return response;
   }
 
-  public String updateFinanceAccount(Finance finance,String username){
+  public String updateFinanceAccount(FinanceDataRequest financeDataRequest, String username){
     Instructor instructor = userService.getInstructor(username);
     String recipientId = instructor.getRecipientId();
-    String response = omiseService.updateRecipient(finance, recipientId);
+    String response = omiseService.updateRecipient(financeDataRequest, recipientId);
     omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
     return response;
   }

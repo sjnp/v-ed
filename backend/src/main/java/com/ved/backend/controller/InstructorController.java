@@ -7,7 +7,7 @@ import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.service.InstructorService;
 import com.ved.backend.service.PrivateObjectStorageService;
 import com.ved.backend.service.PublicObjectStorageService;
-import com.ved.backend.storeClass.Finance;
+import com.ved.backend.request.FinanceDataRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +41,7 @@ public class InstructorController {
   }
 
   @PatchMapping(path = "/finance/updateAccount")
-  public ResponseEntity<?> updateAccount(@RequestBody Finance finance, Principal principal) {
+  public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
     try {
       String response = instructorService.updateFinanceAccount(finance, principal.getName());
       return ResponseEntity.ok().body(response);
@@ -49,8 +49,6 @@ public class InstructorController {
       return ResponseEntity.notFound().build();
     }
   }
-
-  
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {

@@ -23,5 +23,4 @@ public class CourseResponse {
         this.courseId = course.getId();
         this.content = course.getChapters();
     }
-
 }
