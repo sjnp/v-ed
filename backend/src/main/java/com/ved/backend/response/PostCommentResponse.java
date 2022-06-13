@@ -25,6 +25,8 @@ public class PostCommentResponse {
 
     private String detail;
 
+    private String profilePictureUrl;
+
     private String firstname;
 
     private String lastname;
@@ -39,6 +41,7 @@ public class PostCommentResponse {
         this.id = post.getId();
         this.topic = post.getTopic();
         this.detail = post.getDetail();
+        this.profilePictureUrl = post.getStudentCourse().getStudent().getProfilePicUri();
         this.firstname = post.getStudentCourse().getStudent().getFirstName();
         this.lastname = post.getStudentCourse().getStudent().getLastName();
         this.createDateTime = post.getCreateDateTime();

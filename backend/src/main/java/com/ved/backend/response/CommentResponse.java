@@ -26,11 +26,12 @@ public class CommentResponse {
     private boolean visible;
     
     private String commentState;
+
+    private String profilePictureUrl;
     
     private String firstname;
     
     private String lastname;
-
 
     public CommentResponse(Comment comment) {
         this.id = comment.getId();
@@ -38,6 +39,7 @@ public class CommentResponse {
         this.commentDateTime = comment.getCommentDateTime();
         this.visible = comment.isVisible();
         this.commentState = comment.getCommentState().getName();
+        this.profilePictureUrl = comment.getStudent().getProfilePicUri();
         this.firstname = comment.getStudent().getFirstName();
         this.lastname = comment.getStudent().getLastName();
     }

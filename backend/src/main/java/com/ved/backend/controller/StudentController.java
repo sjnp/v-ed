@@ -2,6 +2,7 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.CommentRequest;
 import com.ved.backend.request.PostRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 
 @AllArgsConstructor
@@ -21,7 +21,6 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
-  private final CommentService commentService;
   private final ReviewService reviewService;
 
   private final StudentCourseService studentCourseService;
@@ -84,8 +83,6 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  /* *************************************************************************************************** */
-
   @PostMapping("/courses/post")
   public ResponseEntity<CreatePostResponse> createPost(@RequestBody PostRequest postRequest, Principal principal) {
     CreatePostResponse response = postService.createPost(postRequest, principal.getName());
@@ -104,17 +101,26 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
+  @PostMapping("/courses/{courseId}/posts/comment")
+  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    CommentResponse response = postService.createComment(principal.getName(), courseId, commentRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  /* *************************************************************************************************** */
+
+
+
   // ------------------------------------------------------------------------------------------------------
 
+  
+  
+  
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
     AboutCourseResponse response = courseService.getAboutCourse(courseId);
     return ResponseEntity.ok().body(response);
   }
-
-  
-
-  
 
   @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getAllReviews(@PathVariable Long courseId, Principal principal) {
@@ -128,17 +134,6 @@ public class StudentController {
                                                   Principal principal) {
     ReviewResponse response = reviewService.getReview(reviewId);
     return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping("/courses/{courseId}/posts/comment")
-  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId,
-                                                       @RequestBody HashMap<String, Object> bodyRequest,
-                                                       Principal principal) {
-    Long questionBoardId = Long.parseLong(String.valueOf(bodyRequest.get("questionId")));
-    String comment = String.valueOf(bodyRequest.get("comment"));
-    String username = principal.getName();
-    CommentResponse response = commentService.create(questionBoardId, comment, username);
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PostMapping("/courses/review")
