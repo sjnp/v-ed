@@ -25,6 +25,10 @@ public class PostCommentResponse {
 
     private String detail;
 
+    private String firstname;
+
+    private String lastname;
+
     private LocalDateTime createDateTime;
 
     private boolean visible;
@@ -35,6 +39,8 @@ public class PostCommentResponse {
         this.id = post.getId();
         this.topic = post.getTopic();
         this.detail = post.getDetail();
+        this.firstname = post.getStudentCourse().getStudent().getFirstName();
+        this.lastname = post.getStudentCourse().getStudent().getLastName();
         this.createDateTime = post.getCreateDateTime();
         this.visible = post.isVisible();
         this.comments = post.getComments()
