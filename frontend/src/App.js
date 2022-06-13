@@ -69,7 +69,7 @@ const App = () => {
           {/* student question board */}
           <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />
           <Route path='student/course/:courseId/question-board/create' element={ <StudentCreateQuestion /> } />
-          <Route path='student/course/:courseId/question-board/:questionBoardId' element={ <StudentBoard /> } />
+          <Route path='student/course/:courseId/question-board/:postId' element={ <StudentBoard /> } />
           
           {/* student review */}
           <Route path='student/course/:courseId/review' element={ <StudentReview /> } />

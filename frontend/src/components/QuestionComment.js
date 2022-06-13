@@ -17,22 +17,22 @@ import color from '../utils/color'
 
 const QuestionComment = ({ data }) => {
 
-    let { comment, commentDateTime, commentState, firstname, lastname } = data
+    let { comment, commentDateTime, commentState, profilePictureUrl, firstname, lastname } = data
 
     return (
         <Paper sx={{ mt: 3, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
-            <Grid container sx={{ padding: 2 }}>
-                <Grid item xs={12} sx={{ mb: 2 }}>
+            <Grid container p={2}>
+                <Grid item xs={12} mb={2}>
                     {comment}
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={1} sx={{ justifyContent: "center", display: "flex", mt: 2 }}>
-                    <Avatar src="/static/images/avatar/1.jpg" />
+                <Grid item xs={1} display='flex' justifyContent='center' mt={2}>
+                    <Avatar src={profilePictureUrl || '/static/images/avatar/1.jpg'} />
                 </Grid>
                 <Grid item xs={10}>
-                    <Grid item xs={12} sx={{ mt: 1 }}>
+                    <Grid item xs={12} mt={1}>
                         <Typography variant='subtitle1'>
                             {firstname} {lastname} 
                             <Chip label={commentState} sx={{ ml: 1, pt: 0.4 }} size="small" variant="outlined" />
@@ -44,7 +44,7 @@ const QuestionComment = ({ data }) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid item xs={1} sx={{ textAlign: 'right', mt: 3 }}>
+                <Grid item xs={1} mt={3} textAlign='right'>
                     <Report type={'comment'} />
                 </Grid>
             </Grid>

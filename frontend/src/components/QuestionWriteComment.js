@@ -7,9 +7,6 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 // api
 import apiPrivate from '../api/apiPrivate'
 
-// component
-import LoadingCircle from './LoadingCircle'
-
 // Material UI component
 import Grid from '@mui/material/Grid'
 import Fab from '@mui/material/Fab'
@@ -21,26 +18,28 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // Material UI icon
 import CreateIcon from '@mui/icons-material/Create'
+import CloseIcon from '@mui/icons-material/Close';
 
 // url
 import { URL_CREATE_COMMENT } from '../utils/url'
 
 const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
-    const { courseId ,questionBoardId } = useParams()
-
+    const { courseId, postId } = useParams()
     const axiosPrivate = useAxiosPrivate()
-    
-    const maxLength = 1000
+
+    const maxLength = 10
     const [ comment, setComment ] = useState('')
-    const [ message, setMessage ] = useState(`(${comment.length}/${maxLength})`)
+    const [ message, setMessage ] = useState(`(0/${maxLength})`)
     const [ error, setError ] = useState(false)
 
-    const [ loading, setLoading ] = useState(false)
-    const [ openDialog, setOpenDialog ] = useState(false);
+    const [ openCommentForm, setOpenCommentForm ] = useState(false)
+    const [ saving, setSaving ] = useState(false)
 
     const handleChangeComment = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -48,58 +47,41 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
             setMessage(`(${event.target.value.length}/${maxLength})`)
             setError(false)
         } else {
-            setMessage(`(${comment.length}/${maxLength}) limit ${maxLength} character.`)
+            setMessage(`(${event.target.value.length - 1}/${maxLength}) max length ${maxLength} characters`)
             setError(true)
         }
     }
 
-    const handleClickComment = async () => {
+    const handleBlurComment = () => {
+        setMessage(`(${comment.length}/${maxLength})`)
+        setError(false)
+    }
 
+    const handleCreateComment = async () => {
         if (comment.length === 0) {
-            setMessage(`(${comment.length}/${maxLength}) is required.`)
+            setMessage(`(${comment.length}/${maxLength}) is required`)
             setError(true)
             return
         }
-
-        setLoading(true)
+        setSaving(true)
         
+        const url = URL_CREATE_COMMENT.replace('{courseId}', courseId)
         const payload = {
-            questionId: questionBoardId,
+            postId: postId,
             comment: comment
         }
-        const response = await apiPrivate.post(axiosPrivate,
-          URL_CREATE_COMMENT.replace('{courseId}', courseId),
-          payload)
+        const response = await apiPrivate.post(axiosPrivate, url, payload)
 
         if (response.status === 201) {
-            setComment('')
-            setMessage(`(${comment.length}/${maxLength})`)
-            setError(false)
-            handleCloseDialog()
             onCreateCommentSuccess(response.data)
+            setOpenCommentForm(false)
+            setComment('')
+            setMessage(`(0/${maxLength})`)
+            setError(false)
         } else {
-            alert('Error, please try again.')
+            alert('Fail')
         }
-
-        setLoading(false)
-    }
-
-    const handleBlur = () => {
-        setMessage(`(${comment.length}/${maxLength})`)
-        setError(false)
-    }
-
-    const handleOpenDialog = () => {
-        setOpenDialog(true)
-    }
-
-    const handleCloseDialog = (event, reason) => {
-
-        if (loading && reason === 'backdropClick') return
-
-        setOpenDialog(false)
-        setMessage(`(${comment.length}/${maxLength})`)
-        setError(false)
+        setSaving(false)
     }
 
     return (
@@ -107,55 +89,44 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
             <Grid container>
                 <Grid item xs={11}></Grid>
                 <Grid item xs={1}>
-                    <Fab color='primary' onClick={handleOpenDialog} size='small' sx={{ position: 'fixed', bottom: 20 }}>
+                    <Fab color='primary' size='small' sx={{ position: 'fixed', bottom: 20 }} onClick={() => setOpenCommentForm(true)}>
                         <CreateIcon />
                     </Fab>
                 </Grid>
             </Grid>
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <Dialog open={openCommentForm}>
                 <DialogTitle>
                     Write comment
                     <Typography variant='caption' sx={{ ml: 1, color: error ? 'red' : 'gray' }}>
                         {message}
                     </Typography>
+                    <IconButton sx={{ position: 'absolute', top: 8, right: 8 }} onClick={() => setOpenCommentForm(false)}>
+                        <CloseIcon />
+                    </IconButton>
                 </DialogTitle>
                 <DialogContent sx={{ width: 600 }}>
-                    <TextField
+                    <TextField 
                         autoFocus
                         id="comment"
                         label="Comment"
-                        type="email"
+                        type="text"
                         margin="normal"
-                        disabled={loading}
                         required
                         fullWidth
                         multiline
                         value={comment}
                         onChange={handleChangeComment}
                         error={error}
-                        onBlur={handleBlur}
+                        onBlur={handleBlurComment}
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant='outlined'
-                        color="primary" 
-                        disabled={loading}
-                        sx={{ mr: 1, mb:1 }}
-                        onClick={handleCloseDialog} 
-                    >
-                        CANCEL
+                <DialogActions sx={{ pr: 3, mt: -1, mb: 1 }}>
+                    <Button variant='outlined' onClick={() => setOpenCommentForm(false)}>
+                        Cancel
                     </Button>
-                    <Button 
-                        variant='contained' 
-                        color="primary"
-                        disabled={loading}
-                        sx={{ mr: 1, mb:1 }}
-                        onClick={handleClickComment}                         
-                    >
-                        COMMENT
-                    </Button>
-                    <LoadingCircle loading={loading} layoutLeft={50} />
+                    <LoadingButton variant='contained' onClick={handleCreateComment} loading={saving}>
+                        Comment
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
         </Box>

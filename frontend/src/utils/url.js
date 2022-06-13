@@ -48,9 +48,9 @@ export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapt
 export const URL_GET_ALL_POSTS_BY_COURSE = '/api/students/courses/{courseId}/posts'
 export const URL_CREATE_POST = '/api/students/courses/post'
 export const URL_GET_POST = '/api/students/courses/{courseId}/posts/{postId}'
+export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/comment'
 
 export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
-export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/comment'
 export const URL_CREATE_REVIEW = '/api/students/courses/review'
 export const URL_GET_ALL_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
 export const URL_GET_REVIEW = '/api/students/courses/{courseId}/reviews/{reviewId}'
