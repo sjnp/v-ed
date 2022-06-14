@@ -28,6 +28,9 @@ import CloseIcon from '@mui/icons-material/Close';
 // url
 import { URL_CREATE_COMMENT } from '../utils/url'
 
+// utils
+import scrollMove from '../utils/scrollMove'
+
 const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
     const { courseId, postId } = useParams()
@@ -74,6 +77,7 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
 
         if (response.status === 201) {
             onCreateCommentSuccess(response.data)
+            scrollMove.topToBottom()
             setOpenCommentForm(false)
             setComment('')
             setMessage(`(0/${maxLength})`)

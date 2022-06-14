@@ -82,9 +82,10 @@ const StudentQuestion = () => {
                             null
                         }
                         {
-                            posts?.map(post => (
+                            posts?.map((post, index) => (
                                 post.visible ?
                                 <QuestionCard 
+                                    key={index}
                                     postId={post.id}
                                     topic={post.topic}
                                     datetime={post.createDateTime} 
