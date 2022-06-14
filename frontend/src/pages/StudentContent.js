@@ -11,6 +11,7 @@ import LoadingCircle from '../components/LoadingCircle'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -53,7 +54,9 @@ const StudentContent = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
-                            <Typography variant='h6'>Course content</Typography>
+                            <Breadcrumbs>
+                                <Typography color='black'>Course content</Typography>
+                            </Breadcrumbs>
                         </Grid>
                     </Grid>
                     <Grid container>
