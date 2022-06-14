@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography'
 import Fab from '@mui/material/Fab'
 import Rating from '@mui/material/Rating'
 import Box from '@mui/material/Box'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 
 // Material UI icon
 import AddIcon from '@mui/icons-material/Add'
@@ -30,6 +31,20 @@ import apiPrivate from '../api/apiPrivate'
 import { URL_GET_ALL_REVIEWS_BY_COURSE } from '../utils/url'
 
 const StudentReview = () => {
+
+    const { courseId } = useParams()
+    const navigate = useNavigate()
+    const axiosPrivate = useAxiosPrivate()
+
+    const [ stars, setStars ] = useState(null)
+    const [ rating, setRating ] = useState(null)
+    const [ totalReview, setTotalReview ] = useState(null)
+
+    const [ myReviewId, setMyReviewId ] = useState(0)
+
+    useEffect(async () => {
+
+    }, [])
 
     // const { courseId } = useParams()
 
@@ -73,79 +88,132 @@ const StudentReview = () => {
     return (
         <Container>
             <AppBarSearchHeader />
-            <br/>
-            <Grid container>
-                <Grid item xs={3} md={3}>
-                    <StudentMenu active='review' /> 
+            <Grid container mt={3} mb={5}>
+                <Grid item xs={3}>
+                    <StudentMenu active='review' />
                 </Grid>
-                {/* <Grid item xs={9} marginBottom={5}>
+                <Grid item xs={9}>
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={3}>
-                            <Typography variant='h6'>
-                                Review
-                            </Typography>
+                            <Breadcrumbs>
+                                <Typography color='black'>Reviews</Typography>
+                            </Breadcrumbs>
                         </Grid>
-                        <Grid item xs={6}>
-                        {
-                            loading === false ?
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Rating
-                                    size='large' 
-                                    value={rating} 
-                                    precision={0.1} 
-                                    readOnly 
-                                    emptyIcon={<StarIcon fontSize="inherit" />}
-                                />
-                                <Typography component='span' sx={{ pl: 1}}>{rating}</Typography>
-                                <Typography component='span' sx={{ pl: 1}}>{totalReview}</Typography>
-                            </Box>
-                            :
-                            null
-                        }
+                        <Grid item xs={4} display='flex' flexDirection='row' alignItems='center' justifyContent='center'>
+                            {/* <Rating value={4.8} precision={0.1} readOnly emptyIcon={<StarIcon fontSize="inherit" />} /> */}
+                            {/* <Typography variant='subtitle1' pl={1} pt={0.1}>4.8 (20)</Typography> */}
                         </Grid>
+                        <Grid item xs={2}></Grid>
                         <Grid item xs={2}>
                         {
-                            loading === true ?
-                                null
-                                :
-                                    isReview ?
-                                    <Fab size='small' color='primary' onClick={handleClickEditReview}>
-                                        <EditIcon />
-                                    </Fab>
-                                    :
-                                    <Fab size='small' color='primary' onClick={handleClickCreateReview}>
-                                        <AddIcon />
-                                    </Fab>
-                        }    
+                            myReviewId === null ?
+                            <Fab 
+                                size='small' 
+                                color='primary' 
+                                onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
+                                sx={{ position: 'fixed' }}
+                            >
+                                <AddIcon titleAccess='Create review' />
+                            </Fab>
+                            :
+                            <Fab
+                                size='small' 
+                                color='primary' 
+                                onClick={() => navigate(`/student/course/${courseId}/review/${'my-review-id-hard-code'}`)} 
+                                sx={{ position: 'fixed' }}
+                            >
+                                <EditIcon titleAccess='Edit review' />
+                            </Fab>
+                        }
                         </Grid>
                     </Grid>
-                    <Grid container sx={{ mt: 2 }}>
-                        <Grid item xs={2}></Grid>
-                        <Grid item xs={8} sx={{ pt: 3 }}>
-                        {
-                            reviews?.map((review, index) => {
+                    <Grid container>
+                        <Grid item xs={1}></Grid>
+                        <Grid item xs={10}>
 
-                                if (review.visible === true) {
-                                    return (
-                                        <ReviewCard
-                                            key={index}
-                                            rating={review.rating}
-                                            comment={review.comment}
-                                            firstname={review.firstname}
-                                            lastname={review.lastname} 
-                                            datetime={review.reviewDateTime}
-                                        />
-                                    )
-                                }
-                            })
-                        }    
-                            <LoadingCircle loading={loading} layoutLeft={60} />
                         </Grid>
+                        <Grid item xs={1}></Grid>
                     </Grid>
-                </Grid> */}
+                </Grid>
             </Grid>
         </Container>
+
+        // <Container>
+        //     <AppBarSearchHeader />
+        //     <br/>
+        //     <Grid container>
+        //         <Grid item xs={3} md={3}>
+        //             <StudentMenu active='review' /> 
+        //         </Grid>
+        //         {/* <Grid item xs={9} marginBottom={5}>
+        //             <Grid container>
+        //                 <Grid item xs={1}></Grid>
+        //                 <Grid item xs={3}>
+        //                     <Typography variant='h6'>
+        //                         Review
+        //                     </Typography>
+        //                 </Grid>
+        //                 <Grid item xs={6}>
+        //                 {
+        //                     loading === false ?
+        //                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        //                         <Rating
+        //                             size='large' 
+        //                             value={rating} 
+        //                             precision={0.1} 
+        //                             readOnly 
+        //                             emptyIcon={<StarIcon fontSize="inherit" />}
+        //                         />
+        //                         <Typography component='span' sx={{ pl: 1}}>{rating}</Typography>
+        //                         <Typography component='span' sx={{ pl: 1}}>{totalReview}</Typography>
+        //                     </Box>
+        //                     :
+        //                     null
+        //                 }
+        //                 </Grid>
+        //                 <Grid item xs={2}>
+        //                 {
+        //                     loading === true ?
+        //                         null
+        //                         :
+        //                             isReview ?
+        //                             <Fab size='small' color='primary' onClick={handleClickEditReview}>
+        //                                 <EditIcon />
+        //                             </Fab>
+        //                             :
+        //                             <Fab size='small' color='primary' onClick={handleClickCreateReview}>
+        //                                 <AddIcon />
+        //                             </Fab>
+        //                 }    
+        //                 </Grid>
+        //             </Grid>
+        //             <Grid container sx={{ mt: 2 }}>
+        //                 <Grid item xs={2}></Grid>
+        //                 <Grid item xs={8} sx={{ pt: 3 }}>
+        //                 {
+        //                     reviews?.map((review, index) => {
+
+        //                         if (review.visible === true) {
+        //                             return (
+        //                                 <ReviewCard
+        //                                     key={index}
+        //                                     rating={review.rating}
+        //                                     comment={review.comment}
+        //                                     firstname={review.firstname}
+        //                                     lastname={review.lastname} 
+        //                                     datetime={review.reviewDateTime}
+        //                                 />
+        //                             )
+        //                         }
+        //                     })
+        //                 }    
+        //                     <LoadingCircle loading={loading} layoutLeft={60} />
+        //                 </Grid>
+        //             </Grid>
+        //         </Grid> */}
+        //     </Grid>
+        // </Container>
     )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
@@ -11,6 +11,11 @@ import LoadingCircle from '../components/LoadingCircle'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+
+// Material UI icon
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -22,6 +27,9 @@ import apiPrivate from '../api/apiPrivate'
 import { URL_GET_REVIEW } from '../utils/url'
 
 const StudentEditReview = () => {
+
+    const { courseId } = useParams()
+    const navigate = useNavigate()
 
     // const { courseId, reviewId } = useParams()
 
@@ -52,33 +60,66 @@ const StudentEditReview = () => {
     return (
         <Container>
             <AppBarSearchHeader />
-            <br/>
-            <Grid container>
-                <Grid item xs={3} md={3}>
-                    <StudentMenu active='review' /> 
+            <Grid container mt={3} mb={5}>
+                <Grid item xs={3}>
+                    <StudentMenu active='review' />
                 </Grid>
-                {/* <Grid item xs={9}>
+                <Grid item xs={9}>
                     <Grid container>
-                        <Grid item xs={2}></Grid>
+                        <Grid item xs={1}></Grid>
+                        <Grid item xs={11}>
+                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+                                <Link
+                                    underline='hover' 
+                                    color='default' 
+                                    sx={{ cursor: 'pointer' }} 
+                                    onClick={() => navigate(`/student/course/${courseId}/review`)}
+                                >
+                                    Reviews
+                                </Link>
+                                <Typography color='black'>Edit</Typography>
+                            </Breadcrumbs>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item xs={1}></Grid>
                         <Grid item xs={10}>
-                            <Typography variant='h6'>Edit review</Typography>
+                            <WriteReview type='create' />
                         </Grid>
+                        <Grid item xs={1}></Grid>
                     </Grid>
-                    <Grid container sx={{ mt: 2 }}>
-                        <Grid item xs={2}></Grid>
-                        <Grid item xs={8} sx={{ pt: 3 }}>
-                        {
-                            loading === false ?
-                                <WriteReview initRating={rating} initReview={review} type='update' />
-                                :
-                                null
-                        }    
-                            <LoadingCircle loading={loading} layoutLeft={60} />
-                        </Grid>
-                    </Grid>
-                </Grid> */}
+                </Grid>
             </Grid>
         </Container>
+        // <Container>
+        //     <AppBarSearchHeader />
+        //     <br/>
+        //     <Grid container>
+        //         <Grid item xs={3} md={3}>
+        //             <StudentMenu active='review' /> 
+        //         </Grid>
+        //         {/* <Grid item xs={9}>
+        //             <Grid container>
+        //                 <Grid item xs={2}></Grid>
+        //                 <Grid item xs={10}>
+        //                     <Typography variant='h6'>Edit review</Typography>
+        //                 </Grid>
+        //             </Grid>
+        //             <Grid container sx={{ mt: 2 }}>
+        //                 <Grid item xs={2}></Grid>
+        //                 <Grid item xs={8} sx={{ pt: 3 }}>
+        //                 {
+        //                     loading === false ?
+        //                         <WriteReview initRating={rating} initReview={review} type='update' />
+        //                         :
+        //                         null
+        //                 }    
+        //                     <LoadingCircle loading={loading} layoutLeft={60} />
+        //                 </Grid>
+        //             </Grid>
+        //         </Grid> */}
+        //     </Grid>
+        // </Container>
     )
 }
 
