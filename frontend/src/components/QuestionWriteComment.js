@@ -36,7 +36,7 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
     const { courseId, postId } = useParams()
     const axiosPrivate = useAxiosPrivate()
 
-    const maxLength = 10
+    const maxLength = 1000
     const [ comment, setComment ] = useState('')
     const [ message, setMessage ] = useState(`(0/${maxLength})`)
     const [ error, setError ] = useState(false)
