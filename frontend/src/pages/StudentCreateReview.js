@@ -5,6 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import WriteReview from '../components/WriteReview'
+import ReviewCreate from '../components/ReviewCreate'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -49,7 +50,7 @@ const StudentCreateReview = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10}>
-                            <WriteReview type='create' />
+                            <ReviewCreate />
                         </Grid>
                         <Grid item xs={1}></Grid>
                     </Grid>

@@ -6,6 +6,8 @@ import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import WriteReview from '../components/WriteReview'
 import LoadingCircle from '../components/LoadingCircle'
+import ReviewEdit from '../components/ReviewEdit'
+
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -84,7 +86,7 @@ const StudentEditReview = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10}>
-                            <WriteReview type='create' />
+                            <ReviewEdit />
                         </Grid>
                         <Grid item xs={1}></Grid>
                     </Grid>

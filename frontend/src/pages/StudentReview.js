@@ -40,7 +40,7 @@ const StudentReview = () => {
     const [ rating, setRating ] = useState(null)
     const [ totalReview, setTotalReview ] = useState(null)
 
-    const [ myReviewId, setMyReviewId ] = useState(0)
+    const [ myReviewId, setMyReviewId ] = useState(99)
 
     useEffect(async () => {
 
