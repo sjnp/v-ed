@@ -64,7 +64,7 @@ const App = () => {
 
           {/* student assignment */}
           <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
-          <Route path='student/course/:courseId/assignment/chapter/:chapterNo' element={ <StudentAnswer /> } />
+          <Route path='student/course/:courseId/assignment/chapter/:chapterIndex' element={ <StudentAnswer /> } />
           
           {/* student question board */}
           <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />

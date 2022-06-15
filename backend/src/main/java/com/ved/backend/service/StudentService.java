@@ -1,6 +1,8 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
+import com.ved.backend.model.Answer;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
@@ -10,9 +12,15 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
+<<<<<<< HEAD
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.ChargeResponse;
+=======
+import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.response.AnswerResponse;
+import com.ved.backend.response.AssignmentAnswerResponse;
+>>>>>>> 8c09a69fa05ea1f265e6d2b2d05f083a6c5b186c
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.VideoResponse;
@@ -24,8 +32,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -41,6 +51,7 @@ public class StudentService {
   private final UserService userService;
   private final CourseService courseService;
   private final StudentCourseService studentCourseService;
+  private final AssignmentService assignmentService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentService.class);
@@ -121,7 +132,71 @@ public class StudentService {
     return privateObjectStorageService.readFile(fileName, username);
   }
 
-  /* ************************************************************ */
+  public String getUploadAnswerUrl(Long courseId, int chapterIndex, int noIndex, String clientFileName, String username) {
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+    String fileName = "answer_sid_" + studentCourse.getStudent().getId() + "_cid_" + courseId + "_c" + chapterIndex + "_no." + noIndex + "_" + clientFileName;
+    return privateObjectStorageService.uploadFile(fileName, username);
+  }
+
+  @Transactional
+  public void createAnswer(AnswerRequest answerRequest, String username) {
+    
+    if (Objects.isNull(answerRequest.getChapterIndex())) {
+      throw new BadRequestException("Chapter index is required");
+    }
+
+    if (Objects.isNull(answerRequest.getNoIndex())) {
+      throw new BadRequestException("No index is required");
+    }
+
+    if (Objects.isNull(answerRequest.getFileName())) {
+      throw new BadRequestException("File name is required");
+    }
+
+    StudentCourse studentCourse = this.authStudentCourse(username, answerRequest.getCourseId());
+    Answer answer = Answer.builder()
+      .chapterIndex(answerRequest.getChapterIndex())
+      .noIndex(answerRequest.getNoIndex())
+      .fileName(answerRequest.getFileName())
+      .datetime(LocalDateTime.now())
+      .studentCourse(studentCourse)
+      .build();
+    assignmentService.saveAnswer(answer);
+  }
+
+  public List<AssignmentAnswerResponse> getAssignmentAnswer(Long courseId, Integer chapterIndex, String username) {
+    if (Objects.isNull(chapterIndex)) {
+      throw new BadRequestException("Chapter index is required");
+    }
+    
+    StudentCourse studentCourse = this.authStudentCourse(username, courseId);
+
+    List<AssignmentAnswerResponse> assignmentAnswerResponses = studentCourse.getCourse()
+      .getChapters()
+      .get(chapterIndex)
+      .getAssignments()
+      .stream()
+      .map(assignment -> AssignmentAnswerResponse.builder().assignment(assignment.get("detail")).build())
+      .collect(Collectors.toList());
+
+    List<Answer> answers = studentCourse.getAnswers()
+      .stream()
+      .filter(answer -> answer.getChapterIndex() == chapterIndex)
+      .collect(Collectors.toList());
+
+    for(int i = 0; i < assignmentAnswerResponses.size(); ++i) {
+      for(Answer answer : answers) {
+        if (answer.getNoIndex() == i) {
+          assignmentAnswerResponses.get(i).setAnswer(new AnswerResponse(answer));
+          break;
+        }
+      }
+    }
+
+    return assignmentAnswerResponses;
+  }
+
+  /* ************************************************************************************************** */
 
   public Student getStudent(String username) {
     AppUser appUser = userService.getAppUser(username);

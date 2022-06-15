@@ -1,6 +1,5 @@
 package com.ved.backend.controller;
 
-import com.ved.backend.model.Answer;
 import com.ved.backend.model.Instructor;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
@@ -24,7 +23,6 @@ public class StudentController {
 
   private final StudentService studentService;
   private final CourseService courseService;
-  private final AssignmentService assignmentService;
   private final PostService postService;
   private final CommentService commentService;
   private final ReviewService reviewService;
@@ -76,8 +74,6 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************** */
-
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
   public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
     VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
@@ -90,7 +86,25 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  // ---------------------------------------------
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
+  public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
+    String response = studentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/answer")
+  public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
+    studentService.createAnswer(answerRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
+  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
+    List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  /* *************************************************************************************************** */
 
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
@@ -124,26 +138,6 @@ public class StudentController {
                                                   Principal principal) {
     ReviewResponse response = reviewService.getReview(reviewId);
     return ResponseEntity.ok().body(response);
-  }
-
-  // @PostMapping("/courses/{courseId}")
-  // public ResponseEntity<?> buyCourse(@PathVariable Long courseId, Principal principal) {
-  //   studentCourseService.buyFreeCourse(courseId, principal.getName());
-  //   return ResponseEntity.status(HttpStatus.CREATED).build();
-  // }
-
-  @PostMapping("/courses/answers/pre-authenticated-request")
-  public ResponseEntity<String> createParToUploadAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
-    String response = assignmentService.getUploadAnswerURI(answerRequest, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping("/courses/{courseId}/answer")
-  public ResponseEntity<Long> saveAnswer(@PathVariable Long courseId,
-                                         @RequestBody Answer answer,
-                                         Principal principal) {
-    Long answerId = assignmentService.saveAnswer(answer, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).body(answerId);
   }
 
   @PostMapping("/courses/post")
@@ -180,11 +174,4 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @DeleteMapping("/courses/{courseId}/answer/{answerId}")
-  public ResponseEntity<?> deleteAnswer(@PathVariable Long courseId,
-                                        @PathVariable Long answerId,
-                                        Principal principal) {
-    assignmentService.deleteAnswerFile(answerId, principal.getName());
-    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-  }
 }
