@@ -1,8 +1,10 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.baseException.BadRequestException;
+import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.*;
-import com.ved.backend.repo.AppUserRepo;
+// import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
 import com.ved.backend.repo.ReviewRepo;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -24,47 +27,88 @@ import java.util.Optional;
 @Transactional
 public class ReviewService {
 
-    private final AppUserRepo appUserRepo;
-    private final PublishedCourseRepo publishedCourseRepo;
-    private final CourseRepo courseRepo;
+    private final AuthService authService;
+
     private final ReviewRepo reviewRepo;
 
-    public void create(ReviewRequest reviewRequest, String username) {
+    // private final AppUserRepo appUserRepo;
+    private final PublishedCourseRepo publishedCourseRepo;
+    private final CourseRepo courseRepo;
 
-        Optional<Course> courseOptional = courseRepo.findById(reviewRequest.getCourseId());
-        if (courseOptional.isEmpty()) {
-            throw new MyException("review.course.id.not.found", HttpStatus.BAD_REQUEST);
+    public void create(ReviewRequest reviewRequest, String username) {
+        if (Objects.isNull(reviewRequest.getCourseId())) {
+            throw new BadRequestException("Course id is required");
         }
 
-        AppUser appUser = appUserRepo.findByUsername(username);
-        Student student = appUser.getStudent();
-        // todo : uncomment later.
-        // Long reviewId = student.getReview().getId();
+        if (Objects.isNull(reviewRequest.getRating())) {
+            throw new BadRequestException("Rating is required");
+        }
 
-        // if (Objects.nonNull(reviewId)) {
-        //     throw new MyException("review.duplicate", HttpStatus.CONFLICT);
-        // }
+        if (Objects.isNull(reviewRequest.getReview())) {
+            throw new BadRequestException("Review is required");
+        }
 
-        Course course = courseOptional.get();
-        PublishedCourse publishedCourse = course.getPublishedCourse();
+        StudentCourse studentCourse = authService.authorized(username, reviewRequest.getCourseId());
+        if (reviewRepo.existsByStudentAndPublishedCourse(studentCourse.getStudent(), studentCourse.getCourse().getPublishedCourse())) {
+            throw new ConflictException("You have already reviewed");
+        }
+
+        PublishedCourse publishedCourse = studentCourse.getCourse().getPublishedCourse();
         Double newTotalScore = publishedCourse.getTotalScore() + reviewRequest.getRating();
         Long newTotalUser = publishedCourse.getTotalUser() + 1;
         Double newStar = newTotalScore / newTotalUser;
         publishedCourse.setTotalScore(newTotalScore);
         publishedCourse.setTotalUser(newTotalUser);
         publishedCourse.setStar(newStar);
-
-        Review review = new Review();
-        review.setComment(reviewRequest.getReview());
-        review.setRating(reviewRequest.getRating());
-        review.setReviewDateTime(LocalDateTime.now());
-        review.setVisible(true);
-        review.setStudent(student);
-        review.setPublishedCourse(publishedCourse);
-
         publishedCourseRepo.save(publishedCourse);
+
+        Review review = Review.builder()
+            .rating(reviewRequest.getRating())
+            .comment(reviewRequest.getReview())
+            .reviewDateTime(LocalDateTime.now())
+            .visible(true)
+            .student(studentCourse.getStudent())
+            .publishedCourse(publishedCourse)
+            .build();
         reviewRepo.save(review);
     }
+
+    // public void create(ReviewRequest reviewRequest, String username) {
+
+    //     Optional<Course> courseOptional = courseRepo.findById(reviewRequest.getCourseId());
+    //     if (courseOptional.isEmpty()) {
+    //         throw new MyException("review.course.id.not.found", HttpStatus.BAD_REQUEST);
+    //     }
+
+    //     AppUser appUser = appUserRepo.findByUsername(username);
+    //     Student student = appUser.getStudent();
+    //     // todo : uncomment later.
+    //     // Long reviewId = student.getReview().getId();
+
+    //     // if (Objects.nonNull(reviewId)) {
+    //     //     throw new MyException("review.duplicate", HttpStatus.CONFLICT);
+    //     // }
+
+    //     Course course = courseOptional.get();
+    //     PublishedCourse publishedCourse = course.getPublishedCourse();
+    //     Double newTotalScore = publishedCourse.getTotalScore() + reviewRequest.getRating();
+    //     Long newTotalUser = publishedCourse.getTotalUser() + 1;
+    //     Double newStar = newTotalScore / newTotalUser;
+    //     publishedCourse.setTotalScore(newTotalScore);
+    //     publishedCourse.setTotalUser(newTotalUser);
+    //     publishedCourse.setStar(newStar);
+
+    //     Review review = new Review();
+    //     review.setComment(reviewRequest.getReview());
+    //     review.setRating(reviewRequest.getRating());
+    //     review.setReviewDateTime(LocalDateTime.now());
+    //     review.setVisible(true);
+    //     review.setStudent(student);
+    //     review.setPublishedCourse(publishedCourse);
+
+    //     publishedCourseRepo.save(publishedCourse);
+    //     reviewRepo.save(review);
+    // }
 
     public ReviewCourseResponse getReviewCourse(Long courseId, String username) {
 

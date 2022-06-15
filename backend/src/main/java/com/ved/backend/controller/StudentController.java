@@ -109,7 +109,11 @@ public class StudentController {
 
   /* *************************************************************************************************** */
 
-
+  @PostMapping("/courses/review")
+  public ResponseEntity<?> createReview(@RequestBody ReviewRequest reviewRequest, Principal principal) {
+    reviewService.create(reviewRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
 
   // ------------------------------------------------------------------------------------------------------
 
@@ -136,11 +140,7 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @PostMapping("/courses/review")
-  public ResponseEntity<?> createReview(@RequestBody ReviewRequest reviewRequest, Principal principal) {
-    reviewService.create(reviewRequest, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).build();
-  }
+  
 
   @PutMapping("/courses/reviews/{reviewId}")
   public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest) {
