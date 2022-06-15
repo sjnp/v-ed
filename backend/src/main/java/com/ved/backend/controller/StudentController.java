@@ -51,8 +51,8 @@ public class StudentController {
 
   @PostMapping(path = "/purchase/course")
   public ResponseEntity<?> buyCourse(@RequestBody ChargeDataRequest chargeData, Principal principal) {
-    String authorizeUri = studentService.buyCourse(chargeData, principal.getName());
-    return ResponseEntity.ok().body(authorizeUri);
+    ChargeResponse chargeResponse = studentService.buyCourse(chargeData, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
   }
 
 

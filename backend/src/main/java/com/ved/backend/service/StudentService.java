@@ -12,6 +12,7 @@ import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
+import com.ved.backend.response.ChargeResponse;
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.VideoResponse;
@@ -57,19 +58,19 @@ public class StudentService {
       .build();
     studentCourseService.save(studentCourse);
   }
-  public String buyCourse(ChargeDataRequest chargeData, String username) {
+  public ChargeResponse buyCourse(ChargeDataRequest chargeData, String username) {
     log.info("Username {} get free course id {}", username, chargeData.getCourseId());
     Course course = courseService.getById(chargeData.getCourseId()); // เช็คคอส เช็คฟรี
     Student student = userService.getStudent(username);
     studentCourseService.verifyCanBuyCourse(student, course); // เช็คซื้อคอสได้ไหม ถ้ามีแล้วเออเร่อ
     String sourceId = omiseService.createPaymentSource(chargeData);
-    String authorizeUri = omiseService.createPaymentCharge(chargeData,sourceId);
+    ChargeResponse chargeResponse = omiseService.createPaymentCharge(chargeData,sourceId);
 //    StudentCourse studentCourse = StudentCourse.builder() // สร้าง
 //            .student(student)
 //            .course(course)
 //            .build();
 //    studentCourseService.save(studentCourse); // เซฟ
-    return authorizeUri;
+    return chargeResponse;
   }
 
   public List<CourseCardResponse> getMyCourse(String username) {

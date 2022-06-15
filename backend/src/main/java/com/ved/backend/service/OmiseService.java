@@ -177,18 +177,21 @@ public class OmiseService {
             JSONObject responseJson = new JSONObject(response);
             String authorizeUri = responseJson.get("authorize_uri").toString();
             String chargeId = responseJson.get("id").toString();
-            ChargeResponse response = new ChargeResponse(chargeId,authorizeUri);
-            response.setId("sdsdsds");
             ChargeResponse chargeResponse = ChargeResponse.builder()
                     .id(chargeId)
                     .authorizeUri(authorizeUri)
                     .build();
             log.info(authorizeUri);
+            log.info(chargeId);
             return chargeResponse;
         }
         catch (Exception error) {
             System.out.println(error.getMessage());
-            return error.getMessage();
+            ChargeResponse chargeRespons = ChargeResponse.builder()
+                    .id(null)
+                    .authorizeUri(null)
+                    .build();
+            return chargeRespons;
         }
     }
 
