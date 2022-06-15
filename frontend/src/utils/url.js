@@ -52,10 +52,10 @@ export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/commen
 
 export const URL_CREATE_REVIEW = '/api/students/courses/review'
 export const URL_GET_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
+export const URL_GET_REVIEW = '/api/students/courses/{courseId}/reviews/{reviewId}'
 
 export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
 
-export const URL_GET_REVIEW = '/api/students/courses/{courseId}/reviews/{reviewId}'
 export const URL_EDIT_REVIEW = '/api/students/courses/reviews/{reviewId}'
 
 // student - incomplete

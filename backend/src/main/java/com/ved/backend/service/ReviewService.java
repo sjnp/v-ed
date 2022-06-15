@@ -1,6 +1,7 @@
 package com.ved.backend.service;
 
 import com.ved.backend.exception.CourseNotFoundException;
+import com.ved.backend.exception.ReviewNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.tempException.MyException;
@@ -95,21 +96,28 @@ public class ReviewService {
             .build();
     }
 
+    public ReviewResponse getReview(Long courseId, Long reviewId, String username) {
+        authService.authorized(username, courseId);
+        Review review = reviewRepo.findById(reviewId)
+            .orElseThrow(() -> new ReviewNotFoundException(reviewId));
+        return new ReviewResponse(review);
+    }
+
     /* ******************************************************************************************* */
 
-    public ReviewResponse getReview(Long reviewId) {
+    // public ReviewResponse getReview(Long reviewId) {
 
-        Optional<Review> reviewOptional = reviewRepo.findById(reviewId);
+    //     Optional<Review> reviewOptional = reviewRepo.findById(reviewId);
 
-        if (reviewOptional.isEmpty()) {
-            throw new MyException("review.not.found", HttpStatus.BAD_REQUEST);
-        }
+    //     if (reviewOptional.isEmpty()) {
+    //         throw new MyException("review.not.found", HttpStatus.BAD_REQUEST);
+    //     }
 
-        Review review = reviewOptional.get();
-        ReviewResponse response = new ReviewResponse(review);
+    //     Review review = reviewOptional.get();
+    //     ReviewResponse response = new ReviewResponse(review);
 
-        return response;
-    }
+    //     return response;
+    // }
 
     public void edit(Long reviewId, ReviewRequest reviewRequest) {
 

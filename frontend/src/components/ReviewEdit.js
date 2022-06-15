@@ -11,15 +11,15 @@ import LoadingButton from '@mui/lab/LoadingButton';
 // Material UI icon
 import StarIcon from '@mui/icons-material/Star'
 
-const ReviewEdit = () => {
+const ReviewEdit = ({ dataRating, dataReview }) => {
 
-    const [ rating, setRating ] = useState(null)
-    const [ messageRating, setMessageRating ] = useState(null)
+    const [ rating, setRating ] = useState(dataRating)
+    const [ messageRating, setMessageRating ] = useState(dataRating)
     const [ errorRating, setErrorRating ] = useState(false)
 
     const maxLength = 10
-    const [ review, setReview ] = useState('')
-    const [ messageReview, setMessageReview ] = useState(`(0/${maxLength})`)
+    const [ review, setReview ] = useState(dataReview)
+    const [ messageReview, setMessageReview ] = useState(`(${review.length}/${maxLength})`)
     const [ errorReview, setErrorReview ] = useState(false)
 
     const [ saving, setSaving ] = useState(false)
