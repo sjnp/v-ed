@@ -1,14 +1,15 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.model.*;
-// import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
 import com.ved.backend.repo.ReviewRepo;
 import com.ved.backend.request.ReviewRequest;
+import com.ved.backend.response.PublishedCourseResponse;
 import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.response.ReviewResponse;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,8 @@ public class ReviewService {
     private final AuthService authService;
 
     private final ReviewRepo reviewRepo;
-
-    // private final AppUserRepo appUserRepo;
     private final PublishedCourseRepo publishedCourseRepo;
+
     private final CourseRepo courseRepo;
 
     public void create(ReviewRequest reviewRequest, String username) {
@@ -73,81 +73,29 @@ public class ReviewService {
         reviewRepo.save(review);
     }
 
-    // public void create(ReviewRequest reviewRequest, String username) {
+    public ReviewCourseResponse getReviewsByCourseId(Long courseId, String username) {
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        PublishedCourse publishedCourse = publishedCourseRepo.findByCourseId(courseId)
+            .orElseThrow(() -> new CourseNotFoundException(courseId));
+        PublishedCourseResponse publishedCourseResponse = new PublishedCourseResponse(publishedCourse);
 
-    //     Optional<Course> courseOptional = courseRepo.findById(reviewRequest.getCourseId());
-    //     if (courseOptional.isEmpty()) {
-    //         throw new MyException("review.course.id.not.found", HttpStatus.BAD_REQUEST);
-    //     }
-
-    //     AppUser appUser = appUserRepo.findByUsername(username);
-    //     Student student = appUser.getStudent();
-    //     // todo : uncomment later.
-    //     // Long reviewId = student.getReview().getId();
-
-    //     // if (Objects.nonNull(reviewId)) {
-    //     //     throw new MyException("review.duplicate", HttpStatus.CONFLICT);
-    //     // }
-
-    //     Course course = courseOptional.get();
-    //     PublishedCourse publishedCourse = course.getPublishedCourse();
-    //     Double newTotalScore = publishedCourse.getTotalScore() + reviewRequest.getRating();
-    //     Long newTotalUser = publishedCourse.getTotalUser() + 1;
-    //     Double newStar = newTotalScore / newTotalUser;
-    //     publishedCourse.setTotalScore(newTotalScore);
-    //     publishedCourse.setTotalUser(newTotalUser);
-    //     publishedCourse.setStar(newStar);
-
-    //     Review review = new Review();
-    //     review.setComment(reviewRequest.getReview());
-    //     review.setRating(reviewRequest.getRating());
-    //     review.setReviewDateTime(LocalDateTime.now());
-    //     review.setVisible(true);
-    //     review.setStudent(student);
-    //     review.setPublishedCourse(publishedCourse);
-
-    //     publishedCourseRepo.save(publishedCourse);
-    //     reviewRepo.save(review);
-    // }
-
-    public ReviewCourseResponse getReviewCourse(Long courseId, String username) {
-
-        Optional<Course> courseOptional = courseRepo.findById(courseId);
-
-        if (courseOptional.isEmpty()) {
-            throw new MyException("review.course.id.not.found", HttpStatus.BAD_REQUEST);
-        }
-
-        Course course = courseOptional.get();
-        PublishedCourse publishedCourse = course.getPublishedCourse();
-
-        List<Review> reviews = publishedCourse.getReviews();
-
-        List<ReviewResponse> reviewResponses = new ArrayList<>();
-        Boolean isReview = false;
         Long myReviewId = null;
-        for (Review review : reviews) {
-
-            ReviewResponse reviewResponse = new ReviewResponse(review);
-            reviewResponses.add(reviewResponse);
-
-            if (review.getStudent().getAppUser().getUsername().equals(username)) {
-                isReview = true;
+        List<ReviewResponse> reviewResponses = new ArrayList<ReviewResponse>();
+        for (Review review : publishedCourse.getReviews()) {
+            if (review.getStudent().equals(studentCourse.getStudent())) {
                 myReviewId = review.getId();
             }
+            reviewResponses.add(new ReviewResponse(review));
         }
 
-        ReviewCourseResponse response = new ReviewCourseResponse();
-        response.setCourseId(courseId);
-        response.setMyReviewId(myReviewId);
-        response.setIsReview(isReview);
-        response.setReviews(reviewResponses);
-        Double roundStar =  Double.parseDouble(String.format("%.1f", publishedCourse.getStar()));
-        response.setStar(roundStar);
-        response.setTotalReviewUser(publishedCourse.getTotalUser());
-
-        return response;
+        return ReviewCourseResponse.builder()
+            .summary(publishedCourseResponse)
+            .reviews(reviewResponses)
+            .myReviewId(myReviewId)
+            .build();
     }
+
+    /* ******************************************************************************************* */
 
     public ReviewResponse getReview(Long reviewId) {
 

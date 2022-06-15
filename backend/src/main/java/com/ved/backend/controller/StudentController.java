@@ -115,6 +115,12 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @GetMapping("/courses/{courseId}/reviews")
+  public ResponseEntity<ReviewCourseResponse> getReviewsByCourseId(@PathVariable Long courseId, Principal principal) {
+    ReviewCourseResponse response = reviewService.getReviewsByCourseId(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   // ------------------------------------------------------------------------------------------------------
 
   
@@ -126,11 +132,7 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  @GetMapping("/courses/{courseId}/reviews")
-  public ResponseEntity<ReviewCourseResponse> getAllReviews(@PathVariable Long courseId, Principal principal) {
-    ReviewCourseResponse response = reviewService.getReviewCourse(courseId, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @GetMapping("/courses/{courseId}/reviews/{reviewId}")
   public ResponseEntity<ReviewResponse> getReview(@PathVariable Long courseId,
