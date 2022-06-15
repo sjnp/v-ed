@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
 // Material UI component
 import Rating from '@mui/material/Rating'
@@ -11,13 +12,26 @@ import LoadingButton from '@mui/lab/LoadingButton';
 // Material UI icon
 import StarIcon from '@mui/icons-material/Star'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
+// custom api
+import apiPrivate from '../api/apiPrivate'
+
+// url
+import { URL_CREATE_REVIEW } from '../utils/url'
+
 const ReviewCreate = () => {
+
+    const { courseId } = useParams()
+    const navigate = useNavigate()
+    const axiosPrivate = useAxiosPrivate()
 
     const [ rating, setRating ] = useState(null)
     const [ messageRating, setMessageRating ] = useState(null)
     const [ errorRating, setErrorRating ] = useState(false)
 
-    const maxLength = 10
+    const maxLength = 1000
     const [ review, setReview ] = useState('')
     const [ messageReview, setMessageReview ] = useState(`(0/${maxLength})`)
     const [ errorReview, setErrorReview ] = useState(false)
@@ -50,7 +64,7 @@ const ReviewCreate = () => {
         setErrorReview(false)
     }
 
-    const handleClickReview = () => {
+    const handleClickReview = async () => {
         let invalid = false
 
         if (rating === null || rating < 0) {
@@ -68,10 +82,20 @@ const ReviewCreate = () => {
         if (invalid) return
 
         setSaving(true)
+        const url = URL_CREATE_REVIEW.replace('{courseId}', courseId)
         const payload = {
-            
+            courseId: courseId,
+            rating: rating,
+            review: review
         }
+        const response = await apiPrivate.post(axiosPrivate, url, payload)
 
+        if (response.status === 201) {
+            navigate(`/student/course/${courseId}/review`)
+        } else {
+            alert(response.message)
+        }
+        setSaving(false)
     }
 
     return (
