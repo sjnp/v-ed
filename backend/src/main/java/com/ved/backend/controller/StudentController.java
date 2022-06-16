@@ -91,7 +91,7 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/posts")
   public ResponseEntity<List<PostCardResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
-    List<PostCardResponse> response = postService.getPostsByCourseIdNew(principal.getName(), courseId);
+    List<PostCardResponse> response = postService.getPostsByCourseId(principal.getName(), courseId);
     return ResponseEntity.ok().body(response);
   }
 

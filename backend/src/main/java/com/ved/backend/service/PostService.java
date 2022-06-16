@@ -26,6 +26,9 @@ import com.ved.backend.response.PostCardResponse;
 import com.ved.backend.response.PostCommentResponse;
 
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +45,11 @@ public class PostService {
 
     private final CommentStateProperties commentStateProperties;
 
+    private static final Logger log = LoggerFactory.getLogger(PostService.class);
+
     public CreatePostResponse createPost(PostRequest postRequest, String username) {
+        log.info("Create post in course id: {} by username: {}", postRequest.getCourseId(), username);
+
         if (Objects.isNull(postRequest.getCourseId())) {
             throw new BadRequestException("Course id is required");
         }
@@ -71,7 +78,8 @@ public class PostService {
             .build();
     }
 
-    public List<PostCardResponse> getPostsByCourseIdNew(String username, Long courseId) {
+    public List<PostCardResponse> getPostsByCourseId(String username, Long courseId) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
         authService.authorized(username, courseId);
         Course course = courseRepo.findById(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
@@ -83,6 +91,7 @@ public class PostService {
     }
 
     public PostCommentResponse getPostById(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
         authService.authorized(username, courseId);
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new PostNotFoundException(postId));
@@ -90,6 +99,8 @@ public class PostService {
     }
 
     public CommentResponse createComment(String username, Long courseId, CommentRequest commentRequest) {
+        log.info("Edit post id: {} in course id: {} by username: {}", commentRequest.getPostId(), courseId, username);
+
         if (Objects.isNull(commentRequest.getPostId())) {
             throw new BadRequestException("Post id is required");
         }
