@@ -30,20 +30,20 @@ public class StudentController {
 
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourseNew(principal.getName(), courseId);
+    studentCourseService.buyFreeCourse(principal.getName(), courseId);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
   public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
-    List<CourseCardResponse> response = studentCourseService.getMyCoursesNew(principal.getName());
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses")
   public ResponseEntity<List<CourseCardResponse>> getMyCourses(Principal principal) {
-    List<CourseCardResponse> response = studentCourseService.getMyCoursesNew(principal.getName());
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
