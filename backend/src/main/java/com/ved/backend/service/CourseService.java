@@ -2,7 +2,6 @@ package com.ved.backend.service;
 
 import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.exception.CourseNotFoundException;
-import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
@@ -36,12 +35,14 @@ public class CourseService {
 
     private static final Logger log = LoggerFactory.getLogger(CourseService.class);
 
-    public CourseResponse getCourseNew(Long courseId, String username) {
+    public CourseResponse getCourse(Long courseId, String username) {
+        log.info("Get course id: {} by username: {}", courseId, username);
         StudentCourse studentCourse = authService.authorized(username, courseId);
         return new CourseResponse(studentCourse.getCourse());
     }
 
-    public VideoResponse getVideoUrlNew(Long courseId, int chapterIndex, int sectionIndex, String username) {
+    public VideoResponse getVideoUrl(Long courseId, int chapterIndex, int sectionIndex, String username) {
+        log.info("Get video url course id: {} by username: {}", courseId, username);
         StudentCourse studentCourse = authService.authorized(username, courseId);
         String fileName = "course_vid_" + courseId + "_c" + chapterIndex + "_s" + sectionIndex + ".mp4";
         String videoUrl = privateObjectStorageService.readFile(fileName, username);
@@ -53,7 +54,8 @@ public class CourseService {
             .build();
     }
 
-    public String getHandoutUrlNew(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+    public String getHandoutUrl(Long courseId, int chapterIndex, int sectionIndex, int handoutIndex, String username) {
+        log.info("Get handout url course id: {} by username: {}", courseId, username);
         StudentCourse studentCourse = authService.authorized(username, courseId);
         @SuppressWarnings("unchecked")
         List<Map<String, String>> handouts = (List<Map<String, String>>) studentCourse
@@ -85,12 +87,6 @@ public class CourseService {
         return courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
     }
 
-    public Course getByIdAndPrice(Long courseId, Long price) {
-        log.info("Get course id {} and price {}", courseId, price);
-        return courseRepo.findByIdAndPrice(courseId, price)
-            .orElseThrow(() -> new BadRequestException("Course id " + courseId + " not free"));
-    }
-
     /* ****************************************************************************************** */
 
     public AboutCourseResponse getAboutCourse(Long courseId) {
@@ -106,7 +102,6 @@ public class CourseService {
 
         return response;
     }
-
 
     public Collection<CourseStateRepo.IdAndNameOnly> getAllCourseStates() {
         // log.info("Getting all course states");
