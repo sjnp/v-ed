@@ -100,7 +100,7 @@ const BuyCourseOverview = ({ data }) => {
         <Grid item xs={2}>
           <Avatar
             alt={instructorFirstname}
-            src={instructorPictureURI || "/static/images/avatar/2.jpg"} 
+            src={instructorPictureURI || "/static/images/avatar/1.jpg"} 
             sx={{ bgcolor: stringToColor(instructorFirstname), mt: 0.3 }}
           /> 
         </Grid>
@@ -120,7 +120,7 @@ const BuyCourseOverview = ({ data }) => {
             :
             <Box>
               <Rating value={ratingCourse} size="large" readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
-              <Typography variant="body1" mt={2}>{ratingCourse} {totalReview}</Typography>
+              <Typography variant="body1" mt={2} textAlign='center'>{ratingCourse} ({totalReview})</Typography>
             </Box>
           }
           </Grid>
