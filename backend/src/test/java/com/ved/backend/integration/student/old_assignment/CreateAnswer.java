@@ -1,4 +1,4 @@
-package com.ved.backend.integration.student.assignment;
+package com.ved.backend.integration.student.old_assignment;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;

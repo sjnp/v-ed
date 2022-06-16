@@ -1,4 +1,4 @@
-package com.ved.backend.integration.student.course;
+package com.ved.backend.integration.student.old_assignment;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -8,35 +8,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import static org.hamcrest.Matchers.hasSize;
+
+import java.util.List;
 
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.StudentCourseRepo;
-import com.ved.backend.response.CourseResponse;
 import com.ved.backend.util.MockDatabase;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class GetCourseIT {
-
+public class GetAssignmentAnswer {
+ 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private MockDatabase mockDatabase;
 
     @Autowired
     private AppUserRepo appUserRepo;
@@ -44,76 +46,73 @@ public class GetCourseIT {
     @Autowired
     private CourseRepo courseRepo;
 
-    @Autowired
-    private StudentCourseRepo studentCourseRepo;
-
-    @Autowired
-    private MockDatabase mockDatabase;
-
     @Test
     @Order(1)
     public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-
+        
         mockDatabase.mock_register_student();
 
         mockDatabase.mock_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
-        mockDatabase.mock_course(1000L, "PUBLISHED", "DESIGN");
+        mockDatabase.mock_course(500L, "PUBLISHED", "PROGRAMMING");
         
-        AppUser appUser = appUserRepo.findAppUserByUsername("student@test.com").get();
+        AppUser appUser = appUserRepo.findByUsername("student@test.com");
         Student student = appUser.getStudent();
-        Course course = courseRepo.findAll().get(0);
-        mockDatabase.mock_student_course(student, course);
+        List<Course> courses = courseRepo.findAll();
+        for(Course course : courses) {
+            mockDatabase.mock_student_course(student, course);
+        }
+
+        Long courseId = courses.get(0).getId();
+        int chapterIndex = 0;
+        int noIndex = 0;
+        String fileName = "my_answer.doc";
+        mockDatabase.mock_answer(courseId, chapterIndex, noIndex, fileName);
     }
 
     @Test
     @Order(2)
-    public void givenUsernameAndCourseId_whenSuccess_thenReturnCourseResponse() throws Exception {
+    public void givenChapterIndex_whenSuccess_thenRetrunOkStatusAndAssignmentAnswerResponseList() throws Exception {
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
         // given
-        Course course = studentCourseRepo.findAll().get(0).getCourse();
-        Long courseId = course.getId();
-        CourseResponse courseResponse = new CourseResponse(course);
+        Long courseId = courseRepo.findAll().get(0).getId();
+        Integer chapterIndex = 0;
         // when
+        String url = String.format("/api/students/courses/%d/chapter/%d/answer", courseId, chapterIndex);
         ResultActions resultActions = mockMvc.perform(
-            get("/api/students/courses/" + courseId)
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
-        resultActions
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isNotEmpty())
-            .andExpect(jsonPath("$.courseId").value(courseResponse.getCourseId()))
-            .andExpect(jsonPath("$.content").isArray())
-            .andExpect(jsonPath("$.content").isNotEmpty());
-    }
-
-    @Test
-    @Order(3)
-    public void givenUsernameAndCourseId_whenCourseIdNotFound_thenThrowUnauthorizedException() throws Exception {
-        ResultActions logiActions = mockDatabase.mock_login_student();
-        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
-        // given
-        Long courseId = 0L;
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            get("/api/students/courses/" + courseId)
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
+            get(url).header(HttpHeaders.AUTHORIZATION, accessToken)
         );
         // then
         resultActions
-            .andExpect(status().isNotFound())
-            .andExpect(status().reason(containsString(String.format("Course id %s not found", courseId))));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(1)));
     }
 
     @Test
     @Order(4)
-    public void clear() throws Exception {
+    public void givenChapterIndex_whenNull_thenReturnBadRequestStatus() throws Exception {
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+        // given
+        Long courseId = courseRepo.findAll().get(0).getId();
+        Integer chapterIndex = null;
+        // when
+        String url = String.format("/api/students/courses/%d/chapter/%d/answer", courseId, chapterIndex);
+        ResultActions resultActions = mockMvc.perform(
+            get(url).header(HttpHeaders.AUTHORIZATION, accessToken)
+        );
+        // then
+        resultActions.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @Order(5)
+    public void clear() {
         mockDatabase.clear();
     }
 
