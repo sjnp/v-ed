@@ -32,7 +32,7 @@ public class StudentCourseService {
     private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
     public void buyFreeCourse(String username, Long courseId) {
-        log.info("student username: {} buy free course id {}", username, courseId);
+        log.info("username: {} buy free course id: {}", username, courseId);
         Student student = userService.getStudent(username);
         Course course = courseRepo
             .findByIdAndPrice(courseId, 0L)
@@ -49,7 +49,7 @@ public class StudentCourseService {
     }
 
     public List<CourseCardResponse> getMyCourses(String username) {
-        log.info("Get my courses of username {}", username);
+        log.info("Get my courses of username: {}", username);
         Student student = userService.getStudent(username);
         return studentCourseRepo
             .findByStudent(student)
