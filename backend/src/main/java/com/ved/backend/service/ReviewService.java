@@ -14,6 +14,9 @@ import com.ved.backend.response.PublishedCourseResponse;
 import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.response.ReviewResponse;
 import lombok.AllArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +35,11 @@ public class ReviewService {
     private final ReviewRepo reviewRepo;
     private final PublishedCourseRepo publishedCourseRepo;
 
+    private static final Logger log = LoggerFactory.getLogger(ReviewService.class);
+
     public void create(ReviewRequest reviewRequest, String username) {
+        log.info("Create review in course id: {} by username: {}", reviewRequest.getCourseId(), username);
+
         if (Objects.isNull(reviewRequest.getCourseId())) {
             throw new BadRequestException("Course id is required");
         }
@@ -71,6 +78,7 @@ public class ReviewService {
     }
 
     public ReviewCourseResponse getReviewsByCourseId(Long courseId, String username) {
+        log.info("Get reviews course id: {} by username: {}", courseId, username);
         StudentCourse studentCourse = authService.authorized(username, courseId);
         PublishedCourse publishedCourse = publishedCourseRepo.findByCourseId(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
@@ -93,6 +101,7 @@ public class ReviewService {
     }
 
     public ReviewResponse getReview(Long courseId, Long reviewId, String username) {
+        log.info("Get review id: {} by username: {}", reviewId, username);
         authService.authorized(username, courseId);
         Review review = reviewRepo.findById(reviewId)
             .orElseThrow(() -> new ReviewNotFoundException(reviewId));
@@ -100,6 +109,8 @@ public class ReviewService {
     }
 
     public void edit(ReviewRequest reviewRequest, String username) {
+        log.info("Edit review id: {} by username: {}", reviewRequest.getReview(), username);
+
         if (Objects.isNull(reviewRequest.getCourseId())) {
             throw new BadRequestException("Course id is required");
         }
