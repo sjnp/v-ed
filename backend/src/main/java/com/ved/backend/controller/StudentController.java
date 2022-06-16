@@ -67,19 +67,19 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
   public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
-    List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswerNew(courseId, chapterIndex, principal.getName());
+    List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
   public ResponseEntity<String> getUploadAnswerUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
-    String response = assignmentService.getUploadAnswerUrlNew(courseId, chapterIndex, noIndex, fileName, principal.getName());
+    String response = assignmentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @PostMapping("/courses/{courseId}/answer")
   public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
-    assignmentService.createAnswerNew(answerRequest, principal.getName());
+    assignmentService.createAnswer(answerRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 

@@ -32,7 +32,9 @@ public class AssignmentService {
 
     private static final Logger log = LoggerFactory.getLogger(AssignmentService.class);
 
-    public List<AssignmentAnswerResponse> getAssignmentAnswerNew(Long courseId, Integer chapterIndex, String username) {
+    public List<AssignmentAnswerResponse> getAssignmentAnswer(Long courseId, Integer chapterIndex, String username) {
+        log.info("Get assignment answer course id: {} by username: {}", courseId, username);
+        
         if (Objects.isNull(courseId)) {
             throw new BadRequestException("Course id is required");
         }
@@ -67,13 +69,16 @@ public class AssignmentService {
         return assignmentAnswerResponses;
     }
 
-    public String getUploadAnswerUrlNew(Long courseId, int chapterIndex, int noIndex, String clientFileName, String username) {
+    public String getUploadAnswerUrl(Long courseId, int chapterIndex, int noIndex, String clientFileName, String username) {
+        log.info("Get upload answer url, course id: {} by username: {}", courseId, username);
         StudentCourse studentCourse = authService.authorized(username, courseId);
         String fileName = "answer_sid_" + studentCourse.getStudent().getId() + "_cid_" + courseId + "_c" + chapterIndex + "_no." + noIndex + "_" + clientFileName;
         return privateObjectStorageService.uploadFile(fileName, username);
     }
 
-    public void createAnswerNew(AnswerRequest answerRequest, String username) {
+    public void createAnswer(AnswerRequest answerRequest, String username) {
+        log.info("Create answer course id: {} by username: {}", answerRequest.getCourseId(), username);
+
         if (Objects.isNull(answerRequest.getChapterIndex())) {
             throw new BadRequestException("Chapter index is required");
         }
