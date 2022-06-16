@@ -4,9 +4,9 @@ import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.ReviewNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
-import com.ved.backend.exception.tempException.MyException;
-import com.ved.backend.model.*;
-import com.ved.backend.repo.CourseRepo;
+import com.ved.backend.model.PublishedCourse;
+import com.ved.backend.model.Review;
+import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.PublishedCourseRepo;
 import com.ved.backend.repo.ReviewRepo;
 import com.ved.backend.request.ReviewRequest;
@@ -14,7 +14,6 @@ import com.ved.backend.response.PublishedCourseResponse;
 import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.response.ReviewResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -33,8 +31,6 @@ public class ReviewService {
 
     private final ReviewRepo reviewRepo;
     private final PublishedCourseRepo publishedCourseRepo;
-
-    private final CourseRepo courseRepo;
 
     public void create(ReviewRequest reviewRequest, String username) {
         if (Objects.isNull(reviewRequest.getCourseId())) {
@@ -103,47 +99,36 @@ public class ReviewService {
         return new ReviewResponse(review);
     }
 
-    /* ******************************************************************************************* */
-
-    // public ReviewResponse getReview(Long reviewId) {
-
-    //     Optional<Review> reviewOptional = reviewRepo.findById(reviewId);
-
-    //     if (reviewOptional.isEmpty()) {
-    //         throw new MyException("review.not.found", HttpStatus.BAD_REQUEST);
-    //     }
-
-    //     Review review = reviewOptional.get();
-    //     ReviewResponse response = new ReviewResponse(review);
-
-    //     return response;
-    // }
-
-    public void edit(Long reviewId, ReviewRequest reviewRequest) {
-
-        Optional<Review> reviewOptional = reviewRepo.findById(reviewId);
-
-        if (reviewOptional.isEmpty()) {
-            throw new MyException("review.not.found", HttpStatus.BAD_REQUEST);
+    public void edit(ReviewRequest reviewRequest, String username) {
+        if (Objects.isNull(reviewRequest.getCourseId())) {
+            throw new BadRequestException("Course id is required");
         }
-        Review review = reviewOptional.get();
 
-        Optional<Course> courseOptional = courseRepo.findById(reviewRequest.getCourseId());
-        Course course = courseOptional.get();
-        PublishedCourse publishedCourse = course.getPublishedCourse();
+        if (Objects.isNull(reviewRequest.getRating())) {
+            throw new BadRequestException("Rating is required");
+        }
 
-        Double newScore = publishedCourse.getTotalScore() - review.getRating();
-        newScore = newScore + reviewRequest.getRating();
-        Double newStar = newScore / publishedCourse.getTotalUser();
-        publishedCourse.setTotalScore(newScore);
+        if (Objects.isNull(reviewRequest.getReview())) {
+            throw new BadRequestException("Review is required");
+
+        }
+
+        StudentCourse studentCourse = authService.authorized(username, reviewRequest.getCourseId());
+        Review review = reviewRepo.findById(reviewRequest.getReviewId())
+            .orElseThrow(() -> new ReviewNotFoundException(reviewRequest.getReviewId()));
+
+        PublishedCourse publishedCourse = studentCourse.getCourse().getPublishedCourse();
+        Double totalScore = publishedCourse.getTotalScore() - review.getRating();
+        Double newTotalScore = totalScore + reviewRequest.getRating();
+        Double newStar = newTotalScore / publishedCourse.getTotalUser();
+        publishedCourse.setTotalScore(newTotalScore);
         publishedCourse.setStar(newStar);
+        publishedCourseRepo.save(publishedCourse);
 
         review.setRating(reviewRequest.getRating());
         review.setComment(reviewRequest.getReview());
         review.setReviewDateTime(LocalDateTime.now());
-
         reviewRepo.save(review);
-        publishedCourseRepo.save(publishedCourse);
     }
 
 }

@@ -107,8 +107,6 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
-  /* *************************************************************************************************** */
-
   @PostMapping("/courses/review")
   public ResponseEntity<?> createReview(@RequestBody ReviewRequest reviewRequest, Principal principal) {
     reviewService.create(reviewRequest, principal.getName());
@@ -127,27 +125,22 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  // ------------------------------------------------------------------------------------------------------
+  @PutMapping("/courses/reviews/{reviewId}")
+  public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest, Principal principal) {
+    reviewService.edit(reviewRequest, principal.getName());
+    return ResponseEntity.noContent().build();
+  }
+
+  /* *************************************************************************************************** */
 
   
-  
+
+  // ------------------------------------------------------------------------------------------------------
   
   @GetMapping("/courses/{courseId}/about")
   public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
     AboutCourseResponse response = courseService.getAboutCourse(courseId);
     return ResponseEntity.ok().body(response);
-  }
-
-  
-
-  
-
-  
-
-  @PutMapping("/courses/reviews/{reviewId}")
-  public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest) {
-    reviewService.edit(reviewId, reviewRequest);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PutMapping(path = "/instructor-feature")

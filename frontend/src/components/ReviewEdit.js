@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
 // Material UI component
 import Rating from '@mui/material/Rating'
@@ -11,13 +12,26 @@ import LoadingButton from '@mui/lab/LoadingButton';
 // Material UI icon
 import StarIcon from '@mui/icons-material/Star'
 
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
+
+// custom api
+import apiPrivate from '../api/apiPrivate'
+
+// url
+import { URL_EDIT_REVIEW } from '../utils/url'
+
 const ReviewEdit = ({ dataRating, dataReview }) => {
+
+    const { courseId, reviewId } = useParams()
+    const navigate = useNavigate()
+    const axiosPrivate = useAxiosPrivate()
 
     const [ rating, setRating ] = useState(dataRating)
     const [ messageRating, setMessageRating ] = useState(dataRating)
     const [ errorRating, setErrorRating ] = useState(false)
 
-    const maxLength = 10
+    const maxLength = 1000
     const [ review, setReview ] = useState(dataReview)
     const [ messageReview, setMessageReview ] = useState(`(${review.length}/${maxLength})`)
     const [ errorReview, setErrorReview ] = useState(false)
@@ -50,7 +64,7 @@ const ReviewEdit = ({ dataRating, dataReview }) => {
         setErrorReview(false)
     }
 
-    const handleClickReview = () => {
+    const handleClickReview = async () => {
         let invalid = false
 
         if (rating === null || rating < 0) {
@@ -68,12 +82,23 @@ const ReviewEdit = ({ dataRating, dataReview }) => {
         if (invalid) return
 
         setSaving(true)
+        const url = URL_EDIT_REVIEW
+            .replace('{courseId}', courseId)
+            .replace('{reviewId}', reviewId)
         const payload = {
-            
+            courseId: courseId,
+            reviewId: reviewId,
+            rating: rating,
+            review: review
         }
+        const response = await apiPrivate.put(axiosPrivate, url, payload)
 
-
-        setTimeout(() => setSaving(false), 2000)
+        if (response.status === 204) {
+            navigate(`/student/course/${courseId}/review`)
+        } else {
+            alert(response.message)
+        }
+        setSaving(false)
     }
 
     return (

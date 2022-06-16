@@ -23,8 +23,8 @@ const LoadingReviewForm = () => {
                 <Grid item xs={2} pl={2}>
                     <Skeleton variant='rectangular' width={40} height={15} />
                 </Grid>
-                <Grid item xs={8}>
-                    <Skeleton variant='rectangular' width={100} height={35} sx={{ m: 'auto' }} />
+                <Grid item xs={8} pt={2}>
+                    <Skeleton variant='rectangular' width={140} height={35} sx={{ m: 'auto' }} />
                 </Grid>
                 <Grid item xs={2}></Grid>
             </Grid>
