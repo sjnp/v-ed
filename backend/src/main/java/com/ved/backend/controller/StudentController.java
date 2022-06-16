@@ -131,17 +131,19 @@ public class StudentController {
     return ResponseEntity.noContent().build();
   }
 
+  @GetMapping("/courses/{courseId}/about")
+  public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId, Principal principal) {
+    AboutCourseResponse response = courseService.getAboutCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   /* *************************************************************************************************** */
 
   
 
   // ------------------------------------------------------------------------------------------------------
   
-  @GetMapping("/courses/{courseId}/about")
-  public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
-    AboutCourseResponse response = courseService.getAboutCourse(courseId);
-    return ResponseEntity.ok().body(response);
-  }
+  
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {

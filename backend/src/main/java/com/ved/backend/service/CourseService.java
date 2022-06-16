@@ -1,6 +1,5 @@
 package com.ved.backend.service;
 
-import com.ved.backend.exception.tempException.MyException;
 import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Course;
@@ -17,7 +16,6 @@ import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -69,6 +67,12 @@ public class CourseService {
         return privateObjectStorageService.readFile(fileName, username);
     }
 
+    public AboutCourseResponse getAboutCourse(Long courseId, String username) {
+        log.info("Get about course id: {} by username: {}", courseId, username);
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        return new AboutCourseResponse(studentCourse.getCourse());
+    }
+
     /* ****************************************************************************************** */
 
     public Course getById(Long courseId) {
@@ -88,20 +92,6 @@ public class CourseService {
     }
 
     /* ****************************************************************************************** */
-
-    public AboutCourseResponse getAboutCourse(Long courseId) {
-
-        Optional<Course> courseOptional = courseRepo.findById(courseId);
-
-        if (courseOptional.isEmpty()) {
-            throw new MyException("course.id.not.found", HttpStatus.NOT_FOUND);
-        }
-
-        Course course = courseOptional.get();
-        AboutCourseResponse response = new AboutCourseResponse(course);
-
-        return response;
-    }
 
     public Collection<CourseStateRepo.IdAndNameOnly> getAllCourseStates() {
         // log.info("Getting all course states");
