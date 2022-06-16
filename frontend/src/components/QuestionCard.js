@@ -17,7 +17,7 @@ const QuestionCard = ({ postId, topic, datetime, commentCount }) => {
     const navigate = useNavigate()
 
     const handleClickPost = () => {
-        navigate(`/student/course/${courseId}/question-board/${postId}`)
+        navigate(`/student/course/${courseId}/post/${postId}`)
     }
     
     return (

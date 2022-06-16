@@ -27,7 +27,7 @@ const StudentCreateQuestion = () => {
             <AppBarSearchHeader />
             <Grid container mt={3} mb={5}>
                 <Grid item xs={3}>
-                    <StudentMenu active='question board' />
+                    <StudentMenu active='post' />
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container>
@@ -38,7 +38,7 @@ const StudentCreateQuestion = () => {
                                     underline='hover' 
                                     color='default' 
                                     sx={{ cursor: 'pointer' }} 
-                                    onClick={() => navigate(`/student/course/${courseId}/question-board`)}
+                                    onClick={() => navigate(`/student/course/${courseId}/post`)}
                                 >
                                     Question
                                 </Link>

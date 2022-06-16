@@ -48,7 +48,7 @@ const StudentQuestion = () => {
     }, [])
 
     const handleClickCreateQuestion = () => {
-        navigate(`/student/course/${courseId}/question-board/create`)
+        navigate(`/student/course/${courseId}/post/create`)
     }
 
     return (
@@ -56,7 +56,7 @@ const StudentQuestion = () => {
             <AppBarSearchHeader />
             <Grid container mt={3} mb={5}>
                 <Grid item xs={3}>
-                    <StudentMenu active='question board' />
+                    <StudentMenu active='post' />
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container>

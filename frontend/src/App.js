@@ -66,10 +66,10 @@ const App = () => {
           <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
           <Route path='student/course/:courseId/assignment/chapter/:chapterIndex' element={ <StudentAnswer /> } />
           
-          {/* student question board */}
-          <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />
-          <Route path='student/course/:courseId/question-board/create' element={ <StudentCreateQuestion /> } />
-          <Route path='student/course/:courseId/question-board/:postId' element={ <StudentBoard /> } />
+          {/* student post */}
+          <Route path='student/course/:courseId/post' element={ <StudentQuestion /> } />
+          <Route path='student/course/:courseId/post/create' element={ <StudentCreateQuestion /> } />
+          <Route path='student/course/:courseId/post/:postId' element={ <StudentBoard /> } />
           
           {/* student review */}
           <Route path='student/course/:courseId/review' element={ <StudentReview /> } />

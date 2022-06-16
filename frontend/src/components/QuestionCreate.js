@@ -95,7 +95,7 @@ const QuestionCreate = () => {
         setLoading(false)
 
         if (response.status === 201) {
-            navigate(`/student/course/${courseId}/question-board/${response.data.postId}`)
+            navigate(`/student/course/${courseId}/post/${response.data.postId}`)
         } else {
             alert('Error, please try again')
         }

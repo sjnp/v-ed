@@ -35,9 +35,9 @@ const StudentMenu = ({ active }) => {
             path: `/student/course/${courseId}/assignment`
         },
         {
-            text: 'Question board',
+            text: 'Post',
             icon: <QuestionAnswerIcon />,
-            path: `/student/course/${courseId}/question-board`
+            path: `/student/course/${courseId}/post`
         },
         {
             text: 'Review',
