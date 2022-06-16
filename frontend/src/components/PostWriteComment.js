@@ -31,7 +31,7 @@ import { URL_CREATE_COMMENT } from '../utils/url'
 // utils
 import scrollMove from '../utils/scrollMove'
 
-const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
+const PostWriteComment = ({ onCreateCommentSuccess }) => {
 
     const { courseId, postId } = useParams()
     const axiosPrivate = useAxiosPrivate()
@@ -137,4 +137,4 @@ const QuestionWriteComment = ({ onCreateCommentSuccess }) => {
     )
 }
 
-export default QuestionWriteComment
+export default PostWriteComment

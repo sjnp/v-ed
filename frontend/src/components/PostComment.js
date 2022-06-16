@@ -9,25 +9,21 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
 import Avatar from '@mui/material/Avatar'
-
-// Material UI icon
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip';
 
 // utils
 import color from '../utils/color'
 
-const QuestionTopic = ({ data }) => {
+const PostComment = ({ data }) => {
 
-    const { id, topic, detail, datetime, profilePictureUrl, firstname, lastname } = data
- 
+    let { comment, commentDateTime, commentState, profilePictureUrl, firstname, lastname } = data
+
     return (
-        <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER'), mb: 5 }}>
+        <Paper sx={{ mt: 3, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
             <Grid container p={2}>
-                <Grid item xs={12}>
-                    <Typography variant="h6">{topic}</Typography>
-                </Grid>
-                <Grid item xs={12} mt={2} mb={2}>
-                    {detail}
+                <Grid item xs={12} mb={2}>
+                    {comment}
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
@@ -35,22 +31,25 @@ const QuestionTopic = ({ data }) => {
                 <Grid item xs={1} display='flex' justifyContent='center' mt={2}>
                     <Avatar src={profilePictureUrl || '/static/images/avatar/1.jpg'} />
                 </Grid>
-                <Grid item xs={10} pl={1}>
+                <Grid item xs={10}>
                     <Grid item xs={12} mt={1}>
-                        <Typography variant='subtitle1'> {firstname} {lastname}</Typography>
+                        <Typography variant='subtitle1'>
+                            {firstname} {lastname} 
+                            <Chip label={commentState} sx={{ ml: 1, pt: 0.4 }} size="small" variant="outlined" />
+                        </Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant='caption' color="text.secondary">
-                            {moment(datetime).format("DD/MM/YYYY | kk:mm:ss")}
+                            {moment(commentDateTime).format("DD/MM/YYYY | kk:mm:ss")}
                         </Typography>
                     </Grid>
                 </Grid>
                 <Grid item xs={1} mt={3} textAlign='right'>
-                    <Report type={'question'} />
+                    <Report type={'comment'} />
                 </Grid>
             </Grid>
         </Paper>
     )
 }
 
-export default QuestionTopic
+export default PostComment

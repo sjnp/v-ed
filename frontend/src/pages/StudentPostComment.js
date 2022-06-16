@@ -5,9 +5,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import LoadingCircle from '../components/LoadingCircle'
-import QuestionTopic from '../components/QuestionTopic'
-import QuestionWriteComment from '../components/QuestionWriteComment'
-import QuestionComment from '../components/QuestionComment'
+import PostTopic from '../components/PostTopic'
+import PostWriteComment from '../components/PostWriteComment'
+import PostComment from '../components/PostComment'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Link from '@mui/material/Link'
+import Box from '@mui/material/Box'
 
 // Material UI icon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -28,13 +29,14 @@ import apiPrivate from '../api/apiPrivate'
 // url
 import { URL_GET_POST } from '../utils/url'
 
-const StudentBoard = () => {
+const StudentPostComment = () => {
 
     const { courseId, postId } = useParams()
     const navigate = useNavigate()
     const axiosPrivate = useAxiosPrivate()
 
     const [ posts, setPosts ] = useState(null)
+    const [ topicName, setTopicName ] = useState('')
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
@@ -45,6 +47,7 @@ const StudentBoard = () => {
 
         if (response.status === 200) {
             setPosts(response.data)
+            setTopicName(response.data.topic)
         } else {
             alert('fail')
         }
@@ -67,16 +70,18 @@ const StudentBoard = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
-                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+                            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} >
                                 <Link
                                     underline='hover' 
                                     color='default' 
                                     sx={{ cursor: 'pointer' }} 
                                     onClick={() => navigate(`/student/course/${courseId}/post`)}
                                 >
-                                    Question
+                                    Post
                                 </Link>
-                                <Typography color='text.primary'>Board</Typography>
+                                <Box title={topicName}>
+                                    <Typography noWrap width='300px' color='text.primary'>{topicName}</Typography>
+                                </Box>
                             </Breadcrumbs>
                         </Grid>
                     </Grid>
@@ -84,11 +89,11 @@ const StudentBoard = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} pt={3}>
                         {
-                            posts ? <QuestionTopic data={posts} /> : null
+                            posts ? <PostTopic data={posts} /> : null
                         }
                         {
                             posts?.comments?.map((comment, index) => (
-                                <QuestionComment key={index} data={comment} />
+                                <PostComment key={index} data={comment} />
                             ))
                         }
                         {
@@ -96,7 +101,7 @@ const StudentBoard = () => {
                         }
                         </Grid>
                         <Grid item xs={1}>
-                            <QuestionWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/>
+                            <PostWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -105,4 +110,4 @@ const StudentBoard = () => {
     )
 }
 
-export default StudentBoard
+export default StudentPostComment
