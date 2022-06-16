@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography'
 // Material UI icon
 import CommentIcon from '@mui/icons-material/Comment'
 
-const QuestionCard = ({ postId, topic, datetime, commentCount }) => {
+const PostCard = ({ postId, topic, datetime, commentCount }) => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
@@ -42,4 +42,4 @@ const QuestionCard = ({ postId, topic, datetime, commentCount }) => {
     )
 }
 
-export default QuestionCard
+export default PostCard

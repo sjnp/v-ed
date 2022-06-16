@@ -17,7 +17,7 @@ import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
 import PendingCourse from "./pages/PendingCourse";
-import StudentQuestion from './pages/StudentQuestion';
+import StudentPost from './pages/StudentPost';
 import StudentAssignment from './pages/StudentAssignment';
 import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
@@ -67,7 +67,7 @@ const App = () => {
           <Route path='student/course/:courseId/assignment/chapter/:chapterIndex' element={ <StudentAnswer /> } />
           
           {/* student post */}
-          <Route path='student/course/:courseId/post' element={ <StudentQuestion /> } />
+          <Route path='student/course/:courseId/post' element={ <StudentPost /> } />
           <Route path='student/course/:courseId/post/create' element={ <StudentCreateQuestion /> } />
           <Route path='student/course/:courseId/post/:postId' element={ <StudentBoard /> } />
           

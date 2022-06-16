@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
 import LoadingCircle from '../components/LoadingCircle'
-import QuestionCard from '../components/QuestionCard'
+import PostCard from '../components/PostCard'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -26,7 +26,7 @@ import apiPrivate from '../api/apiPrivate'
 // url
 import { URL_GET_ALL_POSTS_BY_COURSE } from '../utils/url'
 
-const StudentQuestion = () => {
+const StudentPost = () => {
 
     const { courseId } = useParams()
     const axiosPrivate = useAxiosPrivate()
@@ -47,7 +47,7 @@ const StudentQuestion = () => {
         setLoading(false)
     }, [])
 
-    const handleClickCreateQuestion = () => {
+    const handleClickCreatePost = () => {
         navigate(`/student/course/${courseId}/post/create`)
     }
 
@@ -63,12 +63,12 @@ const StudentQuestion = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={9}>
                             <Breadcrumbs>
-                                <Typography color='black'>Question</Typography>
+                                <Typography color='black'>Post</Typography>
                             </Breadcrumbs>
                         </Grid>
                         <Grid item xs={2}>
-                            <Fab size='small' color='primary' onClick={handleClickCreateQuestion} sx={{ position: 'fixed' }}>
-                                <AddIcon titleAccess='Create question' />
+                            <Fab size='small' color='primary' onClick={handleClickCreatePost} sx={{ position: 'fixed' }}>
+                                <AddIcon titleAccess='Create post' />
                             </Fab>
                         </Grid>
                     </Grid>
@@ -84,7 +84,7 @@ const StudentQuestion = () => {
                         {
                             posts?.map((post, index) => (
                                 post.visible ?
-                                <QuestionCard 
+                                <PostCard 
                                     key={index}
                                     postId={post.id}
                                     topic={post.topic}
@@ -104,4 +104,4 @@ const StudentQuestion = () => {
     )
 }
 
-export default StudentQuestion
+export default StudentPost
