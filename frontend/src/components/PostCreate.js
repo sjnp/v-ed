@@ -16,7 +16,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 // url
 import { URL_CREATE_POST } from '../utils/url'
 
-const QuestionCreate = () => {
+const PostCreate = () => {
 
     const { courseId } = useParams()
     const axiosPrivate = useAxiosPrivate()
@@ -142,4 +142,4 @@ const QuestionCreate = () => {
     )
 }
 
-export default QuestionCreate
+export default PostCreate

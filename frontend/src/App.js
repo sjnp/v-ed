@@ -24,7 +24,7 @@ import StudentReview from './pages/StudentReview';
 import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
 import StudentAnswer from './pages/StudentAnswer';
-import StudentCreateQuestion from './pages/StudentCreateQuestion';
+import StudentCreatePost from './pages/StudentCreatePost';
 import StudentBoard from './pages/StudentBoard';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
@@ -68,7 +68,7 @@ const App = () => {
           
           {/* student post */}
           <Route path='student/course/:courseId/post' element={ <StudentPost /> } />
-          <Route path='student/course/:courseId/post/create' element={ <StudentCreateQuestion /> } />
+          <Route path='student/course/:courseId/post/create' element={ <StudentCreatePost /> } />
           <Route path='student/course/:courseId/post/:postId' element={ <StudentBoard /> } />
           
           {/* student review */}

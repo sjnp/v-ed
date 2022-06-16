@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import StudentMenu from '../components/StudentMenu'
-import QuestionCreate from '../components/QuestionCreate'
+import PostCreate from '../components/PostCreate'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -17,7 +17,7 @@ import Link from '@mui/material/Link'
 // Material UI icon
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
-const StudentCreateQuestion = () => {
+const StudentCreatePost = () => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
@@ -40,7 +40,7 @@ const StudentCreateQuestion = () => {
                                     sx={{ cursor: 'pointer' }} 
                                     onClick={() => navigate(`/student/course/${courseId}/post`)}
                                 >
-                                    Question
+                                    Post
                                 </Link>
                                 <Typography color='text.primary'>Create</Typography>
                             </Breadcrumbs>
@@ -49,7 +49,7 @@ const StudentCreateQuestion = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} pt={3}>
-                            <QuestionCreate />
+                            <PostCreate />
                         </Grid>
                         <Grid item xs={1}></Grid>
                     </Grid>
@@ -59,4 +59,4 @@ const StudentCreateQuestion = () => {
     )
 }
 
-export default StudentCreateQuestion
+export default StudentCreatePost
