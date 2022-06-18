@@ -20,6 +20,7 @@ import com.ved.backend.model.Chapter;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Instructor;
+import com.ved.backend.model.Post;
 import com.ved.backend.model.PublishedCourse;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
@@ -30,6 +31,7 @@ import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
@@ -57,6 +59,7 @@ public class MockDatabase {
     @Autowired private PublishedCourseRepo publishedCourseRepo;
     @Autowired private StudentCourseRepo studentCourseRepo;
     @Autowired private AnswerRepo answerRepo;
+    @Autowired private PostRepo postRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
@@ -311,6 +314,21 @@ public class MockDatabase {
             .build();
         
         answerRepo.save(answer);
+    }
+
+    public void mock_post(Long courseId, String topic, String detail) {
+        Student student = appUserRepo.findByUsername("student@test.com").getStudent();
+        Course course = courseRepo.findById(courseId).get();
+        StudentCourse studentCourse = studentCourseRepo.findByStudentAndCourse(student, course).get();
+        Post post = Post.builder()
+            .course(studentCourse.getCourse())
+            .studentCourse(studentCourse)
+            .topic(topic)
+            .detail(detail)
+            .createDateTime(LocalDateTime.now())
+            .visible(true)
+            .build();
+        postRepo.save(post);
     }
 
 }
