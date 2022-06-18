@@ -161,7 +161,7 @@ public class CreateAnswerIT {
 
     @Test
     @Order(5)
-    public void givenAnswerRequest_whenSuccess_thenReturnBadRequestStatus() throws Exception {
+    public void givenAnswerRequest_whenSuccess_thenReturnCreatedStatus() throws Exception {
         // login
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
