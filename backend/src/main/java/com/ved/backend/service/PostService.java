@@ -98,10 +98,10 @@ public class PostService {
         return new PostCommentResponse(post);
     }
 
-    public CommentResponse createComment(String username, Long courseId, CommentRequest commentRequest) {
-        log.info("Edit post id: {} in course id: {} by username: {}", commentRequest.getPostId(), courseId, username);
+    public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+        log.info("Edit post id: {} in course id: {} by username: {}", postId, courseId, username);
 
-        if (Objects.isNull(commentRequest.getPostId())) {
+        if (Objects.isNull(postId)) {
             throw new BadRequestException("Post id is required");
         }
 
@@ -109,9 +109,13 @@ public class PostService {
             throw new BadRequestException("Comment is required");
         }
 
+        if (commentRequest.getComment().length() > 1000) {
+            throw new BadRequestException("Comments are more than 1000 characters");
+        }
+
         StudentCourse studentCourse = authService.authorized(username, courseId);
-        Post post = postRepo.findById(commentRequest.getPostId())
-            .orElseThrow(() -> new PostNotFoundException(commentRequest.getPostId()));
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException(postId));
 
         String commentStateName;
         if (username.equals(post.getStudentCourse().getStudent().getAppUser().getUsername())) {

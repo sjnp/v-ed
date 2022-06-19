@@ -68,9 +68,10 @@ const PostWriteComment = ({ onCreateCommentSuccess }) => {
         }
         setSaving(true)
         
-        const url = URL_CREATE_COMMENT.replace('{courseId}', courseId)
+        const url = URL_CREATE_COMMENT
+            .replace('{courseId}', courseId)
+            .replace('{postId}', postId)
         const payload = {
-            postId: postId,
             comment: comment
         }
         const response = await apiPrivate.post(axiosPrivate, url, payload)
