@@ -127,7 +127,7 @@ public class StudentController {
 
   @PutMapping("/courses/reviews/{reviewId}")
   public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest, Principal principal) {
-    reviewService.edit(reviewRequest, principal.getName());
+    reviewService.edit(principal.getName(), reviewId, reviewRequest);
     return ResponseEntity.noContent().build();
   }
 

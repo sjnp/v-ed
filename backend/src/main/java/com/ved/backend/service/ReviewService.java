@@ -108,7 +108,7 @@ public class ReviewService {
         return new ReviewResponse(review);
     }
 
-    public void edit(ReviewRequest reviewRequest, String username) {
+    public void edit(String username, Long reviewId, ReviewRequest reviewRequest) {
         log.info("Edit review id: {} by username: {}", reviewRequest.getReview(), username);
 
         if (Objects.isNull(reviewRequest.getCourseId())) {
@@ -125,8 +125,8 @@ public class ReviewService {
         }
 
         StudentCourse studentCourse = authService.authorized(username, reviewRequest.getCourseId());
-        Review review = reviewRepo.findById(reviewRequest.getReviewId())
-            .orElseThrow(() -> new ReviewNotFoundException(reviewRequest.getReviewId()));
+        Review review = reviewRepo.findById(reviewId)
+            .orElseThrow(() -> new ReviewNotFoundException(reviewId));
 
         PublishedCourse publishedCourse = studentCourse.getCourse().getPublishedCourse();
         Double totalScore = publishedCourse.getTotalScore() - review.getRating();

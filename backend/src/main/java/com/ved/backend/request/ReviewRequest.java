@@ -14,8 +14,6 @@ import lombok.Setter;
 public class ReviewRequest {
     
     private Long courseId;
-
-    private Long reviewId;
     
     private Double rating;
     

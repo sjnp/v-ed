@@ -83,11 +83,9 @@ const ReviewEdit = ({ dataRating, dataReview }) => {
 
         setSaving(true)
         const url = URL_EDIT_REVIEW
-            .replace('{courseId}', courseId)
             .replace('{reviewId}', reviewId)
         const payload = {
             courseId: courseId,
-            reviewId: reviewId,
             rating: rating,
             review: review
         }
