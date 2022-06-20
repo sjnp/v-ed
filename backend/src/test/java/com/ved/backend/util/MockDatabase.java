@@ -37,6 +37,7 @@ import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
+import com.ved.backend.repo.ReviewRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
 
@@ -66,6 +67,7 @@ public class MockDatabase {
     @Autowired private PostRepo postRepo;
     @Autowired private CommentStateRepo commentStateRepo;
     @Autowired private CommentRepo commentRepo;
+    @Autowired private ReviewRepo reviewRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
@@ -78,6 +80,7 @@ public class MockDatabase {
     private String passwordStudent = "Password123";
 
     public void clear() {
+        reviewRepo.deleteAll();
         commentRepo.deleteAll();
         commentStateRepo.deleteAll();
         studentCourseRepo.deleteAll();
