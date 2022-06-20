@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CategoryProperties;
+import com.ved.backend.configuration.CommentStateProperties;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.Answer;
@@ -17,6 +18,7 @@ import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Chapter;
+import com.ved.backend.model.CommentState;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Instructor;
@@ -28,6 +30,8 @@ import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CategoryRepo;
+import com.ved.backend.repo.CommentRepo;
+import com.ved.backend.repo.CommentStateRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
@@ -60,10 +64,13 @@ public class MockDatabase {
     @Autowired private StudentCourseRepo studentCourseRepo;
     @Autowired private AnswerRepo answerRepo;
     @Autowired private PostRepo postRepo;
+    @Autowired private CommentStateRepo commentStateRepo;
+    @Autowired private CommentRepo commentRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
     @Autowired private CategoryProperties categoryProperties;
+    @Autowired private CommentStateProperties commentStateProperties;
 
     @Autowired private MockMvc mockMvc;
 
@@ -71,6 +78,8 @@ public class MockDatabase {
     private String passwordStudent = "Password123";
 
     public void clear() {
+        commentRepo.deleteAll();
+        commentStateRepo.deleteAll();
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
         courseRepo.deleteAll();
@@ -314,6 +323,19 @@ public class MockDatabase {
             .build();
         
         answerRepo.save(answer);
+    }
+
+    public void mock_comment_state() {
+        List<String> commentStateNames = Arrays.asList(
+            commentStateProperties.getOwner(),
+            commentStateProperties.getStudent(),
+            commentStateProperties.getInstructor()
+        );
+
+        for(String commentStateName : commentStateNames) {
+            CommentState commentState = CommentState.builder().name(commentStateName).build();
+            commentStateRepo.save(commentState);
+        }
     }
 
     public void mock_post(Long courseId, String topic, String detail) {

@@ -99,7 +99,7 @@ public class PostService {
     }
 
     public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
-        log.info("Edit post id: {} in course id: {} by username: {}", postId, courseId, username);
+        log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
 
         if (Objects.isNull(postId)) {
             throw new BadRequestException("Post id is required");
