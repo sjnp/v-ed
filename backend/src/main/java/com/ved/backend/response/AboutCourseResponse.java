@@ -19,7 +19,9 @@ public class AboutCourseResponse {
 
     private String profilePictureUrl;
 
-    private String instructorName;
+    private String instructorFirstName;
+
+    private String instructorLastName;
 
     private String biography;
 
@@ -32,7 +34,8 @@ public class AboutCourseResponse {
     public AboutCourseResponse(Course course) {
         this.courseId = course.getId();
         this.profilePictureUrl = course.getInstructor().getStudent().getProfilePicUri();
-        this.instructorName = course.getInstructor().getStudent().getFullName();
+        this.instructorFirstName = course.getInstructor().getStudent().getFirstName();
+        this.instructorLastName = course.getInstructor().getStudent().getLastName();
         this.biography = course.getInstructor().getStudent().getBiography();
         this.occupation = course.getInstructor().getStudent().getOccupation();
         this.overview = course.getOverview();
