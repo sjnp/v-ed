@@ -85,6 +85,7 @@ public class MockDatabase {
         reviewRepo.deleteAll();
         commentRepo.deleteAll();
         commentStateRepo.deleteAll();
+        answerRepo.deleteAll();
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
         courseRepo.deleteAll();
