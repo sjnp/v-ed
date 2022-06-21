@@ -21,7 +21,6 @@ import StudentPost from './pages/StudentPost';
 import StudentAssignment from './pages/StudentAssignment';
 import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
-import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
 import StudentAnswer from './pages/StudentAnswer';
 import StudentCreatePost from './pages/StudentCreatePost';
@@ -75,9 +74,6 @@ const App = () => {
           <Route path='student/course/:courseId/review' element={ <StudentReview /> } />
           <Route path='student/course/:courseId/review/create' element={ <StudentCreateReview /> } />
           <Route path='student/course/:courseId/review/:reviewId' element={ <StudentEditReview /> } />
-          
-          {/* student instructor */}
-          <Route path='student/course/:courseId/instructor' element={ <StudentInstructor /> } />
           
           {/* student about course */}
           <Route path='student/course/:courseId/about-course' element={ <StudentAboutCourse /> } />
