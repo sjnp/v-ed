@@ -35,6 +35,7 @@ public class InstructorService {
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
 
+  private final FileExtensionStringHandler fileExtensionStringHandler;
   private final CourseStateProperties courseStateProperties;
   private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
   private final PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
@@ -77,7 +78,7 @@ public class InstructorService {
   }
 
   public Map<String, String> createParToUploadCoursePicture(Long courseId, String fileName, String username) {
-    String pictureExtension = FileExtensionStringHandler
+    String pictureExtension = fileExtensionStringHandler
         .getViableExtension(fileName, publicObjectStorageConfigProperties.getViableImageExtensions());
     IncompleteCourseResponse incompleteCourseResponse = getIncompleteCourseDetails(courseId, username);
     String objectName = "course_pic_" + incompleteCourseResponse.getId() + "." + pictureExtension;
@@ -106,7 +107,7 @@ public class InstructorService {
     if (chapterIndex == null || sectionIndex == null || fileName == null) {
       throw new BadRequestException("Request body parameters must not be null.");
     }
-    String videoExtension = FileExtensionStringHandler
+    String videoExtension = fileExtensionStringHandler
         .getViableExtension(fileName, privateObjectStorageConfigProperties.getViableVideoExtensions());
     IncompleteCourseResponse incompleteCourseResponse = getIncompleteCourseDetails(courseId, username);
     String videoObjectName = "course_vid_"
@@ -178,7 +179,7 @@ public class InstructorService {
 
   public void publishApprovedCourse(Long courseId, String username) {
     Course course = getCourse(courseId, username, courseStateProperties.getApproved());
-    CourseState publishedState = courseStateRepo.findByName(courseStateProperties.getPublished());
+    CourseState publishedState = courseStateService.getByName(courseStateProperties.getPublished());
     course.setCourseState(publishedState);
     PublishedCourse publishedCourse = PublishedCourse
         .builder()
