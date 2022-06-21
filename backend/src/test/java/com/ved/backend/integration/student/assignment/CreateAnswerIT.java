@@ -171,7 +171,7 @@ public class CreateAnswerIT {
         Long courseId = course.getId();
         AnswerRequest answerRequest = AnswerRequest.builder()
             .courseId(courseId)
-            .chapterIndex(0)
+            .chapterIndex(1)
             .noIndex(0)
             .fileName("my_answer.pdf")
             .build();
@@ -191,7 +191,7 @@ public class CreateAnswerIT {
 
     @Test
     @Order(6)
-    public void clear() throws Exception {
+    public void clear() {
         mockDatabase.clear();
     }
 
