@@ -1,10 +1,10 @@
 package com.ved.backend.response;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ved.backend.model.Chapter;
 import com.ved.backend.model.Course;
-import com.ved.backend.model.Review;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class OverviewResponse {
     private String overview;
     private List<Chapter> chapterList;
     private String requirement;
-    private List<Review> reviewList;
+    private List<ReviewResponse> reviewList;
     
     private String instructorFirstname;
     private String instructorLastname;
@@ -45,7 +45,10 @@ public class OverviewResponse {
         this.overview = course.getOverview();
         this.chapterList = course.getChapters();
         this.requirement = course.getRequirement();
-        this.reviewList = course.getPublishedCourse().getReviews();
+        this.reviewList = course.getPublishedCourse().getReviews()
+            .stream()
+            .map(review -> new ReviewResponse(review))
+            .collect(Collectors.toList());
         this.instructorFirstname = course.getInstructor().getStudent().getFirstName();
         this.instructorLastname = course.getInstructor().getStudent().getLastName();
         this.instructorPictureURI = course.getInstructor().getStudent().getProfilePicUri();

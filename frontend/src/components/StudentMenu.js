@@ -15,7 +15,6 @@ import NotesIcon from '@mui/icons-material/Notes'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
 import StarsIcon from '@mui/icons-material/Stars'
-import PersonPinIcon from '@mui/icons-material/PersonPin'
 
 const StudentMenu = ({ active }) => {
 
@@ -35,19 +34,14 @@ const StudentMenu = ({ active }) => {
             path: `/student/course/${courseId}/assignment`
         },
         {
-            text: 'Question board',
+            text: 'Post',
             icon: <QuestionAnswerIcon />,
-            path: `/student/course/${courseId}/question-board`
+            path: `/student/course/${courseId}/post`
         },
         {
             text: 'Review',
             icon: <StarsIcon />,
             path: `/student/course/${courseId}/review`
-        },
-        {
-            text: 'Instructor',
-            icon: <PersonPinIcon />,
-            path: `/student/course/${courseId}/instructor`
         },
         {
             text: 'About course',

@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CategoryProperties;
+import com.ved.backend.configuration.CommentStateProperties;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.Answer;
@@ -17,22 +18,30 @@ import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Chapter;
+import com.ved.backend.model.CommentState;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Instructor;
+import com.ved.backend.model.Post;
 import com.ved.backend.model.PublishedCourse;
+import com.ved.backend.model.Review;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CategoryRepo;
+import com.ved.backend.repo.CommentRepo;
+import com.ved.backend.repo.CommentStateRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
+import com.ved.backend.repo.ReviewRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.request.ReviewRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -57,10 +66,15 @@ public class MockDatabase {
     @Autowired private PublishedCourseRepo publishedCourseRepo;
     @Autowired private StudentCourseRepo studentCourseRepo;
     @Autowired private AnswerRepo answerRepo;
+    @Autowired private PostRepo postRepo;
+    @Autowired private CommentStateRepo commentStateRepo;
+    @Autowired private CommentRepo commentRepo;
+    @Autowired private ReviewRepo reviewRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
     @Autowired private CategoryProperties categoryProperties;
+    @Autowired private CommentStateProperties commentStateProperties;
 
     @Autowired private MockMvc mockMvc;
 
@@ -68,6 +82,10 @@ public class MockDatabase {
     private String passwordStudent = "Password123";
 
     public void clear() {
+        reviewRepo.deleteAll();
+        commentRepo.deleteAll();
+        commentStateRepo.deleteAll();
+        answerRepo.deleteAll();
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
         courseRepo.deleteAll();
@@ -311,6 +329,76 @@ public class MockDatabase {
             .build();
         
         answerRepo.save(answer);
+    }
+
+    public void mock_comment_state() {
+        List<String> commentStateNames = Arrays.asList(
+            commentStateProperties.getOwner(),
+            commentStateProperties.getStudent(),
+            commentStateProperties.getInstructor()
+        );
+
+        for(String commentStateName : commentStateNames) {
+            CommentState commentState = CommentState.builder().name(commentStateName).build();
+            commentStateRepo.save(commentState);
+        }
+    }
+
+    public void mock_post(Long courseId, String topic, String detail) {
+        Student student = appUserRepo.findByUsername("student@test.com").getStudent();
+        Course course = courseRepo.findById(courseId).get();
+        StudentCourse studentCourse = studentCourseRepo.findByStudentAndCourse(student, course).get();
+        Post post = Post.builder()
+            .course(studentCourse.getCourse())
+            .studentCourse(studentCourse)
+            .topic(topic)
+            .detail(detail)
+            .createDateTime(LocalDateTime.now())
+            .visible(true)
+            .build();
+        postRepo.save(post);
+    }
+
+    public void mock_published_course(Long courseId) {
+        Course course = courseRepo.findById(courseId).get();
+        PublishedCourse publishedCourse = PublishedCourse.builder()
+            .course(course)
+            .star(0.0)
+            .totalScore(0.0)
+            .totalUser(0L)
+            .build();
+        publishedCourseRepo.save(publishedCourse);
+    }
+
+    public void mock_create_review(Long courseId, Double rating, String commentReview) {
+        ReviewRequest reviewRequest = ReviewRequest.builder()
+            .courseId(courseId)
+            .rating(rating)
+            .review(commentReview)
+            .build();
+
+        Course course = courseRepo.findById(courseId).get();
+        Student student = appUserRepo.findByUsername("student@test.com").getStudent();
+        StudentCourse studentCourse = studentCourseRepo.findByStudentAndCourse(student, course).get();
+
+        PublishedCourse publishedCourse = studentCourse.getCourse().getPublishedCourse();
+        Double newTotalScore = publishedCourse.getTotalScore() + reviewRequest.getRating();
+        Long newTotalUser = publishedCourse.getTotalUser() + 1;
+        Double newStar = newTotalScore / newTotalUser;
+        publishedCourse.setTotalScore(newTotalScore);
+        publishedCourse.setTotalUser(newTotalUser);
+        publishedCourse.setStar(newStar);
+        publishedCourseRepo.save(publishedCourse);
+
+        Review review = Review.builder()
+            .rating(reviewRequest.getRating())
+            .comment(reviewRequest.getReview())
+            .reviewDateTime(LocalDateTime.now())
+            .visible(true)
+            .student(studentCourse.getStudent())
+            .publishedCourse(publishedCourse)
+            .build();
+        reviewRepo.save(review);
     }
 
 }

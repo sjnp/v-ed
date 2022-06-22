@@ -4,6 +4,8 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.CommentRequest;
+import com.ved.backend.request.PostRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
@@ -13,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,16 +23,13 @@ import java.util.List;
 public class StudentController {
 
   private final StudentService studentService;
-  private final CourseService courseService;
-  private final PostService postService;
-  private final CommentService commentService;
   private final ReviewService reviewService;
 
-  @PutMapping(path = "/instructor-feature")
-  public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
-    studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
-    return ResponseEntity.ok().build();
-  }
+  private final StudentCourseService studentCourseService;
+  private final CourseService courseService;
+  private final AssignmentService assignmentService;
+  private final PostService postService;
+
 
   @PostMapping(path = "/finance/active-instrustor")
   public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
@@ -40,125 +38,91 @@ public class StudentController {
   }
 
   /* *************************************************************** */
+ 
 
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentService.buyFreeCourse(courseId, principal.getName());
+    studentCourseService.buyFreeCourse(principal.getName(), courseId);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PostMapping(path = "/purchase/course")
   public ResponseEntity<?> buyCourse(@RequestBody ChargeDataRequest chargeData, Principal principal) {
-    ChargeResponse chargeResponse = studentService.buyCourse(chargeData, principal.getName());
+    ChargeResponse chargeResponse = studentCourseService.buyCourse(chargeData, principal.getName());
     return ResponseEntity.ok().body(chargeResponse);
-  }
-
-
-  @GetMapping("/courses")
-  public ResponseEntity<List<CourseCardResponse>> getMyCourse(Principal principal) {
-    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
-    return ResponseEntity.ok().body(response);
   }
 
   // REFACTOR: moved from OverviewController
   // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
   public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
-    List<CourseCardResponse> response = studentService.getMyCourse(principal.getName());
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses")
+  public ResponseEntity<List<CourseCardResponse>> getMyCourses(Principal principal) {
+    List<CourseCardResponse> response = studentCourseService.getMyCourses(principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}")
   public ResponseEntity<CourseResponse> getCourse(@PathVariable Long courseId, Principal principal) {
-    CourseResponse response = studentService.getCourse(courseId, principal.getName());
+    CourseResponse response = courseService.getCourse(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video")
-  public ResponseEntity<VideoResponse> getVideoCourseUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
-    VideoResponse response = studentService.getVideoCourseUrl(courseId, chapterIndex, sectionIndex, principal.getName());
+  public ResponseEntity<VideoResponse> getVideoUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, Principal principal) {
+    VideoResponse response = courseService.getVideoUrl(courseId, chapterIndex, sectionIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}")
   public ResponseEntity<String> getHandoutUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int sectionIndex, @PathVariable int handoutIndex, Principal principal) {
-    String response = studentService.getHandoutUrl(courseId, chapterIndex, sectionIndex, handoutIndex, principal.getName());
+    String response = courseService.getHandoutUrl(courseId, chapterIndex, sectionIndex, handoutIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
+  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
+    List<AssignmentAnswerResponse> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}")
-  public ResponseEntity<String> getAnswerUploadUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
-    String response = studentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
+  public ResponseEntity<String> getUploadAnswerUrl(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, @PathVariable String fileName, Principal principal) {
+    String response = assignmentService.getUploadAnswerUrl(courseId, chapterIndex, noIndex, fileName, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @PostMapping("/courses/{courseId}/answer")
   public ResponseEntity<?> createAnswer(@RequestBody AnswerRequest answerRequest, Principal principal) {
-    studentService.createAnswer(answerRequest, principal.getName());
+    assignmentService.createAnswer(answerRequest, principal.getName());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
-  @GetMapping("/courses/{courseId}/chapter/{chapterIndex}/answer")
-  public ResponseEntity<List<AssignmentAnswerResponse>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable Integer chapterIndex, Principal principal) {
-    List<AssignmentAnswerResponse> response = studentService.getAssignmentAnswer(courseId, chapterIndex, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
-
-  /* *************************************************************************************************** */
-
-  @GetMapping("/courses/{courseId}/about")
-  public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId) {
-    AboutCourseResponse response = courseService.getAboutCourse(courseId);
-    return ResponseEntity.ok().body(response);
+  @PostMapping("/courses/post")
+  public ResponseEntity<CreatePostResponse> createPost(@RequestBody PostRequest postRequest, Principal principal) {
+    CreatePostResponse response = postService.createPost(postRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @GetMapping("/courses/{courseId}/posts")
-  public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Long courseId) {
-    List<PostResponse> response = postService.getPostByCourseId(courseId);
+  public ResponseEntity<List<PostCardResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
+    List<PostCardResponse> response = postService.getPostsByCourseId(principal.getName(), courseId);
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/posts/{postId}")
-  public ResponseEntity<PostResponse> getPost(@PathVariable Long courseId,
-                                                       @PathVariable Long postId,
-                                                       Principal principal) {
-    PostResponse response = postService.getPostById(postId);
+  public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
+    PostCommentResponse response = postService.getPostById(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
   }
 
-  @GetMapping("/courses/{courseId}/reviews")
-  public ResponseEntity<ReviewCourseResponse> getAllReviews(@PathVariable Long courseId, Principal principal) {
-    ReviewCourseResponse response = reviewService.getReviewCourse(courseId, principal.getName());
-    return ResponseEntity.ok().body(response);
-  }
-
-  @GetMapping("/courses/{courseId}/reviews/{reviewId}")
-  public ResponseEntity<ReviewResponse> getReview(@PathVariable Long courseId,
-                                                  @PathVariable Long reviewId,
-                                                  Principal principal) {
-    ReviewResponse response = reviewService.getReview(reviewId);
-    return ResponseEntity.ok().body(response);
-  }
-
-  @PostMapping("/courses/post")
-  public ResponseEntity<PostResponse> createPost(@RequestBody HashMap<String, Object> bodyRequest, Principal principal) {
-
-    Long courseId = Long.parseLong(bodyRequest.get("courseId").toString());
-    String topic = bodyRequest.get("topic").toString();
-    String detail = bodyRequest.get("detail").toString();
-
-    PostResponse response = postService.create(courseId, topic, detail, principal.getName());
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-  }
-
-  @PostMapping("/courses/{courseId}/posts/comment")
-  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId,
-                                                       @RequestBody HashMap<String, Object> bodyRequest,
-                                                       Principal principal) {
-    Long questionBoardId = Long.parseLong(String.valueOf(bodyRequest.get("questionId")));
-    String comment = String.valueOf(bodyRequest.get("comment"));
-    String username = principal.getName();
-    CommentResponse response = commentService.create(questionBoardId, comment, username);
+  @PostMapping("/courses/{courseId}/posts/{postId}/comment")
+  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    CommentResponse response = postService.createComment(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -168,10 +132,42 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @GetMapping("/courses/{courseId}/reviews")
+  public ResponseEntity<ReviewCourseResponse> getReviewsByCourseId(@PathVariable Long courseId, Principal principal) {
+    ReviewCourseResponse response = reviewService.getReviewsByCourseId(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/reviews/{reviewId}")
+  public ResponseEntity<ReviewResponse> getReview(@PathVariable Long courseId, @PathVariable Long reviewId, Principal principal) {
+    ReviewResponse response = reviewService.getReview(courseId, reviewId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   @PutMapping("/courses/reviews/{reviewId}")
-  public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest) {
-    reviewService.edit(reviewId, reviewRequest);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+  public ResponseEntity<?> editReview(@PathVariable Long reviewId, @RequestBody ReviewRequest reviewRequest, Principal principal) {
+    reviewService.edit(principal.getName(), reviewId, reviewRequest);
+    return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/courses/{courseId}/about")
+  public ResponseEntity<AboutCourseResponse> getAboutCourse(@PathVariable Long courseId, Principal principal) {
+    AboutCourseResponse response = courseService.getAboutCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  /* *************************************************************************************************** */
+
+  
+
+  // ------------------------------------------------------------------------------------------------------
+  
+  
+
+  @PutMapping(path = "/instructor-feature")
+  public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
+    studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
+    return ResponseEntity.ok().build();
   }
 
 }
