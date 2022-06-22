@@ -18,28 +18,47 @@ import { URL_GET_OVERVIEW_COURSE_CARD } from '../utils/url';
 const Payment = () => {
 
   const { courseId } = useParams()
-
   const navigate = useNavigate()
-
   const axiosPrivate = useAxiosPrivate()
-
   const [ courseCard, setCourseCard ] = useState({
-      courseName: null,
-      instructorName: null,
-      rating: null,
-      reviewCount: null,
-      pictureURL: null,
-      price: null,
-      courseId: null
+    courseName: null,
+    instructorName: null,
+    rating: null,
+    reviewCount: null,
+    pictureURL: null,
+    price: null,
+    courseId: null
   })
+  const [ chargeData, setChargeData ] = useState({
+    amount: null,
+    currency: "thb",
+    courseId: null,
+    type: "internet_banking_scb",
+    returnUri: null,
+})
+
+
 
   useEffect(async () => {
-
     const url = URL_GET_OVERVIEW_COURSE_CARD.replace('{courseId}', courseId)
     const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
     setCourseCard(result)
-  
+    setChargeData({...chargeData,
+      amount: (result.price * 100),
+      courseId: result.courseId,
+      returnUrl: result.pictureURL
+    })
   }, [])
+
+  const handlePayment = async () => {
+    try {
+      const response = await axiosPrivate.post('/api/students/purchase/course', chargeData );
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+      // navigate('/', { state: { from: location }, replace: true });
+    }
+  }
 
   return (
     <Container maxWidth='lg'>
@@ -80,6 +99,7 @@ const Payment = () => {
             marginBottom: 2,
             width: 300
           }}
+          onClick={handlePayment}
         >
           Payment
         </Button>
