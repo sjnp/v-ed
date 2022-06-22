@@ -12,15 +12,12 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.StudentRepo;
-<<<<<<< HEAD
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.ChargeResponse;
-=======
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
->>>>>>> 8c09a69fa05ea1f265e6d2b2d05f083a6c5b186c
 import com.ved.backend.response.CourseCardResponse;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.VideoResponse;
