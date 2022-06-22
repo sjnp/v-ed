@@ -171,7 +171,7 @@ public class CreateAnswerIT {
         Long courseId = course.getId();
         AnswerRequest answerRequest = AnswerRequest.builder()
             .courseId(courseId)
-            .chapterIndex(1)
+            .chapterIndex(0)
             .noIndex(0)
             .fileName("my_answer.pdf")
             .build();
