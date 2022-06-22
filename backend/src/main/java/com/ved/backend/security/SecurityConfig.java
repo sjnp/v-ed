@@ -70,10 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/about",
             "/api/students/courses/{\\d+}/posts",
             "/api/students/courses/{\\d+}/posts/{\\d+}",
-            "/api/students/courses/{\\d+}/posts/comment",
             "/api/students/courses/{\\d+}/reviews",
             "/api/students/courses/{\\d+}/reviews/{\\d+}",
-            // "/api/students/courses/{\\d+}/chapter/{\\d+}/no/{\\d+}/answer/**",
             "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
         )
         .hasAnyAuthority("STUDENT");
@@ -84,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/answers/pre-authenticated-request",
             "/api/students/courses/{\\d+}/answer",
             "/api/students/courses/post",
+            "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
             "/api/students/courses/review")
         .hasAnyAuthority("STUDENT");
 
@@ -136,7 +135,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(PUT, "/api/admins/pending-courses/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
-//    http.authorizeRequests().anyRequest().authenticated();
+    // http.authorizeRequests().anyRequest().authenticated();
 
     http.addFilter(customAuthenticationFilter);
     http.addFilterBefore(new CustomAuthorizationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class);
@@ -160,4 +159,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
+
 }

@@ -1,4 +1,4 @@
-package com.ved.backend.integration.student.assignment;
+package com.ved.backend.integration.student.student_course;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -14,14 +14,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import static org.hamcrest.Matchers.hasSize;
 
 import java.util.List;
 
-import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Student;
 import com.ved.backend.repo.AppUserRepo;
@@ -32,8 +30,8 @@ import com.ved.backend.util.MockDatabase;
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class GetAssignmentAnswer {
- 
+public class GetMyCoursesIT {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -51,69 +49,67 @@ public class GetAssignmentAnswer {
     public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-        
         mockDatabase.mock_register_student();
-
         mockDatabase.mock_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
-        mockDatabase.mock_course(500L, "PUBLISHED", "PROGRAMMING");
-        
-        AppUser appUser = appUserRepo.findByUsername("student@test.com");
-        Student student = appUser.getStudent();
-        List<Course> courses = courseRepo.findAll();
-        for(Course course : courses) {
-            mockDatabase.mock_student_course(student, course);
-        }
-
-        Long courseId = courses.get(0).getId();
-        int chapterIndex = 0;
-        int noIndex = 0;
-        String fileName = "my_answer.doc";
-        mockDatabase.mock_answer(courseId, chapterIndex, noIndex, fileName);
+        mockDatabase.mock_course(500L, "PUBLISHED", "DESIGN");
+        mockDatabase.mock_course(900L, "PUBLISHED", "PROGRAMMING");
     }
 
     @Test
     @Order(2)
-    public void givenChapterIndex_whenSuccess_thenRetrunOkStatusAndAssignmentAnswerResponseList() throws Exception {
+    public void givenUsername_whenNoHaveData_thenReturnOkStatusAndEmptyListCourseCardResponse() throws Exception {
+        // login
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
         // given
-        Long courseId = courseRepo.findAll().get(0).getId();
-        Integer chapterIndex = 0;
+
         // when
-        String url = String.format("/api/students/courses/%d/chapter/%d/answer", courseId, chapterIndex);
         ResultActions resultActions = mockMvc.perform(
-            get(url).header(HttpHeaders.AUTHORIZATION, accessToken)
+            get("/api/students/courses")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
         );
+
         // then
         resultActions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$", hasSize(1)));
+            .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    @Order(3)
+    public void givenUsername_whenHaveData_thenReturnOkStatusAndListCourseCardResponse() throws Exception {
+        // login
+        ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
+        // given
+        Student student = appUserRepo.findByUsername("student@test.com").getStudent();
+        List<Course> courses = courseRepo.findAll();
+        for (Course course : courses) {
+            mockDatabase.mock_student_course(student, course);
+        }
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            get("/api/students/courses")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(2)));
     }
 
     @Test
     @Order(4)
-    public void givenChapterIndex_whenNull_thenReturnBadRequestStatus() throws Exception {
-        ResultActions logiActions = mockDatabase.mock_login_student();
-        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
-        // given
-        Long courseId = courseRepo.findAll().get(0).getId();
-        Integer chapterIndex = null;
-        // when
-        String url = String.format("/api/students/courses/%d/chapter/%d/answer", courseId, chapterIndex);
-        ResultActions resultActions = mockMvc.perform(
-            get(url).header(HttpHeaders.AUTHORIZATION, accessToken)
-        );
-        // then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Order(5)
     public void clear() {
         mockDatabase.clear();
     }
-
+    
 }

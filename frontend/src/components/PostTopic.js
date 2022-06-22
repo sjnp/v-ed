@@ -9,39 +9,33 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Divider from '@mui/material/Divider'
 import Avatar from '@mui/material/Avatar'
-
-// Material UI icon
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 
 // utils
 import color from '../utils/color'
 
-const QuestionTopic = ({ data }) => {
+const PostTopic = ({ data }) => {
 
-    const { id, topic, detail, datetime, firstname, lastname } = data
+    const { id, topic, detail, datetime, profilePictureUrl, firstname, lastname } = data
  
     return (
         <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER'), mb: 5 }}>
-            <Grid container sx={{ padding: 2 }}>
+            <Grid container p={2}>
                 <Grid item xs={12}>
-                    <Typography variant="h6">
-                        {topic} 
-                    </Typography>
+                    <Typography variant="h6">{topic}</Typography>
                 </Grid>
-                <Grid item xs={12} sx={{ mt: 2, mb:2 }}>
+                <Grid item xs={12} mt={2} mb={2}>
                     {detail}
                 </Grid>
                 <Grid item xs={12}>
                     <Divider />
                 </Grid>
-                <Grid item xs={1} sx={{ justifyContent: "center", display: "flex", mt: 2 }}>
-                    <Avatar src="/static/images/avatar/1.jpg" sx={{   }} />
+                <Grid item xs={1} display='flex' justifyContent='center' mt={2}>
+                    <Avatar src={profilePictureUrl || '/static/images/avatar/1.jpg'} />
                 </Grid>
-                <Grid item xs={10} sx={{ pl: 1 }}>
-                    <Grid item xs={12} sx={{ mt: 1 }}>
-                        <Typography variant='subtitle1'>
-                            {firstname} {lastname}
-                        </Typography>
+                <Grid item xs={10} pl={1}>
+                    <Grid item xs={12} mt={1}>
+                        <Typography variant='subtitle1'> {firstname} {lastname}</Typography>
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant='caption' color="text.secondary">
@@ -49,12 +43,12 @@ const QuestionTopic = ({ data }) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid item xs={1} sx={{ textAlign: 'right', mt: 3 }}>
-                    <Report type={'question'} />
+                <Grid item xs={1} mt={3} textAlign='right'>
+                    <Report type={'post'} />
                 </Grid>
             </Grid>
         </Paper>
     )
 }
 
-export default QuestionTopic
+export default PostTopic
