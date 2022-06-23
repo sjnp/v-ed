@@ -1,4 +1,4 @@
-package com.ved.backend.integration.student.course;
+package com.ved.backend.integration.student.student_course;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,23 +17,18 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ved.backend.model.Category;
-import com.ved.backend.model.Course;
-import com.ved.backend.model.CourseState;
-import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.util.MockDatabase;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class FreeCourseIT {
- 
+public class BuyFreeCourseIT {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -45,12 +39,6 @@ public class FreeCourseIT {
     private MockDatabase mockDatabase;
 
     @Autowired
-    private CategoryRepo categoryRepo;
-
-    @Autowired
-    private CourseStateRepo courseStateRepo;
-
-    @Autowired
     private CourseRepo courseRepo;
 
     @Test
@@ -58,82 +46,96 @@ public class FreeCourseIT {
     public void init() throws Exception {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
-        
         mockDatabase.mock_register_student();
-
         mockDatabase.mock_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
         mockDatabase.mock_course(0L, "PUBLISHED", "BUSINESS");
-        mockDatabase.mock_course(200L, "PUBLISHED", "DESIGN");
+        mockDatabase.mock_course(200L, "PUBLISHED", "ART");
     }
 
     @Test
     @Order(2)
-    public void givenUsernameAndCourseId_whenCoursePriceNotZero_thenReturnBadRequestStatus() throws Exception {
+    public void givenCourseId_whenPriceNotZero_thenReturnBadRequestStatus() throws Exception {
+        // login
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
         // given
-        Category category = categoryRepo.findByName("DESIGN").get();
-        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
-        Long courseId = courses.get(0).getId();
-        // when
+        Long courseId = courseRepo.findAll()
+            .stream()
+            .filter(course -> course.getPrice() != 0L)
+            .collect(Collectors.toList())
+            .get(0)
+            .getId();
         String payload = objectMapper.writeValueAsString(courseId);
+
+        // when
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
+
         // then
         resultActions
             .andExpect(status().isBadRequest())
-            .andExpect(status().reason(containsString("Course id " + courseId + " not free")));
+            .andExpect(status().reason(containsString("This course not free")));
     }
 
     @Test
     @Order(3)
-    @WithMockUser(username = "student@test.com")
-    public void givenUsernameAndCourseId_whenGetFreeCourseSuccess_thenReturnCreatedStatus() throws Exception {
+    public void givenCourseId_whenSuccess_thenReturnCreatedStatus() throws Exception {
+        // login
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
         // given
-        Category category = categoryRepo.findByName("BUSINESS").get();
-        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
-        Long courseId = courses.get(0).getId();
-        // when
+        Long courseId = courseRepo.findAll()
+            .stream()
+            .filter(course -> course.getPrice() == 0L)
+            .collect(Collectors.toList())
+            .get(0)
+            .getId();
         String payload = objectMapper.writeValueAsString(courseId);
+
+        // when
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
+
         // then
         resultActions.andExpect(status().isCreated());
     }
 
     @Test
     @Order(4)
-    @WithMockUser(username = "student@test.com")
-    public void givenUsernameAndCourseId_whenHaveCourseAlready_thenReturnConflictStatus() throws Exception {
+    public void givenCourseId_whenDuplicate_thenReturnConflictStatus() throws Exception {
+        // login
         ResultActions logiActions = mockDatabase.mock_login_student();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
         // given
-        Category category = categoryRepo.findByName("BUSINESS").get();
-        CourseState courseState = courseStateRepo.findByName("PUBLISHED");
-        List<Course> courses = courseRepo.findCoursesByCategoryAndCourseState(category, courseState);
-        Long courseId = courses.get(0).getId();
-        // when
+        Long courseId = courseRepo.findAll()
+            .stream()
+            .filter(course -> course.getPrice() == 0L)
+            .collect(Collectors.toList())
+            .get(0)
+            .getId();
         String payload = objectMapper.writeValueAsString(courseId);
+
+        // when
         ResultActions resultActions = mockMvc.perform(
             post("/api/students/free/course")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
         );
+
         // then
         resultActions
             .andExpect(status().isConflict())
@@ -145,5 +147,5 @@ public class FreeCourseIT {
     public void clear() {
         mockDatabase.clear();
     }
-
+    
 }

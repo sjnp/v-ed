@@ -1,23 +1,34 @@
 package com.ved.backend.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.ved.backend.exception.tempException.MyException;
-// import com.ved.backend.model.AppUser;
+import com.ved.backend.configuration.CommentStateProperties;
+import com.ved.backend.exception.CourseNotFoundException;
+import com.ved.backend.exception.PostNotFoundException;
+import com.ved.backend.exception.baseException.BadRequestException;
+import com.ved.backend.model.Comment;
+import com.ved.backend.model.CommentState;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.Post;
-// import com.ved.backend.model.StudentCourse;
-// import com.ved.backend.repo.AppUserRepo;
+import com.ved.backend.model.StudentCourse;
+import com.ved.backend.repo.CommentStateRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.PostRepo;
-// import com.ved.backend.repo.StudentCourseRepo;
-import com.ved.backend.response.PostResponse;
+import com.ved.backend.request.CommentRequest;
+import com.ved.backend.request.PostRequest;
+import com.ved.backend.response.CommentResponse;
+import com.ved.backend.response.CreatePostResponse;
+import com.ved.backend.response.PostCardResponse;
+import com.ved.backend.response.PostCommentResponse;
+
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,84 +37,107 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PostService {
 
+    private final AuthService authService;
+    
     private final PostRepo postRepo;
-    // private final AppUserRepo appUserRepo;
-    // private final StudentCourseRepo studentCourseRepo;
+    private final CommentStateRepo commentStateRepo;
     private final CourseRepo courseRepo;
 
-    public PostResponse create(Long courseId, String topic, String detail, String username) {
+    private final CommentStateProperties commentStateProperties;
 
-        if (Objects.isNull(courseId)) {
-            throw new MyException("question.board.course.id.null", HttpStatus.BAD_REQUEST);
+    private static final Logger log = LoggerFactory.getLogger(PostService.class);
+
+    public CreatePostResponse createPost(PostRequest postRequest, String username) {
+        log.info("Create post in course id: {} by username: {}", postRequest.getCourseId(), username);
+
+        if (Objects.isNull(postRequest.getCourseId())) {
+            throw new BadRequestException("Course id is required");
+        }
+      
+        if (Objects.isNull(postRequest.getTopic())) {
+            throw new BadRequestException("Topic is required");
+        }
+      
+        if (Objects.isNull(postRequest.getDetail())) {
+            throw new BadRequestException("Detail is required");
         }
 
-        if (Objects.isNull(topic) || topic.length() == 0) {
-            throw new MyException("question.board.topic.null", HttpStatus.BAD_REQUEST);
+        StudentCourse studentCourse = authService.authorized(username, postRequest.getCourseId());
+        Post post = Post.builder()
+            .course(studentCourse.getCourse())
+            .studentCourse(studentCourse)
+            .topic(postRequest.getTopic())
+            .detail(postRequest.getDetail())
+            .createDateTime(LocalDateTime.now())
+            .visible(true)
+            .build();
+            
+        Post resultPost = postRepo.save(post);
+        return CreatePostResponse.builder()
+            .postId(resultPost.getId())
+            .build();
+    }
+
+    public List<PostCardResponse> getPostsByCourseId(String username, Long courseId) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
+        authService.authorized(username, courseId);
+        Course course = courseRepo.findById(courseId)
+            .orElseThrow(() -> new CourseNotFoundException(courseId));
+        return course
+            .getPosts()
+            .stream()
+            .map(post -> new PostCardResponse(post))
+            .collect(Collectors.toList());
+    }
+
+    public PostCommentResponse getPostById(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+        authService.authorized(username, courseId);
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException(postId));
+        return new PostCommentResponse(post);
+    }
+
+    public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+        log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
+
+        if (Objects.isNull(postId)) {
+            throw new BadRequestException("Post id is required");
         }
 
-        if (Objects.isNull(detail) || detail.length() == 0) {
-            throw new MyException("question.board.detail.null", HttpStatus.BAD_REQUEST);
+        if (Objects.isNull(commentRequest.getComment())) {
+            throw new BadRequestException("Comment is required");
         }
 
-        // AppUser appUser = appUserRepo.findByUsername(username);
-        // Long studentId = appUser.getStudent().getId();
+        if (commentRequest.getComment().length() > 1000) {
+            throw new BadRequestException("Comments are more than 1000 characters");
+        }
 
-        // REASON : remove -> studentCourseRepo.findByCourseIdAndStudentId in repository
-        // StudentCourse studentCourse = studentCourseRepo.findByCourseIdAndStudentId(courseId, studentId);
+        StudentCourse studentCourse = authService.authorized(username, courseId);
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException(postId));
 
-        Post post = new Post();
-        post.setTopic(topic);
-        post.setDetail(detail);
-        post.setCreateDateTime(LocalDateTime.now());
-        post.setVisible(true);
-        // post.setCourse(studentCourse.getCourse());
-        // post.setStudentCourse(studentCourse);
-
-        // Course course = studentCourse.getCourse();
-        // course.getPosts().add(post);
-
-        // studentCourse.getPosts().add(post);
-
+        String commentStateName;
+        if (username.equals(post.getStudentCourse().getStudent().getAppUser().getUsername())) {
+            commentStateName = commentStateProperties.getOwner();
+        } else if (username.equals(studentCourse.getCourse().getInstructor().getStudent().getAppUser().getUsername())) {
+            commentStateName = commentStateProperties.getInstructor();
+        } else {
+            commentStateName = commentStateProperties.getStudent();
+        }
+        CommentState commentState = commentStateRepo.findByName(commentStateName);
+        Comment comment = Comment.builder()
+            .post(post)
+            .comment(commentRequest.getComment())
+            .commentDateTime(LocalDateTime.now())
+            .visible(true)
+            .commentState(commentState)
+            .student(studentCourse.getStudent())
+            .build();
+        post.getComments().add(comment);
         postRepo.save(post);
-        // studentCourseRepo.save(studentCourse);
-        // courseRepo.save(course);
-
-        PostResponse response = new PostResponse(post);
-        return response;
-    }
-
-    public PostResponse getPostById(Long questionBoardId) {
-
-        Optional<Post> questionBoardOptional = postRepo.findById(questionBoardId);
-
-        if (questionBoardOptional.isEmpty()) {
-            throw new MyException("question.baord.id.not.found", HttpStatus.BAD_REQUEST);
-        }
-
-        Post post = questionBoardOptional.get();
-        PostResponse postResponse = new PostResponse(post);
-
-        return postResponse;
-    }
-
-    public List<PostResponse> getPostByCourseId(Long courseId) {
-
-        Optional<Course> courseOptional = courseRepo.findById(courseId);
-
-        if (courseOptional.isEmpty()) {
-            throw new MyException("question.baord.course.id.not.found", HttpStatus.BAD_REQUEST);
-        }
-
-        Course course = courseOptional.get();
-        List<Post> posts = course.getPosts();
-
-        List<PostResponse> response = new ArrayList<PostResponse>();
-        for (Post post : posts) {
-            PostResponse postResponse = new PostResponse(post);
-            response.add(postResponse);
-        }
-
-        return response;
+        
+        return new CommentResponse(comment);
     }
 
 }

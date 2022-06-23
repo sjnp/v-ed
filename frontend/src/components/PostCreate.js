@@ -7,25 +7,20 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 // custom api
 import apiPrivate from '../api/apiPrivate'
 
-// component
-import LoadingCircle from '../components/LoadingCircle'
-
 // Material UI component
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // url
 import { URL_CREATE_POST } from '../utils/url'
 
-const QuestionCreate = () => {
-
-    const axiosPrivate = useAxiosPrivate()
-
-    const navigate = useNavigate()
+const PostCreate = () => {
 
     const { courseId } = useParams()
+    const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate()
 
     const maxLengthTopic = 200
     const maxLengthDetail = 1000
@@ -74,7 +69,6 @@ const QuestionCreate = () => {
     }
 
     const handleClickCreate = async () => {
-        
         let invalid = false
 
         if (topic.length === 0) {
@@ -92,7 +86,6 @@ const QuestionCreate = () => {
         if (invalid) return
 
         setLoading(true)
-        
         const payLoad = {
             courseId: courseId,
             topic: topic,
@@ -102,7 +95,7 @@ const QuestionCreate = () => {
         setLoading(false)
 
         if (response.status === 201) {
-            navigate(`/student/course/${courseId}/question-board/${response.data.id}`)
+            navigate(`/student/course/${courseId}/post/${response.data.postId}`)
         } else {
             alert('Error, please try again')
         }
@@ -115,6 +108,7 @@ const QuestionCreate = () => {
                 label="Topic"
                 variant="outlined"
                 margin="normal"
+                size='small'
                 required 
                 fullWidth
                 multiline
@@ -129,6 +123,7 @@ const QuestionCreate = () => {
                 label="Detail"
                 variant="outlined"
                 margin="normal"
+                size='small'
                 required 
                 fullWidth
                 multiline
@@ -139,18 +134,12 @@ const QuestionCreate = () => {
                 onBlur={handleBlurDetail}
             />
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2 }}>
-                <Button
-                    variant='contained' 
-                    disabled={loading} 
-                    sx={{ width: '20%' }} 
-                    onClick={handleClickCreate}
-                >
+                <LoadingButton variant='contained' loading={loading} onClick={handleClickCreate} sx={{ width: '20%' }}>
                     Create
-                </Button>
+                </LoadingButton>
             </Box>
-            <LoadingCircle loading={loading} layoutLeft={60} />
         </Paper>
     )
 }
 
-export default QuestionCreate
+export default PostCreate
