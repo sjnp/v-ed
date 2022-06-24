@@ -53,6 +53,15 @@ public class Student {
       inverseJoinColumns = {@JoinColumn(name = "instructor_id", referencedColumnName = "id")})
   private Instructor instructor;
 
+  @OneToMany(mappedBy = "student")
+  private List<ReviewReport> reviewReports;
+
+  @OneToMany(mappedBy = "student")
+  private List<PostReport> postReports;
+
+  @OneToMany(mappedBy = "student")
+  private List<CommentReport> commentReports;
+
   public String getFullName() { return firstName + " " + lastName; }
 
 }

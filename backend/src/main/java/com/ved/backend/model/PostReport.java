@@ -34,4 +34,12 @@ public class PostReport {
       inverseJoinColumns = {@JoinColumn(name = "report_state_id", referencedColumnName = "id")})
   private ReportState reportState;
 
+  @ManyToOne
+  @JoinColumn(name = "reason_report_id")
+  private ReasonReport reasonReport;
+
+  @ManyToOne
+  @JoinColumn(name = "student_id")
+  private Student student;
+
 }
