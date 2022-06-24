@@ -27,6 +27,7 @@ public class StudentController {
   private final CourseService courseService;
   private final AssignmentService assignmentService;
   private final PostService postService;
+  private final ReportService reportService;
 
   @PostMapping("/free/course")
   public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
@@ -139,11 +140,13 @@ public class StudentController {
 
   /* *************************************************************************************************** */
 
-  
+  @GetMapping("/reason-reports")
+  public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
+    List<ReasonReportResponse> response = reportService.getReasonReports();
+    return ResponseEntity.ok().body(response);
+  }
 
   // ------------------------------------------------------------------------------------------------------
-  
-  
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {

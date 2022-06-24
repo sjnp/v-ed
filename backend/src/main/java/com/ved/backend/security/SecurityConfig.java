@@ -72,7 +72,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/posts/{\\d+}",
             "/api/students/courses/{\\d+}/reviews",
             "/api/students/courses/{\\d+}/reviews/{\\d+}",
-            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer",
+            "/api/students/reason-reports"
         )
         .hasAnyAuthority("STUDENT");
 
