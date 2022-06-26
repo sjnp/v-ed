@@ -57,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overviews/category/**",
             "/api/overviews/courses/{\\d+}",
             "/api/overviews/courses/{\\d+}/card",
-            "/api/overviews/video-example/**"
+            "/api/overviews/video-example/**",
+            "/api/students/reason-reports"
         )
         .permitAll();
 
@@ -72,8 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/posts/{\\d+}",
             "/api/students/courses/{\\d+}/reviews",
             "/api/students/courses/{\\d+}/reviews/{\\d+}",
-            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer",
-            "/api/students/reason-reports"
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
         )
         .hasAnyAuthority("STUDENT");
 

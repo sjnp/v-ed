@@ -1,30 +1,30 @@
-import { useDispatch } from 'react-redux' 
+import { useDispatch, useSelector } from 'react-redux'
+import axios from '../api/axios'
 
 // feature slice
 import { setReasonReport } from '../features/reasonReportSlice'
-
-// custom hook
-import useAxiosPrivate from './useAxiosPrivate'
-
-// custom api
-import apiPrivate from '../api/apiPrivate'
 
 // url
 import { URL_GET_REASON_REPORTS } from '../utils/url'
 
 const useReasonReport = () => {
 
-    const axiosPrivate = useAxiosPrivate()
     const dispatch = useDispatch()
+    const reasons = useSelector(state => state.reasonReport.value.reasonReports)
 
     const createReasonReportRedux = async () => {
-        const response = await apiPrivate.get(axiosPrivate, URL_GET_REASON_REPORTS)
-        if (response.status === 200) {
-            dispatch(
-                setReasonReport({ reasonReports: response.data })
-            )
-        } else {
-            alert('Error get raason report')
+        if (reasons.length === 0) {
+            const response = await axios.get(URL_GET_REASON_REPORTS)
+                .then(res => res)
+                .catch(err => err.response)
+
+            if (response.status === 200) {
+                dispatch(
+                    setReasonReport({ reasonReports: response.data })
+                )
+            } else {
+                alert('Error get raason report')
+            }
         }
     }
 
