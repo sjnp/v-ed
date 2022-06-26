@@ -9,14 +9,16 @@ import useAxiosPrivate from './useAxiosPrivate'
 // custom api
 import apiPrivate from '../api/apiPrivate'
 
+// url
+import { URL_GET_REASON_REPORTS } from '../utils/url'
+
 const useReasonReport = () => {
 
     const axiosPrivate = useAxiosPrivate()
     const dispatch = useDispatch()
 
     const createReasonReportRedux = async () => {
-        const url = '/api/students/reason-reports'
-        const response = await apiPrivate.get(axiosPrivate, url)
+        const response = await apiPrivate.get(axiosPrivate, URL_GET_REASON_REPORTS)
         if (response.status === 200) {
             dispatch(
                 setReasonReport({ reasonReports: response.data })
