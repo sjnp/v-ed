@@ -1,6 +1,5 @@
 package com.ved.backend.integration.instructor;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CategoryProperties;
 import com.ved.backend.configuration.CourseStateProperties;
@@ -9,7 +8,6 @@ import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

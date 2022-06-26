@@ -22,8 +22,6 @@ import java.util.Map;
 @RequestMapping(path = "/api/instructors")
 public class InstructorController {
   private final InstructorService instructorService;
-  private final PublicObjectStorageService publicObjectStorageService;
-  private final PrivateObjectStorageService privateObjectStorageService;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
