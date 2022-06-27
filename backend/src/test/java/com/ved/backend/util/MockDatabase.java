@@ -24,6 +24,7 @@ import com.ved.backend.model.CourseState;
 import com.ved.backend.model.Instructor;
 import com.ved.backend.model.Post;
 import com.ved.backend.model.PublishedCourse;
+import com.ved.backend.model.ReasonReport;
 import com.ved.backend.model.Review;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
@@ -38,6 +39,7 @@ import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
+import com.ved.backend.repo.ReasonReportRepo;
 import com.ved.backend.repo.ReviewRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
@@ -70,6 +72,7 @@ public class MockDatabase {
     @Autowired private CommentStateRepo commentStateRepo;
     @Autowired private CommentRepo commentRepo;
     @Autowired private ReviewRepo reviewRepo;
+    @Autowired private ReasonReportRepo reasonReportRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
@@ -82,6 +85,7 @@ public class MockDatabase {
     private String passwordStudent = "Password123";
 
     public void clear() {
+        reasonReportRepo.deleteAll();
         reviewRepo.deleteAll();
         commentRepo.deleteAll();
         commentStateRepo.deleteAll();
@@ -399,6 +403,23 @@ public class MockDatabase {
             .publishedCourse(publishedCourse)
             .build();
         reviewRepo.save(review);
+    }
+
+    public void mock_reason_report() {
+        List<String> descriptions = Arrays.asList(
+            "ข้อความสแปม",
+            "ละเมิดสิทธิของฉัน",
+            "ข้อความเท็จ ไม่ตรงกับข้อเท็จจริง",
+            "ใช้ถ้อยคำที่รุนแรง หยาบคาย",
+            "เนื้อหารุนแรง และน่ารังเกียจ"
+        );
+
+        for(String description : descriptions) {
+            ReasonReport reasonReport = ReasonReport.builder()
+                .description(description)
+                .build();
+            reasonReportRepo.save(reasonReport);
+        }
     }
 
 }
