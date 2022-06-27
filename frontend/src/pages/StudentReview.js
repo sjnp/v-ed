@@ -133,6 +133,7 @@ const StudentReview = () => {
                             reviews?.map((review, index) => (
                                 <ReviewCard
                                     key={index}
+                                    reviewId={review.id}
                                     rating={review.rating}
                                     comment={review.comment}
                                     firstname={review.firstname}
