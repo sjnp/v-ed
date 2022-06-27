@@ -41,9 +41,6 @@ class InstructorServiceTest {
   private CourseRepo courseRepo;
 
   @Mock
-  private CourseStateRepo courseStateRepo;
-
-  @Mock
   private InstructorRepo instructorRepo;
 
   @Mock

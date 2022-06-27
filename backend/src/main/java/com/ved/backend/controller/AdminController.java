@@ -24,14 +24,14 @@ public class AdminController {
   private final AdminService adminService;
 
   @GetMapping(path = "/pending-courses")
-  public ResponseEntity<?> getAllPendingCourses() {
-    List<PendingCourseResponse> pendingCourseResponses = adminService.getPendingCourses();
+  public ResponseEntity<?> getAllPendingCourses(Principal principal) {
+    List<PendingCourseResponse> pendingCourseResponses = adminService.getPendingCourses(principal.getName());
     return ResponseEntity.ok().body(pendingCourseResponses);
   }
 
   @GetMapping(path = "/pending-courses/{courseId}")
-  public ResponseEntity<?> getPendingCourse(@PathVariable Long courseId) {
-    FullPendingCourseInfoDto fullPendingCourseInfoDto = adminService.getPendingCourse(courseId);
+  public ResponseEntity<?> getPendingCourse(@PathVariable Long courseId, Principal principal) {
+    FullPendingCourseInfoDto fullPendingCourseInfoDto = adminService.getPendingCourse(courseId, principal.getName());
     return ResponseEntity.ok().body(fullPendingCourseInfoDto);
   }
 

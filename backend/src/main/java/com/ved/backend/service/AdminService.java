@@ -1,10 +1,12 @@
 package com.ved.backend.service;
 
 import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.RoleProperties;
+import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.NotFoundException;
-import com.ved.backend.model.Course;
-import com.ved.backend.model.CourseState;
-import com.ved.backend.model.Student;
+import com.ved.backend.model.*;
+import com.ved.backend.repo.AppRoleRepo;
+import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.response.FullPendingCourseInfoDto;
 import com.ved.backend.response.InstructorInfoDto;
@@ -13,6 +15,7 @@ import com.ved.backend.response.VideoResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,16 +26,35 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AdminService {
 
+  private final AppUserRepo appUserRepo;
+  private final AppRoleRepo appRoleRepo;
   private final CourseRepo courseRepo;
   private final CourseStateProperties courseStateProperties;
+  private final RoleProperties roleProperties;
   private final CourseStateService courseStateService;
   private final CourseService courseService;
   private final PrivateObjectStorageService privateObjectStorageService;
+  private final PasswordEncoder passwordEncoder;
 
   private static final Logger log = LoggerFactory.getLogger(AdminService.class);
 
-  public List<PendingCourseResponse> getPendingCourses() {
+  // Only use this service for integration testing
+  public void registerAdmin(AppUser appUser) {
+    if (appUserRepo.existsByUsername(appUser.getUsername())) {
+      String usernameAlreadyExist = "User with username: " + appUser.getUsername() + " already exists";
+      throw new ConflictException(usernameAlreadyExist);
+    }
+
+    log.info("Register new admin: {} to the database", appUser.getUsername());
+    appUser.setPassword(passwordEncoder.encode(appUser.getPassword()));
+    AppRole adminRole = appRoleRepo.findByName(roleProperties.getAdmin());
+    appUser.getAppRoles().add(adminRole);
+    appUserRepo.save(appUser);
+  }
+
+  public List<PendingCourseResponse> getPendingCourses(String username) {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
+    log.info("Finding all pending courses, admin: {}", username);
     List<Course> pendingCourses = courseRepo.findCoursesByCourseState(pendingState);
     return pendingCourses
         .stream()
@@ -44,7 +66,7 @@ public class AdminService {
         .collect(Collectors.toList());
   }
 
-  public FullPendingCourseInfoDto getPendingCourse(Long courseId) {
+  public FullPendingCourseInfoDto getPendingCourse(Long courseId, String username) {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
     Course pendingCourse = courseService.getByIdAndCourseState(courseId, pendingState);
     Student student = pendingCourse.getInstructor().getStudent();
