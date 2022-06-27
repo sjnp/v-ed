@@ -4,6 +4,7 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.request.PostRequest;
+import com.ved.backend.request.ReportRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
@@ -144,6 +145,12 @@ public class StudentController {
   public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
     List<ReasonReportResponse> response = reportService.getReasonReports();
     return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/report")
+  public ResponseEntity<?> createReport(@RequestBody ReportRequest reportRequest, Principal principal) {
+    reportService.createReport(principal.getName(), reportRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   // ------------------------------------------------------------------------------------------------------
