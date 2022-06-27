@@ -59,6 +59,7 @@ export const URL_EDIT_REVIEW = '/api/students/courses/reviews/{reviewId}'
 export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
 
 export const URL_GET_REASON_REPORTS = '/api/students/reason-reports'
+export const URL_CREATE_REPORT = '/api/students/report'
 
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'

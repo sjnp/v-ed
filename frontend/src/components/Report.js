@@ -3,63 +3,56 @@ import React, { useState } from 'react'
 // component
 import ReportModal from './ReportModal'
 
-// Material UI
+// Material UI component
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-// import Modal from '@mui/material/Modal'
-// import ClickAwayListener from '@mui/material/ClickAwayListener'
-// import Container from '@mui/material/Container'
-
 
 // icon
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FlagIcon from '@mui/icons-material/Flag';
 
-const Report = ({ type }) => {
-    
-    const [ anchorEl, setAnchorEl ] = useState(null);
-    
-    const handleClickMoreVertIcon = (event) => {
-        setAnchorEl(event.currentTarget)
+const Report = ({ type, contentId }) => {
+
+    const [ report, setReport ] = useState(null)
+    const [ reportModal, setReportModal ] = useState(false)
+
+    const handleOpenReport = (event) => {
+        setReport(event.currentTarget)
     }
 
-    const handleCloseMenu = () => {
-        setAnchorEl(null)
+    const handleCloseReport = () => {
+        setReport(null)
     }
 
-    const handleClickMenu = () => {
-        setOpenReportModel(true)
-        setAnchorEl(null)
+    const handleOpenReportModal = () => {
+        setReport(null)
+        setReportModal(true)
     }
 
-    const [ openReportModal, setOpenReportModel ] = useState(false)
+    const handleCloseReportModal = () => {
+        setReportModal(false)
+    }
     
     return (
         <Box>
-
-            <IconButton onClick={handleClickMoreVertIcon}>
+            <IconButton onClick={handleOpenReport}>
                 <MoreVertIcon />
             </IconButton>
-
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                <MenuItem onClick={handleClickMenu}>
+            <Menu anchorEl={report} open={Boolean(report)} onClose={handleCloseReport}>
+                <MenuItem onClick={handleOpenReportModal}>
                     <FlagIcon />
-                    <Typography sx={{ ml: 1 }}>
-                        Report
-                    </Typography>
+                    <Typography ml={1}>Report</Typography>
                 </MenuItem>
             </Menu>
-            {/* <Modal open={openModal}> */}
-                {/* <div> */}
-                {/* <ClickAwayListener onClickAway={handleCloseReportModal}> */}
-                    
-                {/* </ClickAwayListener> */}
-            {/* </div> */}
-            {/* </Modal> */}
-            <ReportModal type={type} open={openReportModal} handleOpen={setOpenReportModel} />
+            <ReportModal
+                open={reportModal} 
+                onClose={handleCloseReportModal}
+                type={type}
+                contentId={contentId}
+            />
         </Box>
     )
 }

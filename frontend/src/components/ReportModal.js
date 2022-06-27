@@ -1,169 +1,119 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
-// Material UI
-import Paper from '@mui/material/Paper'
+// component
+import AlertMessage from './AlertMessage'
+
+// Material UI component
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Modal from '@mui/material/Modal'
-import Container from '@mui/material/Container'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormControl from '@mui/material/FormControl'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
 
-const ReportModal = ({ type, open, handleOpen }) => {
+// custom hook
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
 
-    const getTopicReport = (type) => {
+// custom api
+import apiPrivate from '../api/apiPrivate'
 
-        const allTopicReport = [
-            { value: 1, text: 'ข้อความสแปม' },
-            { value: 2, text: 'ละเมิดสิทธิของฉัน' },
-            { value: 3, text: 'ข้อความเท็จ ไม่ตรงกับข้อเท็จจริง' },
-            { value: 4, text: 'ใช้ถ้อยคำที่รุนแรง หยาบคาย' },
-            { value: 5, text: 'ความเห็นนอกบริบท ไม่เกี่ยวข้องกับคำถาม' },
-            { value: 6, text: 'เนื้อหารุนแรง และน่ารังเกียจ' },
-            { value: 7, text: 'xxx' },
-            { value: 8, text: 'xxx' },
-            { value: 9, text: 'xxx' },
-        ]
+// url
+import { URL_CREATE_REPORT } from '../utils/url';
 
-        let topicReport = []
+const ReportModal = ({ type, contentId, open, onClose }) => {
 
-        if (type === 'review') {
-            topicReport.push(allTopicReport[0])
-            topicReport.push(allTopicReport[1])
-            topicReport.push(allTopicReport[2])
-            topicReport.push(allTopicReport[3])
-        } else if (type === 'comment') {
-            topicReport.push(allTopicReport[0])
-            topicReport.push(allTopicReport[1])
-            topicReport.push(allTopicReport[2])
-            topicReport.push(allTopicReport[3])
-            topicReport.push(allTopicReport[4])
-        } else if (type === 'question') {
-            topicReport.push(allTopicReport[0])
-            topicReport.push(allTopicReport[1])
-            topicReport.push(allTopicReport[2])
-            topicReport.push(allTopicReport[3])
-            topicReport.push(allTopicReport[5])
-        }
-        
-        return topicReport
+    const axiosPrivate = useAxiosPrivate()
+
+    const reasons = useSelector(state => state.reasonReport.value.reasonReports)
+
+    const [ reasonReportId, setReasonReportId ] = useState(null)
+    const [ openAlertMessage, setOpenAlertMessage ] = useState(false)
+    const [ typeAlertMessage, setTypeAlertMessage ] = useState('info')
+    const [ messageAlertMessage, setMessageAlertMessage ] = useState('')
+
+    const handleCloseMyself = () => {
+        onClose()
+        setReasonReportId(null)
     }
 
-    const topicReports = getTopicReport(type)
-
-    const [ reportValue, setReportValue ] = useState('')
-
-    const initAlertMessage = {
-        open: false,
-        type: 'info',
-        text: '',
-        labelButton: ''
+    const handleChangeReason = (event) => {
+        setReasonReportId(event.target.value)
     }
 
-    const [ alertMessage, setAlertMessage ] = useState(initAlertMessage)
+    const handleCloseAlertMessage = (event, reason) => {
+        if (reason === 'clickaway') return
+        setOpenAlertMessage(false)
+    }
 
-    const handleClickSendReport = () => {
-
-        if (reportValue === '') {
-            setAlertMessage({
-                open: true,
-                type: 'warning',
-                text: 'Please, select report topic.',
-                labelButton: 'OK'
-            })
+    const handleSendReport = async () => {
+        if (reasonReportId === null ) {
+            setTypeAlertMessage('error')
+            setMessageAlertMessage('Reason report is required')
+            setOpenAlertMessage(true)
             return
         }
 
-        const result = 'successx'
-
-        if (result === 'success') {
-            setAlertMessage({
-                open: true,
-                type: 'success',
-                text: reportValue + '\nReport successful ',
-                labelButton: 'Done'
-            })
-        } else {
-            setAlertMessage({
-                open: true,
-                type: 'error',
-                text: reportValue + '\nReport fail, please try again',
-                labelButton: 'Try again'
-            })
+        const payload = {
+            contentId: contentId,
+            reasonReportId: reasonReportId,
+            reportType: type
         }
-        handleOpen(false)
-        setReportValue('')
-    }
+        const response = await apiPrivate.post(axiosPrivate, URL_CREATE_REPORT, payload)
 
-    const handleClickCancel = () => {
-        handleOpen(false)
-        setReportValue(0)
+        if (response.status === 201) {
+            onClose()
+            handleCloseAlertMessage()
+            setTypeAlertMessage('success')
+            setMessageAlertMessage('Report successful')
+            setOpenAlertMessage(true)
+        } else {
+            setTypeAlertMessage('error')
+            setMessageAlertMessage(response.message)
+            setOpenAlertMessage(true)
+        }
     }
     
     return (
         <Box>
-        <Modal open={open}>
-            <Container component="main" maxWidth="xs">
-                <Paper sx={{ mt: 10, p: 2 }}>
-                    <Box>
-                        <Typography variant='h6'>
-                            Report
-                        </Typography>
-                    </Box>
-                    <Divider sx={{ mt: 1, mb: 1 }} />
-                    <Box>
-                        <FormControl>
-                            <RadioGroup onChange={(event) => setReportValue(event.target.value)}>
-                            {
-                                topicReports.map((topicReport, index) => (
-                                    <FormControlLabel
-                                        key={index}
-                                        value={topicReport.text}
-                                        control={<Radio />}
-                                        label={topicReport.text} 
-                                    />
-                                ))
-                            }
-                            </RadioGroup>
-                        </FormControl>
-                    </Box>
-                    <Divider sx={{ mt: 1, mb: 1 }} />
-                    <Box>
-                        <Button variant='contained' color="secondary" sx={{ m:1 }} onClick={handleClickCancel}>
-                            Cancel
-                        </Button>
-                        <Button variant='contained' color='primary' sx={{ m:1 }} onClick={handleClickSendReport}>
-                            Send report
-                        </Button>
-                    </Box>
-                </Paper>
-            </Container>
-        </Modal>
-        <Modal open={alertMessage.open} sx={{ width: 300, m: 'auto' }}>
-            <Paper sx={{ marginTop: 25, padding: 2 }}>
-                <Alert severity={alertMessage.type} sx={{ margin: 1, marginBottom: 2 }} >
-                    <AlertTitle>{alertMessage.type}</AlertTitle>
-                    {alertMessage.text}
-                </Alert>
-                <Box textAlign="center">
-                    <Button
-                        type="button" 
-                        variant="contained" 
-                        color={alertMessage.type}
-                        onClick={() => setAlertMessage(initAlertMessage)} 
-                    >
-                        {alertMessage.labelButton}
+            <Dialog open={open} onClose={handleCloseMyself}>
+                <DialogTitle>Report</DialogTitle>
+                <DialogContent>
+                    <FormControl>
+                        <RadioGroup onChange={handleChangeReason}>
+                        {
+                            reasons.map((reason, index) => (
+                                <FormControlLabel 
+                                    key={index} 
+                                    control={<Radio />}
+                                    value={reason?.id} 
+                                    label={reason?.description}
+                                />
+                            ))
+                        }
+                        </RadioGroup>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions sx={{ mr: 1, mb: 1 }}>
+                    <Button variant='outlined' color='primary' onClick={handleCloseMyself}>
+                        Cancel
                     </Button>
-                </Box>
-            </Paper>
-        </Modal>
-      </Box>  
+                    <Button variant='contained' color='primary' onClick={handleSendReport}>
+                        Send
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <AlertMessage
+                open={openAlertMessage} 
+                type={typeAlertMessage}
+                message={messageAlertMessage}
+                onClose={handleCloseAlertMessage}
+            />
+        </Box>
     )
 }
 
