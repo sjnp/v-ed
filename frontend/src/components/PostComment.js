@@ -17,7 +17,7 @@ import color from '../utils/color'
 
 const PostComment = ({ data }) => {
 
-    let { comment, commentDateTime, commentState, profilePictureUrl, firstname, lastname } = data
+    let { id, comment, commentDateTime, commentState, profilePictureUrl, firstname, lastname } = data
 
     return (
         <Paper sx={{ mt: 3, borderLeft: 3, borderColor: color.getColorCommentType(commentState) }}>
@@ -45,7 +45,7 @@ const PostComment = ({ data }) => {
                     </Grid>
                 </Grid>
                 <Grid item xs={1} mt={3} textAlign='right'>
-                    <Report type={'comment'} />
+                    <Report type='comment' contentId={id} />
                 </Grid>
             </Grid>
         </Paper>
