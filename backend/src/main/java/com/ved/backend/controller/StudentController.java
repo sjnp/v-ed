@@ -2,6 +2,7 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.BuyCourseRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.request.PostRequest;
 import com.ved.backend.request.ReportRequest;
@@ -30,9 +31,9 @@ public class StudentController {
   private final PostService postService;
   private final ReportService reportService;
 
-  @PostMapping("/free/course")
-  public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourse(principal.getName(), courseId);
+  @PostMapping("/course/free")
+  public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
+    studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 

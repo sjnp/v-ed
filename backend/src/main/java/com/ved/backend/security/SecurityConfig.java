@@ -78,8 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(POST, "/api/students/free/course",
-            "/api/students/buy/course",
+        .antMatchers(POST, "/api/students/course/free",
+            "/api/students/course/buy",
             "/api/students/courses/answers/pre-authenticated-request",
             "/api/students/courses/{\\d+}/answer",
             "/api/students/courses/post",
