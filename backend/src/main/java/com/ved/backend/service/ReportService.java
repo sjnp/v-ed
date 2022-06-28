@@ -9,11 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ved.backend.configuration.ReportStateProperties;
+import com.ved.backend.exception.CommentNotFoundException;
 import com.ved.backend.exception.PostNotFoundException;
 import com.ved.backend.exception.ReasonReportNotFoundException;
 import com.ved.backend.exception.ReviewNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
+import com.ved.backend.model.Comment;
+import com.ved.backend.model.CommentReport;
 import com.ved.backend.model.Post;
 import com.ved.backend.model.PostReport;
 import com.ved.backend.model.ReasonReport;
@@ -21,6 +24,8 @@ import com.ved.backend.model.ReportState;
 import com.ved.backend.model.Review;
 import com.ved.backend.model.ReviewReport;
 import com.ved.backend.model.Student;
+import com.ved.backend.repo.CommentRepo;
+import com.ved.backend.repo.CommentReportRepo;
 import com.ved.backend.repo.PostRepo;
 import com.ved.backend.repo.PostReportRepo;
 import com.ved.backend.repo.ReasonReportRepo;
@@ -46,6 +51,9 @@ public class ReportService {
 
     private final PostRepo postRepo;
     private final PostReportRepo postReportRepo;
+
+    private final CommentRepo commentRepo;
+    private final CommentReportRepo commentReportRepo;
 
     private final ReportStateProperties reportStateProperties;
 
@@ -134,7 +142,25 @@ public class ReportService {
     }
 
     public void reportComment(String username, ReportRequest reportRequest) {
+        Student student = userService.getStudent(username);
+        Comment comment = commentRepo.findById(reportRequest.getContentId())
+            .orElseThrow(() -> new CommentNotFoundException(reportRequest.getContentId()));
 
+        if (commentReportRepo.existsByCommentAndStudent(comment, student)) {
+            throw new ConflictException("You report this comment already");
+        }
+
+        ReportState reportState = reportStateRepo.findByName(reportStateProperties.getPending());
+        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
+            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
+        CommentReport commentReport = CommentReport.builder()
+            .reasonReport(reasonReport)
+            .reportState(reportState)
+            .comment(comment)
+            .student(student)
+            .datatime(LocalDateTime.now())
+            .build();
+        commentReportRepo.save(commentReport);
     }
 
 }
