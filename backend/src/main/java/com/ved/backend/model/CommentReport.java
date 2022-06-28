@@ -1,6 +1,7 @@
 package com.ved.backend.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,10 +10,13 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.AUTO;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table
 public class CommentReport {
@@ -20,7 +24,8 @@ public class CommentReport {
   @GeneratedValue(strategy = AUTO)
   private Long id;
 
-  private String description;
+  @Column(nullable = false)
+  private LocalDateTime datatime;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinTable(name = "comment_comment_report",
