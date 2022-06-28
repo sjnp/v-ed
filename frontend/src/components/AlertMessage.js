@@ -19,7 +19,7 @@ const AlertMessage = ({ open, type, message, onClose }) => {
     const useStyles = makeStyles({
         info: { backgroundColor: '#2979ff', color: textColor },
         success: { backgroundColor: '#43A047', color: textColor },
-        warning: { backgroundColor: '#ffa000', color: textColor },
+        warning: { backgroundColor: '#ed6c02', color: textColor },
         error: { backgroundColor: '#d32f2f', color: textColor },
     })
     const classes = useStyles()
@@ -32,7 +32,7 @@ const AlertMessage = ({ open, type, message, onClose }) => {
     }
 
     return (
-        <Snackbar open={open} autoHideDuration={3000} onClose={onClose}>
+        <Snackbar open={open} autoHideDuration={5000} onClose={onClose}>
             <Alert severity={type} className={classes[type]} icon={icons[type]} onClose={onClose}>
                 {message}
             </Alert>
