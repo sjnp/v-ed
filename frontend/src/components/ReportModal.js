@@ -15,6 +15,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
+import LoadingButton from '@mui/lab/LoadingButton'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -32,6 +33,7 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
     const reasons = useSelector(state => state.reasonReport.value.reasonReports)
 
     const [ reasonReportId, setReasonReportId ] = useState(null)
+    const [ loading, setLoading ] = useState(false)
     const [ openAlertMessage, setOpenAlertMessage ] = useState(false)
     const [ typeAlertMessage, setTypeAlertMessage ] = useState('info')
     const [ messageAlertMessage, setMessageAlertMessage ] = useState('')
@@ -52,21 +54,23 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
 
     const handleSendReport = async () => {
         if (reasonReportId === null ) {
-            setTypeAlertMessage('error')
+            setTypeAlertMessage('warning')
             setMessageAlertMessage('Reason report is required')
             setOpenAlertMessage(true)
             return
         }
 
+        setLoading(true)
         const payload = {
             contentId: contentId,
             reasonReportId: reasonReportId,
             reportType: type
         }
         const response = await apiPrivate.post(axiosPrivate, URL_CREATE_REPORT, payload)
+        setLoading(false)
 
         if (response.status === 201) {
-            onClose()
+            handleCloseMyself()
             handleCloseAlertMessage()
             setTypeAlertMessage('success')
             setMessageAlertMessage('Report successful')
@@ -99,12 +103,12 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
                     </FormControl>
                 </DialogContent>
                 <DialogActions sx={{ mr: 1, mb: 1 }}>
-                    <Button variant='outlined' color='primary' onClick={handleCloseMyself}>
+                    <Button variant='outlined' color='primary' disabled={loading} onClick={handleCloseMyself}>
                         Cancel
                     </Button>
-                    <Button variant='contained' color='primary' onClick={handleSendReport}>
+                    <LoadingButton variant='contained' color='primary' loading={loading} onClick={handleSendReport}>
                         Send
-                    </Button>
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
             <AlertMessage
