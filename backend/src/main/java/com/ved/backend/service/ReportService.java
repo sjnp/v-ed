@@ -2,6 +2,7 @@ package com.ved.backend.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -70,15 +71,15 @@ public class ReportService {
     public void createReport(String username, ReportRequest reportRequest) {
         log.info("username: {} report {} id {}",username, reportRequest.getReportType(), reportRequest.getContentId());
 
-        if (reportRequest.getContentId().equals(null)) {
+        if (Objects.isNull(reportRequest.getContentId())) {
             throw new BadRequestException("Content id is required");
         }
 
-        if (reportRequest.getReasonReportId().equals(null)) {
+        if (Objects.isNull(reportRequest.getReasonReportId())) {
             throw new BadRequestException("Reason report id is required");
         }
 
-        if (reportRequest.getReportType().equals(null)) {
+        if (Objects.isNull(reportRequest.getReportType())) {
             throw new BadRequestException("Report type is required");
         }
 
