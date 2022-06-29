@@ -95,15 +95,19 @@ public class AdminService {
                                                     String username) {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
     Course pendingCourse = courseService.getByIdAndCourseState(courseId, pendingState);
-    String videoFileName = String.valueOf(pendingCourse.getChapters()
-        .get(chapterIndex)
-        .getSections()
-        .get(sectionIndex)
-        .get("videoUri"));
-    String videoUrl = privateObjectStorageService.readFile(videoFileName, username);
-    return VideoResponse.builder()
-        .videoUrl(videoUrl)
-        .build();
+    try {
+      String videoFileName = String.valueOf(pendingCourse.getChapters()
+          .get(chapterIndex)
+          .getSections()
+          .get(sectionIndex)
+          .get("videoUri"));
+      String videoUrl = privateObjectStorageService.readFile(videoFileName, username);
+      return VideoResponse.builder()
+          .videoUrl(videoUrl)
+          .build();
+    } catch (Exception e) {
+      throw new NotFoundException("Video not found");
+    }
   }
 
   public Map<String, String> getHandoutUrlFromPendingCourse(Long courseId,
