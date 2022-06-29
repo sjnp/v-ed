@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CategoryProperties;
 import com.ved.backend.configuration.CommentStateProperties;
 import com.ved.backend.configuration.CourseStateProperties;
+import com.ved.backend.configuration.ReportStateProperties;
 import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.Answer;
 import com.ved.backend.model.AppRole;
@@ -25,6 +26,7 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.model.Post;
 import com.ved.backend.model.PublishedCourse;
 import com.ved.backend.model.ReasonReport;
+import com.ved.backend.model.ReportState;
 import com.ved.backend.model.Review;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
@@ -33,14 +35,18 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.CategoryRepo;
 import com.ved.backend.repo.CommentRepo;
+import com.ved.backend.repo.CommentReportRepo;
 import com.ved.backend.repo.CommentStateRepo;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.PostRepo;
+import com.ved.backend.repo.PostReportRepo;
 import com.ved.backend.repo.PublishedCourseRepo;
 import com.ved.backend.repo.ReasonReportRepo;
+import com.ved.backend.repo.ReportStateRepo;
 import com.ved.backend.repo.ReviewRepo;
+import com.ved.backend.repo.ReviewReportRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.repo.StudentRepo;
 import com.ved.backend.request.ReviewRequest;
@@ -73,11 +79,16 @@ public class MockDatabase {
     @Autowired private CommentRepo commentRepo;
     @Autowired private ReviewRepo reviewRepo;
     @Autowired private ReasonReportRepo reasonReportRepo;
+    @Autowired private ReportStateRepo reportStateRepo;
+    @Autowired private ReviewReportRepo reviewReportRepo;
+    @Autowired private PostReportRepo postReportRepo;
+    @Autowired private CommentReportRepo commentReportRepo;
 
     @Autowired private RoleProperties roleProperties;
     @Autowired private CourseStateProperties courseStateProperties;
     @Autowired private CategoryProperties categoryProperties;
     @Autowired private CommentStateProperties commentStateProperties;
+    @Autowired private ReportStateProperties reportStateProperties;
 
     @Autowired private MockMvc mockMvc;
 
@@ -85,10 +96,15 @@ public class MockDatabase {
     private String passwordStudent = "Password123";
 
     public void clear() {
+        commentReportRepo.deleteAll();
+        postReportRepo.deleteAll();
+        reviewReportRepo.deleteAll();
+        reportStateRepo.deleteAll();
         reasonReportRepo.deleteAll();
         reviewRepo.deleteAll();
         commentRepo.deleteAll();
         commentStateRepo.deleteAll();
+        postRepo.deleteAll();
         answerRepo.deleteAll();
         studentCourseRepo.deleteAll();
         publishedCourseRepo.deleteAll();
@@ -419,6 +435,21 @@ public class MockDatabase {
                 .description(description)
                 .build();
             reasonReportRepo.save(reasonReport);
+        }
+    }
+
+    public void mock_report_state() {
+        List<String> reportStateNames = Arrays.asList(
+            reportStateProperties.getApproved(),
+            reportStateProperties.getPending(),
+            reportStateProperties.getRejected()
+        );
+        
+        for (String name : reportStateNames) {
+            ReportState reportState = ReportState.builder()
+                .name(name)
+                .build();
+            reportStateRepo.save(reportState);
         }
     }
 
