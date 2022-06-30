@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 public class InstructorService {
 
   private final CourseRepo courseRepo;
-  private final CourseStateRepo courseStateRepo;
   private final InstructorRepo instructorRepo;
 
   private final UserService userService;
@@ -103,6 +102,10 @@ public class InstructorService {
   }
 
   public Map<String, String> saveCoursePictureUrl(Long courseId, String objectName, String username) {
+    if (!objectName.contains("course_pic_" + courseId)) {
+      throw new BadRequestException("Invalid Object Name");
+    }
+
     Course incompleteCourse = getCourse(courseId, username, courseStateProperties.getIncomplete());
 
     log.info("Updating course picture from instructor: {}", username);

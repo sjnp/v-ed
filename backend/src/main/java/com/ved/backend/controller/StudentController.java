@@ -4,8 +4,10 @@ import com.ved.backend.model.Instructor;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.BuyCourseRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.request.PostRequest;
+import com.ved.backend.request.ReportRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
@@ -29,8 +31,9 @@ public class StudentController {
   private final CourseService courseService;
   private final AssignmentService assignmentService;
   private final PostService postService;
+  private final ReportService reportService;
 
-
+  
   @PostMapping(path = "/finance/active-instrustor")
   public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
     String response = studentService.activeInstructor(finance, principal.getName());
@@ -158,11 +161,19 @@ public class StudentController {
 
   /* *************************************************************************************************** */
 
-  
+  @GetMapping("/reason-reports")
+  public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
+    List<ReasonReportResponse> response = reportService.getReasonReports();
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/report")
+  public ResponseEntity<?> createReport(@RequestBody ReportRequest reportRequest, Principal principal) {
+    reportService.createReport(principal.getName(), reportRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
 
   // ------------------------------------------------------------------------------------------------------
-  
-  
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {

@@ -6,6 +6,7 @@ import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.RoleProperties;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
+import com.ved.backend.service.CategoryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -24,6 +24,8 @@ import java.util.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,10 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     locations = "classpath:application-it.properties"
 )
 @AutoConfigureMockMvc
-public class CreateCourseIT {
-
+public class GetAllIncompleteCoursesIT {
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private CategoryService categoryService;
 
   @Autowired
   private AppUserRepo appUserRepo;
@@ -58,15 +62,12 @@ public class CreateCourseIT {
   private CategoryProperties categoryProperties;
 
   @Autowired
-  private CourseRepo courseRepo;
-
-  @Autowired
   private ObjectMapper objectMapper;
 
   private String accessToken;
 
   @BeforeEach
-  void createInstructorAndLogin() throws Exception {
+  void init() throws Exception {
     // Create STUDENT role
     appRoleRepo.save(AppRole.builder()
         .name(roleProperties.getStudent())
@@ -162,7 +163,7 @@ public class CreateCourseIT {
   }
 
   @Test
-  void givenNewCourse_whenCreateCourse_thenReturnOk() throws Exception {
+  void givenTwoIncompleteCourses_whenGetIncompleteCourses_ReturnIncompleteCourses() throws Exception {
     //given
     HashMap<String, String> assignment = new HashMap<>();
     String assignmentDetail = "assignment test";
@@ -177,48 +178,58 @@ public class CreateCourseIT {
         .assignments(List.of(assignment))
         .build();
 
-    String courseName = "Test Course's name";
-    Long price = 0L;
-    String overview = "Overview Test";
-    String requirement = "Requirement Test";
-    Long categoryId = categoryRepo.findByName(categoryProperties.getDesign()).get().getId();
+    Category category = categoryService.getByName(categoryProperties.getDesign());
     Category design = Category.builder()
-        .id(categoryId)
-        .name(categoryProperties.getDesign())
-        .build();
-    Course givenCourse = Course.builder()
-        .name(courseName)
-        .price(price)
-        .overview(overview)
-        .requirement(requirement)
-        .chapters(List.of(chapter))
-        .category(design)
+        .id(category.getId())
+        .name(category.getName())
         .build();
 
-    //when
-    String json = objectMapper.writeValueAsString(givenCourse);
-    ResultActions resultActions = mockMvc.perform(post("/api/instructors/course")
+    String newCourseJson = objectMapper.writeValueAsString(
+        Course.builder()
+            .name("Course Name Test")
+            .price(0L)
+            .overview("Overview Test")
+            .requirement("Requirement Test")
+            .chapters(List.of(chapter))
+            .category(design)
+            .build());
+
+    mockMvc.perform(post("/api/instructors/course")
         .header(AUTHORIZATION, accessToken)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(json));
+        .content(newCourseJson));
+    mockMvc.perform(post("/api/instructors/course")
+        .header(AUTHORIZATION, accessToken)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(newCourseJson));
+
+    //when
+    ResultActions resultActions = mockMvc
+        .perform(get("/api/instructors/incomplete-courses")
+            .header(AUTHORIZATION, accessToken));
 
     //then
-    resultActions.andExpect(status().isCreated());
-    MockHttpServletResponse response = resultActions.andReturn().getResponse();
-    String URI = response.getHeader("Location");
-    assertThat(URI).isNotNull();
-    String[] parts = URI.split("/incomplete-courses/");
-    Long courseId = Long.valueOf(parts[parts.length - 1]);
-    Course expectedCourse = courseRepo
-        .findById(courseId)
-        .orElseThrow(() -> new RuntimeException("Can't find this course in database."));
-    Category expectedCategory = expectedCourse.getCategory();
-    CourseState expectedCourseState = expectedCourse.getCourseState();
-    assertThat(expectedCourse.getName()).isEqualTo(givenCourse.getName());
-    assertThat(expectedCourse.getRequirement()).isEqualTo(givenCourse.getRequirement());
-    assertThat(expectedCourse.getOverview()).isEqualTo(givenCourse.getOverview());
-    assertThat(expectedCourse.getPrice()).isEqualTo(givenCourse.getPrice());
-    assertThat(expectedCategory.getName()).isEqualTo(givenCourse.getCategory().getName());
-    assertThat(expectedCourseState.getName()).isEqualTo(courseStateProperties.getIncomplete());
+    resultActions
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isNotEmpty())
+        .andExpect(jsonPath("$.instructorFullName").value("First Last"))
+        .andExpect(jsonPath("$.courses.length()").value(2));
+  }
+
+  @Test
+  void givenNoIncompleteCourses_whenGetIncompleteCourse_ReturnEmptyArray() throws Exception {
+    //given
+
+    //when
+    ResultActions resultActions = mockMvc
+        .perform(get("/api/instructors/incomplete-courses")
+            .header(AUTHORIZATION, accessToken));
+
+    //then
+    resultActions
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").isNotEmpty())
+        .andExpect(jsonPath("$.instructorFullName").value("First Last"))
+        .andExpect(jsonPath("$.courses.length()").value(0));
   }
 }

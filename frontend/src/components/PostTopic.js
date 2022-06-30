@@ -44,7 +44,7 @@ const PostTopic = ({ data }) => {
                     </Grid>
                 </Grid>
                 <Grid item xs={1} mt={3} textAlign='right'>
-                    <Report type={'post'} />
+                    <Report type='post' contentId={id} />
                 </Grid>
             </Grid>
         </Paper>
