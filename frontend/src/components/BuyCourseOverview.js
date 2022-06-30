@@ -59,26 +59,22 @@ const BuyCourseOverview = ({ data }) => {
   }
 
   const handleClickGetFreeCourse = async () => {
-    if (username) {
-      setLoadingGetFreeCourse(true)
-
-      // const payload = {
-      //   courseId: courseId
-      // }
-      const payload = courseId
-      const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
-      
-      setLoadingGetFreeCourse(false)
-      
-      if (response.status === 201) {
-        // navigate(`/payment/course/${courseId}/success`)
-        alert('success')
-      } else {
-        alert(JSON.stringify(response.message))
-      }
-      
-    } else {
+    if (!username) {
       setRequiredLogin(true)
+      return
+    }
+
+    setLoadingGetFreeCourse(true)
+    const payload = {
+      courseId: courseId
+    }
+    const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
+    setLoadingGetFreeCourse(false)
+    
+    if (response.status === 201) {
+      navigate(`/student/course`)
+    } else {
+      alert(JSON.stringify(response.message))
     }
   }
 
@@ -149,13 +145,11 @@ const BuyCourseOverview = ({ data }) => {
           <SignInForm onLoginSuccess={() => setRequiredLogin(false)} onSignUp={handleClickCallSignUpForm} />
         </Container>
       </Modal>
-
       <Modal open={callSignUpForm}>
         <Container component='main' maxWidth='xs'>
           <SignUpForm onClose={() => setCallSignUpForm(false)} onSuccess={handleSignUpSuccess} />
         </Container>
       </Modal>
-      
       <Modal open={openSignUpSuccess} onClose={() => setOpenSignUpSuccess(false)}>
         <Container component="main" maxWidth="xs">
           <SuccessAlertBox handleClick={() => setOpenSignUpSuccess(false)} text='Register successful' />

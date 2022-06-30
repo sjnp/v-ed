@@ -15,9 +15,13 @@ import Skeleton from '@mui/material/Skeleton';
 // service
 import overviewService from '../services/overview';
 
+// custom hook
+import useReasonReport from '../hooks/useReasonReport'
+
 const Overview = () => {
 
   const { courseId } = useParams()
+  const createReasonReportRedux = useReasonReport()
 
   const [ overview, setOverview ] = useState({})
   const [ videoExampleURI, setVideoExampleURI ] = useState('')
@@ -31,6 +35,7 @@ const Overview = () => {
         setVideoExampleURI(response.data)
       }
     }
+    createReasonReportRedux()
   }, [])
 
   return (

@@ -22,6 +22,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useReasonReport from '../hooks/useReasonReport'
 
 // custom api
 import apiPrivate from '../api/apiPrivate'
@@ -32,8 +33,10 @@ import { URL_GET_POST } from '../utils/url'
 const StudentPostComment = () => {
 
     const { courseId, postId } = useParams()
-    const navigate = useNavigate()
     const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate()
+    const createReasonReportRedux = useReasonReport()
+
 
     const [ posts, setPosts ] = useState(null)
     const [ topicName, setTopicName ] = useState('')
@@ -52,6 +55,7 @@ const StudentPostComment = () => {
             alert('fail')
         }
         setLoading(false)
+        createReasonReportRedux()
     }, [])
 
     const handleCreateCommentSuucess = (newComment) => {

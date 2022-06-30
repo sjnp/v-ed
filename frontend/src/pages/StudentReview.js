@@ -24,6 +24,7 @@ import StarIcon from '@mui/icons-material/Star'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useReasonReport from '../hooks/useReasonReport'
 
 // custom api
 import apiPrivate from '../api/apiPrivate'
@@ -34,8 +35,9 @@ import { URL_GET_REVIEWS_BY_COURSE } from '../utils/url'
 const StudentReview = () => {
 
     const { courseId } = useParams()
-    const navigate = useNavigate()
     const axiosPrivate = useAxiosPrivate()
+    const navigate = useNavigate()
+    const createReasonReportRedux = useReasonReport()
 
     const [ stars, setStars ] = useState(null)
     const [ totalUserReview, setTotalUserReview ] = useState(null)
@@ -56,6 +58,7 @@ const StudentReview = () => {
             alert(response.message)
         }
         setLoading(false)
+        createReasonReportRedux()
     }, [])
 
     return (
@@ -81,7 +84,6 @@ const StudentReview = () => {
                                 Array(5).fill().map((element, index) => (
                                     <Skeleton key={index} variant="circular" width={20} height={20} sx={{ m: 0.5 }} />
                                 ))
-
                             }
                             </Box>
                             :
@@ -131,6 +133,7 @@ const StudentReview = () => {
                             reviews?.map((review, index) => (
                                 <ReviewCard
                                     key={index}
+                                    reviewId={review.id}
                                     rating={review.rating}
                                     comment={review.comment}
                                     firstname={review.firstname}
