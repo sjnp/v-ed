@@ -19,6 +19,7 @@ import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Category;
 import com.ved.backend.model.Chapter;
+import com.ved.backend.model.Comment;
 import com.ved.backend.model.CommentState;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.CourseState;
@@ -451,6 +452,22 @@ public class MockDatabase {
                 .build();
             reportStateRepo.save(reportState);
         }
+    }
+
+    public void mock_comment(Long postId, String commentText) {
+        Post post = postRepo.findById(postId).get();
+        CommentState commentState = commentStateRepo.findByName(commentStateProperties.getOwner());
+        Student student = appUserRepo.findByUsername("student@test.com").getStudent();
+        Comment comment = Comment.builder()
+            .post(post)
+            .comment(commentText)
+            .commentDateTime(LocalDateTime.now())
+            .visible(true)
+            .commentState(commentState)
+            .student(student)
+            .build();
+        post.getComments().add(comment);
+        postRepo.save(post);
     }
 
 }
