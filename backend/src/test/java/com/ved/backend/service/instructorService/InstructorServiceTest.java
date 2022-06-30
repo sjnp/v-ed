@@ -76,7 +76,6 @@ class InstructorServiceTest {
   void setup() {
     underTest = new InstructorService(
         courseRepo,
-        courseStateRepo,
         instructorRepo,
         userService,
         courseStateService,
@@ -245,7 +244,19 @@ class InstructorServiceTest {
   }
 
   @Test
-  void givenIdAndObjectNameAndUsername_whenSaveCoursePictureUrl() {
+  void givenIdAndInvalidObjectNameAndUsername_whenSaveCoursePictureUrl_thenThrow() {
+    //given
+    Long courseId = 1L;
+    String username = "test@test.com";
+    String objectName = "invalid.jpg";
+
+    //when
+    //then
+    assertThatThrownBy(() -> underTest.saveCoursePictureUrl(courseId, objectName, username))
+        .isInstanceOf(BadRequestException.class);
+  }
+  @Test
+  void givenIdAndObjectNameAndUsername_whenSaveCoursePictureUrl_thenReturnPicUrl() {
     //given
     InstructorService underThisTest = spy(underTest);
     Long courseId = 1L;
@@ -256,7 +267,7 @@ class InstructorServiceTest {
         .price(9999L)
         .chapters(List.of(new Chapter()))
         .build();
-    String objectName = "test.jpg";
+    String objectName = "course_pic_" + courseId + ".jpg";
     String osUri = "regional.objectstorage.com";
     String namespace = "namespace";
     String bucketName = "bucketName";
