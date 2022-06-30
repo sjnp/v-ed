@@ -68,6 +68,7 @@ public class AdminService {
 
   public FullPendingCourseInfoDto getPendingCourse(Long courseId, String username) {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
+    log.info("Finding a pending course, admin: {}", username);
     Course pendingCourse = courseService.getByIdAndCourseState(courseId, pendingState);
     Student student = pendingCourse.getInstructor().getStudent();
     InstructorInfoDto instructorInfoDto = InstructorInfoDto.builder()
@@ -118,28 +119,35 @@ public class AdminService {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
     Course pendingCourse = courseService.getByIdAndCourseState(courseId, pendingState);
 
-    @SuppressWarnings("unchecked")
-    List<Map<String, String>> handouts = (List<Map<String, String>>) pendingCourse
-        .getChapters()
-        .get(chapterIndex)
-        .getSections()
-        .get(sectionIndex)
-        .get("handouts");
-    boolean found = handouts.stream().anyMatch(handout -> handout.get("handoutUri").equals(requestHandoutFileName));
-    if (!found) {
+    try {
+      @SuppressWarnings("unchecked")
+      List<Map<String, String>> handouts = (List<Map<String, String>>) pendingCourse
+          .getChapters()
+          .get(chapterIndex)
+          .getSections()
+          .get(sectionIndex)
+          .get("handouts");
+      boolean found = handouts.stream().anyMatch(handout -> handout.get("handoutUri").equals(requestHandoutFileName));
+      if (!found) {
+        throw new NotFoundException("Handout not found");
+      }
+      String handoutUrl = privateObjectStorageService.readFile(requestHandoutFileName, username);
+      return Map.of("handoutUrl", handoutUrl);
+    } catch (Exception e) {
       throw new NotFoundException("Handout not found");
     }
-    String handoutUrl = privateObjectStorageService.readFile(requestHandoutFileName, username);
-    return Map.of("handoutUrl", handoutUrl);
+
   }
 
-  public void changePendingCourseState(Long courseId, Boolean isApproved) {
+  public void changePendingCourseState(Long courseId, Boolean isApproved, String username) {
     CourseState pendingState = courseStateService.getByName(courseStateProperties.getPending());
     Course pendingCourse = courseService.getByIdAndCourseState(courseId, pendingState);
     CourseState newCourseState;
     if (isApproved) {
+      log.info("Admin: {} approved course_id: {}", username, courseId);
       newCourseState = courseStateService.getByName(courseStateProperties.getApproved());
     } else {
+      log.info("Admin: {} rejected course_id: {}", username, courseId);
       newCourseState = courseStateService.getByName(courseStateProperties.getRejected());
     }
     pendingCourse.setCourseState(newCourseState);

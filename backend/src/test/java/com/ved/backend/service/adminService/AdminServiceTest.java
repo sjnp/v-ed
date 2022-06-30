@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -307,5 +308,210 @@ public class AdminServiceTest {
 
     //then
     assertThat(videoResponse.getVideoUrl()).isEqualTo(videoUrl);
+  }
+
+  @Test
+  void givenCourseIdAndInvalidChapterIndex_whenGetHandoutUrl_thenThrow() {
+    //given
+    Long courseId = 1L;
+    Integer invalidChapterIndex = 2;
+    Integer sectionIndex = 0;
+    String username = "admin";
+    String requestHandoutFileName = "handout.pdf";
+
+    given(courseStateProperties.getPending()).willReturn("PENDING");
+    CourseState pendingState = CourseState.builder()
+        .name("PENDING")
+        .build();
+    given(courseStateService.getByName(anyString())).willReturn(pendingState);
+    String handoutUri = "handout.pdf";
+    Map<String, String> handout = Map.of("handoutUri", handoutUri);
+    List<Map<String, String>> handouts = List.of(handout);
+    HashMap<String, Object> section = new HashMap<>();
+    section.put("handouts", handouts);
+    Chapter chapter = Chapter.builder()
+        .sections(List.of(section))
+        .build();
+    Course course = Course.builder()
+        .chapters(List.of(chapter))
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+
+    //when
+    //then
+    assertThatThrownBy(() -> underTest
+        .getHandoutUrlFromPendingCourse(courseId, invalidChapterIndex, sectionIndex, requestHandoutFileName, username))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("Handout not found");
+  }
+
+  @Test
+  void givenCourseIdAndInvalidSectionIndex_whenGetHandoutUrl_thenThrow() {
+    //given
+    Long courseId = 1L;
+    Integer chapterIndex = 0;
+    Integer invalidSectionIndex = 1;
+    String username = "admin";
+    String requestHandoutFileName = "handout.pdf";
+
+    given(courseStateProperties.getPending()).willReturn("PENDING");
+    CourseState pendingState = CourseState.builder()
+        .name("PENDING")
+        .build();
+    given(courseStateService.getByName(anyString())).willReturn(pendingState);
+    String handoutUri = "handout.pdf";
+    Map<String, String> handout = Map.of("handoutUri", handoutUri);
+    List<Map<String, String>> handouts = List.of(handout);
+    HashMap<String, Object> section = new HashMap<>();
+    section.put("handouts", handouts);
+    Chapter chapter = Chapter.builder()
+        .sections(List.of(section))
+        .build();
+    Course course = Course.builder()
+        .chapters(List.of(chapter))
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+
+    //when
+    //then
+    assertThatThrownBy(() -> underTest
+        .getHandoutUrlFromPendingCourse(courseId, chapterIndex, invalidSectionIndex, requestHandoutFileName, username))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("Handout not found");
+  }
+
+  @Test
+  void givenInvalidHandoutFileName_whenGetHandoutUrl_thenThrow() {
+    //given
+    Long courseId = 1L;
+    Integer chapterIndex = 0;
+    Integer sectionIndex = 0;
+    String username = "admin";
+    String invalidRequestHandoutFileName = "invalid_handout.pdf";
+
+    given(courseStateProperties.getPending()).willReturn("PENDING");
+    CourseState pendingState = CourseState.builder()
+        .name("PENDING")
+        .build();
+    given(courseStateService.getByName(anyString())).willReturn(pendingState);
+    String handoutUri = "handout.pdf";
+    Map<String, String> handout = Map.of("handoutUri", handoutUri);
+    List<Map<String, String>> handouts = List.of(handout);
+    HashMap<String, Object> section = new HashMap<>();
+    section.put("handouts", handouts);
+    Chapter chapter = Chapter.builder()
+        .sections(List.of(section))
+        .build();
+    Course course = Course.builder()
+        .chapters(List.of(chapter))
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+
+    //when
+    //then
+    assertThatThrownBy(() -> underTest
+        .getHandoutUrlFromPendingCourse(courseId, chapterIndex, sectionIndex, invalidRequestHandoutFileName, username))
+        .isInstanceOf(NotFoundException.class)
+        .hasMessageContaining("Handout not found");
+  }
+
+  @Test
+  void givenValidInputs_whenGetHandoutUrl_thenReturnHandoutUrl() {
+    //given
+    Long courseId = 1L;
+    Integer chapterIndex = 0;
+    Integer sectionIndex = 0;
+    String username = "admin";
+    String requestHandoutFileName = "handout.pdf";
+
+    given(courseStateProperties.getPending()).willReturn("PENDING");
+    CourseState pendingState = CourseState.builder()
+        .name("PENDING")
+        .build();
+    given(courseStateService.getByName(anyString())).willReturn(pendingState);
+    Map<String, String> handout = Map.of("handoutUri", requestHandoutFileName);
+    List<Map<String, String>> handouts = List.of(handout);
+    HashMap<String, Object> section = new HashMap<>();
+    section.put("handouts", handouts);
+    Chapter chapter = Chapter.builder()
+        .sections(List.of(section))
+        .build();
+    Course course = Course.builder()
+        .chapters(List.of(chapter))
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+    String handoutUrl = "test.com/handout.pdf";
+    given(privateObjectStorageService.readFile(requestHandoutFileName, username)).willReturn(handoutUrl);
+
+    //when
+    Map<String, String> expected = underTest
+        .getHandoutUrlFromPendingCourse(courseId, chapterIndex, sectionIndex, requestHandoutFileName, username);
+
+    //then
+    assertThat(expected.get("handoutUrl")).isEqualTo(handoutUrl);
+  }
+
+  @Test
+  void givenCourseIdAndApproved_whenChangePendingCourseState_thenApproveCourse() {
+    //given
+    Long courseId = 1L;
+    Boolean isApproved = true;
+    String username = "admin";
+
+    String pending = "PENDING";
+    given(courseStateProperties.getPending()).willReturn(pending);
+    CourseState pendingState = CourseState.builder()
+        .name(pending)
+        .build();
+    given(courseStateService.getByName(pending)).willReturn(pendingState);
+    Course course = Course.builder()
+        .courseState(pendingState)
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+    String approved = "APPROVED";
+    given(courseStateProperties.getApproved()).willReturn(approved);
+    CourseState approvedState = CourseState.builder()
+        .name(approved)
+        .build();
+    given(courseStateService.getByName(approved)).willReturn(approvedState);
+
+    //when
+    underTest.changePendingCourseState(courseId, isApproved, username);
+
+    //then
+    ArgumentCaptor<Course> courseArgumentCaptor = ArgumentCaptor.forClass(Course.class);
+    verify(courseRepo).save(courseArgumentCaptor.capture());
+  }
+
+  @Test
+  void givenCourseIdAndRejected_whenChangePendingCourseState_thenRejectCourse() {
+    //given
+    Long courseId = 1L;
+    Boolean isApproved = false;
+    String username = "admin";
+
+    String pending = "PENDING";
+    given(courseStateProperties.getPending()).willReturn(pending);
+    CourseState pendingState = CourseState.builder()
+        .name(pending)
+        .build();
+    given(courseStateService.getByName(pending)).willReturn(pendingState);
+    Course course = Course.builder()
+        .courseState(pendingState)
+        .build();
+    given(courseService.getByIdAndCourseState(courseId, pendingState)).willReturn(course);
+    String rejected = "REJECTED";
+    given(courseStateProperties.getRejected()).willReturn(rejected);
+    CourseState rejectedState = CourseState.builder()
+        .name(rejected)
+        .build();
+    given(courseStateService.getByName(rejected)).willReturn(rejectedState);
+
+    //when
+    underTest.changePendingCourseState(courseId, isApproved, username);
+
+    //then
+    ArgumentCaptor<Course> courseArgumentCaptor = ArgumentCaptor.forClass(Course.class);
+    verify(courseRepo).save(courseArgumentCaptor.capture());
   }
 }

@@ -63,8 +63,9 @@ public class AdminController {
 
   @PutMapping(path = "/pending-courses/{courseId}", params = "isApproved")
   public ResponseEntity<?> changePendingCourseState(@PathVariable Long courseId,
-                                                    @RequestParam(name = "isApproved") Boolean isApproved) {
-    adminService.changePendingCourseState(courseId, isApproved);
+                                                    @RequestParam(name = "isApproved") Boolean isApproved,
+                                                    Principal principal) {
+    adminService.changePendingCourseState(courseId, isApproved, principal.getName());
     return ResponseEntity.ok().build();
   }
 
