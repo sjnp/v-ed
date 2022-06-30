@@ -2,8 +2,10 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.BuyCourseRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.request.PostRequest;
+import com.ved.backend.request.ReportRequest;
 import com.ved.backend.request.ReviewRequest;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
@@ -27,10 +29,11 @@ public class StudentController {
   private final CourseService courseService;
   private final AssignmentService assignmentService;
   private final PostService postService;
+  private final ReportService reportService;
 
-  @PostMapping("/free/course")
-  public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourse(principal.getName(), courseId);
+  @PostMapping("/course/free")
+  public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
+    studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
@@ -139,11 +142,19 @@ public class StudentController {
 
   /* *************************************************************************************************** */
 
-  
+  @GetMapping("/reason-reports")
+  public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
+    List<ReasonReportResponse> response = reportService.getReasonReports();
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/report")
+  public ResponseEntity<?> createReport(@RequestBody ReportRequest reportRequest, Principal principal) {
+    reportService.createReport(principal.getName(), reportRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
 
   // ------------------------------------------------------------------------------------------------------
-  
-  
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {

@@ -72,7 +72,7 @@ public class BuyFreeCourseIT {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/free/course")
+            post("/api/students/course/free")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
@@ -102,7 +102,7 @@ public class BuyFreeCourseIT {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/free/course")
+            post("/api/students/course/free")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)
@@ -130,7 +130,7 @@ public class BuyFreeCourseIT {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/free/course")
+            post("/api/students/course/free")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .content(payload)

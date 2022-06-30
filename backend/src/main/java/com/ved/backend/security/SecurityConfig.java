@@ -57,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overviews/category/**",
             "/api/overviews/courses/{\\d+}",
             "/api/overviews/courses/{\\d+}/card",
-            "/api/overviews/video-example/**"
+            "/api/overviews/video-example/**",
+            "/api/students/reason-reports"
         )
         .permitAll();
 
@@ -77,13 +78,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(POST, "/api/students/free/course",
-            "/api/students/buy/course",
+        .antMatchers(POST, "/api/students/course/free",
+            "/api/students/course/buy",
             "/api/students/courses/answers/pre-authenticated-request",
             "/api/students/courses/{\\d+}/answer",
             "/api/students/courses/post",
             "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
-            "/api/students/courses/review")
+            "/api/students/courses/review",
+            "/api/students/report"
+        )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()

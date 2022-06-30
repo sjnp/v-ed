@@ -27,7 +27,7 @@ const ReviewCard = ({ reviewId, rating, comment, firstname, lastname, datetime }
                             <Rating value={rating} readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
                         </Box>
                         <Box >
-                            <Report type={'review'} />
+                            <Report type='review' contentId={reviewId} />
                         </Box>
                     </Box>
                 </Grid>
