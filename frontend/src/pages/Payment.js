@@ -34,7 +34,7 @@ const Payment = () => {
     currency: "thb",
     courseId: null,
     type: "internet_banking_scb",
-    returnUri: null,
+    returnUri: "http://localhost:3000/payment/course/9/success",
 })
 
 
@@ -44,16 +44,18 @@ const Payment = () => {
     const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
     setCourseCard(result)
     setChargeData({...chargeData,
-      amount: (result.price * 100),
+      amount: (result.price * 10000),
       courseId: result.courseId,
-      returnUrl: result.pictureURL
+      // returnUrl: result.pictureURL
+      returnUrl: "http://localhost:3000/payment/course/9/success"
     })
   }, [])
 
   const handlePayment = async () => {
     try {
       const response = await axiosPrivate.post('/api/students/purchase/course', chargeData );
-      console.log(response);
+      console.log(response.data.authorizeUri);
+      window.open(response.data.authorizeUri, "_self")
     } catch (err) {
       console.error(err);
       // navigate('/', { state: { from: location }, replace: true });

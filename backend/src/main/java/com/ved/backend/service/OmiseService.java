@@ -167,6 +167,11 @@ public class OmiseService {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.add("Authorization", "Basic " + base64Creds);
             MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+            log.info(chargeData.getAmount());
+            log.info(chargeData.getCurrency());
+            log.info(chargeData.getType());
+            log.info(chargeData.getReturnUri());
+//            log.info(source );
             body.add("amount", chargeData.getAmount());
             body.add("currency", chargeData.getCurrency());
             body.add("type", chargeData.getType());
