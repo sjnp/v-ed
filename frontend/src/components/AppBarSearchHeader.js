@@ -1,34 +1,39 @@
-import { AppBar, Container, Grid, Toolbar, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
+// component
+import SignInSignUpModals from "./SignInSignUpModals"
+import UserMenu from "./UserMenu"
+import SearchBox from "./SearchBox"
+
+// Material UI component
+import AppBar from '@mui/material/AppBar'
+import Container from '@mui/material/Container'
+import Grid from '@mui/material/Grid'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+
+// custom hook
 import useRefreshToken from "../hooks/useRefreshToken"
-import SignInSignUpModals from "./SignInSignUpModals";
-import UserMenu from "./UserMenu";
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
-import SearchBox from "./SearchBox";
+// custom api
+import apiPrivate from '../api/apiPrivate'
 
-import { Box, Button, Link } from "@mui/material";
+// url (in utils)
+import { URL_SEARCH } from "../utils/url";
 
 const AppBarSearchHeader = () => {
 
-  const [isLoading, setIsLoading] = useState(true);
-
+  const axiosPrivate = useAxiosPrivate()
   const refresh = useRefreshToken();
+  const navigate = useNavigate()
 
   const username = useSelector((state) => state.auth.value.username);
   const persist = useSelector((state) => state.auth.value.persist);
 
-  const navigate = useNavigate()
-  const handleClickLogoVEd = () => navigate('/')
-
-  const handleSearchEvent = (event) => {
-    if(event.keyCode == 13){
-      console.log('value', event.target.value);
-      navigate('/search')
-   }
-  }
+  const [ isLoading, setIsLoading ] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,52 +52,50 @@ const AppBarSearchHeader = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const handleSearchEvent = async (event) => {
+    if (event.keyCode === 13 && event.target.value.trim() !== '') {
+      const url = URL_SEARCH
+      const response = await apiPrivate.get(axiosPrivate, url)
+
+      if (response.status === 200) {
+        navigate('/search')
+      } else {
+        alert('Search error : ' + response.message)
+      }
+    }
+  }
+
   return (
     <>
-      <AppBar
-        color="inherit"
-        elevation={1}
-      >
+      <AppBar color="inherit" elevation={1}>
         <Container maxWidth="lg">
           <Toolbar>
-            <Grid
-              container
-              alignItems='center'
-              spacing={2}
-            >
+            <Grid container alignItems='center' spacing={2}>
               <Grid item xs={3.5}>
-                  <Typography
-                    variant="h6" 
-                    color="text.primary"
-                    onClick={handleClickLogoVEd} 
-                    sx={{ cursor: 'pointer' }}
-                  >
+                  <Typography variant="h6" color="text.primary" onClick={() => navigate('/')} sx={{ cursor: 'pointer' }}>
                     V-Ed
                   </Typography>
               </Grid>
               <Grid item xs={5} >
-                <SearchBox 
-                  onKeyDown = {handleSearchEvent}
-                />
+                <SearchBox onKeyDown={handleSearchEvent} />
               </Grid>
               <Grid item xs={3.5}>
-                {
-                  !persist
-                    ? username
-                      ? <UserMenu />
-                      : <SignInSignUpModals />
-                    : isLoading
-                      ? <Grid
-                        container
-                        alignItems='center'
-                        justifyContent='flex-end'
-                      >
-                        <p>Loading...</p>
-                      </Grid>
-                      : username
-                        ? <UserMenu />
-                        : <SignInSignUpModals />
-                }
+              {
+                !persist ? 
+                  username ? 
+                    <UserMenu />
+                    : 
+                    <SignInSignUpModals />
+                  : 
+                  isLoading ? 
+                    <Grid container alignItems='center' justifyContent='flex-end'>
+                      <p>Loading...</p>
+                    </Grid>
+                    : username ? 
+                      <UserMenu />
+                      :
+                      <SignInSignUpModals />
+              }
               </Grid>
             </Grid>
           </Toolbar>
