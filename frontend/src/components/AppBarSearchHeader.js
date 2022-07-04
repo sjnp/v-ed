@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 // component
 import SignInSignUpModals from "./SignInSignUpModals"
@@ -18,17 +18,11 @@ import Typography from '@mui/material/Typography'
 import useRefreshToken from "../hooks/useRefreshToken"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
-// custom api
-import apiPrivate from '../api/apiPrivate'
-
-// url (in utils)
-import { URL_SEARCH } from "../utils/url";
-
 const AppBarSearchHeader = () => {
 
-  const axiosPrivate = useAxiosPrivate()
   const refresh = useRefreshToken();
   const navigate = useNavigate()
+  const [ searchParams ] = useSearchParams()
 
   const username = useSelector((state) => state.auth.value.username);
   const persist = useSelector((state) => state.auth.value.persist);
@@ -52,17 +46,20 @@ const AppBarSearchHeader = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSearchEvent = async (event) => {
-    if (event.keyCode === 13 && event.target.value.trim() !== '') {
-      const url = URL_SEARCH
-      const response = await apiPrivate.get(axiosPrivate, url)
+  const handleSearch = (event) => {
+    if (event.keyCode !== 13 || event.target.value.trim() === '') return
 
-      if (response.status === 200) {
-        navigate('/search')
-      } else {
-        alert('Search error : ' + response.message)
-      }
+    const types = ['category', 'min_price', 'max_price', 'rating']
+    let queryString = types
+      .map(type => searchParams.get(type))
+      .filter(param => param !== null)
+      .join('&')
+
+    if (queryString !== '') {
+      queryString = '&' + queryString
     }
+    
+    navigate(`/search?name=${event.target.value}${queryString}`)
   }
 
   return (
@@ -76,8 +73,8 @@ const AppBarSearchHeader = () => {
                     V-Ed
                   </Typography>
               </Grid>
-              <Grid item xs={5} >
-                <SearchBox onKeyDown={handleSearchEvent} />
+              <Grid item xs={5}>
+                <SearchBox onKeyDown={handleSearch} />
               </Grid>
               <Grid item xs={3.5}>
               {

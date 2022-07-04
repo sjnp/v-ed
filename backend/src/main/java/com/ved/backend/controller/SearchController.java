@@ -22,11 +22,11 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<CourseCardResponse>> search(
-        @RequestParam(name = "n") String courseName,
-        @RequestParam(name = "c", required = false) String categoryName,
-        @RequestParam(name = "lp", required = false) Long minPrice,
-        @RequestParam(name = "up", required = false) Long maxPrice,
-        @RequestParam(name = "r", required = false) Double rating
+        @RequestParam(name = "name") String courseName,
+        @RequestParam(name = "category", required = false) String categoryName,
+        @RequestParam(name = "min_price", required = false) Long minPrice,
+        @RequestParam(name = "max_price", required = false) Long maxPrice,
+        @RequestParam(name = "rating", required = false) Double rating
     ) {
         List<CourseCardResponse> response = searchService.search(courseName, categoryName, minPrice, maxPrice, rating);
         return ResponseEntity.ok().body(response);
