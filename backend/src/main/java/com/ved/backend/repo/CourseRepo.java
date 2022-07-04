@@ -56,7 +56,7 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
       "   INNER JOIN course_published_course cpc ON cpc.course_id = c.id " +
       "   INNER JOIN published_course pc ON pc.id = cpc.published_course_id " + 
       "WHERE " +
-      "   c.name LIKE %:name% " +
+      "   LOWER(c.name) LIKE CONCAT('%', LOWER(:name), '%') " +
       "   AND cs.name = 'PUBLISHED' " +
       "   AND cg.name IN (:category) " +
       "   AND c.price >= :minPrice " +
