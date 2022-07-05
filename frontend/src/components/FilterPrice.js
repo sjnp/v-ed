@@ -68,10 +68,24 @@ const FilterPrice = () => {
         }
     }
 
+    const getMessagePrice = () => {
+        const infin = <>&infin;</>
+        if (min && max) {
+            return `${min} - ${max}`
+        } else if (min && !max) {
+            return `${min} or more`
+        } else if (!min && max) {
+            return `Limit ${max}`
+        } else if (!min && !max) {
+            return 'All'
+        }
+    }
+
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Typography fontWeight='bold'>Price</Typography>
+                <Typography color='gray' pl={1}>( {getMessagePrice()} )</Typography>
             </AccordionSummary>
             <AccordionDetails>
                 <Grid container spacing={1}>
