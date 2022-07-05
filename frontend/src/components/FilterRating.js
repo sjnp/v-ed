@@ -29,7 +29,7 @@ const FilterRating = () => {
 
     const handleClickRating = (value) => {
         setActive(value)
-        dispatch( setRating({ rating: active }) )
+        dispatch( setRating({ rating: value }) )
     }
 
     const getMessageSelectRating = () => {
