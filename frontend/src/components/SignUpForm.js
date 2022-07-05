@@ -14,6 +14,7 @@ import Grid from '@mui/material/Grid'
 import VisibilityOff from "@mui/icons-material/VisibilityOff"
 import Visibility from "@mui/icons-material/Visibility"
 import CloseIcon from "@mui/icons-material/Close"
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 // utils
 import { validation } from '../utils/validation'
@@ -143,7 +144,7 @@ const SignUpForm = ({ onSuccess, onClose }) => {
         <Grid item xs={2}></Grid>
         <Grid item xs={8}>
           <Grid container direction="row" alignItems="center" justifyContent="center">
-            <Typography variant='h5'>Register</Typography>
+            <Typography variant='h5'>Sign up</Typography>
           </Grid>
         </Grid>
         <Grid item xs={2}>
@@ -243,8 +244,14 @@ const SignUpForm = ({ onSuccess, onClose }) => {
               )
             }}
           />
-          <Button type='submit' fullWidth variant='contained' sx={{ mt: 6, mb: 2 }}>
-            Register
+          <Button 
+            type='submit' 
+            fullWidth 
+            variant='contained' 
+            sx={{ mt: 6, mb: 2 }} 
+            endIcon={<ArrowForwardIcon />}
+          >
+            Sign Up
           </Button>
         </Box>
       </Box>

@@ -15,29 +15,27 @@ import Skeleton from '@mui/material/Skeleton';
 // service
 import overviewService from '../services/overview';
 
+// custom hook
+import useReasonReport from '../hooks/useReasonReport'
+
 const Overview = () => {
 
   const { courseId } = useParams()
+  const createReasonReportRedux = useReasonReport()
 
   const [ overview, setOverview ] = useState({})
-
   const [ videoExampleURI, setVideoExampleURI ] = useState('')
 
-  useEffect(() => {
-
-    const getOverviewCaourseAPI = async () =>{
-      let response = await overviewService.getOverviewCourse(courseId)
+  useEffect(async () => {
+    let response = await overviewService.getOverviewCourse(courseId)
+    if (response.status === 200) {
+      setOverview(response.data)
+      response = await overviewService.getExampleVideoCourse(courseId)
       if (response.status === 200) {
-        setOverview(response.data)
-        
-        response = await overviewService.getExampleVideoCourse(courseId)
-        if (response.status === 200) {
-          setVideoExampleURI(response.data)
-        }
+        setVideoExampleURI(response.data)
       }
     }
-    getOverviewCaourseAPI()
-
+    createReasonReportRedux()
   }, [])
 
   return (
@@ -45,12 +43,12 @@ const Overview = () => {
       <AppBarSearchHeader />
       <Grid container rowSpacing={1} marginTop={1}>
         <Grid item xs={8}>
-          <Grid container height='100%'  direction="column" alignItems="center" justifyContent="center">
+          <Grid container height='100%' direction="column" alignItems="center" justifyContent="center">
           {
             videoExampleURI ?
             <ReactPlayer light={overview?.pictureURL} url={videoExampleURI} playing={true} controls={true} />
             :
-            <Skeleton variant='rectangular'  width='90%' height='90%' />
+            <Skeleton variant='rectangular' width='90%' height='90%' />
           }
           </Grid>
         </Grid>

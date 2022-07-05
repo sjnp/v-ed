@@ -17,15 +17,14 @@ import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
 import PendingCourse from "./pages/PendingCourse";
-import StudentQuestion from './pages/StudentQuestion';
+import StudentPost from './pages/StudentPost';
 import StudentAssignment from './pages/StudentAssignment';
 import StudentContent from './pages/StudentContent';
 import StudentReview from './pages/StudentReview';
-import StudentInstructor from './pages/StudentInstructor';
 import StudentAboutCourse from './pages/StudentAboutCourse';
 import StudentAnswer from './pages/StudentAnswer';
-import StudentCreateQuestion from './pages/StudentCreateQuestion';
-import StudentBoard from './pages/StudentBoard';
+import StudentCreatePost from './pages/StudentCreatePost';
+import StudentPostComment from './pages/StudentPostComment';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
@@ -57,27 +56,24 @@ const App = () => {
           <Route path='student/course' element={ <Student/> } />
 
           {/* student video course */}
-          <Route path='student/course/:courseId/video/c/:chapterNo/s/:sectionNo' element={ <StudentVideoCourse/> } />
+          <Route path='student/course/:courseId/video/c/:chapterIndex/s/:sectionIndex' element={ <StudentVideoCourse/> } />
 
           {/* student content */}
           <Route path='student/course/:courseId/content' element={ <StudentContent /> } />
 
           {/* student assignment */}
           <Route path='student/course/:courseId/assignment' element={ <StudentAssignment /> } />
-          <Route path='student/course/:courseId/assignment/chapter/:chapterNo' element={ <StudentAnswer /> } />
+          <Route path='student/course/:courseId/assignment/chapter/:chapterIndex' element={ <StudentAnswer /> } />
           
-          {/* student question board */}
-          <Route path='student/course/:courseId/question-board' element={ <StudentQuestion /> } />
-          <Route path='student/course/:courseId/question-board/create' element={ <StudentCreateQuestion /> } />
-          <Route path='student/course/:courseId/question-board/:questionBoardId' element={ <StudentBoard /> } />
+          {/* student post */}
+          <Route path='student/course/:courseId/post' element={ <StudentPost /> } />
+          <Route path='student/course/:courseId/post/create' element={ <StudentCreatePost /> } />
+          <Route path='student/course/:courseId/post/:postId' element={ <StudentPostComment /> } />
           
           {/* student review */}
           <Route path='student/course/:courseId/review' element={ <StudentReview /> } />
           <Route path='student/course/:courseId/review/create' element={ <StudentCreateReview /> } />
           <Route path='student/course/:courseId/review/:reviewId' element={ <StudentEditReview /> } />
-          
-          {/* student instructor */}
-          <Route path='student/course/:courseId/instructor' element={ <StudentInstructor /> } />
           
           {/* student about course */}
           <Route path='student/course/:courseId/about-course' element={ <StudentAboutCourse /> } />

@@ -59,26 +59,22 @@ const BuyCourseOverview = ({ data }) => {
   }
 
   const handleClickGetFreeCourse = async () => {
-    if (username) {
-      setLoadingGetFreeCourse(true)
-
-      // const payload = {
-      //   courseId: courseId
-      // }
-      const payload = courseId
-      const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
-      
-      setLoadingGetFreeCourse(false)
-      
-      if (response.status === 201) {
-        // navigate(`/payment/course/${courseId}/success`)
-        alert('success')
-      } else {
-        alert(JSON.stringify(response.message))
-      }
-      
-    } else {
+    if (!username) {
       setRequiredLogin(true)
+      return
+    }
+
+    setLoadingGetFreeCourse(true)
+    const payload = {
+      courseId: courseId
+    }
+    const response = await apiPrivate.post(axiosPrivate, URL_FREE_COURSE, payload)
+    setLoadingGetFreeCourse(false)
+    
+    if (response.status === 201) {
+      navigate(`/student/course`)
+    } else {
+      alert(JSON.stringify(response.message))
     }
   }
 
@@ -100,7 +96,7 @@ const BuyCourseOverview = ({ data }) => {
         <Grid item xs={2}>
           <Avatar
             alt={instructorFirstname}
-            src={instructorPictureURI || "/static/images/avatar/2.jpg"} 
+            src={instructorPictureURI || "/static/images/avatar/1.jpg"} 
             sx={{ bgcolor: stringToColor(instructorFirstname), mt: 0.3 }}
           /> 
         </Grid>
@@ -120,7 +116,7 @@ const BuyCourseOverview = ({ data }) => {
             :
             <Box>
               <Rating value={ratingCourse} size="large" readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
-              <Typography variant="body1" mt={2}>{ratingCourse} {totalReview}</Typography>
+              <Typography variant="body1" mt={2} textAlign='center'>{ratingCourse} ({totalReview})</Typography>
             </Box>
           }
           </Grid>
@@ -149,13 +145,11 @@ const BuyCourseOverview = ({ data }) => {
           <SignInForm onLoginSuccess={() => setRequiredLogin(false)} onSignUp={handleClickCallSignUpForm} />
         </Container>
       </Modal>
-
       <Modal open={callSignUpForm}>
         <Container component='main' maxWidth='xs'>
           <SignUpForm onClose={() => setCallSignUpForm(false)} onSuccess={handleSignUpSuccess} />
         </Container>
       </Modal>
-      
       <Modal open={openSignUpSuccess} onClose={() => setOpenSignUpSuccess(false)}>
         <Container component="main" maxWidth="xs">
           <SuccessAlertBox handleClick={() => setOpenSignUpSuccess(false)} text='Register successful' />

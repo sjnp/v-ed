@@ -57,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overviews/category/**",
             "/api/overviews/courses/{\\d+}",
             "/api/overviews/courses/{\\d+}/card",
-            "/api/overviews/video-example/**"
+            "/api/overviews/video-example/**",
+            "/api/students/reason-reports"
         )
         .permitAll();
 
@@ -66,21 +67,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses",
             "/api/students/courses/{\\d+}",
             "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video",
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/{\\d+}",
             "/api/students/courses/{\\d+}/about",
             "/api/students/courses/{\\d+}/posts",
             "/api/students/courses/{\\d+}/posts/{\\d+}",
-            "/api/students/courses/{\\d+}/posts/comment",
             "/api/students/courses/{\\d+}/reviews",
-            "/api/students/courses/{\\d+}/reviews/{\\d+}")
+            "/api/students/courses/{\\d+}/reviews/{\\d+}",
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
+        )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
-        .antMatchers(POST, "/api/students/free/course",
-            "/api/students/buy/course",
+        .antMatchers(POST, "/api/students/course/free",
+            "/api/students/course/buy",
             "/api/students/courses/answers/pre-authenticated-request",
             "/api/students/courses/{\\d+}/answer",
             "/api/students/courses/post",
-            "/api/students/courses/review")
+            "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
+            "/api/students/courses/review",
+            "/api/students/report"
+        )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
@@ -132,7 +138,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(PUT, "/api/admins/pending-courses/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
-//    http.authorizeRequests().anyRequest().authenticated();
+    // http.authorizeRequests().anyRequest().authenticated();
 
     http.addFilter(customAuthenticationFilter);
     http.addFilterBefore(new CustomAuthorizationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class);
@@ -156,4 +162,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     source.registerCorsConfiguration("/**", configuration);
     return source;
   }
+
 }

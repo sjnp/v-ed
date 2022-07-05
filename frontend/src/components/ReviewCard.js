@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography'
 // Material UI icon 
 import StarIcon from '@mui/icons-material/Star'
 
-const ReviewCard = ({ rating, comment, firstname, lastname, datetime }) => {
+const ReviewCard = ({ reviewId, rating, comment, firstname, lastname, datetime }) => {
 
     return (
         <Paper elevation={3} sx={{ width: 500, m: 'auto', p: 2, mb: 3 }}>
@@ -27,7 +27,7 @@ const ReviewCard = ({ rating, comment, firstname, lastname, datetime }) => {
                             <Rating value={rating} readOnly emptyIcon={<StarIcon fontSize="inherit" />} />
                         </Box>
                         <Box >
-                            <Report type={'review'} />
+                            <Report type='review' contentId={reviewId} />
                         </Box>
                     </Box>
                 </Grid>

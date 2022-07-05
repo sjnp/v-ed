@@ -35,24 +35,35 @@ export const URL_GET_VIDEO_EXAMPLE = '/api/overviews/video-example/courses/{cour
 
 // student
 export const URL_GET_COURSE_SAMPLES = '/api/students/course-samples'
-export const URL_FREE_COURSE = '/api/students/free/course'
-export const URL_BUY_COURSE = '/api/students/buy/course'
+export const URL_FREE_COURSE = '/api/students/course/free'
+export const URL_BUY_COURSE = '/api/students/course/buy'
 export const URL_GET_STUDENT_COURSES = '/api/students/courses'
 export const URL_GET_COURSE = '/api/students/courses/{courseId}'
 export const URL_GET_VIDEO = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video'
-export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
-export const URL_CREATE_POST = '/api/students/courses/post'
+export const URL_GET_HANDOUT = '/api/students/courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutIndex}'
+
+export const URL_GET_UPLOAD_ANSWER_URL = '/api/students/courses/{courseId}/chapter/{chapterIndex}/no/{noIndex}/answer/{fileName}'
+export const URL_CREATE_ANSWER = '/api/students/courses/{courseId}/answer'
+export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapter/{chapterIndex}/answer'
+
 export const URL_GET_ALL_POSTS_BY_COURSE = '/api/students/courses/{courseId}/posts'
+export const URL_CREATE_POST = '/api/students/courses/post'
 export const URL_GET_POST = '/api/students/courses/{courseId}/posts/{postId}'
-export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/comment'
+export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/{postId}/comment'
+
 export const URL_CREATE_REVIEW = '/api/students/courses/review'
-export const URL_GET_ALL_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
+export const URL_GET_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
 export const URL_GET_REVIEW = '/api/students/courses/{courseId}/reviews/{reviewId}'
 export const URL_EDIT_REVIEW = '/api/students/courses/reviews/{reviewId}'
 
+export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
+
+export const URL_GET_REASON_REPORTS = '/api/students/reason-reports'
+export const URL_CREATE_REPORT = '/api/students/report'
+
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'
-export const URL_SAVE_ANSWER = '/api/students/courses/{courseId}/answer'
+// export const URL_SAVE_ANSWER = '/api/students/courses/{courseId}/answer'
 export const URL_DELETE_ANSWER = '/api/students/courses/{courseId}/answer/{answerId}'
 
 export const URL_GET_COURSE_BY_ID = ''
@@ -62,9 +73,3 @@ export const URL_GET_COURSE_BY_ID = ''
 // question board
 
 export const URL_GET_QUESTION_TOPIC_ALL = '/api/question-board/question/all'
-
-
-// comment
-
-
-// review

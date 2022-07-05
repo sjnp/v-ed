@@ -30,7 +30,7 @@ public class MockData {
         Answer answer = new Answer();
         answer.setId(100L);
         answer.setChapterIndex(0);
-        answer.setSectionIndex(0);
+        answer.setNoIndex(0);
         answer.setFileName("answer_cid_0_c0_s0.txt");
         answer.setDatetime(LocalDateTime.now());
         answer.setCommentInstructor("comment from instructor test");
@@ -129,7 +129,6 @@ public class MockData {
     public CommentReport getCommentReport() {
         CommentReport commentReport = new CommentReport();
         commentReport.setId(50L);
-        commentReport.setDescription("Description comment report test");
         commentReport.setComment(null);
         commentReport.setReportState(null);
         return commentReport;
@@ -223,7 +222,6 @@ public class MockData {
     public PostReport getPostReport() {
         PostReport postReport = new PostReport();
         postReport.setId(120L);
-        postReport.setDescription("Description post report test");
         postReport.setPost(null);
         postReport.setReportState(null);
         return postReport;
@@ -266,7 +264,6 @@ public class MockData {
     public ReviewReport getReviewReport() {
         ReviewReport reviewReport = new ReviewReport();
         reviewReport.setId(160L);
-        reviewReport.setDescription("Description review report state");
         reviewReport.setReview(null);
         reviewReport.setReportState(null);
         return reviewReport;
