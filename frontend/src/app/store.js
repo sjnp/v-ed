@@ -9,6 +9,7 @@ import studentAssignmentReducer from '../features/studentAssignmentSlice'
 import questionBoardReducer from '../features/questionBoardSlice'
 import commentReducer from '../features/commentSlice'
 import reasonReportReducer from '../features/reasonReportSlice'
+import searchReducer from '../features/searchSlice'
 
 // beta
 import assignmentReducer from "../features/assignmentSlice";
@@ -24,6 +25,7 @@ export const store = configureStore({
     questionBoard: questionBoardReducer,
     comment: commentReducer,
     reasonReport: reasonReportReducer,
+    search: searchReducer,
     
     // beta
     assignmentStudent: assignmentReducer
