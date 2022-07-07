@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 // Material UI component
 import Box from '@mui/material/Box'
@@ -19,11 +19,13 @@ const SearchBox = () => {
   const dispatch = useDispatch()
   const [ searchParams ] = useSearchParams()
 
-  const [ search, setSearch ] = useState(searchParams.get('name') || '')
+  const nameRedex = useSelector(state => state.search.value.name)
+  const categoryRedex = useSelector(state => state.search.value.category)
+  const minPriceRedex = useSelector(state => state.search.value.minPrice)
+  const maxPriceRedex = useSelector(state => state.search.value.maxPrice)
+  const ratingRedex = useSelector(state => state.search.value.rating)
 
-  if (searchParams.get('name')) {
-    dispatch( setName({ name: searchParams.get('name') }) )
-  }
+  const [ search, setSearch ] = useState(searchParams.get('name') || '')
 
   const handleChangeSearch = (event) => {
     setSearch(event.target.value)
@@ -38,7 +40,29 @@ const SearchBox = () => {
 
   const handleSearch = () => {
     if (search.trim() === '') return
-    navigate(`/search?name=${search}`)
+
+    const name = nameRedex || searchParams.get('name')
+    const category = categoryRedex || searchParams.get('category')
+    const minPrice = minPriceRedex || searchParams.get('min_price')
+    const maxPrice = maxPriceRedex || searchParams.get('max_price')
+    const rating = ratingRedex || searchParams.get('rating')
+
+    const params = [
+      { name: 'name', value: name },
+      { name: 'category', value: category },
+      { name: 'min_price', value: minPrice },
+      { name: 'max_price', value: maxPrice },
+      { name: 'rating', value: rating }
+    ]
+
+    const queryString = params
+      .filter(param => param.value !== null)
+      .map(param => param.name + '=' + param.value)
+      .join('&')
+
+    navigate(`/search?${queryString}`)
+
+    // navigate(`/search?name=${search}`)
   }
 
   return (

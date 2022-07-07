@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 // component
 import SignInSignUpModals from "./SignInSignUpModals"
@@ -16,13 +16,11 @@ import Typography from '@mui/material/Typography'
 
 // custom hook
 import useRefreshToken from "../hooks/useRefreshToken"
-import useAxiosPrivate from "../hooks/useAxiosPrivate"
 
 const AppBarSearchHeader = () => {
 
   const refresh = useRefreshToken();
   const navigate = useNavigate()
-  const [ searchParams ] = useSearchParams()
 
   const username = useSelector((state) => state.auth.value.username);
   const persist = useSelector((state) => state.auth.value.persist);
@@ -46,22 +44,6 @@ const AppBarSearchHeader = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleSearch = (event) => {
-    if (event.keyCode !== 13 || event.target.value.trim() === '') return
-
-    const types = ['category', 'min_price', 'max_price', 'rating']
-    let queryString = types
-      .map(type => searchParams.get(type))
-      .filter(param => param !== null)
-      .join('&')
-
-    if (queryString !== '') {
-      queryString = '&' + queryString
-    }
-    
-    navigate(`/search?name=${event.target.value}${queryString}`)
-  }
-
   return (
     <>
       <AppBar color="inherit" elevation={1}>
@@ -74,7 +56,7 @@ const AppBarSearchHeader = () => {
                   </Typography>
               </Grid>
               <Grid item xs={5}>
-                <SearchBox onKeyDown={handleSearch} />
+                <SearchBox />
               </Grid>
               <Grid item xs={3.5}>
               {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
 // Material UI component
 import Accordion from '@mui/material/Accordion'
@@ -19,10 +20,11 @@ import { setCategory } from '../features/searchSlice'
 const FilterCategory = () => {
 
     const dispatch = useDispatch()
+    const [ searchParams ] = useSearchParams()
 
     const categories = ['All', 'Academic', 'Art', 'Business', 'Design', 'Programming']
     
-    const [ active, setActive ] = useState('All')
+    const [ active, setActive ] = useState(searchParams.get('category') || categories[0])
 
     const handleClickCategory = (value) => {
         setActive(value)

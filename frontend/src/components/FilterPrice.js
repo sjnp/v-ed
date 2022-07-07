@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
 // Material UI component
 import Accordion from '@mui/material/Accordion'
@@ -18,9 +19,10 @@ import { setMinPrice, setMaxPrice } from '../features/searchSlice'
 const FilterPrice = () => {
 
     const dispatch = useDispatch()
+    const [ searchParams ] = useSearchParams()
 
-    const [ min, setMin ] = useState('')
-    const [ max, setMax ] = useState('')
+    const [ min, setMin ] = useState(searchParams.get('min_price') || '')
+    const [ max, setMax ] = useState(searchParams.get('max_price') || '')
     const [ error, setError ] = useState('')
 
     const getPrice = (oldValue, newValue) => {
@@ -69,7 +71,6 @@ const FilterPrice = () => {
     }
 
     const getMessagePrice = () => {
-        const infin = <>&infin;</>
         if (min && max) {
             return `${min} - ${max}`
         } else if (min && !max) {

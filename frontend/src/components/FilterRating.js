@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
 // Material UI component
 import Accordion from '@mui/material/Accordion'
@@ -22,10 +23,11 @@ import { setRating } from '../features/searchSlice'
 const FilterRating = () => {
 
     const dispatch = useDispatch()
+    const [ searchParams ] = useSearchParams()
 
     const ratings = [5, 4, 3, 2, 1, 'No review', 'All']
 
-    const [ active, setActive ] = useState('All')
+    const [ active, setActive ] = useState(searchParams.get('rating') || 'All')
 
     const handleClickRating = (value) => {
         setActive(value)
