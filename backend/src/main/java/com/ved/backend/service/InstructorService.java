@@ -125,6 +125,30 @@ public class InstructorService {
     return Map.of("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
   }
 
+  public Map<String, String> createParToReadCourseVideoFromIncompleteCourse(Long courseId,
+                                                                            Long chapterIndex,
+                                                                            Long sectionIndex,
+                                                                            String fileName,
+                                                                            String username) {
+    if (chapterIndex == null || sectionIndex == null || fileName == null) {
+      throw new BadRequestException("Request body parameters must not be null.");
+    }
+    log.info("Read Video: {} from Course: {} by Instructor: {}", fileName, courseId, username);
+    String videoExtension = fileExtensionStringHandler
+        .getViableExtension(fileName, privateObjectStorageConfigProperties.getViableVideoExtensions());
+    IncompleteCourseResponse incompleteCourseResponse = getIncompleteCourseDetails(courseId, username);
+    String videoObjectName = "course_vid_"
+        + incompleteCourseResponse.getId()
+        + "_c"
+        + chapterIndex
+        + "_s"
+        + sectionIndex
+        + "."
+        + videoExtension;
+    String preauthenticatedRequestUrl = privateObjectStorageService.readFile(videoObjectName, username);
+    return Map.of("preauthenticatedRequestUrl", preauthenticatedRequestUrl);
+  }
+
   public Map<String, String> createParToUploadHandout(Long courseId,
                                                       Long chapterIndex,
                                                       Long sectionIndex,
