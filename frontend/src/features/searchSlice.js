@@ -5,7 +5,8 @@ const initialState = {
     category: null,
     minPrice: null,
     maxPrice: null,
-    rating: null    
+    rating: null,
+    searching: 0
 }
 
 export const searchSlice = createSlice({
@@ -29,12 +30,23 @@ export const searchSlice = createSlice({
         setRating: (state, action) => {
             state.value.rating = action.payload.rating
         },
+        doSearching: (state, action) => {
+            state.value.searching = state.value.searching + 1
+        },
         reset: (state) => {
             state.value = initialState
         }
     }
 })
 
-export const { setName, setCategory, setMinPrice, setMaxPrice, setRating, reset } = searchSlice.actions
+export const { 
+    setName,
+    setCategory,
+    setMinPrice,
+    setMaxPrice,
+    setRating,
+    doSearching,
+    reset,
+} = searchSlice.actions
 
 export default searchSlice.reducer

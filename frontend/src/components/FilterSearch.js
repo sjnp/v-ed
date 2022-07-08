@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 // component
 import FilterCategory from './FilterCategory'
@@ -13,9 +13,13 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import LoadingButton from '@mui/lab/LoadingButton'
 
+// feature
+import { doSearching } from '../features/searchSlice'
+
 const FilterSearch = () => {
     
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [ searchParams ] = useSearchParams()
 
     const nameRedex = useSelector(state => state.search.value.name)
@@ -23,6 +27,7 @@ const FilterSearch = () => {
     const minPriceRedex = useSelector(state => state.search.value.minPrice)
     const maxPriceRedex = useSelector(state => state.search.value.maxPrice)
     const ratingRedex = useSelector(state => state.search.value.rating)
+    const searching = useSelector(state => state.search.value.searching)
 
     const handleClickSearch = () => {
         const name = nameRedex || searchParams.get('name')
@@ -45,6 +50,7 @@ const FilterSearch = () => {
             .join('&')
 
         navigate(`/search?${queryString}`)
+        dispatch( doSearching() )
     }
 
     return (

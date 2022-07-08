@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 // Material UI component
@@ -11,12 +11,13 @@ import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
 
 // feature
-import { setName } from '../features/searchSlice'
+import { setName, doSearching } from '../features/searchSlice'
 
 const SearchBox = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const location = useLocation()
   const [ searchParams ] = useSearchParams()
 
   const nameRedex = useSelector(state => state.search.value.name)
@@ -60,9 +61,11 @@ const SearchBox = () => {
       .map(param => param.name + '=' + param.value)
       .join('&')
 
-    navigate(`/search?${queryString}`)
-
-    // navigate(`/search?name=${search}`)
+    if (location.pathname === '/search') {
+      dispatch( doSearching() )
+    } else {
+      navigate(`/search?${queryString}`)
+    }
   }
 
   return (
