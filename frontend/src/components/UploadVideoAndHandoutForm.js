@@ -29,7 +29,8 @@ import React, {useEffect, useState} from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {
   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT,
-  URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
+  URL_CREATE_PAR_FOR_WRITE_COURSE_VID,
+  URL_CREATE_PAR_FOR_READ_COURSE_VID,
   URL_UPDATE_COURSE_MATERIAL, URL_DELETE_INCOMPLETE_COURSE_HANDOUT
 } from "../utils/url";
 import axios from "axios";
@@ -138,7 +139,7 @@ const UploadVideoAndHandoutForm = (props) => {
 
       const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
         axiosPrivate,
-        URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
+        URL_CREATE_PAR_FOR_WRITE_COURSE_VID,
         courseId,
         {
           chapterIndex: chapterIndex,
@@ -206,15 +207,23 @@ const UploadVideoAndHandoutForm = (props) => {
   const playVideo = (chapterIndex, sectionIndex) => async () => {
     setOpenVideoModal(true);
     setIsFetchingVideoUrl(true);
-    const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
-      axiosPrivate,
-      URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
-      courseId,
-      {
-        chapterIndex: chapterIndex,
-        sectionIndex: sectionIndex,
-        fileName: createdCourseChapters[chapterIndex].sections[sectionIndex].videoUri
-      });
+    // const parUrl = await uploadUtility.createPreauthenticatedRequestForCourse(
+    //   axiosPrivate,
+    //   URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID,
+    //   courseId,
+    //   {
+    //     chapterIndex: chapterIndex,
+    //     sectionIndex: sectionIndex,
+    //     fileName: createdCourseChapters[chapterIndex].sections[sectionIndex].videoUri
+    //   });
+    const fileName = createdCourseChapters[chapterIndex].sections[sectionIndex].videoUri;
+    const createParUrl = URL_CREATE_PAR_FOR_READ_COURSE_VID
+      .replace('{courseId}', courseId)
+      .replace('{chapterIndex}', chapterIndex)
+      .replace('{sectionIndex}', sectionIndex)
+      .replace('{fileName}', fileName);
+    const response = await axiosPrivate.get(createParUrl);
+    const parUrl = response.data.preauthenticatedRequestUrl;
     setCourseVideoUrl(parUrl);
     setIsFetchingVideoUrl(false);
   }
