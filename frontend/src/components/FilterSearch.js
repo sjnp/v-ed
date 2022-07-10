@@ -27,7 +27,6 @@ const FilterSearch = () => {
     const minPriceRedex = useSelector(state => state.search.value.minPrice)
     const maxPriceRedex = useSelector(state => state.search.value.maxPrice)
     const ratingRedex = useSelector(state => state.search.value.rating)
-    const searching = useSelector(state => state.search.value.searching)
 
     const handleClickSearch = () => {
         const name = nameRedex || searchParams.get('name')

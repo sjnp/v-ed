@@ -25,9 +25,9 @@ const FilterRating = () => {
     const dispatch = useDispatch()
     const [ searchParams ] = useSearchParams()
 
-    const ratings = [5, 4, 3, 2, 1, 'No review', 'All']
+    const ratings = [5, 4, 3, 2, 1, 'all']
 
-    const [ active, setActive ] = useState(searchParams.get('rating') || 'All')
+    const [ active, setActive ] = useState(searchParams.get('rating') || 'all')
 
     const handleClickRating = (value) => {
         setActive(value)
@@ -56,7 +56,7 @@ const FilterRating = () => {
                     ratings.map((rating, index) => (
                         <ListItemButton key={index} selected={active === rating} onClick={() => handleClickRating(rating)}>
                         {
-                            rating === 'All' || rating === 'No review' ?
+                            rating === 'all' ?
                             <ListItemText primary={rating} />
                             :
                             <Grid container>

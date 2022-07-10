@@ -22,7 +22,7 @@ const FilterCategory = () => {
     const dispatch = useDispatch()
     const [ searchParams ] = useSearchParams()
 
-    const categories = ['All', 'Academic', 'Art', 'Business', 'Design', 'Programming']
+    const categories = ['all', 'academic', 'art', 'business', 'design', 'programming']
     
     const [ active, setActive ] = useState(searchParams.get('category') || categories[0])
 

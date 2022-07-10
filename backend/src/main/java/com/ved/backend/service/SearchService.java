@@ -21,12 +21,12 @@ public class SearchService {
 
     private final CategoryProperties categoryProperties;
 
-    public List<CourseCardResponse> search(String courseName, String categoryName, Long minPrice, Long maxPrice, Double rating) {
+    public List<CourseCardResponse> search(String courseName, String categoryName, Long minPrice, Long maxPrice, String rating) {
         List<String> categories = this.getCategoriesParam(categoryName);
         minPrice = this.getMinPriceParam(minPrice);
         maxPrice = this.getMaxPriceParam(maxPrice);
-        rating = this.getRatingParam(rating);
-        return courseRepo.search(courseName, categories, minPrice, maxPrice, rating)
+        Double stars = this.getRatingParam(rating);
+        return courseRepo.search(courseName, categories, minPrice, maxPrice, stars)
             .stream()
             .map(searchCourse -> new CourseCardResponse(searchCourse))
             .collect(Collectors.toList());
@@ -60,8 +60,12 @@ public class SearchService {
         return Objects.isNull(maxPrice) ? 1000000L : maxPrice;
     }
 
-    private Double getRatingParam(Double rating) {
-        return Objects.isNull(rating) ? 0 : rating;
+    private Double getRatingParam(String rating) {
+        if (Objects.isNull(rating) || rating.equals("all")) {
+            return 0.0;
+        } else {
+            return Double.parseDouble(rating);
+        }
     }
 
 }

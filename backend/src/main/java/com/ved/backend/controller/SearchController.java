@@ -26,7 +26,7 @@ public class SearchController {
         @RequestParam(name = "category", required = false) String categoryName,
         @RequestParam(name = "min_price", required = false) Long minPrice,
         @RequestParam(name = "max_price", required = false) Long maxPrice,
-        @RequestParam(name = "rating", required = false) Double rating
+        @RequestParam(name = "rating", required = false) String rating
     ) {
         List<CourseCardResponse> response = searchService.search(courseName, categoryName, minPrice, maxPrice, rating);
         return ResponseEntity.ok().body(response);

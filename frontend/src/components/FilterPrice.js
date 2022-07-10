@@ -76,9 +76,9 @@ const FilterPrice = () => {
         } else if (min && !max) {
             return `${min} or more`
         } else if (!min && max) {
-            return `Limit ${max}`
+            return `limit ${max}`
         } else if (!min && !max) {
-            return 'All'
+            return 'all'
         }
     }
 

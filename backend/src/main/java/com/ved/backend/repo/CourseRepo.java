@@ -61,9 +61,9 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
       "   AND cg.name IN (:category) " +
       "   AND c.price >= :minPrice " +
       "   AND c.price <= :maxPrice " +
-      "   AND pc.star >= :rating ",
+      "   AND pc.star >= :star ",
     nativeQuery = true
   )
-  List<SearchCourse> search(String name, List<String> category, Long minPrice, Long maxPrice, Double rating);
+  List<SearchCourse> search(String name, List<String> category, Long minPrice, Long maxPrice, Double star);
 
 }
