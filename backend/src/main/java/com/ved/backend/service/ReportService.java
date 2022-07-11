@@ -102,14 +102,18 @@ public class ReportService {
         Student student = userService.getStudent(username);
         Review review = reviewRepo.findById(reportRequest.getContentId())
             .orElseThrow(() -> new ReviewNotFoundException(reportRequest.getContentId()));
-        
-        if (reviewReportRepo.existsByReviewAndStudent(review, student)) {
+        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
+            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
+
+        if (review.getStudent().getAppUser().getUsername().equals(username)) {
+            throw new BadRequestException("You can't report review yourself");
+        }
+
+        if (reviewReportRepo.existsByReviewAndStudentAndReasonReport(review, student, reasonReport)) {
             throw new ConflictException("You report this review already");
         }
 
         ReportState reportState = reportStateRepo.findByName(reportStateProperties.getPending());
-        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
-            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
         ReviewReport reviewReport = ReviewReport.builder()
             .reasonReport(reasonReport)
             .reportState(reportState)
@@ -124,14 +128,18 @@ public class ReportService {
         Student student = userService.getStudent(username);
         Post post = postRepo.findById(reportRequest.getContentId())
             .orElseThrow(() -> new PostNotFoundException(reportRequest.getContentId()));
+        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
+            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
 
-        if (postReportRepo.existsByPostAndStudent(post, student)) {
+        if (post.getStudentCourse().getStudent().getAppUser().getUsername().equals(username)) {
+            throw new BadRequestException("You can't report post yourself");
+        }
+
+        if (postReportRepo.existsByPostAndStudentAndReasonReport(post, student, reasonReport)) {
             throw new ConflictException("You report this post already");
         }
 
         ReportState reportState = reportStateRepo.findByName(reportStateProperties.getPending());
-        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
-            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
         PostReport postReport = PostReport.builder()
             .reasonReport(reasonReport)
             .reportState(reportState)
@@ -146,14 +154,18 @@ public class ReportService {
         Student student = userService.getStudent(username);
         Comment comment = commentRepo.findById(reportRequest.getContentId())
             .orElseThrow(() -> new CommentNotFoundException(reportRequest.getContentId()));
+        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
+            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
 
-        if (commentReportRepo.existsByCommentAndStudent(comment, student)) {
+        if (comment.getStudent().getAppUser().getUsername().equals(username)) {
+            throw new BadRequestException("You can't report comment yourself");
+        }
+
+        if (commentReportRepo.existsByCommentAndStudentAndReasonReport(comment, student, reasonReport)) {
             throw new ConflictException("You report this comment already");
         }
 
         ReportState reportState = reportStateRepo.findByName(reportStateProperties.getPending());
-        ReasonReport reasonReport = reasonReportRepo.findById(reportRequest.getReasonReportId())
-            .orElseThrow(() -> new ReasonReportNotFoundException(reportRequest.getReasonReportId()));
         CommentReport commentReport = CommentReport.builder()
             .reasonReport(reasonReport)
             .reportState(reportState)
