@@ -11,7 +11,8 @@ export const URL_CREATE_NEW_COURSE = '/api/instructors/course'
 export const URL_GET_INCOMPLETE_COURSE = '/api/instructors/incomplete-courses/{courseId}'
 export const URL_GET_ALL_INCOMPLETE_COURSES = '/api/instructors/incomplete-courses'
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_PIC = '/api/instructors/incomplete-courses/{courseId}/picture/pre-authenticated-request'
-export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_VID = '/api/instructors/incomplete-courses/{courseId}/video/pre-authenticated-request'
+export const URL_CREATE_PAR_FOR_WRITE_COURSE_VID = '/api/instructors/incomplete-courses/{courseId}/video/pre-authenticated-request'
+export const URL_CREATE_PAR_FOR_READ_COURSE_VID = '/api/instructors/incomplete-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video/{fileName}/pre-authenticated-request'
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_HANDOUT = '/api/instructors/incomplete-courses/{courseId}/handout/pre-authenticated-request'
 export const URL_DELETE_INCOMPLETE_COURSE_HANDOUT = '/api/instructors/incomplete-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutUri}'
 export const URL_SAVE_COURSE_PICTURE = '/api/instructors/incomplete-courses/{courseId}/picture/{pictureName}'
@@ -60,6 +61,9 @@ export const URL_GET_ABOUT_COURSE = '/api/students/courses/{courseId}/about'
 
 export const URL_GET_REASON_REPORTS = '/api/students/reason-reports'
 export const URL_CREATE_REPORT = '/api/students/report'
+
+// search
+export const URL_SEARCH = '/api/search'
 
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'

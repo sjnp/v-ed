@@ -96,6 +96,9 @@ public class MockDatabase {
     private String usernameStudent = "student@test.com";
     private String passwordStudent = "Password123";
 
+    private String usernameInstructor = "instructor@test.com";
+    private String passwordInstructor = "Password123";
+
     public void clear() {
         commentReportRepo.deleteAll();
         postReportRepo.deleteAll();
@@ -312,13 +315,33 @@ public class MockDatabase {
         );
     }
 
-    public ResultActions mock_login_student() throws Exception {
-        Map<String, String> request = Map.of(
-            "username", this.usernameStudent, 
-            "password", this.passwordStudent
-        );
+    public void mock_register_instructor() throws Exception {
+        AppUser appUser = getAppUserRoleStudent();
+        appUser.setUsername(this.usernameInstructor);
+        appUser.setPassword(this.passwordInstructor);
         ObjectMapper objectMapper = new ObjectMapper();
-        String content = objectMapper.writeValueAsString(request);
+        String content = objectMapper.writeValueAsString(appUser);
+        mockMvc.perform(
+            MockMvcRequestBuilders.post("/api/users/new-student")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        );
+        AppUser user = appUserRepo.findByUsername("instructor@test.com");
+        AppRole appRole = appRoleRepo.findByName(roleProperties.getInstructor());
+        user.getAppRoles().add(appRole);
+        Student student = user.getStudent();
+        Instructor instructor = Instructor.builder()
+            .recipientId("recipient-id")
+            .student(student)
+            .build();
+        student.setInstructor(instructor);
+        studentRepo.save(student);
+        appUserRepo.save(user);
+    }
+
+    private ResultActions mock_login(Map<String, String> requestLogin) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(requestLogin);
         ResultActions resultActions = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -326,6 +349,22 @@ public class MockDatabase {
         );
         return resultActions;
     }
+
+    public ResultActions mock_login_student() throws Exception {
+        Map<String, String> request = Map.of(
+            "username", this.usernameStudent, 
+            "password", this.passwordStudent
+        );
+        return this.mock_login(request);
+    }
+
+    public ResultActions mock_login_instructor() throws Exception {
+        Map<String, String> request = Map.of(
+            "username", this.usernameInstructor, 
+            "password", this.passwordInstructor
+        );
+        return this.mock_login(request);
+    } 
 
     public String getCredential(ResultActions resultActions, String name) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -348,7 +387,6 @@ public class MockDatabase {
             .datetime(LocalDateTime.now())
             .studentCourse(studentCourse)
             .build();
-        
         answerRepo.save(answer);
     }
 

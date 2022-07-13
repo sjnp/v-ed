@@ -1,23 +1,22 @@
 import React, { useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
 // Material UI component
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
-import StarIcon from '@mui/icons-material/Star';
-import CardActions from '@mui/material/CardActions';
-import CardContent from "@mui/material/CardContent";
-
-const cardHeight = 160
+import Box from "@mui/material/Box"
+import Card from "@mui/material/Card"
+import CardMedia from "@mui/material/CardMedia"
+import Typography from "@mui/material/Typography"
+import Rating from "@mui/material/Rating"
+import StarIcon from '@mui/icons-material/Star'
+import Grid from "@mui/material/Grid"
 
 const CourseCardWide = ({ image, courseName, instructorName, rating, reviewCount, pathOnClick, price }) => {
 
   const [ shadow, setShadow ] = useState(1)
   const handleMouseOver = () => setShadow(8)
   const handleMouseOut = () => setShadow(1)
+
+  const cardHeight = 160
 
   const navigate = useNavigate()
   const handleClickCourseCard = () => navigate(pathOnClick)
@@ -30,60 +29,65 @@ const CourseCardWide = ({ image, courseName, instructorName, rating, reviewCount
   }
   
   return (
-    <Card
-      sx={{ 
-        height: cardHeight,
-        boxShadow: shadow, 
+    <Card 
+      sx={{
+        mb: 2,
+        boxShadow: shadow,
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         overflow: 'hidden',
-      }} 
-      onMouseOver={handleMouseOver} 
+      }}
+      onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
       onClick={handleClickCourseCard}
     >
-      <CardMedia component="img" image={image} sx={{ height : cardHeight, minWidth : 284, maxWidth : 284 }} />
-      <Box sx={{ minWidth: 580 }}>
-        <CardContent sx={{ marginTop: -1.5 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-end', overflow: 'hidden' }} >
-            <Typography sx={{flex : 1}} variant="body1" color="text.primary" title={courseName}>
-              {courseName}
-            </Typography>
-            {
-              price ? 
-              <Box >
-                <Typography sx={{ flex : 1 }} variant="body1" color="primary" fontWeight='bold' title={price}>
-                  {showPrice}
-                </Typography>
-              </Box>
-              :
-              null
-            }
-          </Box>
-          <Typography variant="caption" color="text.secondary" title={instructorName}>
-            {instructorName}
-          </Typography>
-        </CardContent>
-        <Box sx={{height : cardHeight - 115}}/>
-          <CardActions sx={{ marginLeft: 0.6 }}>
+      <Grid container >
+        <Grid item xs={6}>
+          <CardMedia component="img" image={image} height={cardHeight} />
+        </Grid>
+        <Grid item xs={6} container direction='column' justifyContent='space-between' pt={1}>
+          <Grid item container>
+            <Grid item xs={12}>
+              <Typography noWrap pl={1} pr={1} variant="body1" color="text.primary" title={courseName}>
+                {courseName}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography noWrap pl={1} pr={1} variant="caption" color="text.secondary" title={instructorName}>
+                {instructorName}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item container direction='row' justifyContent='space-between' alignItems='center' pb={1}>
           {
             rating === 0 && reviewCount === 0 ?
-              <Typography variant="caption">No review now</Typography>
+              <Typography variant="caption" pl={1}>No review now</Typography>
               :
-              <Box>
+              <Box pl={1}>
                 <Rating
                   value={rating} 
                   size="small" 
                   readOnly
                   emptyIcon={<StarIcon fontSize="inherit" />}
                 />
-                <Typography variant="caption">{rating} ({reviewCount})</Typography>
+                <Typography pl={1} pt={-1} variant="caption">{rating} ({reviewCount})</Typography>
               </Box>
           }
-          </CardActions>
-        </Box>
+          {
+            price ? 
+            <Box pr={1}>
+              <Typography variant="body1" color="primary" fontWeight='bold' title={price}>
+                {showPrice}
+              </Typography>
+            </Box>
+            :
+            null
+          }
+          </Grid>
+        </Grid>
+      </Grid>
     </Card>
   )
 }

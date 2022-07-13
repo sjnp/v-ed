@@ -103,25 +103,25 @@ const StudentAboutCourse = () => {
                             biography === null ?
                             <LoadingContentPaper />
                             :
-                            <ContentPaper label='Biography' content={biography} />
+                            <ContentPaper label='Instructor biography' content={biography} />
                         }
                         {
                             occupation === null ?
                             <LoadingContentPaper />
                             :
-                            <ContentPaper label='Occupation' content={occupation} />
+                            <ContentPaper label='Instructor occupation' content={occupation} />
                         }
                         {
                             overview === null ?
                             <LoadingContentPaper />
                             :
-                            <ContentPaper label='Overview' content={overview} />
+                            <ContentPaper label='Course overview' content={overview} />
                         }
                         {
                             requirement === null ?
                             <LoadingContentPaper />
                             :
-                            <ContentPaper label='Requirement' content={requirement} />
+                            <ContentPaper label='Course requirement' content={requirement} />
                         }
                         </Grid>
                         <Grid item xs={2}></Grid>
