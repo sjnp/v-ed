@@ -74,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/posts/{\\d+}",
             "/api/students/courses/{\\d+}/reviews",
             "/api/students/courses/{\\d+}/reviews/{\\d+}",
-            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer",
+            "/api/users/profile"
         )
         .hasAnyAuthority("STUDENT");
 
@@ -86,13 +87,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/post",
             "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
             "/api/students/courses/review",
-            "/api/students/report"
+            "/api/students/report",
+            "/api/users/display"
         )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**",
-            "/api/students/courses/reviews/{\\d+}")
+            "/api/students/courses/reviews/{\\d+}",
+            "/api/users/display"
+        )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()

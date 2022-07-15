@@ -1,10 +1,9 @@
 package com.ved.backend.service;
 
-// import com.ved.backend.exception.RegisterException;
+import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 
 import com.ved.backend.exception.UserNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
-// import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
@@ -15,6 +14,8 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.response.ProfileResponse;
+
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -38,6 +39,8 @@ public class UserService implements UserDetailsService {
   private final StudentRepo studentRepo;
   private final InstructorRepo instructorRepo;
   private final PasswordEncoder passwordEncoder;
+  private final PublicObjectStorageService publicObjectStorageService;
+  private final PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserService.class);
 
@@ -97,4 +100,35 @@ public class UserService implements UserDetailsService {
           return new UnauthorizedException(userIsNotInstructor);
         });
   }
+
+  //---------------------------------------------------------------------------------
+
+  public ProfileResponse getProfile(String username) {
+    Student student = this.getStudent(username);
+    return new ProfileResponse(student);
+  }
+
+  public String createUploadDisplayUrl(String username) {
+    Student student = this.getStudent(username);
+    String fileName = "display_" + student.getId() + ".jpg";
+    return publicObjectStorageService.uploadFile(fileName, username);
+  }
+
+  public String updateDisplay(String username) {
+    Student student = this.getStudent(username);
+    String fileName = "display_" + student.getId() + ".jpg";
+    String pictureUrl = new StringBuilder()
+      .append(publicObjectStorageConfigProperties.getRegionalObjectStorageUri())
+      .append("/n/")
+      .append(publicObjectStorageConfigProperties.getNamespace())
+      .append("/b/")
+      .append(publicObjectStorageConfigProperties.getBucketName())
+      .append("/o/")
+      .append(fileName)
+      .toString();
+    student.setProfilePicUri(pictureUrl);
+    studentRepo.save(student);
+    return publicObjectStorageService.readFile(fileName, username);
+  }
+  
 }
