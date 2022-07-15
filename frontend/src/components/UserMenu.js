@@ -14,7 +14,7 @@ const UserMenu = () => {
   const settings = roles.includes('ADMIN')
     ? ['Admin', 'Logout']
     : roles.includes('INSTRUCTOR')
-      ? ['Student', 'Instructor', 'Account Settings', 'Account Settings New', 'Logout']
+      ? ['Student', 'Instructor', 'Account Settings', 'Logout']
       : ['Student', 'Account Settings', 'Logout'];
 
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -40,9 +40,6 @@ const UserMenu = () => {
         navigate('/admin');
         break;
       case 'Account Settings':
-        navigate('/account-manage');
-        break;
-      case 'Account Settings New':
         navigate('/account-manage/profile');
         break;
       case 'Logout':
