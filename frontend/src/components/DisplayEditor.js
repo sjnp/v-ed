@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from '../api/axios'
 
 // component
@@ -30,8 +30,12 @@ import { URL_GET_PROFILE } from '../utils/url';
 import { URL_CREATE_UPLOAD_DISPLAY } from '../utils/url';
 import { URL_UPDATE_DISPLAY } from '../utils/url';
 
+// feature slice
+import { updatePicture } from '../features/profileSlice'
+
 const DisplayEditor = () => {
 
+    const dispatch = useDispatch()
     const apiPrivate = useApiPrivate()
     const alertMessage = useAlertMessage()
     const username = useSelector(state => state.auth.value.username)
@@ -88,6 +92,7 @@ const DisplayEditor = () => {
         if (responseSaveDisplay.status === 200) {
             setDisplayUrl(responseSaveDisplay.data)
             alertMessage.show('success', 'Upload display successful')
+            dispatch( updatePicture({ uriPicture: responseSaveDisplay.data }) )
         } else {
             alertMessage.show('error', 'Upload display fial, please try again')
         }
