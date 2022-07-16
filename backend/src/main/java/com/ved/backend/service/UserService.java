@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -108,15 +109,27 @@ public class UserService implements UserDetailsService {
     return new ProfileResponse(student);
   }
 
+  private String getFileNameDisplay(Student student) {
+    if (Objects.isNull(student.getProfilePicUri())) {
+      return "display_" + student.getId() + "_0" + ".jpg";
+    } else {
+      String splitStr = "display_" + student.getId() + "_";
+      String[] arrStr = student.getProfilePicUri().split(splitStr);
+      String count = arrStr[arrStr.length - 1].replace(".jpg", "");
+      String next = count.equals("0") ? "1" : "0";
+      return "display_" + student.getId() + "_" + next + ".jpg";
+    }
+  }
+
   public String createUploadDisplayUrl(String username) {
     Student student = this.getStudent(username);
-    String fileName = "display_" + student.getId() + ".jpg";
+    String fileName = this.getFileNameDisplay(student);
     return publicObjectStorageService.uploadFile(fileName, username);
   }
 
   public String updateDisplay(String username) {
     Student student = this.getStudent(username);
-    String fileName = "display_" + student.getId() + ".jpg";
+    String fileName = this.getFileNameDisplay(student);
     String pictureUrl = new StringBuilder()
       .append(publicObjectStorageConfigProperties.getRegionalObjectStorageUri())
       .append("/n/")
@@ -128,7 +141,7 @@ public class UserService implements UserDetailsService {
       .toString();
     student.setProfilePicUri(pictureUrl);
     studentRepo.save(student);
-    return publicObjectStorageService.readFile(fileName, username);
+    return pictureUrl;
   }
   
 }
