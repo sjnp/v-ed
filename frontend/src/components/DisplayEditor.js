@@ -100,7 +100,7 @@ const DisplayEditor = () => {
     }
 
     return (
-        <Grid container border='solid 1px #c3c3c3' borderRadius={3} p={3}>
+        <Grid container>
             <Grid item xs={3} container direction='column' alignItems='left' justifyContent='center'>
                 <Typography>Display</Typography>
             </Grid>
