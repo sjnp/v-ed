@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 // component
 import AlertMessage from './AlertMessage'
@@ -18,29 +18,20 @@ import useApiPrivate from '../hooks/useApiPrivate'
 import useAlertMessage from '../hooks/useAlertMessage'
 
 // url
-import { URL_GET_PROFILE } from '../utils/url'
+import { URL_UPDATE_PROFILE } from '../utils/url'
 
-const OccupationEditor = () => {
+const OccupationEditor = ({ defaultOccupation }) => {
 
     const apiPrivate = useApiPrivate()
     const alertMessage = useAlertMessage()
 
     const maxLength = 255
 
-    const [ occupation, setOccupation ] = useState('')
-    const [ message, setMessage ] = useState(`(0/${maxLength})`)
+    const [ occupation, setOccupation ] = useState(defaultOccupation || '')
+    const [ message, setMessage ] = useState(`(${occupation?.length}/${maxLength})`)
     const [ error, setError ] = useState(false)
-    const [ loading, setLoading ] = useState(true)
     const [ saving, setSaving ] = useState(false)
     const [ isEdit, setIsEdit ] = useState(false)
-
-    useEffect(async () => {
-        const response = await apiPrivate.get(URL_GET_PROFILE)
-        if (response.status === 200) {
-            setOccupation(response.data.occupation)
-        }
-        setLoading(false)
-    }, [])
 
     const handleChangeOccupation = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -62,14 +53,18 @@ const OccupationEditor = () => {
         setIsEdit(true)
     }
 
-    const handleClickSaveOccupation = () => {
+    const handleClickSaveOccupation = async () => {
         setSaving(true)
+        const payload = {
+            occupation: occupation
+        }
 
-        setTimeout(() => {
-            setSaving(false)
+        const response = await apiPrivate.put(URL_UPDATE_PROFILE, payload)
+        if (response.status === 204) {
             setIsEdit(false)
             alertMessage.show('success', 'Update occupation successful')
-        }, 3000)
+        }
+        setSaving(false)
     }
 
     return (
@@ -114,7 +109,7 @@ const OccupationEditor = () => {
                     Save
                 </LoadingButton>
                 :
-                <IconButton color='primary' onClick={handleClickEditOccupation} disabled={loading}>
+                <IconButton color='primary' onClick={handleClickEditOccupation}>
                     <EditIcon />
                 </IconButton>
             }

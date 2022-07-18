@@ -1,6 +1,7 @@
 package com.ved.backend.controller;
 
 import com.ved.backend.model.AppUser;
+import com.ved.backend.request.ProfileRequest;
 import com.ved.backend.response.ProfileResponse;
 import com.ved.backend.service.UserService;
 
@@ -41,6 +42,12 @@ public class UserController {
   public ResponseEntity<String> updateDisplay(Principal principal) {
     String response = userService.updateDisplay(principal.getName());
     return ResponseEntity.ok().body(response);
+  }
+
+  @PutMapping("/profile")
+  public ResponseEntity<?> updateProfile(@RequestBody ProfileRequest profileRequest, Principal principal) {
+    userService.updateProfile(profileRequest, principal.getName());
+    return ResponseEntity.noContent().build();
   }
 
 }

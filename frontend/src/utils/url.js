@@ -69,6 +69,7 @@ export const URL_SEARCH = '/api/search'
 export const URL_GET_PROFILE = '/api/users/profile'
 export const URL_CREATE_UPLOAD_DISPLAY = '/api/users/display'
 export const URL_UPDATE_DISPLAY = '/api/users/display'
+export const URL_UPDATE_PROFILE = '/api/users/profile'
 
 
 // student - incomplete

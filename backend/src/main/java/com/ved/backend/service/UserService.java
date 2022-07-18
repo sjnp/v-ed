@@ -14,6 +14,7 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.request.ProfileRequest;
 import com.ved.backend.response.ProfileResponse;
 
 import lombok.AllArgsConstructor;
@@ -142,6 +143,30 @@ public class UserService implements UserDetailsService {
     student.setProfilePicUri(pictureUrl);
     studentRepo.save(student);
     return pictureUrl;
+  }
+
+  public void updateProfile(ProfileRequest profileRequest, String username) {
+    Student student = this.getStudent(username);
+
+    if (Objects.nonNull(profileRequest.getFirstname())) {
+      student.setFirstName(profileRequest.getFirstname());
+    }
+
+    if (Objects.nonNull(profileRequest.getLastname())) {
+      student.setLastName(profileRequest.getLastname());
+    }
+
+    if (Objects.nonNull(profileRequest.getBiography())) {
+      String value = profileRequest.getBiography().trim().equals("") ? null : profileRequest.getBiography();
+      student.setBiography(value);
+    }
+
+    if (Objects.nonNull(profileRequest.getOccupation())) {
+      String value = profileRequest.getOccupation().trim().equals("") ? null : profileRequest.getOccupation();
+      student.setOccupation(value);
+    }
+
+    studentRepo.save(student);
   }
   
 }

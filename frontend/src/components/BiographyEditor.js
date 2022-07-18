@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 // component
 import AlertMessage from './AlertMessage'
@@ -18,29 +18,20 @@ import useApiPrivate from '../hooks/useApiPrivate'
 import useAlertMessage from '../hooks/useAlertMessage'
 
 // url
-import { URL_GET_PROFILE } from '../utils/url'
+import { URL_UPDATE_PROFILE } from '../utils/url'
 
-const BiographyEditor = () => {
+const BiographyEditor = ({ defaultBiography }) => {
 
     const apiPrivate = useApiPrivate()
     const alertMessage = useAlertMessage()
 
     const maxLength = 1024
 
-    const [ biography, setBiography ] = useState('')
-    const [ message, setMessage ] = useState(`(0/${maxLength})`)
+    const [ biography, setBiography ] = useState(defaultBiography || '')
+    const [ message, setMessage ] = useState(`(${biography?.length}/${maxLength})`)
     const [ error, setError ] = useState(false)
-    const [ loading, setLoading ] = useState(true)
     const [ saving, setSaving ] = useState(false)
     const [ isEdit, setIsEdit ] = useState(false)
-    
-    useEffect(async () => {
-        const response = await apiPrivate.get(URL_GET_PROFILE)
-        if (response.status === 200) {
-            setBiography(response.data.biography)
-        }
-        setLoading(false)
-    }, [])
 
     const handleChangeBiography = (event) => {
         if (event.target.value.length <= maxLength) {
@@ -62,14 +53,18 @@ const BiographyEditor = () => {
         setIsEdit(true)
     }
 
-    const handleClickSaveBiography = () => {
+    const handleClickSaveBiography = async () => {
         setSaving(true)
+        const payload = {
+            biography: biography
+        }
 
-        setTimeout(() => {
-            setSaving(false)
+        const response = await apiPrivate.put(URL_UPDATE_PROFILE, payload)
+        if (response.status === 204) {
             setIsEdit(false)
             alertMessage.show('success', 'Update biography successful')
-        }, 3000)
+        }
+        setSaving(false)
     }
 
     return (
@@ -114,7 +109,7 @@ const BiographyEditor = () => {
                     Save
                 </LoadingButton>
                 :
-                <IconButton color='primary' onClick={handleClickEditBiography} disabled={loading}>
+                <IconButton color='primary' onClick={handleClickEditBiography}>
                     <EditIcon />
                 </IconButton>
             }

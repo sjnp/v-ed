@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from '../api/axios'
 
 // component
-import stringToColor from './stringToColor';
-import AlertMessage from './AlertMessage';
+import stringToColor from './stringToColor'
+import AlertMessage from './AlertMessage'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Input from '@mui/material/Input'
-import Skeleton from '@mui/material/Skeleton'
-
 import LoadingButton from '@mui/lab/LoadingButton'
 
 // Materail UI icon
@@ -20,20 +18,19 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto'
 
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
-import useAlertMessage from '../hooks/useAlertMessage';
+import useAlertMessage from '../hooks/useAlertMessage'
 
 // utils
 import { uploadUtility } from '../utils/uploadUtility'
 
 // url
-import { URL_GET_PROFILE } from '../utils/url';
-import { URL_CREATE_UPLOAD_DISPLAY } from '../utils/url';
-import { URL_UPDATE_DISPLAY } from '../utils/url';
+import { URL_CREATE_UPLOAD_DISPLAY } from '../utils/url'
+import { URL_UPDATE_DISPLAY } from '../utils/url'
 
 // feature slice
 import { updatePicture } from '../features/profileSlice'
 
-const DisplayEditor = () => {
+const DisplayEditor = ({ defaultDisplayUrl }) => {
 
     const dispatch = useDispatch()
     const apiPrivate = useApiPrivate()
@@ -42,19 +39,8 @@ const DisplayEditor = () => {
 
     const defaultImageSize = 100
 
-    const [ displayUrl, setDisplayUrl ] = useState('')
-    const [ loading, setLoading ] = useState(true)
+    const [ displayUrl, setDisplayUrl ] = useState(defaultDisplayUrl || '')
     const [ uploading, setUploading ] = useState(false)
-
-    useEffect(async () => {
-        const response = await apiPrivate.get(URL_GET_PROFILE)
-        if (response.status === 200) {
-            setDisplayUrl(response.data.displayUrl)
-        } else {
-            alertMessage.show('error', `Can't loading display, please try again`)
-        }
-        setLoading(false)
-    }, [])
 
     const handleChangeFile = async (event) => {
         const file = event.target.files[0]
@@ -122,20 +108,15 @@ const DisplayEditor = () => {
                 </label>
             </Grid>
             <Grid item xs={3} container alignItems='right' justifyContent='right'>
-            {
-                loading ?
-                <Skeleton variant='circular' width={defaultImageSize} height={defaultImageSize} />
-                :
                 <Avatar
                     alt={username}
-                    src={displayUrl || '/static/images/avatar/2.jpg'}  // 
+                    src={displayUrl || '/static/images/avatar/2.jpg'}
                     sx={{ 
                         bgcolor: stringToColor(username),
                         width: defaultImageSize,
                         height: defaultImageSize
                     }}
                 />
-            }
             </Grid>
             <AlertMessage
                 open={alertMessage.getOpen()} 

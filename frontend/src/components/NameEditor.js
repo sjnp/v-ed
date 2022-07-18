@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 // component
 import AlertMessage from './AlertMessage'
@@ -18,34 +18,24 @@ import useApiPrivate from '../hooks/useApiPrivate'
 import useAlertMessage from '../hooks/useAlertMessage'
 
 // url
-import { URL_GET_PROFILE } from '../utils/url'
+import { URL_UPDATE_PROFILE } from '../utils/url'
 
 // utils
 import { validation } from '../utils/validation'
 
-const NameEditor = () => {
+const NameEditor = ({ defaultFirstname, defaultLastname }) => {
 
     const apiPrivate = useApiPrivate()
     const alertMessage = useAlertMessage()
 
-    const [ firstname, setFirstname ] = useState('')
-    const [ lastname, setLastname ] = useState('')
+    const [ firstname, setFirstname ] = useState(defaultFirstname || '')
+    const [ lastname, setLastname ] = useState(defaultLastname || '')
     const [ messageFirstname, setMessageFirstname ] = useState('')
     const [ messageLastname, setMessageLastname ] = useState('')
     const [ errorFirstname, setErrorFirstname ] = useState(false)
     const [ errorLastname, setErrorLastname ] = useState(false)
-    const [ loading, setLoading ] = useState(true)
     const [ saving, setSaving ] = useState(false)
     const [ isEdit, setIsEdit ] = useState(false)
-
-    useEffect(async () => {
-        const response = await apiPrivate.get(URL_GET_PROFILE)
-        if (response.status === 200) {
-            setFirstname(response.data.firstname)
-            setLastname(response.data.lastname)
-        }
-        setLoading(false)
-    }, [])
 
     const handleChangeName = (event, setName) => {
         setName(event.target.value)
@@ -75,7 +65,7 @@ const NameEditor = () => {
         return flagFirstname || flagLastname
     }
 
-    const handleClickSaveName = () => {
+    const handleClickSaveName = async () => {
         setMessageFirstname('')
         setMessageLastname('')
         setErrorFirstname(false)
@@ -90,12 +80,12 @@ const NameEditor = () => {
             lastname: lastname,
         }
 
-        setInterval(() => {
-            setSaving(false)
+        const response = await apiPrivate.put(URL_UPDATE_PROFILE, payload)
+        if (response.status === 204) {
             setIsEdit(false)
             alertMessage.show('success', 'Update name successful')
-        }, 3000)
-        
+        }
+        setSaving(false)
     }
 
     return (
@@ -151,7 +141,7 @@ const NameEditor = () => {
                     Save
                 </LoadingButton>
                 :
-                <IconButton color='primary' onClick={handleClickEditName} disabled={loading}>
+                <IconButton color='primary' onClick={handleClickEditName}>
                     <EditIcon />
                 </IconButton>
             }
