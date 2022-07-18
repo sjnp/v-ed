@@ -4,6 +4,9 @@ import React from 'react'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import AccountManageMenu from '../components/AccountManageMenu'
 import DisplayEditor from '../components/DisplayEditor'
+import NameEditor from '../components/NameEditor'
+import BiographyEditor from '../components/BiographyEditor'
+import OccupationEditor from '../components/OccupationEditor'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -34,16 +37,16 @@ const AccountManageProfile = () => {
                                 <DisplayEditor />
                             </Grid>
                             <Grid item xs={12}><Divider /></Grid>
-                            <Grid item xs={12}>
-                                Name editor
+                            <Grid item xs={12} pl={3} pr={3} pt={2} pb={2}>
+                                <NameEditor />
                             </Grid>
                             <Grid item xs={12}><Divider /></Grid>
-                            <Grid item xs={12}>
-                                Biography editor
+                            <Grid item xs={12} pl={3} pr={3} pt={2} pb={2}>
+                                <BiographyEditor />
                             </Grid>
                             <Grid item xs={12}><Divider /></Grid>
-                            <Grid item xs={12}>
-                                Occupation editor
+                            <Grid item xs={12} pl={3} pr={3} pt={2} pb={2}>
+                                <OccupationEditor />
                             </Grid>
                         </Grid>
                     </Grid>
