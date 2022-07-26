@@ -8,6 +8,7 @@ import com.ved.backend.service.UserService;
 import lombok.AllArgsConstructor;
 
 import java.security.Principal;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,18 @@ public class UserController {
   @PutMapping("/profile")
   public ResponseEntity<?> updateProfile(@RequestBody ProfileRequest profileRequest, Principal principal) {
     userService.updateProfile(profileRequest, principal.getName());
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/verify-password")
+  public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> request, Principal principal) {
+    userService.verifyPassword(principal.getName(), request.get("password"));
+    return ResponseEntity.noContent().build();
+  }
+
+  @PutMapping("change-password")
+  public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request, Principal principal) {
+    userService.changePassword(principal.getName(), request.get("newPassword"));
     return ResponseEntity.noContent().build();
   }
 

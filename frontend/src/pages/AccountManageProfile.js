@@ -8,6 +8,7 @@ import NameEditor from '../components/NameEditor'
 import BiographyEditor from '../components/BiographyEditor'
 import OccupationEditor from '../components/OccupationEditor'
 import LoadingCircle from '../components/LoadingCircle'
+import ChangePassword from '../components/ChangePassword'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -90,6 +91,10 @@ const AccountManageProfile = () => {
                                     <OccupationEditor
                                         defaultOccupation={occupation}
                                     />
+                                </Grid>
+                                <Grid item xs={12}><Divider /></Grid>
+                                <Grid item xs={12} pl={3} pr={3} pt={2} pb={2}>
+                                    <ChangePassword />
                                 </Grid>
                             </Grid>
                         }

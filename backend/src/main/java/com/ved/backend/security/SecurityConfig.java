@@ -88,7 +88,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
             "/api/students/courses/review",
             "/api/students/report",
-            "/api/users/display"
+            "/api/users/display",
+            "/api/users/verify-password"
         )
         .hasAnyAuthority("STUDENT");
 
@@ -96,7 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(PUT, "/api/students/instructor-feature/**",
             "/api/students/courses/reviews/{\\d+}",
             "/api/users/display",
-            "/api/users/profile"
+            "/api/users/profile",
+            "/api/users/change-password"
         )
         .hasAnyAuthority("STUDENT");
 

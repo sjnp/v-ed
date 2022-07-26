@@ -3,6 +3,7 @@ package com.ved.backend.service;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 
 import com.ved.backend.exception.UserNotFoundException;
+import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.AppRole;
@@ -167,6 +168,31 @@ public class UserService implements UserDetailsService {
     }
 
     studentRepo.save(student);
+  }
+
+  public void verifyPassword(String username, String password) {
+    AppUser appUser = this.getAppUser(username);
+
+    if (Objects.isNull(password)) {
+      throw new BadRequestException("Password is required");
+    }
+
+    boolean isMatch = passwordEncoder.matches(password, appUser.getPassword());
+    if (isMatch == false) {
+      throw new BadRequestException("Password Invalid");
+    }
+  }
+
+  public void changePassword(String username, String newPassword) {
+    AppUser appUser = this.getAppUser(username);
+
+    if (Objects.isNull(newPassword)) {
+      throw new BadRequestException("Password is required");
+    }
+
+    String newPasswordEncode = passwordEncoder.encode(newPassword);
+    appUser.setPassword(newPasswordEncode);
+    appUserRepo.save(appUser);
   }
   
 }

@@ -11,7 +11,6 @@ import Box from '@mui/material/Box'
 
 // Material UI icon
 import PersonIcon from '@mui/icons-material/Person'
-import KeyIcon from '@mui/icons-material/Key'
 import SchoolIcon from '@mui/icons-material/School'
 
 const AccountManageMenu = ({ active }) => {
@@ -27,11 +26,6 @@ const AccountManageMenu = ({ active }) => {
             text: 'Profile',
             icon: <PersonIcon />,
             path: `/account-manage/profile`
-        },
-        {
-            text: 'Change password',
-            icon: <KeyIcon />,
-            path: `/account-manage/change-password`
         },
         {
             text: 'Instructor',
