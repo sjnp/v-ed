@@ -65,6 +65,15 @@ export const URL_CREATE_REPORT = '/api/students/report'
 // search
 export const URL_SEARCH = '/api/search'
 
+// user (account setting)
+export const URL_GET_PROFILE = '/api/users/profile'
+export const URL_CREATE_UPLOAD_DISPLAY = '/api/users/display'
+export const URL_UPDATE_DISPLAY = '/api/users/display'
+export const URL_UPDATE_PROFILE = '/api/users/profile'
+export const URL_VERIFY_PASSWORD = '/api/users/verify-password'
+export const URL_UPDATE_NEW_PASSWORD = '/api/users/change-password'
+
+
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'
 // export const URL_SAVE_ANSWER = '/api/students/courses/{courseId}/answer'

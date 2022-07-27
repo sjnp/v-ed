@@ -13,6 +13,10 @@ import {Routes, Route} from 'react-router-dom';
 import Unauthorized from './pages/Unauthorized';
 
 import AccountManage from './pages/AccountManage';
+import AccountManageProfile from './pages/AccountManageProfile';
+import AccountManageVerifyPassword from './pages/AccountManageVerifyPassword';
+import AccountManageNewPassword from './pages/AccountManageNewPassword';
+import AccountManageInstructor from './pages/AccountManageInstructor';
 import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
@@ -47,6 +51,12 @@ const App = () => {
 
           {/* account management */}
           <Route path='account-manage' element={ <AccountManage/> } />
+          {/* account management new */}
+          <Route path='account-manage/profile' element={ <AccountManageProfile/> } />
+          <Route path='account-manage/profile/verify-password' element={ <AccountManageVerifyPassword/> } />
+          <Route path='account-manage/profile/new-password' element={ <AccountManageNewPassword/> } />
+          
+          <Route path='account-manage/instructor' element={ <AccountManageInstructor/> } />
 
           {/* payment */}
           <Route path='payment/course/:courseId' element={ <Payment /> } />
