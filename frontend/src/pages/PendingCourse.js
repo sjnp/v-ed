@@ -15,6 +15,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import CourseSidebar from "../components/CourseSidebar";
 import PendingCourseContent from "../components/PendingCourseContent";
 import LoadingButton from "@mui/lab/LoadingButton";
+import PendingCourseAssignment from "../components/PendingCourseAssignment";
+import PendingCourseInstructorInfo from "../components/PendingCourseInstructorInfo";
+import PendingCourseInfo from "../components/PendingCourseInfo";
 
 const PendingCourse = () => {
   const {courseId} = useParams();
@@ -41,109 +44,115 @@ const PendingCourse = () => {
           },
           {
             label: {icon: <AssignmentIcon/>, text: 'Assignment'},
-            element: null
+            element: <PendingCourseAssignment chapters={newCourse.chapters}/>
           },
           {
             label: {icon: <PersonPinIcon/>, text: 'Instructor'},
-            element: null
+            element: <PendingCourseInstructorInfo instructorInfo={newCourse.instructorInfo}/>
           },
           {
             label: {icon: <NotesIcon/>, text: 'About course'},
-            element: null
+            element: <PendingCourseInfo
+              category={newCourse.category}
+              requirement={newCourse.requirement}
+              overview={newCourse.overview}
+            />
           }
-        ];
+      ]
+        ;
         setCourse(newCourse);
         setElements(newElements);
         setMainElement(newElements[0].element);
         console.log(newCourse);
       })
-      .then(() => setIsFinishFetching(true))
-      .catch(err => {
-        console.error(err);
-        navigate('/admin');
-      })
-  }, [axiosPrivate, courseId, navigate]);
+      .
+        then(() => setIsFinishFetching(true))
+          .catch(err => {
+            console.error(err);
+            navigate('/admin');
+          })
+      }, [axiosPrivate, courseId, navigate]);
 
-  const handleChangeMainElement = (index) => {
-    setMainElement(elements[index].element);
-  }
-
-  const handleApproval = async (isApproved) => {
-    try {
-      isApproved ? setIsApproving(true) : setIsRejecting(true)
-      const url = URL_PUT_PENDING_COURSE.replace('{courseId}', courseId)
-      await axiosPrivate.put(url,
-        null,
-        {
-          params: {
-            isApproved: isApproved
-          }
-        }
-      );
-      navigate('/admin');
-    } catch (err) {
-      isApproved ? setIsApproving(false) : setIsRejecting(false)
-      console.error(err);
+    const handleChangeMainElement = (index) => {
+      setMainElement(elements[index].element);
     }
+
+    const handleApproval = async (isApproved) => {
+      try {
+        isApproved ? setIsApproving(true) : setIsRejecting(true)
+        const url = URL_PUT_PENDING_COURSE.replace('{courseId}', courseId)
+        await axiosPrivate.put(url,
+          null,
+          {
+            params: {
+              isApproved: isApproved
+            }
+          }
+        );
+        navigate('/admin');
+      } catch (err) {
+        isApproved ? setIsApproving(false) : setIsRejecting(false)
+        console.error(err);
+      }
+    }
+
+    return (
+      <Container maxWidth="lg">
+        <AppBarHeader/>
+        <Box sx={{pt: 2, pb: 2}}>
+          {(!isFinishFetching) &&
+            <Stack alignItems='center' sx={{mt: 5}}>
+              <CircularProgress/>
+            </Stack>
+          }
+          {(!!course) &&
+            <>
+              <Grid container spacing={3}>
+                <Grid item xs={3}>
+                  <CourseSidebar
+                    labels={elements.map(element => element.label)}
+                    onClickSidebar={handleChangeMainElement}
+                  />
+                </Grid>
+                <Grid item xs={9}>
+                  {mainElement}
+                </Grid>
+              </Grid>
+              <Stack
+                direction='row'
+                alignItems='center'
+                justifyContent='flex-end'
+                spacing={1}
+                sx={{marginTop: 6, marginBottom: 3}}
+              >
+                <Typography variant='h6' sx={{mr: 1}}>Approve this course ?</Typography>
+                <LoadingButton
+                  disabled={isRejecting}
+                  variant='contained'
+                  loading={isApproving}
+                  loadingPosition="start"
+                  startIcon={<CheckIcon/>}
+                  onClick={() => handleApproval(true)}
+                >
+                  Yes
+                </LoadingButton>
+                <LoadingButton
+                  disabled={isApproving}
+                  variant='outlined'
+                  loading={isRejecting}
+                  loadingPosition="end"
+                  endIcon={<CloseIcon/>}
+                  onClick={() => handleApproval(false)}
+                >
+                  No
+                </LoadingButton>
+              </Stack>
+            </>
+          }
+
+        </Box>
+      </Container>
+    );
   }
 
-  return (
-    <Container maxWidth="lg">
-      <AppBarHeader/>
-      <Box sx={{pt: 2, pb: 2}}>
-        {(!isFinishFetching) &&
-          <Stack alignItems='center' sx={{mt: 5}}>
-            <CircularProgress/>
-          </Stack>
-        }
-        {(!!course) &&
-          <>
-            <Grid container spacing={3}>
-              <Grid item xs={3}>
-                <CourseSidebar
-                  labels={elements.map(element => element.label)}
-                  onClickSidebar={handleChangeMainElement}
-                />
-              </Grid>
-              <Grid item xs={9}>
-                {mainElement}
-              </Grid>
-            </Grid>
-            <Stack
-              direction='row'
-              alignItems='center'
-              justifyContent='flex-end'
-              spacing={1}
-              sx={{marginTop: 6, marginBottom: 3}}
-            >
-              <Typography variant='h6' sx={{mr: 1}}>Approve this course ?</Typography>
-              <LoadingButton
-                disabled={isRejecting}
-                variant='contained'
-                loading={isApproving}
-                loadingPosition="start"
-                startIcon={<CheckIcon/>}
-                onClick={() => handleApproval(true)}
-              >
-                Yes
-              </LoadingButton>
-              <LoadingButton
-                disabled={isApproving}
-                variant='outlined'
-                loading={isRejecting}
-                loadingPosition="end"
-                endIcon={<CloseIcon/>}
-                onClick={() => handleApproval(false)}
-              >
-                No
-              </LoadingButton>
-            </Stack>
-          </>
-        }
-
-      </Box>
-    </Container>
-  );
-}
-
-export default PendingCourse;
+  export default PendingCourse;
