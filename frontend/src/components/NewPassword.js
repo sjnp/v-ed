@@ -92,6 +92,7 @@ const NewPassword = () => {
         } else {
             alertMessage.show('error', response.message)
         }
+        setSaving(false)
     }
     
     return (

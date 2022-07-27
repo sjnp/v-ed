@@ -170,6 +170,10 @@ public class UserService implements UserDetailsService {
     studentRepo.save(student);
   }
 
+  private boolean isPasswordMatch(String rawPassword, String encodedPassword) {
+    return passwordEncoder.matches(rawPassword, encodedPassword);
+  }
+
   public void verifyPassword(String username, String password) {
     AppUser appUser = this.getAppUser(username);
 
@@ -177,7 +181,7 @@ public class UserService implements UserDetailsService {
       throw new BadRequestException("Password is required");
     }
 
-    boolean isMatch = passwordEncoder.matches(password, appUser.getPassword());
+    boolean isMatch = this.isPasswordMatch(password, appUser.getPassword());
     if (isMatch == false) {
       throw new BadRequestException("Password Invalid");
     }
@@ -188,6 +192,11 @@ public class UserService implements UserDetailsService {
 
     if (Objects.isNull(newPassword)) {
       throw new BadRequestException("Password is required");
+    }
+
+    boolean isMatch = this.isPasswordMatch(newPassword, appUser.getPassword());
+    if (isMatch == true) {
+      throw new BadRequestException("The old password can't be used");
     }
 
     String newPasswordEncode = passwordEncoder.encode(newPassword);
