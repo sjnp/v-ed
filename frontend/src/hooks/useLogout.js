@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { reset } from "../features/authSlice";
+import { resetProfile } from "../features/profileSlice"
 import axios from "../api/axios";
 // import useAuth from "./useAuth"
 
@@ -15,6 +16,7 @@ const useLogout = () => {
       });
 
       dispatch(reset());
+      dispatch(resetProfile());
     } catch (err) {
       console.error(err);
     }
