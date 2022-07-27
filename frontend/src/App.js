@@ -32,6 +32,9 @@ import StudentPostComment from './pages/StudentPostComment';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
+import InstructorAssignment from './pages/InstructorAssignment';
+import InstructorPost from './pages/InstructorPost';
+import InstructorReview from './pages/InstructorReview';
 
 const App = () => {
   return (
@@ -94,6 +97,9 @@ const App = () => {
           <Route path='instructor' element={ <Instructor /> } />
           <Route path='instructor/create-course' element={ <CreateCourse/> } />
           <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
+          <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignment /> } />
+          <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
+          <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
         </Route>
 
         {/* admin role */}

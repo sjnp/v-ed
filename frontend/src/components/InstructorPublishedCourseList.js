@@ -21,7 +21,7 @@ const InstructorPublishedCourseList = () => {
           courseCard['rating'] = course.rating;
           courseCard['reviewTotal'] = course.reviewTotal;
           courseCard['isIncomplete'] = false;
-          // courseCard['pathOnClick'] = null;
+          courseCard['pathOnClick'] = `/instructor/course/${course.id}/assignment`;
           return courseCard;
         });
         console.log(newPublishedCourses);
