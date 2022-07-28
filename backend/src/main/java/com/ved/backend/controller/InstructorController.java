@@ -186,7 +186,7 @@ public class InstructorController {
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/course/{courseId}/reviews")
+  @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getReviewsCourse(@PathVariable Long courseId, Principal principal) {
     ReviewCourseResponse response = reviewService.getReviewsCourseByInstructor(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
