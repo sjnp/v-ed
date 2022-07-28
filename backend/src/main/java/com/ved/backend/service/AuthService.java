@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.ved.backend.exception.CourseNotFoundException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.model.Course;
+import com.ved.backend.model.Instructor;
 import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.CourseRepo;
@@ -34,6 +35,13 @@ public class AuthService {
         return studentCourseRepo
             .findByStudentAndCourse(student, course)
             .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course"));
+    }
+
+    public Course authorizedInstructor(String username, Long courseId) {
+        Instructor instructor = userService.getInstructor(username);
+        return courseRepo
+            .findCourseByIdAndInstructor(courseId, instructor)
+            .orElseThrow(() -> new UnauthorizedException("You are not owner this course"));
     }
 
 }
