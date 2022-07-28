@@ -78,16 +78,27 @@ public class PostService {
             .build();
     }
 
-    public List<PostCardResponse> getPostsByCourseId(String username, Long courseId) {
-        log.info("Get post course id: {} by username: {}", courseId, username);
-        authService.authorized(username, courseId);
-        Course course = courseRepo.findById(courseId)
+    public List<PostCardResponse> getAllPostsCourse(Long courseId) {
+        Course course = courseRepo
+            .findById(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
         return course
             .getPosts()
             .stream()
             .map(post -> new PostCardResponse(post))
             .collect(Collectors.toList());
+    }
+
+    public List<PostCardResponse> getAllPostsCourseByStudent(Long courseId, String username) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
+        authService.authorized(username, courseId);
+        return this.getAllPostsCourse(courseId);
+    }
+
+    public List<PostCardResponse> getAllPostsCourseByInstructor(Long courseId, String username) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
+        authService.authorizedInstructor(username, courseId);
+        return this.getAllPostsCourse(courseId);
     }
 
     public PostCommentResponse getPostById(String username, Long courseId, Long postId) {
