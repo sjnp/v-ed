@@ -113,7 +113,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/approved-courses",
             "/api/instructors/rejected-courses",
             "/api/instructors/published-courses",
-            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**")
+            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**",
+            "/api/instructors/course/{\\d+}/reviews"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

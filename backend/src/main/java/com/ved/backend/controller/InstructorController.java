@@ -3,9 +3,10 @@ package com.ved.backend.controller;
 import com.ved.backend.model.Course;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
+import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.service.InstructorService;
-import com.ved.backend.service.PrivateObjectStorageService;
-import com.ved.backend.service.PublicObjectStorageService;
+import com.ved.backend.service.ReviewService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequestMapping(path = "/api/instructors")
 public class InstructorController {
   private final InstructorService instructorService;
+  private final ReviewService reviewService;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
@@ -182,6 +184,12 @@ public class InstructorController {
                                                   Principal principal) {
     instructorService.deleteCoursePictureUrl(courseId, principal.getName());
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/course/{courseId}/reviews")
+  public ResponseEntity<ReviewCourseResponse> getReviewsCourse(@PathVariable Long courseId, Principal principal) {
+    ReviewCourseResponse response = reviewService.getReviewsCourseByInstructor(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
   }
 
 }
