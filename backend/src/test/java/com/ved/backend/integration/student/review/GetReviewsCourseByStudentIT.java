@@ -31,7 +31,7 @@ import com.ved.backend.util.MockDatabase;
 @TestPropertySource(locations = "classpath:application-it.properties")
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
-public class GetReviewByCourseIdIT {
+public class GetReviewsCourseByStudentIT {
     
     @Autowired
     private MockMvc mockMvc;
