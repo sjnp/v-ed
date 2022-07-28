@@ -90,6 +90,7 @@ const StudentPost = () => {
                                     topic={post.topic}
                                     datetime={post.createDateTime} 
                                     commentCount={post.commentCount}
+                                    type='student'
                                 />
                                 :
                                 null
