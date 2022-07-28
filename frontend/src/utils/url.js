@@ -20,6 +20,9 @@ export const URL_UPDATE_COURSE_MATERIAL = '/api/instructors/incomplete-courses/{
 export const URL_SUBMIT_INCOMPLETE_COURSE = '/api/instructors/incomplete-courses/{courseId}/state'
 export const URL_PUBLISH_INSTRUCTOR_COURSE = '/api/instructors/approved-courses/{courseId}'
 export const URL_DELETE_COURSE_PICTURE = '/api/instructors/incomplete-courses/{courseId}/picture'
+export const URL_GET_ASSIGNMENTS_COURSE = '/api/instructors/course/{courseId}/assignments'
+export const URL_GET_POSTS_COURSE = '/api/instructors/course/{courseId}/posts'
+export const URL_GET_REVIEWS_COURSE = '/api/instructors/course/{courseId}/reviews'
 
 // admin
 export const URL_GET_PENDING_COURSE = '/api/admins/pending-courses/{courseId}'
