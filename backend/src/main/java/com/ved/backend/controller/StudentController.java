@@ -93,7 +93,7 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/posts")
-  public ResponseEntity<List<PostCardResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
+  public ResponseEntity<List<PostCardResponse>> getAllPostsCourse(@PathVariable Long courseId, Principal principal) {
     List<PostCardResponse> response = postService.getAllPostsCourseByStudent(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
