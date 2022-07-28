@@ -118,7 +118,7 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getReviewsByCourseId(@PathVariable Long courseId, Principal principal) {
-    ReviewCourseResponse response = reviewService.getReviewsByCourseId(courseId, principal.getName());
+    ReviewCourseResponse response = reviewService.getReviewsCourseByStudent(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
