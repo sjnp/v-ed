@@ -4,23 +4,14 @@ import Tabs from "@mui/material/Tabs";
 import {useState} from "react";
 import Tab from "@mui/material/Tab";
 import PendingCourseList from "../components/PendingCourseList";
+import PendingReportList from "../components/PendingReportList";
 
 const Admin = () => {
   const [tabIndex, setTabIndex] = useState(0);
 
   const tabs = [
     {label: 'Course', children: <PendingCourseList/>},
-    {
-      label: 'Report', children: <div><Typography>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In congue placerat risus. Proin at volutpat ligula.
-        Curabitur diam urna, dapibus ut auctor ut, ullamcorper in urna. Aenean in nulla dui. Sed feugiat tortor sed
-        lorem gravida elementum. Nunc rutrum ornare porta. Vestibulum imperdiet lorem eu lacus fermentum, id hendrerit
-        ante auctor. Praesent in velit semper, tempor mi ac, dictum neque. Aenean interdum fringilla magna. Ut feugiat
-        ultrices mi at gravida. Cras elit ligula, tempus in malesuada et, dictum a eros. Vestibulum ante ipsum primis
-        in faucibus orci luctus et ultrices posuere cubilia curae; Sed quis condimentum nisi, ac vehicula lacus.
-        Curabitur magna diam, malesuada et elit quis, aliquam ultricies dolor. Morbi fringilla vitae arcu nec posuere.
-      </Typography></div>
-    }
+    {label: 'Report', children: <PendingReportList/>}
   ]
 
   const handleTabChange = (event, newTabIndex) => {
