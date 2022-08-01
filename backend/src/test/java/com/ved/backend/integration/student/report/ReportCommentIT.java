@@ -1,6 +1,5 @@
 package com.ved.backend.integration.student.report;
 
-
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -71,7 +70,7 @@ public class ReportCommentIT {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
         mockDatabase.mock_register_student();
-        mockDatabase.mock_instructor();
+        mockDatabase.mock_register_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
         mockDatabase.mock_course(1000L, "PUBLISHED", "DESIGN");
@@ -90,7 +89,7 @@ public class ReportCommentIT {
     @Order(2)
     public void givenContentId_whenNull_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -120,7 +119,7 @@ public class ReportCommentIT {
     @Order(3)
     public void givenReasonReportId_whenNull_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -150,7 +149,7 @@ public class ReportCommentIT {
     @Order(4)
     public void givenReportType_whenNull_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -181,7 +180,7 @@ public class ReportCommentIT {
     @Order(5)
     public void givenReportType_whenInvalid_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -210,9 +209,40 @@ public class ReportCommentIT {
 
     @Test
     @Order(6)
-    public void givenReportRequest_whenSuccess_thenReturnCreatedStatus() throws Exception {
+    public void givenUsername_whenReportMyself_thenReturnBadRequestStatus() throws Exception {
         // login
         ResultActions logiActions = mockDatabase.mock_login_student();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
+        // given
+        Comment comment = commentRepo.findAll().get(0);
+        List<ReasonReport> reasonReports = reasonReportRepo.findAll();
+        ReportRequest reportRequest = ReportRequest.builder()
+            .contentId(comment.getId())
+            .reasonReportId(reasonReports.get(0).getId())
+            .reportType("comment")
+            .build();
+        String payload = objectMapper.writeValueAsString(reportRequest);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            post("/api/students/report")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload)
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason(containsString("You can't report comment yourself")));
+    }
+
+    @Test
+    @Order(7)
+    public void givenReportRequest_whenSuccess_thenReturnCreatedStatus() throws Exception {
+        // login
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -238,10 +268,10 @@ public class ReportCommentIT {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     public void givenReportRequest_whenDuplicated_thenReturnConflictStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -269,7 +299,7 @@ public class ReportCommentIT {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void clear() {
         mockDatabase.clear();
     }

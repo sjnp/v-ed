@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails.AccessType.ObjectWrite;
+import static com.oracle.bmc.objectstorage.model.CreatePreauthenticatedRequestDetails.AccessType.ObjectRead;;
 
 @AllArgsConstructor
 @Service
@@ -20,4 +21,10 @@ public class PublicObjectStorageService {
     String preauthenticatedRequestName = username + "_upload_" + objectName;
     return publicObjectStoragePar.createPreauthenticatedRequest(objectName, preauthenticatedRequestName, ObjectWrite);
   }
+
+  public String readFile(String fileName, String username) {
+    String preauthenticatedRequestName = username + "_read_" + fileName;
+    return publicObjectStoragePar.createPreauthenticatedRequest(fileName, preauthenticatedRequestName, ObjectRead);
+  }
+
 }

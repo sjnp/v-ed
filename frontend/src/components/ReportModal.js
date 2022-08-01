@@ -19,6 +19,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useAlertMessage from '../hooks/useAlertMessage'
 
 // custom api
 import apiPrivate from '../api/apiPrivate'
@@ -29,14 +30,12 @@ import { URL_CREATE_REPORT } from '../utils/url';
 const ReportModal = ({ type, contentId, open, onClose }) => {
 
     const axiosPrivate = useAxiosPrivate()
+    const alertMessage = useAlertMessage()
 
     const reasons = useSelector(state => state.reasonReport.value.reasonReports)
 
     const [ reasonReportId, setReasonReportId ] = useState(null)
     const [ loading, setLoading ] = useState(false)
-    const [ openAlertMessage, setOpenAlertMessage ] = useState(false)
-    const [ typeAlertMessage, setTypeAlertMessage ] = useState('info')
-    const [ messageAlertMessage, setMessageAlertMessage ] = useState('')
 
     const handleCloseMyself = () => {
         onClose()
@@ -47,16 +46,9 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
         setReasonReportId(event.target.value)
     }
 
-    const handleCloseAlertMessage = (event, reason) => {
-        if (reason === 'clickaway') return
-        setOpenAlertMessage(false)
-    }
-
     const handleSendReport = async () => {
         if (reasonReportId === null ) {
-            setTypeAlertMessage('warning')
-            setMessageAlertMessage('Reason report is required')
-            setOpenAlertMessage(true)
+            alertMessage.show('warning', 'Reason report is required')
             return
         }
 
@@ -71,14 +63,10 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
 
         if (response.status === 201) {
             handleCloseMyself()
-            handleCloseAlertMessage()
-            setTypeAlertMessage('success')
-            setMessageAlertMessage('Report successful')
-            setOpenAlertMessage(true)
+            alertMessage.close()
+            alertMessage.show('success', 'Report successful')
         } else {
-            setTypeAlertMessage('error')
-            setMessageAlertMessage(response.message)
-            setOpenAlertMessage(true)
+            alertMessage.show('error', response.message)
         }
     }
     
@@ -112,10 +100,10 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
                 </DialogActions>
             </Dialog>
             <AlertMessage
-                open={openAlertMessage} 
-                type={typeAlertMessage}
-                message={messageAlertMessage}
-                onClose={handleCloseAlertMessage}
+                open={alertMessage.getOpen()} 
+                type={alertMessage.getType()}
+                message={alertMessage.getMessage()}
+                onClose={alertMessage.close}
             />
         </Box>
     )

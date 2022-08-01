@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/overviews/courses/{\\d+}",
             "/api/overviews/courses/{\\d+}/card",
             "/api/overviews/video-example/**",
-            "/api/students/reason-reports"
+            "/api/students/reason-reports",
+            "/api/search"
         )
         .permitAll();
 
@@ -73,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/{\\d+}/posts/{\\d+}",
             "/api/students/courses/{\\d+}/reviews",
             "/api/students/courses/{\\d+}/reviews/{\\d+}",
-            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer"
+            "/api/students/courses/{\\d+}/chapter/{\\d+}/answer",
+            "/api/users/profile"
         )
         .hasAnyAuthority("STUDENT");
 
@@ -85,13 +87,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/post",
             "/api/students/courses/{\\d+}/posts/{\\d+}/comment",
             "/api/students/courses/review",
-            "/api/students/report"
+            "/api/students/report",
+            "/api/users/display",
+            "/api/users/verify-password"
         )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/students/instructor-feature/**",
-            "/api/students/courses/reviews/{\\d+}")
+            "/api/students/courses/reviews/{\\d+}",
+            "/api/users/display",
+            "/api/users/profile",
+            "/api/users/change-password"
+        )
         .hasAnyAuthority("STUDENT");
 
     http.authorizeRequests()
@@ -104,7 +112,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/pending-courses",
             "/api/instructors/approved-courses",
             "/api/instructors/rejected-courses",
-            "/api/instructors/published-courses")
+            "/api/instructors/published-courses",
+            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**")
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

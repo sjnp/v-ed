@@ -1,15 +1,29 @@
 import {Avatar, Grid, IconButton, Menu, MenuItem, Typography} from "@mui/material";
-import {useState} from "react";
-import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import { useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import stringToColor from './stringToColor';
 
+import Skeleton from '@mui/material/Skeleton'
+
+// custom hook
+import useApiPrivate from '../hooks/useApiPrivate'
+
+// url
+import { URL_GET_PROFILE } from "../utils/url";
+
+// feature slice
+import { updatePicture } from '../features/profileSlice'
+
 const UserMenu = () => {
   const logout = useLogout();
   const navigate = useNavigate();
+  const apiPrivage = useApiPrivate();
+  const dispatch = useDispatch();
 
   const username = useSelector((state) => state.auth.value.username);
+  const uriPicture = useSelector((state) => state.profile.value.uriPicture);
   const roles = useSelector((state) => state.auth.value.roles);
   const settings = roles.includes('ADMIN')
     ? ['Admin', 'Logout']
@@ -40,7 +54,7 @@ const UserMenu = () => {
         navigate('/admin');
         break;
       case 'Account Settings':
-        navigate('/account-manage');
+        navigate('/account-manage/profile');
         break;
       case 'Logout':
         signOut();
@@ -50,8 +64,20 @@ const UserMenu = () => {
     }
   };
 
-  return (
+  const [ displayUrl, setDisplayUrl ] = useState('')
+  useEffect(async () => {
+    if (uriPicture) {
+      setDisplayUrl(uriPicture)
+    } else {
+      const response = await apiPrivage.get(URL_GET_PROFILE)
+      if (response.status === 200) {
+        setDisplayUrl(response.data.displayUrl)
+        dispatch( updatePicture({ uriPicture: response.data.displayUrl }) )
+      }
+    }
+  }, [uriPicture])
 
+  return (
     <Grid
       container
       alignItems='center'
@@ -59,9 +85,18 @@ const UserMenu = () => {
       spacing={2}
     >
       <Grid item>
-        <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-          <Avatar alt={username} src="/static/images/avatar/2.jpg" sx={{bgcolor: stringToColor(username)}}/>
-        </IconButton>
+        {
+          displayUrl === '' ?
+          <Skeleton variant='circular' width={40} height={40} />
+          :
+          <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
+            <Avatar
+              alt={username} 
+              src={displayUrl || "/static/images/avatar/2.jpg"}
+              sx={{bgcolor: stringToColor(username)}}
+            />
+          </IconButton>
+        }
         <Menu
           sx={{mt: '45px'}}
           id="menu-appbar"

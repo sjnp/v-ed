@@ -9,18 +9,21 @@ import  Modal from "@mui/material/Modal"
 // component
 import SignInForm from "./SignInForm"
 import SignUpForm from "./SignUpForm"
-import SuccessAlertBox from "./SuccessAlertBox"
+import AlertMessage from "./AlertMessage"
+
+// custom hook
+import useAlertMessage from '../hooks/useAlertMessage'
 
 const SignInSignUpModals = () => {
+
+  const alertMessage = useAlertMessage()
 
   const [ openSignIn, setOpenSignIn ] = useState(false)
   const [ openSignUp, setOpenSignUp ] = useState(false)
 
-  const [ openSignUpSuccess, setOpenSignUpSuccess ] = useState(false)
-
   const handleSignUpSuccess = () => {
     setOpenSignUp(false)
-    setOpenSignUpSuccess(true)
+    alertMessage.show('success', 'Register successful')
   }
 
   const handClickSignUpLoginForm = () => {
@@ -45,11 +48,12 @@ const SignInSignUpModals = () => {
             <SignUpForm onSuccess={handleSignUpSuccess} onClose={() => setOpenSignUp(false)} />
           </Container>
         </Modal>
-        <Modal open={openSignUpSuccess} onClose={() => setOpenSignUpSuccess(false)}>
-          <Container component="main" maxWidth="xs">
-            <SuccessAlertBox handleClick={() => setOpenSignUpSuccess(false)} text='Register successful' />
-          </Container>
-        </Modal>
+        <AlertMessage
+          open={alertMessage.getOpen()} 
+          type={alertMessage.getType()}
+          message={alertMessage.getMessage()}
+          onClose={alertMessage.close}
+        />
       </Grid>
     </Grid>
   )

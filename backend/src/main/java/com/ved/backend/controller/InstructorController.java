@@ -56,6 +56,25 @@ public class InstructorController {
     return ResponseEntity.ok().body(incompleteCourseMaterials);
   }
 
+  @GetMapping(path = "/incomplete-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video/{fileName}/pre-authenticated-request")
+  public ResponseEntity<?> createParToReadVideoFromIncompleteCourse(@PathVariable Long courseId,
+                                                                    @PathVariable Long chapterIndex,
+                                                                    @PathVariable Long sectionIndex,
+                                                                    @PathVariable String fileName,
+                                                                    Principal principal) {
+    Map<String, String> preauthenticatedRequest = instructorService
+        .createParToReadCourseVideoFromIncompleteCourse(courseId,
+            chapterIndex,
+            sectionIndex,
+            fileName,
+            principal.getName());
+    URI uri = URI.create(ServletUriComponentsBuilder
+        .fromCurrentContextPath()
+        .path(preauthenticatedRequest.get("preauthenticatedRequestUrl"))
+        .toUriString());
+    return ResponseEntity.created(uri).body(preauthenticatedRequest);
+  }
+
   @GetMapping(path = "/incomplete-courses")
   public ResponseEntity<?> getAllIncompleteCourses(Principal principal) {
     HashMap<String, Object> dto = instructorService.getAllIncompleteCourses(principal.getName());
