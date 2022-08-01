@@ -1,10 +1,10 @@
 package com.ved.backend.controller;
 
-import com.ved.backend.response.FullPendingCourseInfoDto;
-import com.ved.backend.response.PendingCourseResponse;
-import com.ved.backend.response.VideoResponse;
+import com.ved.backend.response.*;
+import com.ved.backend.service.AdminReportService;
 import com.ved.backend.service.AdminService;
 import com.ved.backend.service.CourseService;
+import com.ved.backend.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,8 @@ public class AdminController {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AdminController.class);
 
   private final AdminService adminService;
+  private final AdminReportService adminReportService;
+  private final ReportService reportService;
 
   @GetMapping(path = "/pending-courses")
   public ResponseEntity<?> getAllPendingCourses(Principal principal) {
@@ -58,6 +60,18 @@ public class AdminController {
         handoutUri,
         principal.getName());
     return ResponseEntity.ok().body(handoutResponse);
+  }
+
+  @GetMapping(path = "/pending-reports/reviews")
+  public ResponseEntity<?> getAllPendingReviewReports(Principal principal) {
+    List<PendingReviewReportResponse> pendingReviewReportResponses = (principal.getName());
+    return ResponseEntity.ok().body(pendingCourseResponses);
+  }
+
+  @GetMapping(path = "/report-reasons")
+  public ResponseEntity<?> getAllReportReasons() {
+    List<ReasonReportResponse> response = reportService.getReasonReports();
+    return ResponseEntity.ok().body(response);
   }
 
   @PutMapping(path = "/pending-courses/{courseId}", params = "isApproved")
