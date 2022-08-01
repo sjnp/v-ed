@@ -3,6 +3,8 @@ import moment from 'moment'
 
 // component
 import Report from './Report'
+import stringToColor from './stringToColor'
+
 
 // Material UI component
 import Paper from '@mui/material/Paper'
@@ -16,7 +18,7 @@ import Typography from '@mui/material/Typography'
 // Material UI icon 
 import StarIcon from '@mui/icons-material/Star'
 
-const ReviewCard = ({ reviewId, rating, comment, firstname, lastname, datetime }) => {
+const ReviewCard = ({ reviewId, rating, comment, displayUrl, reviewUsername, firstname, lastname, datetime }) => {
 
     return (
         <Paper elevation={3} sx={{ width: 500, m: 'auto', p: 2, mb: 3 }}>
@@ -38,7 +40,12 @@ const ReviewCard = ({ reviewId, rating, comment, firstname, lastname, datetime }
                     <Divider />
                 </Grid>
                 <Grid item xs={2} sx={{ justifyContent: "center", display: "flex", mt: 2 }}>
-                    <Avatar src="/static/images/avatar/1.jpg" />
+                    {/* <Avatar src="/static/images/avatar/1.jpg" /> */}
+                    <Avatar
+                        alt={reviewUsername} 
+                        src={displayUrl || "/static/images/avatar/2.jpg"}
+                        sx={{bgcolor: stringToColor(reviewUsername)}}
+                    />
                 </Grid>
                 <Grid item xs={10}>
                     <Grid item xs={12} sx={{ mt: 1 }}>

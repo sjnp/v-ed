@@ -136,6 +136,8 @@ const StudentReview = () => {
                                     reviewId={review.id}
                                     rating={review.rating}
                                     comment={review.comment}
+                                    displayUrl={review.displayUrl}
+                                    reviewUsername={review.reviewUsername}
                                     firstname={review.firstname}
                                     lastname={review.lastname} 
                                     datetime={review.reviewDateTime}
