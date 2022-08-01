@@ -1,6 +1,8 @@
 package com.ved.backend.controller;
 
 import com.ved.backend.model.Course;
+import com.ved.backend.request.CommentRequest;
+import com.ved.backend.response.CommentResponse;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PostCardResponse;
 import com.ved.backend.response.PostCommentResponse;
@@ -11,6 +13,8 @@ import com.ved.backend.service.PostService;
 import com.ved.backend.service.ReviewService;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -206,6 +210,12 @@ public class InstructorController {
   public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
     PostCommentResponse response = postService.getPostByInstructor(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/posts/{postId}/comment")
+  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    CommentResponse response = postService.createCommentByInstructor(principal.getName(), courseId, postId, commentRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
 }

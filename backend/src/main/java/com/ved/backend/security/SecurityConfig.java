@@ -114,7 +114,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/rejected-courses",
             "/api/instructors/published-courses",
             "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**",
-            "/api/instructors/courses/{\\d+}/reviews"
+            "/api/instructors/courses/{\\d+}/reviews",
+            "/api/instructors/courses/{\\d+}/posts",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}"
         )
         .hasAnyAuthority("INSTRUCTOR");
 
@@ -122,7 +124,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(POST, "/api/instructors/course",
             "/api/instructors/incomplete-courses/{\\d+}/picture/pre-authenticated-request",
             "/api/instructors/incomplete-courses/{\\d+}/video/pre-authenticated-request",
-            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request")
+            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}/comment"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

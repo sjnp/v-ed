@@ -106,7 +106,7 @@ public class StudentController {
 
   @PostMapping("/courses/{courseId}/posts/{postId}/comment")
   public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
-    CommentResponse response = postService.createComment(principal.getName(), courseId, postId, commentRequest);
+    CommentResponse response = postService.createCommentByStudent(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

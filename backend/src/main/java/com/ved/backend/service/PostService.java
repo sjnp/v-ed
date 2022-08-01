@@ -119,7 +119,7 @@ public class PostService {
         return this.getPost(postId);
     }
 
-    public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+    public CommentResponse createCommentByStudent(String username, Long courseId, Long postId, CommentRequest commentRequest) {
         log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
 
         if (Objects.isNull(postId)) {
@@ -141,8 +141,6 @@ public class PostService {
         String commentStateName;
         if (username.equals(post.getStudentCourse().getStudent().getAppUser().getUsername())) {
             commentStateName = commentStateProperties.getOwner();
-        } else if (username.equals(studentCourse.getCourse().getInstructor().getStudent().getAppUser().getUsername())) {
-            commentStateName = commentStateProperties.getInstructor();
         } else {
             commentStateName = commentStateProperties.getStudent();
         }
@@ -154,6 +152,40 @@ public class PostService {
             .visible(true)
             .commentState(commentState)
             .student(studentCourse.getStudent())
+            .build();
+        post.getComments().add(comment);
+        postRepo.save(post);
+        
+        return new CommentResponse(comment);
+    }
+
+    public CommentResponse createCommentByInstructor(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+        log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
+
+        if (Objects.isNull(postId)) {
+            throw new BadRequestException("Post id is required");
+        }
+
+        if (Objects.isNull(commentRequest.getComment())) {
+            throw new BadRequestException("Comment is required");
+        }
+
+        if (commentRequest.getComment().length() > 1000) {
+            throw new BadRequestException("Comments are more than 1000 characters");
+        }
+        
+        Course course = authService.authorizedInstructor(username, courseId);
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException(postId));
+        String commentStateName = commentStateProperties.getInstructor();
+        CommentState commentState = commentStateRepo.findByName(commentStateName);
+        Comment comment = Comment.builder()
+            .post(post)
+            .comment(commentRequest.getComment())
+            .commentDateTime(LocalDateTime.now())
+            .visible(true)
+            .commentState(commentState)
+            .student(course.getInstructor().getStudent())
             .build();
         post.getComments().add(comment);
         postRepo.save(post);
