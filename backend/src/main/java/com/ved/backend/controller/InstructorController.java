@@ -3,6 +3,7 @@ package com.ved.backend.controller;
 import com.ved.backend.model.Course;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PostCardResponse;
+import com.ved.backend.response.PostCommentResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.service.InstructorService;
@@ -198,6 +199,12 @@ public class InstructorController {
   @GetMapping("/courses/{courseId}/posts")
   public ResponseEntity<List<PostCardResponse>> getAllPostsCourse(@PathVariable Long courseId, Principal principal) {
     List<PostCardResponse> response = postService.getAllPostsCourseByInstructor(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts/{postId}")
+  public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
+    PostCommentResponse response = postService.getPostByInstructor(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
   }
 

@@ -100,7 +100,7 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/posts/{postId}")
   public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
-    PostCommentResponse response = postService.getPostById(principal.getName(), courseId, postId);
+    PostCommentResponse response = postService.getPostByStudent(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
   }
 
@@ -118,7 +118,6 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getReviewsByCourseId(@PathVariable Long courseId, Principal principal) {
-    // ReviewCourseResponse response = reviewService.getReviewsByCourseId(courseId, principal.getName());
     ReviewCourseResponse response = reviewService.getReviewsCourseByStudent(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }

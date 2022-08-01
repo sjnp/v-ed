@@ -101,12 +101,22 @@ public class PostService {
         return this.getAllPostsCourse(courseId);
     }
 
-    public PostCommentResponse getPostById(String username, Long courseId, Long postId) {
-        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
-        authService.authorized(username, courseId);
+    public PostCommentResponse getPost(Long postId) {
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new PostNotFoundException(postId));
         return new PostCommentResponse(post);
+    }
+
+    public PostCommentResponse getPostByStudent(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+        authService.authorized(username, courseId);
+        return this.getPost(postId);
+    }
+
+    public PostCommentResponse getPostByInstructor(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+        authService.authorizedInstructor(username, courseId);
+        return this.getPost(postId);
     }
 
     public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
