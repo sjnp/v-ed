@@ -104,7 +104,10 @@ const StudentPostComment = () => {
                         }
                         </Grid>
                         <Grid item xs={1}>
-                            <PostWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/>
+                            <PostWriteComment
+                                onCreateCommentSuccess={handleCreateCommentSuucess}
+                                commentBy='student'    
+                            />
                         </Grid>
                     </Grid>
                 </Grid>

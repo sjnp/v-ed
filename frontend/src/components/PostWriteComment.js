@@ -26,12 +26,12 @@ import CreateIcon from '@mui/icons-material/Create'
 import CloseIcon from '@mui/icons-material/Close';
 
 // url
-import { URL_CREATE_COMMENT } from '../utils/url'
-
+import { URL_CREATE_COMMENT_STUDENT } from '../utils/url'
+import { URL_CREATE_COMMENT_INSTRUCTOR } from '../utils/url'
 // utils
 import scrollMove from '../utils/scrollMove'
 
-const PostWriteComment = ({ onCreateCommentSuccess }) => {
+const PostWriteComment = ({ onCreateCommentSuccess, commentBy }) => {
 
     const { courseId, postId } = useParams()
     const axiosPrivate = useAxiosPrivate()
@@ -68,7 +68,13 @@ const PostWriteComment = ({ onCreateCommentSuccess }) => {
         }
         setSaving(true)
         
-        const url = URL_CREATE_COMMENT
+        let url = null
+        if (commentBy === 'student') {
+            url = URL_CREATE_COMMENT_STUDENT
+        } else if (commentBy === 'instructor') {
+            url = URL_CREATE_COMMENT_INSTRUCTOR
+        }
+        url = url
             .replace('{courseId}', courseId)
             .replace('{postId}', postId)
         const payload = {

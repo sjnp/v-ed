@@ -3,9 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
-// import StudentMenu from '../components/StudentMenu'
 import InstructorMenu from '../components/InstructorMenu'
-
 import LoadingCircle from '../components/LoadingCircle'
 import PostTopic from '../components/PostTopic'
 import PostWriteComment from '../components/PostWriteComment'
@@ -23,11 +21,7 @@ import Box from '@mui/material/Box'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 // custom hook
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import useReasonReport from '../hooks/useReasonReport'
-
-// custom api
-// import apiPrivate from '../api/apiPrivate'
 
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
@@ -61,6 +55,11 @@ const InstructorPostComment = () => {
         setLoading(false)
         createReasonReportRedux()
     }, [])
+
+    const handleCreateCommentSuucess = (newComment) => {
+        posts.comments.push(newComment)
+        setPosts({ ...posts })
+    }
 
     return (
         <Container>
@@ -104,7 +103,10 @@ const InstructorPostComment = () => {
                         }
                         </Grid>
                         <Grid item xs={1}>
-                            {/* <PostWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/> */}
+                            <PostWriteComment
+                                onCreateCommentSuccess={handleCreateCommentSuucess}
+                                commentBy='instructor'
+                            />
                         </Grid>
                     </Grid>
                 </Grid>
