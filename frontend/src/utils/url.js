@@ -23,6 +23,7 @@ export const URL_DELETE_COURSE_PICTURE = '/api/instructors/incomplete-courses/{c
 export const URL_GET_ASSIGNMENTS_COURSE = '/api/instructors/courses/{courseId}/assignments'
 export const URL_GET_POSTS_COURSE = '/api/instructors/courses/{courseId}/posts'
 export const URL_GET_POSTS_ID = '/api/instructors/courses/{courseId}/posts/{postId}'
+export const URL_CREATE_COMMENT_INSTRUCTOR = '/api/instructors/courses/{courseId}/posts/{postId}/comment'
 export const URL_GET_REVIEWS_COURSE = '/api/instructors/courses/{courseId}/reviews'
 
 // admin
@@ -54,7 +55,7 @@ export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapt
 export const URL_GET_ALL_POSTS_BY_COURSE = '/api/students/courses/{courseId}/posts'
 export const URL_CREATE_POST = '/api/students/courses/post'
 export const URL_GET_POST = '/api/students/courses/{courseId}/posts/{postId}'
-export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/{postId}/comment'
+export const URL_CREATE_COMMENT_STUDENT = '/api/students/courses/{courseId}/posts/{postId}/comment'
 
 export const URL_CREATE_REVIEW = '/api/students/courses/review'
 export const URL_GET_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
