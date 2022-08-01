@@ -12,30 +12,36 @@ import SCBIcon from '../icon/SCBIcon.svg';
 import BAYIcon from '../icon/BAYIcon.svg';
 import BBLIcon from '../icon/BBLIcon.svg';
 
-export default function BankingPaymentSelect() {
+export default function BankingPaymentSelect({ setChargeData , chargeData }) {
   const [bankSelect, setBankSelect] = React.useState('');
 
   const handleBankSelect = (event) => {
     console.log(event.target.value)
-    setBankSelect(event.target.value);
+    setChargeData({...chargeData,
+        type: event.target.value
+    });
   };
 
   const bankingData = [
     {
       text: 'Krung Thai Bank',
-      icon: KTBIcon
+      icon: KTBIcon,
+      value:'internet_banking_ktb'
     },
     {
       text: 'Siam Commercial Bank',
-      icon: SCBIcon
+      icon: SCBIcon,
+      value:'internet_banking_scb'
     },
     {
       text: 'Bank of Ayudhya',
-      icon: BAYIcon
+      icon: BAYIcon,
+      value:'internet_banking_bay'
     },
     {
       text: 'Bangkok Bank',
-      icon: BBLIcon
+      icon: BBLIcon,
+      value:'internet_banking_bbl'
     }
   ]
 
@@ -48,7 +54,7 @@ export default function BankingPaymentSelect() {
       //     primary={item.text}
       //   />
       // </MenuItem>
-      <MenuItem value={item.text} key={index}>
+      <MenuItem value={item.value} key={index}>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
           {/* <InboxIcon /> */}
           <img src={item.icon} />
@@ -71,7 +77,7 @@ export default function BankingPaymentSelect() {
         <Select
           // labelId="demo-simple-select-label"
           // id="demo-simple-select"
-          value={bankSelect}
+          value={chargeData.type}
           label="Banking"
           onChange={handleBankSelect}
         >

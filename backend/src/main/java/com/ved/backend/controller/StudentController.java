@@ -55,6 +55,12 @@ public class StudentController {
     return ResponseEntity.ok().body(chargeResponse);
   }
 
+  @PostMapping(path = "/purchase/check-purchase")
+  public ResponseEntity<?> checkBuyCourse(@RequestBody Long courseId, Principal principal) {
+    ChargeResponse chargeResponse = studentCourseService.checkBuyCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
+  }
+
   // REFACTOR: moved from OverviewController
   // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")

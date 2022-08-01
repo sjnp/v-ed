@@ -33,8 +33,8 @@ const Payment = () => {
     amount: null,
     currency: "thb",
     courseId: null,
-    type: "internet_banking_scb",
-    returnUri: "http://localhost:3000/payment/course/9/success",
+    type: null,
+    returnUri: "payment/course/9/success",
 })
 
 
@@ -47,7 +47,7 @@ const Payment = () => {
       amount: (result.price * 10000),
       courseId: result.courseId,
       // returnUrl: result.pictureURL
-      returnUrl: "http://localhost:3000/payment/course/9/success"
+      returnUrl: "payment/course/9/success"
     })
   }, [])
 
@@ -56,6 +56,7 @@ const Payment = () => {
       const response = await axiosPrivate.post('/api/students/purchase/course', chargeData );
       console.log(response.data.authorizeUri);
       window.open(response.data.authorizeUri, "_self")
+      // window.open(response.data.authorizeUri, "_blank")
     } catch (err) {
       console.error(err);
       // navigate('/', { state: { from: location }, replace: true });
@@ -91,7 +92,7 @@ const Payment = () => {
         <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2, marginTop: 10 }}>
           Internet Banking :
         </Typography>
-        <BankingPaymentSelect />
+        <BankingPaymentSelect setChargeData={setChargeData} chargeData={chargeData}/>
         <Button
           type='submit'
           variant='contained'

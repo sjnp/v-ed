@@ -20,4 +20,5 @@ public class OmiseConfigProperties {
     private String recipientUrl;
     private String sourceUrl;
     private String chargeUrl;
+    private String returnUrl;
 }

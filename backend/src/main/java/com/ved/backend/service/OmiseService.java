@@ -170,12 +170,12 @@ public class OmiseService {
             log.info(chargeData.getAmount());
             log.info(chargeData.getCurrency());
             log.info(chargeData.getType());
-            log.info(chargeData.getReturnUri());
+            log.info(omiseKey.getReturnUrl() + "/" +chargeData.getReturnUri());
 //            log.info(source );
             body.add("amount", chargeData.getAmount());
             body.add("currency", chargeData.getCurrency());
             body.add("type", chargeData.getType());
-            body.add("return_uri", chargeData.getReturnUri());
+            body.add("return_uri", omiseKey.getReturnUrl() + "/" +chargeData.getReturnUri());
             body.add("source", source );
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
@@ -200,26 +200,55 @@ public class OmiseService {
         }
     }
 
-    public String markChargeAsPaid(String chargeId) {
+//    public String markChargeAsPaid(String chargeId) {
+//        try {
+//            String base64Creds = getBase64SecretKey();
+//            String url = omiseKey.getChargeUrl() + "/" + chargeId + "/mark_as_paid";
+//            RestTemplate restTemplate = new RestTemplate();
+//            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//            headers.add("Authorization", "Basic " + base64Creds);
+//            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+//            HttpEntity<?> request = new HttpEntity<Object>(body, headers);
+//            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
+//            JSONObject responseJson = new JSONObject(response);
+//            String authorizeUri = responseJson.get("authorize_uri").toString();
+//            log.info(authorizeUri);
+//            return authorizeUri;
+//        }
+//        catch (Exception error) {
+//            System.out.println(error.getMessage());
+//            return error.getMessage();
+//        }
+//    }
+
+    public boolean checkChargeStatus(String chargeId) {
         try {
             String base64Creds = getBase64SecretKey();
-            String url = omiseKey.getChargeUrl() + "/" + chargeId + "/mark_as_paid";
+            String url = omiseKey.getChargeUrl() + '/' + chargeId;
+            log.info(url);
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.add("Authorization", "Basic " + base64Creds);
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
-            HttpEntity<?> request = new HttpEntity<Object>(body, headers);
-            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            log.info("2");
+            HashMap<String, Object> response = restTemplate.patchForObject(url, request, HashMap.class);
+            log.info("3");
             JSONObject responseJson = new JSONObject(response);
-            String authorizeUri = responseJson.get("authorize_uri").toString();
-            log.info(authorizeUri);
-            return authorizeUri;
+            log.info("4");
+            String paid = responseJson.get("paid").toString();
+            log.info(paid);
+            boolean status = Boolean.parseBoolean(paid);
+            return status;
         }
         catch (Exception error) {
             System.out.println(error.getMessage());
-            return error.getMessage();
+            return false;
         }
     }
+
+
 }

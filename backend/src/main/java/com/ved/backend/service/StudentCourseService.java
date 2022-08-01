@@ -65,13 +65,47 @@ public class StudentCourseService {
         }
         String sourceId = omiseService.createPaymentSource(chargeData);
         ChargeResponse chargeResponse = omiseService.createPaymentCharge(chargeData,sourceId);
-    //    StudentCourse studentCourse = StudentCourse.builder() // สร้าง
-    //            .student(student)
-    //            .course(course)
-    //            .build();
-    //    studentCourseService.save(studentCourse); // เซฟ
+        StudentCourse studentCourse = StudentCourse.builder() // สร้าง
+                .student(student)
+                .course(course)
+                .chargeId(chargeResponse.getId())
+                .paySuccess(false)
+                .build();
+        studentCourseRepo.save(studentCourse); // เซฟ
         return chargeResponse;
       }
+
+
+    public ChargeResponse checkBuyCourse(Long courseId, String username) {
+        Student student = userService.getStudent(username);
+        Course course = courseRepo
+                .findById(courseId)
+                .orElseThrow(() -> new BadRequestException("Course not found"));
+        StudentCourse studentCourse = studentCourseRepo
+                .findByStudentAndCourse(student,course)
+                .orElseThrow(() -> new BadRequestException("studentCourse not found"));
+        String chargeId = studentCourse.getChargeId();
+        log.info("1");
+        boolean isPaid = omiseService.checkChargeStatus(chargeId);
+        log.info("5");
+        if (isPaid) {
+            log.info("6");
+            studentCourse.setPaySuccess(true);
+            studentCourseRepo.save(studentCourse);
+
+        } else {
+            log.info("7");
+            studentCourseRepo.delete(studentCourse);
+            log.info("Pass");
+
+        }
+        log.info("8");
+        ChargeResponse chargeResponse = ChargeResponse.builder()
+                .payState(isPaid)
+                .build();
+        log.info("9");
+        return chargeResponse;
+    }
 
     public List<CourseCardResponse> getMyCourses(String username) {
         log.info("Get my courses of username: {}", username);
