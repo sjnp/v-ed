@@ -1,5 +1,4 @@
 import React from 'react'
-import { useSelector} from "react-redux"
 import moment from 'moment'
 
 // component
@@ -18,9 +17,7 @@ import color from '../utils/color'
 
 const PostTopic = ({ data }) => {
 
-    const username = useSelector((state) => state.auth.value.username)
-
-    const { id, topic, detail, datetime, profilePictureUrl, firstname, lastname } = data
+    const { id, topic, detail, datetime, profilePictureUrl, postUsername, firstname, lastname } = data
  
     return (
         <Paper sx={{ borderLeft: 3, borderColor: color.getColorCommentType('OWNER'), mb: 5 }}>
@@ -36,9 +33,9 @@ const PostTopic = ({ data }) => {
                 </Grid>
                 <Grid item xs={1} display='flex' justifyContent='center' mt={2}>
                     <Avatar
-                        alt={username} 
+                        alt={postUsername} 
                         src={profilePictureUrl || "/static/images/avatar/2.jpg"}
-                        sx={{bgcolor: stringToColor(username)}}
+                        sx={{bgcolor: stringToColor(postUsername)}}
                     />
                 </Grid>
                 <Grid item xs={10} pl={1}>
