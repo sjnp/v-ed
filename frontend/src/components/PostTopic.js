@@ -1,8 +1,10 @@
 import React from 'react'
+import { useSelector} from "react-redux"
 import moment from 'moment'
 
 // component
 import Report from './Report'
+import stringToColor from './stringToColor'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
@@ -15,6 +17,8 @@ import Typography from '@mui/material/Typography'
 import color from '../utils/color'
 
 const PostTopic = ({ data }) => {
+
+    const username = useSelector((state) => state.auth.value.username)
 
     const { id, topic, detail, datetime, profilePictureUrl, firstname, lastname } = data
  
@@ -31,7 +35,11 @@ const PostTopic = ({ data }) => {
                     <Divider />
                 </Grid>
                 <Grid item xs={1} display='flex' justifyContent='center' mt={2}>
-                    <Avatar src={profilePictureUrl || '/static/images/avatar/1.jpg'} />
+                    <Avatar
+                        alt={username} 
+                        src={profilePictureUrl || "/static/images/avatar/2.jpg"}
+                        sx={{bgcolor: stringToColor(username)}}
+                    />
                 </Grid>
                 <Grid item xs={10} pl={1}>
                     <Grid item xs={12} mt={1}>
