@@ -27,7 +27,6 @@ const PaymentSuccess = () => {
     const navigate = useNavigate()
 
     useEffect(async () => {
-        console.log("Before Enter")
         try {
             const result = await axiosPrivate.post("/api/students/purchase/check-purchase", courseId )
             console.log(result);
