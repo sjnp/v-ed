@@ -64,8 +64,8 @@ public class AdminController {
 
   @GetMapping(path = "/pending-reports/reviews")
   public ResponseEntity<?> getAllPendingReviewReports(Principal principal) {
-    List<PendingReviewReportResponse> pendingReviewReportResponses = (principal.getName());
-    return ResponseEntity.ok().body(pendingCourseResponses);
+    List<PendingReviewReportResponse> pendingReviewReportResponses = adminReportService.getAllPendingReviewReports(principal.getName());
+    return ResponseEntity.ok().body(pendingReviewReportResponses);
   }
 
   @GetMapping(path = "/report-reasons")
