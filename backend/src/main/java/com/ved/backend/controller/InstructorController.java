@@ -2,9 +2,11 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Course;
 import com.ved.backend.response.IncompleteCourseResponse;
+import com.ved.backend.response.PostCardResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.response.ReviewCourseResponse;
 import com.ved.backend.service.InstructorService;
+import com.ved.backend.service.PostService;
 import com.ved.backend.service.ReviewService;
 
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.Map;
 public class InstructorController {
   private final InstructorService instructorService;
   private final ReviewService reviewService;
+  private final PostService postService;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
@@ -187,8 +190,14 @@ public class InstructorController {
   }
 
   @GetMapping("/courses/{courseId}/reviews")
-  public ResponseEntity<ReviewCourseResponse> getReviewsCourse(@PathVariable Long courseId, Principal principal) {
+  public ResponseEntity<ReviewCourseResponse> getAllReviewsCourse(@PathVariable Long courseId, Principal principal) {
     ReviewCourseResponse response = reviewService.getReviewsCourseByInstructor(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts")
+  public ResponseEntity<List<PostCardResponse>> getAllPostsCourse(@PathVariable Long courseId, Principal principal) {
+    List<PostCardResponse> response = postService.getAllPostsCourseByInstructor(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
