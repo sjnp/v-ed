@@ -27,18 +27,40 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import useReasonReport from '../hooks/useReasonReport'
 
 // custom api
-import apiPrivate from '../api/apiPrivate'
+// import apiPrivate from '../api/apiPrivate'
+
+// custom hook
+import useApiPrivate from '../hooks/useApiPrivate'
 
 // url
-import { URL_GET_POST } from '../utils/url'
+import { URL_GET_POSTS_ID } from '../utils/url'
 
 const InstructorPostComment = () => {
 
     const { courseId, postId } = useParams()
-    const axiosPrivate = useAxiosPrivate()
     const navigate = useNavigate()
+    const apiPrivate = useApiPrivate()
+    const createReasonReportRedux = useReasonReport()
+
+    const [ posts, setPosts ] = useState(null)
+    const [ topicName, setTopicName ] = useState('')
+    const [ loading, setLoading ] = useState(true)
     
-    const topicName = 'hard code topic name'
+    useEffect(async () => {
+        const url = URL_GET_POSTS_ID
+            .replace('{courseId}', courseId)
+            .replace('{postId}', postId)
+        const response = await apiPrivate.get(url)
+
+        if (response.status === 200) {
+            setPosts(response.data)
+            setTopicName(response.data.topic)
+        } else {
+            alert('fail')
+        }
+        setLoading(false)
+        createReasonReportRedux()
+    }, [])
 
     return (
         <Container>
@@ -69,17 +91,17 @@ const InstructorPostComment = () => {
                     <Grid container>
                         <Grid item xs={1}></Grid>
                         <Grid item xs={10} pt={3}>
-                        {/* {
+                        {
                             posts ? <PostTopic data={posts} /> : null
-                        } */}
-                        {/* {
+                        }
+                        {
                             posts?.comments?.map((comment, index) => (
                                 <PostComment key={index} data={comment} />
                             ))
-                        } */}
-                        {/* {
+                        }
+                        {
                             loading ? <LoadingCircle loading={loading} centerY={true} /> : null
-                        } */}
+                        }
                         </Grid>
                         <Grid item xs={1}>
                             {/* <PostWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/> */}

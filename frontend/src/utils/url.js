@@ -22,6 +22,7 @@ export const URL_PUBLISH_INSTRUCTOR_COURSE = '/api/instructors/approved-courses/
 export const URL_DELETE_COURSE_PICTURE = '/api/instructors/incomplete-courses/{courseId}/picture'
 export const URL_GET_ASSIGNMENTS_COURSE = '/api/instructors/courses/{courseId}/assignments'
 export const URL_GET_POSTS_COURSE = '/api/instructors/courses/{courseId}/posts'
+export const URL_GET_POSTS_ID = '/api/instructors/courses/{courseId}/posts/{postId}'
 export const URL_GET_REVIEWS_COURSE = '/api/instructors/courses/{courseId}/reviews'
 
 // admin

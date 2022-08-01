@@ -37,7 +37,6 @@ const StudentPostComment = () => {
     const navigate = useNavigate()
     const createReasonReportRedux = useReasonReport()
 
-
     const [ posts, setPosts ] = useState(null)
     const [ topicName, setTopicName ] = useState('')
     const [ loading, setLoading ] = useState(true)
