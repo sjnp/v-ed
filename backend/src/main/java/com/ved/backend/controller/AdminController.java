@@ -82,4 +82,12 @@ public class AdminController {
     return ResponseEntity.ok().build();
   }
 
+  @PutMapping(path = "/pending-reports/reviews/{reviewReportId}", params = "isApproved")
+  public ResponseEntity<?> changePendingReviewReportState(@PathVariable Long reviewReportId,
+                                                          @RequestParam(name = "isApproved") Boolean isApproved,
+                                                          Principal principal) {
+    adminReportService.changePendingReviewReportState(reviewReportId, isApproved, principal.getName());
+    return ResponseEntity.ok().build();
+  }
+
 }
