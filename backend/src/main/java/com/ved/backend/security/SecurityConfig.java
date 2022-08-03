@@ -142,12 +142,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/admins/pending-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video",
             "/api/admins/pending-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/**",
             "/api/admins/pending-reports/reviews",
+            "/api/admins/pending-reports/posts",
             "/api/admins/report-reasons")
         .hasAnyAuthority("ADMIN");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/admins/pending-courses/{\\d+}",
-            "/api/admins/pending-reports/reviews/{\\d+}")
+            "/api/admins/pending-reports/reviews/{\\d+}",
+            "/api/admins/pending-reports/posts/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
     // http.authorizeRequests().anyRequest().authenticated();

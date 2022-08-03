@@ -68,6 +68,12 @@ public class AdminController {
     return ResponseEntity.ok().body(pendingReviewReportResponses);
   }
 
+  @GetMapping(path = "/pending-reports/posts")
+  public ResponseEntity<?> getAllPendingPostReports(Principal principal) {
+    List<PendingPostReportResponse> pendingPostReportResponses = adminReportService.getAllPendingPostReports(principal.getName());
+    return ResponseEntity.ok().body(pendingPostReportResponses);
+  }
+
   @GetMapping(path = "/report-reasons")
   public ResponseEntity<?> getAllReportReasons() {
     List<ReasonReportResponse> response = reportService.getReasonReports();
@@ -90,4 +96,11 @@ public class AdminController {
     return ResponseEntity.ok().build();
   }
 
+  @PutMapping(path = "/pending-reports/posts/{postReportId}", params = "isApproved")
+  public ResponseEntity<?> changePendingPostReportState(@PathVariable Long postReportId,
+                                                        @RequestParam(name = "isApproved") Boolean isApproved,
+                                                        Principal principal) {
+    adminReportService.changePendingPostReportState(postReportId, isApproved, principal.getName());
+    return ResponseEntity.ok().build();
+  }
 }

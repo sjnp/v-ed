@@ -29,6 +29,8 @@ export const URL_GET_PENDING_COURSE_VIDEO = '/api/admins/pending-courses/{course
 export const URL_GET_PENDING_COURSE_HANDOUT = '/api/admins/pending-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutUri}'
 export const URL_GET_ALL_PENDING_REVIEW_REPORTS = '/api/admins/pending-reports/reviews'
 export const URL_PUT_PENDING_REVIEW_REPORT = '/api/admins/pending-reports/reviews/{reviewReportId}'
+export const URL_GET_ALL_PENDING_POST_REPORTS = '/api/admins/pending-reports/posts'
+export const URL_PUT_PENDING_POST_REPORT = '/api/admins/pending-reports/posts/{postReportId}'
 
 // overview
 export const URL_GET_OVERVIEWS_FROM_CATEGORY = '/api/overviews/category/{name}'
