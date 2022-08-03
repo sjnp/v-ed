@@ -69,7 +69,7 @@ public class GetAllPostsCourseIT {
 
     @Test
     @Order(2)
-    public void givenCourseId_whenNotOwner_thenReturnUnauthorizationStatus() throws Exception {
+    public void givenCourseId_whenNotOwner_thenReturnUnauthorizedStatus() throws Exception {
         // login
         ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
@@ -142,7 +142,7 @@ public class GetAllPostsCourseIT {
 
     @Test
     @Order(5)
-    public void clear() throws Exception {
+    public void clear() {
         mockDatabase.clear();
     }
 
