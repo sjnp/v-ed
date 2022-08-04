@@ -67,7 +67,6 @@ const InstructorPost = () => {
                         }
                         {
                             posts?.map((post, index) => (
-                                post.visible ?
                                 <PostCard 
                                     key={index}
                                     postId={post.id}
@@ -76,8 +75,6 @@ const InstructorPost = () => {
                                     commentCount={post.commentCount}
                                     type='instructor'
                                 />
-                                :
-                                null
                             ))
                         }
                         </Grid>

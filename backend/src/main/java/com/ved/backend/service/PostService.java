@@ -85,6 +85,7 @@ public class PostService {
         return course
             .getPosts()
             .stream()
+            .filter(post -> post.isVisible() == true)
             .map(post -> new PostCardResponse(post))
             .collect(Collectors.toList());
     }
@@ -159,6 +160,7 @@ public class PostService {
         return postResponse
             .getComments()
             .stream()
+            .filter(cm -> cm.isVisible() == true)
             .map(cm -> new CommentResponse(cm))
             .collect(Collectors.toList());
     }
@@ -197,6 +199,7 @@ public class PostService {
         return postResponse
             .getComments()
             .stream()
+            .filter(cm -> cm.isVisible() == true)
             .map(cm -> new CommentResponse(cm))
             .collect(Collectors.toList());
     }

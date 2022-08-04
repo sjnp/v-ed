@@ -51,6 +51,7 @@ public class PostCommentResponse {
         this.visible = post.isVisible();
         this.comments = post.getComments()
             .stream()
+            .filter(comment -> comment.isVisible() == true)
             .map(comment -> new CommentResponse(comment))
             .collect(Collectors.toList());
     }
