@@ -31,6 +31,8 @@ export const URL_GET_ALL_PENDING_REVIEW_REPORTS = '/api/admins/pending-reports/r
 export const URL_PUT_PENDING_REVIEW_REPORT = '/api/admins/pending-reports/reviews/{reviewReportId}'
 export const URL_GET_ALL_PENDING_POST_REPORTS = '/api/admins/pending-reports/posts'
 export const URL_PUT_PENDING_POST_REPORT = '/api/admins/pending-reports/posts/{postReportId}'
+export const URL_GET_ALL_PENDING_POST_COMMENTS = '/api/admins/pending-reports/comments'
+export const URL_GET_PENDING_POST_WITH_REPORTED_COMMENTS = '/api/admins/pending-reports/comments/{commentReportId}'
 
 // overview
 export const URL_GET_OVERVIEWS_FROM_CATEGORY = '/api/overviews/category/{name}'

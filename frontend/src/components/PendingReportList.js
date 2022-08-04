@@ -2,9 +2,9 @@ import {useState} from "react";
 import {Divider, Paper, Stack, ToggleButton, ToggleButtonGroup, Typography} from "@mui/material";
 import PendingReviewReportList from "./PendingReviewReportList";
 import PendingPostReportList from "./PendingPostReportList";
+import PendingCommentReportList from "./PendingCommentReportList";
 
 const PendingReportList = () => {
-
   const toggleButtons = [
     {
       label: "Reviews",
@@ -16,7 +16,7 @@ const PendingReportList = () => {
     },
     {
       label: "Comments",
-      element: null
+      element: <PendingCommentReportList/>
     }
   ];
 

@@ -70,8 +70,24 @@ public class AdminController {
 
   @GetMapping(path = "/pending-reports/posts")
   public ResponseEntity<?> getAllPendingPostReports(Principal principal) {
-    List<PendingPostReportResponse> pendingPostReportResponses = adminReportService.getAllPendingPostReports(principal.getName());
+    List<PendingPostReportResponse> pendingPostReportResponses = adminReportService
+        .getAllPendingPostReports(principal.getName());
     return ResponseEntity.ok().body(pendingPostReportResponses);
+  }
+
+  @GetMapping(path = "/pending-reports/comments")
+  public ResponseEntity<?> getAllPendingCommentReports(Principal principal) {
+    List<PendingCommentReportResponse> pendingCommentReportResponses = adminReportService
+        .getAllPendingCommentReports(principal.getName());
+    return ResponseEntity.ok().body(pendingCommentReportResponses);
+  }
+
+  @GetMapping(path = "/pending-reports/comments/{commentReportId}")
+  public ResponseEntity<?> getPostWithReportedComment(@PathVariable Long commentReportId,
+                                                      Principal principal) {
+    PostWithReportedCommentResponse response = adminReportService
+        .getPostWithReportedComment(commentReportId ,principal.getName());
+    return ResponseEntity.ok().body(response);
   }
 
   @GetMapping(path = "/report-reasons")

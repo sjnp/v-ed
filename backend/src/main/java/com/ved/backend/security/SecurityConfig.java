@@ -143,6 +143,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/admins/pending-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/handout/**",
             "/api/admins/pending-reports/reviews",
             "/api/admins/pending-reports/posts",
+            "/api/admins/pending-reports/comments",
+            "/api/admins/pending-reports/comments/{\\d+}",
             "/api/admins/report-reasons")
         .hasAnyAuthority("ADMIN");
 

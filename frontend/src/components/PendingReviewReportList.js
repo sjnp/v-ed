@@ -41,22 +41,6 @@ const PendingReviewReportList = () => {
   }, [axiosPrivate])
 
   const handleApproval = async (isApproved, reportId) => {
-    // try {
-    //   isApproved ? setIsApproving(true) : setIsRejecting(true)
-    //   const url = URL_PUT_PENDING_COURSE.replace('{courseId}', courseId)
-    //   await axiosPrivate.put(url,
-    //     null,
-    //     {
-    //       params: {
-    //         isApproved: isApproved
-    //       }
-    //     }
-    //   );
-    //   navigate('/admin');
-    // } catch (err) {
-    //   isApproved ? setIsApproving(false) : setIsRejecting(false)
-    //   console.error(err);
-    // }
     try {
       isApproved ? setIsApproving(true) : setIsRejecting(false)
       const url = URL_PUT_PENDING_REVIEW_REPORT.replace('{reviewReportId}', reportId)

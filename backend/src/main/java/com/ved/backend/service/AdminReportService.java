@@ -3,11 +3,14 @@ package com.ved.backend.service;
 import com.ved.backend.configuration.ReportStateProperties;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.*;
+import com.ved.backend.repo.CommentReportRepo;
 import com.ved.backend.repo.PostReportRepo;
 import com.ved.backend.repo.ReportStateRepo;
 import com.ved.backend.repo.ReviewReportRepo;
+import com.ved.backend.response.PendingCommentReportResponse;
 import com.ved.backend.response.PendingPostReportResponse;
 import com.ved.backend.response.PendingReviewReportResponse;
+import com.ved.backend.response.PostWithReportedCommentResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ public class AdminReportService {
   private final ReportStateRepo reportStateRepo;
   private final ReviewReportRepo reviewReportRepo;
   private final PostReportRepo postReportRepo;
+  private final CommentReportRepo commentReportRepo;
 
   private final ReportStateProperties reportStateProperties;
 
@@ -108,5 +112,55 @@ public class AdminReportService {
 
     pendingPostReport.setReportState(newReportState);
     postReportRepo.save(pendingPostReport);
+  }
+
+  public List<PendingCommentReportResponse> getAllPendingCommentReports(String username) {
+    log.info("Finding all pending comment reports, admin: {}", username);
+    ReportState pendingState = reportStateRepo.findByName(reportStateProperties.getPending());
+    List<CommentReport> pendingCommentReport = commentReportRepo.findAllByReportState(pendingState);
+    return pendingCommentReport
+        .stream()
+        .map(r -> PendingCommentReportResponse.builder()
+            .id(r.getId())
+            .reportReason(r.getReasonReport().getDescription())
+            .studentId(r.getStudent().getId())
+            .reporterName(r.getStudent().getFirstName())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  public PostWithReportedCommentResponse getPostWithReportedComment(Long commentReportId, String username) {
+    ReportState pendingState = reportStateRepo.findByName(reportStateProperties.getPending());
+    CommentReport pendingCommentReport = commentReportRepo
+        .findByIdAndReportState(commentReportId, pendingState)
+        .orElseThrow(() -> new NotFoundException("Comment report not found"));
+
+    Comment reportedComment = pendingCommentReport.getComment();
+    Post post = reportedComment.getPost();
+    List<Comment> commentList = post.getComments()
+        .stream()
+        .filter(Comment::isVisible)
+        .map(c -> Comment.builder()
+            .id(c.getId())
+            .comment(c.getComment())
+            .student(Student.builder()
+                .id(c.getStudent().getId())
+                .firstName(c.getStudent().getFirstName())
+                .build())
+            .build())
+        .collect(Collectors.toList());
+
+    return PostWithReportedCommentResponse.builder()
+        .reportId(commentReportId)
+        .reportedCommentId(reportedComment.getId())
+        .reportReason(pendingCommentReport.getReasonReport().getDescription())
+        .studentId(pendingCommentReport.getStudent().getId())
+        .reporterName(pendingCommentReport.getStudent().getFirstName())
+        .post(Post.builder()
+            .topic(post.getTopic())
+            .detail(post.getDetail())
+            .build())
+        .commentList(commentList)
+        .build();
   }
 }

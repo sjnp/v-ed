@@ -1,14 +1,15 @@
 package com.ved.backend.repo;
 
+import com.ved.backend.model.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ved.backend.model.Comment;
-import com.ved.backend.model.CommentReport;
-import com.ved.backend.model.ReasonReport;
-import com.ved.backend.model.Student;
+import java.util.List;
+import java.util.Optional;
 
 public interface CommentReportRepo extends JpaRepository<CommentReport, Long> {
 
     Boolean existsByCommentAndStudentAndReasonReport(Comment comment, Student student, ReasonReport reasonReport);
 
+    List<CommentReport> findAllByReportState(ReportState reportState);
+    Optional<CommentReport> findByIdAndReportState(Long id, ReportState reportState);
 }
