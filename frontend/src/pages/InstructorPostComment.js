@@ -56,9 +56,11 @@ const InstructorPostComment = () => {
         createReasonReportRedux()
     }, [])
 
-    const handleCreateCommentSuucess = (newComment) => {
-        posts.comments.push(newComment)
-        setPosts({ ...posts })
+    const handleCreateCommentSuucess = (newComments) => {
+        setPosts({ 
+            ...posts,
+            comments: newComments
+        })
     }
 
     return (

@@ -29,11 +29,10 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "/api/instructors")
 public class InstructorController {
+
   private final InstructorService instructorService;
   private final ReviewService reviewService;
   private final PostService postService;
-
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {
@@ -213,8 +212,8 @@ public class InstructorController {
   }
 
   @PostMapping("/courses/{courseId}/posts/{postId}/comment")
-  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
-    CommentResponse response = postService.createCommentByInstructor(principal.getName(), courseId, postId, commentRequest);
+  public ResponseEntity<List<CommentResponse>> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    List<CommentResponse> response = postService.createCommentByInstructor(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 

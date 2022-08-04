@@ -119,7 +119,7 @@ public class PostService {
         return this.getPost(postId);
     }
 
-    public CommentResponse createCommentByStudent(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+    public List<CommentResponse> createCommentByStudent(String username, Long courseId, Long postId, CommentRequest commentRequest) {
         log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
 
         if (Objects.isNull(postId)) {
@@ -154,12 +154,16 @@ public class PostService {
             .student(studentCourse.getStudent())
             .build();
         post.getComments().add(comment);
-        postRepo.save(post);
+        Post postResponse = postRepo.save(post);
         
-        return new CommentResponse(comment);
+        return postResponse
+            .getComments()
+            .stream()
+            .map(cm -> new CommentResponse(cm))
+            .collect(Collectors.toList());
     }
 
-    public CommentResponse createCommentByInstructor(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+    public List<CommentResponse> createCommentByInstructor(String username, Long courseId, Long postId, CommentRequest commentRequest) {
         log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
 
         if (Objects.isNull(postId)) {
@@ -188,9 +192,13 @@ public class PostService {
             .student(course.getInstructor().getStudent())
             .build();
         post.getComments().add(comment);
-        postRepo.save(post);
+        Post postResponse = postRepo.save(post);
         
-        return new CommentResponse(comment);
+        return postResponse
+            .getComments()
+            .stream()
+            .map(cm -> new CommentResponse(cm))
+            .collect(Collectors.toList());
     }
 
 }

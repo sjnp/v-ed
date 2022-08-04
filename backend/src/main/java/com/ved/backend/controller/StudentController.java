@@ -105,8 +105,8 @@ public class StudentController {
   }
 
   @PostMapping("/courses/{courseId}/posts/{postId}/comment")
-  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
-    CommentResponse response = postService.createCommentByStudent(principal.getName(), courseId, postId, commentRequest);
+  public ResponseEntity<List<CommentResponse>> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    List<CommentResponse> response = postService.createCommentByStudent(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -140,8 +140,6 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************************************************** */
-
   @GetMapping("/reason-reports")
   public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
     List<ReasonReportResponse> response = reportService.getReasonReports();
@@ -153,8 +151,6 @@ public class StudentController {
     reportService.createReport(principal.getName(), reportRequest);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
-
-  // ------------------------------------------------------------------------------------------------------
 
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
