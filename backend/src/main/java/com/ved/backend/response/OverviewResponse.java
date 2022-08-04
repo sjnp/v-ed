@@ -47,6 +47,7 @@ public class OverviewResponse {
         this.requirement = course.getRequirement();
         this.reviewList = course.getPublishedCourse().getReviews()
             .stream()
+            .filter(review -> review.isVisible() == true)
             .map(review -> new ReviewResponse(review))
             .collect(Collectors.toList());
         this.instructorFirstname = course.getInstructor().getStudent().getFirstName();

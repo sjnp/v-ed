@@ -103,23 +103,26 @@ const StudentReview = () => {
                             null
                             :
                             myReviewId === null ?
-                            <Fab 
-                                size='small' 
-                                color='primary' 
-                                onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
-                                sx={{ position: 'fixed' }}
-                            >
-                                <AddIcon titleAccess='Create review' />
-                            </Fab>
-                            :
-                            <Fab
-                                size='small' 
-                                color='primary' 
-                                onClick={() => navigate(`/student/course/${courseId}/review/${myReviewId}`)} 
-                                sx={{ position: 'fixed' }}
-                            >
-                                <EditIcon titleAccess='Edit review' />
-                            </Fab>
+                                <Fab 
+                                    size='small' 
+                                    color='primary' 
+                                    onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
+                                    sx={{ position: 'fixed' }}
+                                >
+                                    <AddIcon titleAccess='Create review' />
+                                </Fab>
+                                :
+                                myReviewId === 0 ?
+                                    null
+                                    :
+                                    <Fab
+                                        size='small' 
+                                        color='primary' 
+                                        onClick={() => navigate(`/student/course/${courseId}/review/${myReviewId}`)} 
+                                        sx={{ position: 'fixed' }}
+                                    >
+                                        <EditIcon titleAccess='Edit review' />
+                                    </Fab>
                         }
                         </Grid>
                     </Grid>
