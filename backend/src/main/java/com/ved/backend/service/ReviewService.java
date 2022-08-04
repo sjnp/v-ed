@@ -83,13 +83,16 @@ public class ReviewService {
         PublishedCourseResponse publishedCourseResponse = new PublishedCourseResponse(publishedCourse);
         Long myReviewId = null;
         List<ReviewResponse> reviewResponses = new ArrayList<ReviewResponse>();
-        
         for (Review review : publishedCourse.getReviews()) {
+
             if (review.getStudent().getAppUser().getUsername().equals(username)) {
-                myReviewId = review.getId();
+                myReviewId = review.isVisible() == true ? review.getId() : 0L;
             }
-            reviewResponses.add(new ReviewResponse(review));
-        }
+
+            if (review.isVisible()) {
+                reviewResponses.add(new ReviewResponse(review));
+            }
+        }     
         
         return ReviewCourseResponse.builder()
             .summary(publishedCourseResponse)
