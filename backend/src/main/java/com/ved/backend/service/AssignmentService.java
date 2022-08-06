@@ -2,15 +2,18 @@ package com.ved.backend.service;
 
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Answer;
+import com.ved.backend.model.Course;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
+import com.ved.backend.response.AssignmentCourseResponse;
 
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -100,6 +103,22 @@ public class AssignmentService {
             .studentCourse(studentCourse)
             .build();
         answerRepo.save(answer);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////
+
+    public List<AssignmentCourseResponse> getAssignmentCourse(Long courseId, String username) {
+        Course course = authService.authorizedInstructor(username, courseId);
+        List<AssignmentCourseResponse> assignmentCourseResponses = new ArrayList<AssignmentCourseResponse>();
+        int size = course.getChapters().size();
+        for (int i = 0; i < size; ++i) {
+            AssignmentCourseResponse assignmentCourseResponse = AssignmentCourseResponse.builder()
+                .chapterIndex(i)
+                .chapterNo(i + 1)
+                .build();
+            assignmentCourseResponses.add(assignmentCourseResponse);
+        }
+        return assignmentCourseResponses;
     }
 
 }

@@ -2,12 +2,14 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Course;
 import com.ved.backend.request.CommentRequest;
+import com.ved.backend.response.AssignmentCourseResponse;
 import com.ved.backend.response.CommentResponse;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PostCardResponse;
 import com.ved.backend.response.PostCommentResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.response.ReviewCourseResponse;
+import com.ved.backend.service.AssignmentService;
 import com.ved.backend.service.InstructorService;
 import com.ved.backend.service.PostService;
 import com.ved.backend.service.ReviewService;
@@ -33,6 +35,7 @@ public class InstructorController {
   private final InstructorService instructorService;
   private final ReviewService reviewService;
   private final PostService postService;
+  private final AssignmentService assignmentService;
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {
@@ -215,6 +218,14 @@ public class InstructorController {
   public ResponseEntity<List<CommentResponse>> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
     List<CommentResponse> response = postService.createCommentByInstructor(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  /////////////////////////////////////////////////////////////
+
+  @GetMapping("/courses/{courseId}/assignments")
+  public ResponseEntity<List<AssignmentCourseResponse>> getAssignmentsCourse(@PathVariable Long courseId, Principal principal) {
+    List<AssignmentCourseResponse> response = assignmentService.getAssignmentCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
   }
 
 }

@@ -32,7 +32,8 @@ import StudentPostComment from './pages/StudentPostComment';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
-import InstructorAssignment from './pages/InstructorAssignment';
+import InstructorAssignmentCourse from './pages/InstructorAssignmentCourse';
+import InstructorAssignmentChapter from './pages/InstructorAssignmentChapter';
 import InstructorPost from './pages/InstructorPost';
 import InstructorPostComment from './pages/InstructorPostComment';
 import InstructorReview from './pages/InstructorReview';
@@ -98,7 +99,8 @@ const App = () => {
           <Route path='instructor' element={ <Instructor /> } />
           <Route path='instructor/create-course' element={ <CreateCourse/> } />
           <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
-          <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignment /> } />
+          <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignmentCourse /> } />
+          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex' element={ <InstructorAssignmentChapter /> } />
           <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
           <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
