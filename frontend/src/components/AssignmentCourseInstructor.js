@@ -6,7 +6,7 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 
-const AssignmentChapterInstructor = ({ chapterIndex, chapterNo }) => {
+const AssignmentCourseInstructor = ({ chapterIndex, chapterNo }) => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
@@ -32,4 +32,4 @@ const AssignmentChapterInstructor = ({ chapterIndex, chapterNo }) => {
     )
 }
 
-export default AssignmentChapterInstructor
+export default AssignmentCourseInstructor
