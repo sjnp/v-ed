@@ -1,6 +1,8 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.model.Course;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.service.InstructorService;
@@ -24,6 +26,26 @@ public class InstructorController {
   private final InstructorService instructorService;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
+
+  @GetMapping(path = "/finance/getAccount")
+  public ResponseEntity<?> getAccountData(Principal principal) {
+    try {
+      String response = instructorService.getOmiseAccountData(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @PatchMapping(path = "/finance/updateAccount")
+  public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
+    try {
+      String response = instructorService.updateFinanceAccount(finance, principal.getName());
+      return ResponseEntity.ok().body(response);
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {

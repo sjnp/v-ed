@@ -47,6 +47,9 @@ class InstructorServiceTest {
   private UserService userService;
 
   @Mock
+  private OmiseService omiseService;
+
+  @Mock
   private CourseStateService courseStateService;
 
   @Mock
@@ -75,6 +78,7 @@ class InstructorServiceTest {
         courseRepo,
         instructorRepo,
         userService,
+        omiseService,
         courseStateService,
         publicObjectStorageService,
         privateObjectStorageService,
