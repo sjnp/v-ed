@@ -66,6 +66,11 @@ const UserMenu = () => {
 
   const [ displayUrl, setDisplayUrl ] = useState('')
   useEffect(async () => {
+    if (roles.includes('ADMIN')) {
+      setDisplayUrl(null)
+      dispatch( updatePicture({ uriPicture: null }) )
+      return
+    }
     if (uriPicture) {
       setDisplayUrl(uriPicture)
     } else {

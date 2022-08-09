@@ -1,10 +1,10 @@
 package com.ved.backend.controller;
 
-import com.ved.backend.response.FullPendingCourseInfoDto;
-import com.ved.backend.response.PendingCourseResponse;
-import com.ved.backend.response.VideoResponse;
+import com.ved.backend.response.*;
+import com.ved.backend.service.AdminReportService;
 import com.ved.backend.service.AdminService;
 import com.ved.backend.service.CourseService;
+import com.ved.backend.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +21,8 @@ public class AdminController {
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AdminController.class);
 
   private final AdminService adminService;
+  private final AdminReportService adminReportService;
+  private final ReportService reportService;
 
   @GetMapping(path = "/pending-courses")
   public ResponseEntity<?> getAllPendingCourses(Principal principal) {
@@ -60,6 +62,40 @@ public class AdminController {
     return ResponseEntity.ok().body(handoutResponse);
   }
 
+  @GetMapping(path = "/pending-reports/reviews")
+  public ResponseEntity<?> getAllPendingReviewReports(Principal principal) {
+    List<PendingReviewReportResponse> pendingReviewReportResponses = adminReportService.getAllPendingReviewReports(principal.getName());
+    return ResponseEntity.ok().body(pendingReviewReportResponses);
+  }
+
+  @GetMapping(path = "/pending-reports/posts")
+  public ResponseEntity<?> getAllPendingPostReports(Principal principal) {
+    List<PendingPostReportResponse> pendingPostReportResponses = adminReportService
+        .getAllPendingPostReports(principal.getName());
+    return ResponseEntity.ok().body(pendingPostReportResponses);
+  }
+
+  @GetMapping(path = "/pending-reports/comments")
+  public ResponseEntity<?> getAllPendingCommentReports(Principal principal) {
+    List<PendingCommentReportResponse> pendingCommentReportResponses = adminReportService
+        .getAllPendingCommentReports(principal.getName());
+    return ResponseEntity.ok().body(pendingCommentReportResponses);
+  }
+
+  @GetMapping(path = "/pending-reports/comments/{commentReportId}")
+  public ResponseEntity<?> getPostWithReportedComment(@PathVariable Long commentReportId,
+                                                      Principal principal) {
+    PostWithReportedCommentResponse response = adminReportService
+        .getPostWithReportedComment(commentReportId ,principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping(path = "/report-reasons")
+  public ResponseEntity<?> getAllReportReasons() {
+    List<ReasonReportResponse> response = reportService.getReasonReports();
+    return ResponseEntity.ok().body(response);
+  }
+
   @PutMapping(path = "/pending-courses/{courseId}", params = "isApproved")
   public ResponseEntity<?> changePendingCourseState(@PathVariable Long courseId,
                                                     @RequestParam(name = "isApproved") Boolean isApproved,
@@ -68,4 +104,19 @@ public class AdminController {
     return ResponseEntity.ok().build();
   }
 
+  @PutMapping(path = "/pending-reports/reviews/{reviewReportId}", params = "isApproved")
+  public ResponseEntity<?> changePendingReviewReportState(@PathVariable Long reviewReportId,
+                                                          @RequestParam(name = "isApproved") Boolean isApproved,
+                                                          Principal principal) {
+    adminReportService.changePendingReviewReportState(reviewReportId, isApproved, principal.getName());
+    return ResponseEntity.ok().build();
+  }
+
+  @PutMapping(path = "/pending-reports/posts/{postReportId}", params = "isApproved")
+  public ResponseEntity<?> changePendingPostReportState(@PathVariable Long postReportId,
+                                                        @RequestParam(name = "isApproved") Boolean isApproved,
+                                                        Principal principal) {
+    adminReportService.changePendingPostReportState(postReportId, isApproved, principal.getName());
+    return ResponseEntity.ok().build();
+  }
 }
