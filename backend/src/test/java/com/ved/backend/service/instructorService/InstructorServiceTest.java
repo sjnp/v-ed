@@ -47,6 +47,9 @@ class InstructorServiceTest {
   private UserService userService;
 
   @Mock
+  private OmiseService omiseService;
+
+  @Mock
   private CourseStateService courseStateService;
 
   @Mock
@@ -71,18 +74,19 @@ class InstructorServiceTest {
 
   @BeforeEach
   void setup() {
-    // underTest = new InstructorService(
-    //     courseRepo,
-    //     instructorRepo,
-    //     userService,
-    //     courseStateService,
-    //     publicObjectStorageService,
-    //     privateObjectStorageService,
-    //     fileExtensionStringHandler,
-    //     courseStateProperties,
-    //     publicObjectStorageConfigProperties,
-    //     privateObjectStorageConfigProperties
-    // );
+     underTest = new InstructorService(
+         courseRepo,
+         instructorRepo,
+         userService,
+         omiseService,
+         courseStateService,
+         publicObjectStorageService,
+         privateObjectStorageService,
+         fileExtensionStringHandler,
+         courseStateProperties,
+         publicObjectStorageConfigProperties,
+         privateObjectStorageConfigProperties
+     );
   }
 
   @Test
