@@ -34,6 +34,7 @@ import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
 import InstructorAssignmentCourse from './pages/InstructorAssignmentCourse';
 import InstructorAssignmentChapter from './pages/InstructorAssignmentChapter';
+import InstructorAssignmentAnswer from './pages/InstructorAssignmentAnswer';
 import InstructorPost from './pages/InstructorPost';
 import InstructorPostComment from './pages/InstructorPostComment';
 import InstructorReview from './pages/InstructorReview';
@@ -101,6 +102,8 @@ const App = () => {
           <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
           <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignmentCourse /> } />
           <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex' element={ <InstructorAssignmentChapter /> } />
+          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex/answer' element={ <InstructorAssignmentAnswer /> } />
+          
           <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
           <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
