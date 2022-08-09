@@ -180,7 +180,6 @@ public class StudentController {
   }
 
   // ------------------------------------------------------------------------------------------------------
-
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
