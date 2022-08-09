@@ -26,6 +26,7 @@ export const URL_GET_POSTS_ID = '/api/instructors/courses/{courseId}/posts/{post
 export const URL_CREATE_COMMENT_INSTRUCTOR = '/api/instructors/courses/{courseId}/posts/{postId}/comment'
 export const URL_GET_REVIEWS_COURSE = '/api/instructors/courses/{courseId}/reviews'
 export const URL_GET_ASSIGNMENTS_COURSE_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments'
+export const URL_GET_ASSIGNMENTS_CHAPTER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}'
 
 // admin
 export const URL_GET_PENDING_COURSE = '/api/admins/pending-courses/{courseId}'

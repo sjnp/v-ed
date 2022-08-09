@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import InstructorMenu from '../components/InstructorMenu'
-import AssignmentChapterInstructor from '../components/AssignmentChapterInstructor'
+import AssignmentCourseInstructor from '../components/AssignmentCourseInstructor'
 import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
@@ -59,7 +59,7 @@ const InstructorAssignmentCourse = () => {
                         <Grid item xs={10} pt={2}>
                             {
                                 assignments.map((assignment, index) => (
-                                    <AssignmentChapterInstructor
+                                    <AssignmentCourseInstructor
                                         key={index}
                                         chapterIndex={assignment.chapterIndex}
                                         chapterNo={assignment.chapterNo}

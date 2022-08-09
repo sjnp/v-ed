@@ -2,6 +2,7 @@ package com.ved.backend.controller;
 
 import com.ved.backend.model.Course;
 import com.ved.backend.request.CommentRequest;
+import com.ved.backend.response.AssignmentChapterResponse;
 import com.ved.backend.response.AssignmentCourseResponse;
 import com.ved.backend.response.CommentResponse;
 import com.ved.backend.response.IncompleteCourseResponse;
@@ -225,6 +226,12 @@ public class InstructorController {
   @GetMapping("/courses/{courseId}/assignments")
   public ResponseEntity<List<AssignmentCourseResponse>> getAssignmentsCourse(@PathVariable Long courseId, Principal principal) {
     List<AssignmentCourseResponse> response = assignmentService.getAssignmentCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/assignments/chapters/{chapterIndex}")
+  public ResponseEntity<List<AssignmentChapterResponse>> getAssignmentChapter(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
+    List<AssignmentChapterResponse> response = assignmentService.getAssignmentChapter(courseId, chapterIndex, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 

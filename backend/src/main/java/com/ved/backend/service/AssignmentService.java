@@ -8,6 +8,7 @@ import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
+import com.ved.backend.response.AssignmentChapterResponse;
 import com.ved.backend.response.AssignmentCourseResponse;
 
 import lombok.AllArgsConstructor;
@@ -119,6 +120,29 @@ public class AssignmentService {
             assignmentCourseResponses.add(assignmentCourseResponse);
         }
         return assignmentCourseResponses;
+    }
+
+    public List<AssignmentChapterResponse> getAssignmentChapter(Long courseId, int chapterIndex, String username) {
+        Course course = authService.authorizedInstructor(username, courseId);
+        List<AssignmentChapterResponse> assignments = course
+            .getChapters()
+            .get(chapterIndex)
+            .getAssignments()
+            .stream()
+            .map(assignment -> AssignmentChapterResponse.builder()
+                                    .courseId(course.getId())
+                                    .chapterIndex(chapterIndex)
+                                    .noIndex(null)
+                                    .detail(assignment.get("detail"))
+                                    .build()
+            )
+            .collect(Collectors.toList());
+
+        for (int i = 0; i < assignments.size(); ++i) {
+            assignments.get(i).setNoIndex(i);
+        }
+
+        return assignments;
     }
 
 }
