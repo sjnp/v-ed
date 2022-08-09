@@ -31,7 +31,7 @@ public class StudentController {
   private final PostService postService;
   private final ReportService reportService;
 
-  @PostMapping("/course/free")
+  @PostMapping("/course/free") // fixxxx
   public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
     studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
