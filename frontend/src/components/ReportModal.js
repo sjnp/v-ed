@@ -48,9 +48,7 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
 
     const handleSendReport = async () => {
         if (reasonReportId === null ) {
-            alertMessage.setType('warning')
-            alertMessage.setMessage('Reason report is required')
-            alertMessage.setOpen(true)
+            alertMessage.show('warning', 'Reason report is required')
             return
         }
 
@@ -66,13 +64,9 @@ const ReportModal = ({ type, contentId, open, onClose }) => {
         if (response.status === 201) {
             handleCloseMyself()
             alertMessage.close()
-            alertMessage.setType('success')
-            alertMessage.setMessage('Report successful')
-            alertMessage.setOpen(true)
+            alertMessage.show('success', 'Report successful')
         } else {
-            alertMessage.setType('error')
-            alertMessage.setMessage(response.message)
-            alertMessage.setOpen(true)
+            alertMessage.show('error', response.message)
         }
     }
     

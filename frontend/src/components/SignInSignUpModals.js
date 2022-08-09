@@ -23,9 +23,7 @@ const SignInSignUpModals = () => {
 
   const handleSignUpSuccess = () => {
     setOpenSignUp(false)
-    alertMessage.setOpen(true)
-    alertMessage.setType('success')
-    alertMessage.setMessage('Register successful')
+    alertMessage.show('success', 'Register successful')
   }
 
   const handClickSignUpLoginForm = () => {

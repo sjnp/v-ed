@@ -1,5 +1,6 @@
 package com.ved.backend.service.userService;
 
+import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
 import com.ved.backend.exception.UserNotFoundException;
 import com.ved.backend.exception.baseException.ConflictException;
 import com.ved.backend.exception.baseException.UnauthorizedException;
@@ -11,6 +12,7 @@ import com.ved.backend.repo.AppRoleRepo;
 import com.ved.backend.repo.AppUserRepo;
 import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentRepo;
+import com.ved.backend.service.PublicObjectStorageService;
 import com.ved.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,6 +52,12 @@ class UserServiceTest {
   @Mock
   private PasswordEncoder passwordEncoder;
 
+  @Mock
+  private PublicObjectStorageService publicObjectStorageService;
+
+  @Mock
+  private PublicObjectStorageConfigProperties publicObjectStorageConfigProperties;
+
   private UserService underTest;
 
   @BeforeEach
@@ -59,7 +67,9 @@ class UserServiceTest {
         appRoleRepo,
         studentRepo,
         instructorRepo,
-        passwordEncoder
+        passwordEncoder,
+        publicObjectStorageService,
+        publicObjectStorageConfigProperties
     );
   }
 

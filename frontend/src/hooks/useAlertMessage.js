@@ -2,72 +2,51 @@ import { useState } from 'react'
 
 const useAlertMessage = () => {
 
-    const [ valueOpen, setValueOpen ] = useState(false)
-    const [ valueType, setValueType ] = useState('info')
-    const [ valueMessage, setBalueMessage ] = useState('')
+    const [ open, setOpen ] = useState(false)
+    const [ type, setType ] = useState('info')
+    const [ message, setMessage ] = useState('')
 
-    const setOpen = (value) => {
+    const show = (newType, newMessage) => {
         try {
 
-            if (typeof value !== 'boolean') {
-                throw 'AlertMessage: properties open require boolean type only'
+            if (typeof newMessage !== 'string') {
+                throw 'AlertMessage: properties message require string type only'
             }
-            setValueOpen(value)
-
-        } catch (ex) {
-            console.error(ex)
-        }
-    }
-
-    const setType = (value) => {
-        try {
-
-            if (typeof value !== 'string') {
+            
+            if (typeof newType !== 'string') {
                 throw 'AlertMessage: properties type require string type only'
             }
 
-            if (value === 'success' || value === 'info' || value === 'warning' || value === 'error') {
-                setValueType(value)
+            if (newType === 'success' || newType === 'info' || newType === 'warning' || newType === 'error') {
+                setOpen(true)
+                setType(newType)
+                setMessage(newMessage)
             } else {
                 throw 'AlertMessage: properties type value is ( success | info | warning | error ) only'
             }
 
-        } catch (ex) {
-            console.error(ex)
+        } catch (err) {
+            console.error(err)
         }
     }
-
-    const setMessage = (value) => {
-        try {
-
-            if (typeof value !== 'string') {
-                throw 'AlertMessage: properties message require string type only'
-            }
-            setBalueMessage(value)
-
-        } catch (ex) {
-            console.error(ex)
-        }
-    }
-
-    const getOpen = () => valueOpen
-    const getType = () => valueType
-    const getMessage = () => valueMessage
 
     const close = (event, reason) => {
         if (reason === 'clickaway') return
-        setValueOpen(false)
+        setOpen(false)
     }
 
+    const getOpen = () => open
+    const getType = () => type
+    const getMessage = () => message
+
     return {
-        setOpen,
-        setType,
-        setMessage,
+        show,
+        close,
         getOpen,
         getType,
-        getMessage,
-        close
+        getMessage
     }
+
 }
 
 export default useAlertMessage

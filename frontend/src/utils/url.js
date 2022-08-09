@@ -27,6 +27,12 @@ export const URL_PUT_PENDING_COURSE = '/api/admins/pending-courses/{courseId}'
 export const URL_GET_ALL_PENDING_COURSES = '/api/admins/pending-courses'
 export const URL_GET_PENDING_COURSE_VIDEO = '/api/admins/pending-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/video'
 export const URL_GET_PENDING_COURSE_HANDOUT = '/api/admins/pending-courses/{courseId}/chapter/{chapterIndex}/section/{sectionIndex}/handout/{handoutUri}'
+export const URL_GET_ALL_PENDING_REVIEW_REPORTS = '/api/admins/pending-reports/reviews'
+export const URL_PUT_PENDING_REVIEW_REPORT = '/api/admins/pending-reports/reviews/{reviewReportId}'
+export const URL_GET_ALL_PENDING_POST_REPORTS = '/api/admins/pending-reports/posts'
+export const URL_PUT_PENDING_POST_REPORT = '/api/admins/pending-reports/posts/{postReportId}'
+export const URL_GET_ALL_PENDING_POST_COMMENTS = '/api/admins/pending-reports/comments'
+export const URL_GET_PENDING_POST_WITH_REPORTED_COMMENTS = '/api/admins/pending-reports/comments/{commentReportId}'
 
 // overview
 export const URL_GET_OVERVIEWS_FROM_CATEGORY = '/api/overviews/category/{name}'
@@ -64,6 +70,15 @@ export const URL_CREATE_REPORT = '/api/students/report'
 
 // search
 export const URL_SEARCH = '/api/search'
+
+// user (account setting)
+export const URL_GET_PROFILE = '/api/users/profile'
+export const URL_CREATE_UPLOAD_DISPLAY = '/api/users/display'
+export const URL_UPDATE_DISPLAY = '/api/users/display'
+export const URL_UPDATE_PROFILE = '/api/users/profile'
+export const URL_VERIFY_PASSWORD = '/api/users/verify-password'
+export const URL_UPDATE_NEW_PASSWORD = '/api/users/change-password'
+
 
 // student - incomplete
 export const URL_CREATE_PAR_FOR_READ_WRITE_COURSE_ANSWER = '/api/students/courses/answers/pre-authenticated-request'
