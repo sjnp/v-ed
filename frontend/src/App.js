@@ -102,8 +102,7 @@ const App = () => {
           <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
           <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignmentCourse /> } />
           <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex' element={ <InstructorAssignmentChapter /> } />
-          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex/answer' element={ <InstructorAssignmentAnswer /> } />
-          
+          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex/answer/:noIndex' element={ <InstructorAssignmentAnswer /> } />
           <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
           <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />

@@ -14,7 +14,7 @@ const AssignmentChapterInstructor = ({ noIndex, detail }) => {
     const no = noIndex + 1
 
     const handleClickAssignmentChapter = () => {
-        navigate(`/instructor/course/${courseId}/assignment/chapter/${chapterIndex}/answer`)
+        navigate(`/instructor/course/${courseId}/assignment/chapter/${chapterIndex}/answer/${noIndex}`)
     }
 
     return (
