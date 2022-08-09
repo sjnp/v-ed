@@ -42,10 +42,9 @@ public class StudentController {
 
   /* *************************************************************** */
  
-
-  @PostMapping("/free/course")
-  public ResponseEntity<?> buyFreeCourse(@RequestBody Long courseId, Principal principal) {
-    studentCourseService.buyFreeCourse(principal.getName(), courseId);
+  @PostMapping("/course/free")
+  public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
+    studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
