@@ -22,20 +22,23 @@ const PaymentSuccess = () => {
     const { courseId } = useParams()
     const [isPaid,setIsPaid] = useState(false);
     const [isDataLoad,setIsDataLoad] = useState(false);
+    const [isNull,setIsNull] = useState(false);
     const axiosPrivate = useAxiosPrivate();
 
     const navigate = useNavigate()
 
     useEffect(async () => {
         try {
-            const result = await axiosPrivate.post("/api/students/purchase/check-purchase", courseId )
+            const result = await axiosPrivate.post("/api/students/purchase/check-purchase", courseId ).catch()
+            console.log(result.data.payState);
             console.log(result);
-        setIsPaid(result)
-        console.log("Enter")
-        setIsDataLoad(true);
+            setIsPaid(result.data.payState)
+            setIsDataLoad(true);
         }
         catch(error){
             console.log(error)
+            setIsNull(true)
+            setIsDataLoad(true);
         }
         
       }, [])
@@ -60,7 +63,6 @@ const PaymentSuccess = () => {
                 </Grid> */}
                 
                 <Grid item marginBottom={3}>
-                {console.log(isDataLoad)}
                 {!isDataLoad ? 
                     <Skeleton variant="rectangular" height={150} />
                     : 
@@ -68,6 +70,12 @@ const PaymentSuccess = () => {
                         <Alert severity="success">
                             <AlertTitle>Payment Success</AlertTitle>
                             Your payment has been processed successfully.
+                        </Alert>
+                        :
+                        isNull ?
+                        <Alert severity="warning">
+                            <AlertTitle>Payment Failed</AlertTitle>
+                            Your payment has problem occur. 
                         </Alert>
                         :
                         <Alert severity="error">

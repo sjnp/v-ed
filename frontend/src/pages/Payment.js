@@ -44,7 +44,7 @@ const Payment = () => {
     const result = await axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
     setCourseCard(result)
     setChargeData({...chargeData,
-      amount: (result.price * 10000),
+      amount: (result.price * 100),
       courseId: result.courseId,
       // returnUrl: result.pictureURL
       returnUrl: "payment/course/9/success"

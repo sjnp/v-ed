@@ -234,13 +234,9 @@ public class OmiseService {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.add("Authorization", "Basic " + base64Creds);
             HttpEntity<?> request = new HttpEntity<Object>(headers);
-            log.info("2");
             HashMap<String, Object> response = restTemplate.patchForObject(url, request, HashMap.class);
-            log.info("3");
             JSONObject responseJson = new JSONObject(response);
-            log.info("4");
             String paid = responseJson.get("paid").toString();
-            log.info(paid);
             boolean status = Boolean.parseBoolean(paid);
             return status;
         }
@@ -250,5 +246,5 @@ public class OmiseService {
         }
     }
 
-
+    public String create
 }

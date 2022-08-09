@@ -14,7 +14,7 @@ const AccountManageInstructor = () => {
   const roles = useSelector((state) => state.auth.value.roles);
   const [tiggerInputRecipient,setTiggerInputRecipient] = useState(false)
   const [addOrChange,setAddOrChange] = useState('')
-  
+
   const handleAddRecipent = () => {
     tiggerInputRecipient ? setTiggerInputRecipient(false) : setTiggerInputRecipient(true);
   }

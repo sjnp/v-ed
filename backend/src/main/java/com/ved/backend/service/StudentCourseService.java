@@ -85,25 +85,18 @@ public class StudentCourseService {
                 .findByStudentAndCourse(student,course)
                 .orElseThrow(() -> new BadRequestException("studentCourse not found"));
         String chargeId = studentCourse.getChargeId();
-        log.info("1");
         boolean isPaid = omiseService.checkChargeStatus(chargeId);
-        log.info("5");
         if (isPaid) {
-            log.info("6");
+            log.info("If");
             studentCourse.setPaySuccess(true);
             studentCourseRepo.save(studentCourse);
-
         } else {
-            log.info("7");
+            log.info("try");
             studentCourseRepo.delete(studentCourse);
-            log.info("Pass");
-
         }
-        log.info("8");
         ChargeResponse chargeResponse = ChargeResponse.builder()
                 .payState(isPaid)
                 .build();
-        log.info("9");
         return chargeResponse;
     }
 
