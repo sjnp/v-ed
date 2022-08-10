@@ -5,6 +5,7 @@ import com.ved.backend.model.Answer;
 import com.ved.backend.model.Course;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
+import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
@@ -129,13 +130,7 @@ public class AssignmentService {
             .get(chapterIndex)
             .getAssignments()
             .stream()
-            .map(assignment -> AssignmentChapterResponse.builder()
-                                    .courseId(course.getId())
-                                    .chapterIndex(chapterIndex)
-                                    .noIndex(null)
-                                    .detail(assignment.get("detail"))
-                                    .build()
-            )
+            .map(asm -> new AssignmentChapterResponse(courseId, chapterIndex, null, asm.get("detail")))
             .collect(Collectors.toList());
 
         for (int i = 0; i < assignments.size(); ++i) {
@@ -143,6 +138,11 @@ public class AssignmentService {
         }
 
         return assignments;
+    }
+
+    public List<AnswerInstructor> getAssignmentAnswer(Long courseId, int chapterIndex, int noIndex, String username) {
+        authService.authorizedInstructor(username, courseId);
+        return answerRepo.findByCourseIdAndChapterIndexAndNoindex(courseId, chapterIndex, noIndex);
     }
 
 }
