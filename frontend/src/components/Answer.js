@@ -96,7 +96,7 @@ const Answer = ({ assignment, answer, noIndex, commentInstructor }) => {
     }
 
     return (
-        <Paper sx={{ width: '80%', m: 'auto' }}>
+        <Paper sx={{ width: '80%', m: 'auto', mb: 3 }}>
             <Grid container pt={2} pl={2} pr={2} pb={1}>
                 <Grid item xs={12}>
                     <Typography fontWeight='bold'>
