@@ -17,6 +17,7 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
         String getCommentInstructor();
         LocalDateTime getDatetime();
         String getFileName();
+        String getStudentName();
     }
     @Query(
         value =
@@ -26,11 +27,13 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
         "   a.no_index AS noIndex, " +
         "   a.comment_instructor AS commentInstructor, " +
         "   a.datetime AS datetime, " +
-        "   a.file_name AS fileName " +
+        "   a.file_name AS fileName, " +
+        "   CONCAT(s.first_name, ' ', s.last_name) AS studentName " +
         "FROM " +
         "   student_course sc " +
         "   INNER JOIN student_course_answer sca ON sca.student_course_id = sc.id " +
         "   INNER JOIN answer a ON a.id = sca.answer_id " +
+        "   INNER JOIN student s ON s.id = sc.student_id " +
         "WHERE " +
         "   sc.course_id = :courseId " +
         "   AND a.chapter_index = :chapterIndex " +
