@@ -122,6 +122,7 @@ public class AdminReportService {
         .stream()
         .map(r -> PendingCommentReportResponse.builder()
             .id(r.getId())
+            .comment(r.getComment().getComment())
             .reportReason(r.getReasonReport().getDescription())
             .studentId(r.getStudent().getId())
             .reporterName(r.getStudent().getFirstName())
@@ -129,38 +130,28 @@ public class AdminReportService {
         .collect(Collectors.toList());
   }
 
-  public PostWithReportedCommentResponse getPostWithReportedComment(Long commentReportId, String username) {
+  public void changePendingCommentReportState(Long commentReportId, Boolean isApproved, String username) {
+    log.info("Change pending comment report, admin: {}", username);
     ReportState pendingState = reportStateRepo.findByName(reportStateProperties.getPending());
     CommentReport pendingCommentReport = commentReportRepo
         .findByIdAndReportState(commentReportId, pendingState)
-        .orElseThrow(() -> new NotFoundException("Comment report not found"));
+        .orElseThrow(() -> new NotFoundException("Post report not found"));
+    ReportState newReportState;
 
-    Comment reportedComment = pendingCommentReport.getComment();
-    Post post = reportedComment.getPost();
-    List<Comment> commentList = post.getComments()
-        .stream()
-        .filter(Comment::isVisible)
-        .map(c -> Comment.builder()
-            .id(c.getId())
-            .comment(c.getComment())
-            .student(Student.builder()
-                .id(c.getStudent().getId())
-                .firstName(c.getStudent().getFirstName())
-                .build())
-            .build())
-        .collect(Collectors.toList());
+    if (isApproved) {
+      newReportState = reportStateRepo.findByName(reportStateProperties.getApproved());
+      List<CommentReport> pendingCommentReports = commentReportRepo
+          .findAllByReportStateAndComment(pendingState, pendingCommentReport.getComment());
+      pendingCommentReports.stream().forEach(r -> {
+        r.setReportState(newReportState);
+        commentReportRepo.save(r);
+      });
+      pendingCommentReport.getComment().setVisible(false);
+    } else {
+      newReportState = reportStateRepo.findByName(reportStateProperties.getRejected());
+    }
 
-    return PostWithReportedCommentResponse.builder()
-        .reportId(commentReportId)
-        .reportedCommentId(reportedComment.getId())
-        .reportReason(pendingCommentReport.getReasonReport().getDescription())
-        .studentId(pendingCommentReport.getStudent().getId())
-        .reporterName(pendingCommentReport.getStudent().getFirstName())
-        .post(Post.builder()
-            .topic(post.getTopic())
-            .detail(post.getDetail())
-            .build())
-        .commentList(commentList)
-        .build();
+    pendingCommentReport.setReportState(newReportState);
+    commentReportRepo.save(pendingCommentReport);
   }
 }

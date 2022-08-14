@@ -14,10 +14,7 @@ import React, {useEffect, useState} from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {useNavigate} from "react-router-dom";
 import {
-  URL_GET_ALL_PENDING_COURSES, URL_GET_ALL_PENDING_POST_REPORTS,
-  URL_GET_ALL_PENDING_REVIEW_REPORTS,
-  URL_PUT_PENDING_COURSE, URL_PUT_PENDING_POST_REPORT,
-  URL_PUT_PENDING_REVIEW_REPORT
+  URL_GET_ALL_PENDING_COMMENT_REPORTS, URL_PUT_PENDING_COMMENT_REPORT,
 } from "../utils/url";
 import CheckIcon from "@mui/icons-material/Check";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -34,39 +31,35 @@ const PendingCommentReportList = () => {
 
   const [pendingCommentReports, setPendingCommentReports] = useState([]);
   const [isFinishFetching, setIsFinishFetching] = useState(false);
-  const [selectedReport, setSelectedReport] = useState(null);
-  // const [isApproving, setIsApproving] = useState(false);
-  // const [isRejecting, setIsRejecting] = useState(false);
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
 
   useEffect(() => {
-    axiosPrivate.get(URL_GET_ALL_PENDING_POST_REPORTS)
+    axiosPrivate.get(URL_GET_ALL_PENDING_COMMENT_REPORTS)
       .then(response => setPendingCommentReports(response.data))
       .then(() => setIsFinishFetching(true))
       .catch(err => console.error(err));
   }, [axiosPrivate])
 
-  // const handleApproval = async (isApproved, reportId) => {
-  //   try {
-  //     isApproved ? setIsApproving(true) : setIsRejecting(false)
-  //     const url = URL_PUT_PENDING_POST_REPORT.replace('{postReportId}', reportId)
-  //     await axiosPrivate.put(url,
-  //       null,
-  //       {
-  //         params: {
-  //           isApproved: isApproved
-  //         }
-  //       }
-  //     );
-  //     await axiosPrivate.get(URL_GET_ALL_PENDING_POST_REPORTS)
-  //       .then(response => setPendingCommentReports(response.data))
-  //   } catch (err) {
-  //     console.error(err)
-  //   } finally {
-  //     isApproved ? setIsApproving(false) : setIsRejecting(false)
-  //   }
-  // }
-  const handleCollapse = (newSelectedReport) => {
-    setSelectedReport(newSelectedReport !== selectedReport ? newSelectedReport : null)
+  const handleApproval = async (isApproved, reportId) => {
+    try {
+      isApproved ? setIsApproving(true) : setIsRejecting(false)
+      const url = URL_PUT_PENDING_COMMENT_REPORT.replace('{commentReportId}', reportId)
+      await axiosPrivate.put(url,
+        null,
+        {
+          params: {
+            isApproved: isApproved
+          }
+        }
+      );
+      await axiosPrivate.get(URL_GET_ALL_PENDING_COMMENT_REPORTS)
+        .then(response => setPendingCommentReports(response.data))
+    } catch (err) {
+      console.error(err)
+    } finally {
+      isApproved ? setIsApproving(false) : setIsRejecting(false)
+    }
   }
 
   if (!isFinishFetching) {
@@ -84,44 +77,55 @@ const PendingCommentReportList = () => {
       >
         <TableHead>
           <TableRow>
-            <TableCell >Report ID</TableCell>
+            <TableCell>Reported Comment</TableCell>
             <TableCell>Report Reason</TableCell>
             <TableCell>Reporter</TableCell>
-            <TableCell style={{width: 100}}/>
+            <TableCell/>
           </TableRow>
         </TableHead>
         <TableBody>
           {pendingCommentReports.map((report => (
-            <React.Fragment key={report.id}>
-              <TableRow
-                sx={{'& > *': { borderBottom: 'unset' }}}
-                hover
-              >
-                <TableCell>#{report.id}</TableCell>
-                <TableCell>{report.reportReason}</TableCell>
-                <TableCell>{`${report.reporterName}#${report.studentId}`}</TableCell>
-                <TableCell>
-                  <IconButton
-                    aria-label="expand row"
-                    size="small"
-                    onClick={() => {
-                      handleCollapse(report.id)
-                    }}
+            <TableRow
+              key={report.id}
+              sx={{'&:last-child td, &:last-child th': {border: 0}}}
+              hover
+            >
+              <TableCell>{report.comment}</TableCell>
+              <TableCell>{report.reportReason}</TableCell>
+              <TableCell>{`${report.reporterName}#${report.studentId}`}</TableCell>
+              <TableCell align='right'>
+                <Stack
+                  direction='row'
+                  alignItems='center'
+                  justifyContent='flex-end'
+                  spacing={1}
+                >
+                  <LoadingButton
+                    size='small'
+                    disabled={isRejecting}
+                    variant='contained'
+                    loading={isApproving}
+                    loadingPosition="start"
+                    startIcon={<CheckIcon/>}
+                    onClick={() => handleApproval(true, report.id)}
                   >
-                    {selectedReport === report.id ? <KeyboardArrowUpIcon/> : <KeyboardArrowDownIcon/>}
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                  <Collapse in={selectedReport === report.id} timeout='auto' unmountOnExit>
-                    <Stack alignItems='center' sx={{mt: 5}}>
-                      <PostWithReportedComment selectedReport={selectedReport}/>
-                    </Stack>
-                  </Collapse>
-                </TableCell>
-              </TableRow>
-            </React.Fragment>
+                    Approve
+                  </LoadingButton>
+                  <LoadingButton
+                    size='small'
+                    color="error"
+                    disabled={isApproving}
+                    variant='outlined'
+                    loading={isRejecting}
+                    loadingPosition="end"
+                    endIcon={<CloseIcon/>}
+                    onClick={() => handleApproval(false, report.id)}
+                  >
+                    Reject
+                  </LoadingButton>
+                </Stack>
+              </TableCell>
+            </TableRow>
           )))}
         </TableBody>
       </Table>

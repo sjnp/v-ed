@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class PendingCommentReportResponse {
   private Long id;
+  private String comment;
   private String reportReason;
   private Long studentId;
   private String reporterName;
