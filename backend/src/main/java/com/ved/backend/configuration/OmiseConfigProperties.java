@@ -18,6 +18,7 @@ public class OmiseConfigProperties {
     private String publicKey;
     private String secretKey;
     private String recipientUrl;
+    private String transferUrl;
     private String sourceUrl;
     private String chargeUrl;
     private String returnUrl;
