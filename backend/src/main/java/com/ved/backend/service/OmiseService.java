@@ -200,34 +200,11 @@ public class OmiseService {
         }
     }
 
-//    public String markChargeAsPaid(String chargeId) {
-//        try {
-//            String base64Creds = getBase64SecretKey();
-//            String url = omiseKey.getChargeUrl() + "/" + chargeId + "/mark_as_paid";
-//            RestTemplate restTemplate = new RestTemplate();
-//            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//            headers.add("Authorization", "Basic " + base64Creds);
-//            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
-//            HttpEntity<?> request = new HttpEntity<Object>(body, headers);
-//            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-//            JSONObject responseJson = new JSONObject(response);
-//            String authorizeUri = responseJson.get("authorize_uri").toString();
-//            log.info(authorizeUri);
-//            return authorizeUri;
-//        }
-//        catch (Exception error) {
-//            System.out.println(error.getMessage());
-//            return error.getMessage();
-//        }
-//    }
 
     public boolean checkChargeStatus(String chargeId) {
         try {
             String base64Creds = getBase64SecretKey();
             String url = omiseKey.getChargeUrl() + '/' + chargeId;
-            log.info(url);
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
             HttpHeaders headers = new HttpHeaders();
@@ -246,5 +223,72 @@ public class OmiseService {
         }
     }
 
-//    public String create
+    public String createTransferToRecipient (String amount , String recipientId) {
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = omiseKey.getTransferUrl();
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+            body.add("amount", amount);
+            body.add("recipient", recipientId);
+            HttpEntity<?> request = new HttpEntity<Object>(body, headers);
+            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
+            JSONObject responseJson = new JSONObject(response);
+            String transferId = responseJson.get("id").toString();
+            log.info(transferId);
+            return transferId;
+        }
+        catch (Exception error) {
+            System.out.println(error.getMessage());
+            return error.getMessage();
+        }
+    }
+
+    public boolean markTransferAsSent(String transferId) {
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = omiseKey.getTransferUrl() + '/' + transferId + "/mark_as_sent";
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
+            JSONObject responseJson = new JSONObject(response);
+            String sent = responseJson.get("sent").toString();
+            boolean status = Boolean.parseBoolean(sent);
+            return status;
+        }
+        catch (Exception error) {
+            System.out.println(error.getMessage());
+            return false;
+        }
+    }
+
+    public boolean markTransferAsPaid(String transferId) {
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = omiseKey.getTransferUrl() + '/' + transferId + "/mark_as_paid";
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
+            JSONObject responseJson = new JSONObject(response);
+            String paid = responseJson.get("paid").toString();
+            boolean status = Boolean.parseBoolean(paid);
+            return status;
+        }
+        catch (Exception error) {
+            System.out.println(error.getMessage());
+            return false;
+        }
+    }
 }
