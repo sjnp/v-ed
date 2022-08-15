@@ -8,14 +8,20 @@ import java.util.stream.Collectors;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.ConflictException;
+
 import com.ved.backend.model.*;
+import com.ved.backend.model.Course;
+import com.ved.backend.model.Instructor;
+import com.ved.backend.model.Student;
+import com.ved.backend.model.StudentCourse;
+
 import com.ved.backend.repo.CourseRepo;
+import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.response.ChargeResponse;
 import com.ved.backend.response.CourseCardResponse;
 
-import com.ved.backend.response.CourseResponse;
 import lombok.AllArgsConstructor;
 
 import org.slf4j.Logger;
@@ -29,14 +35,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class StudentCourseService {
 
   private final UserService userService;
-
-  private final CourseRepo courseRepo;
-  private final StudentCourseRepo studentCourseRepo;
+  private final CourseService courseService;
   private final OmiseService omiseService;
   private final CategoryService categoryService;
   private final CourseStateService courseStateService;
+
+  private final InstructorRepo instructorRepo;
+  private final CourseRepo courseRepo;
+  private final StudentCourseRepo studentCourseRepo;
   private final CourseStateProperties courseStateProperties;
-  private final CourseService courseService;
 
   private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
 
@@ -91,12 +98,18 @@ public class StudentCourseService {
         .orElseThrow(() -> new BadRequestException("studentCourse not found"));
     String chargeId = studentCourse.getChargeId();
     boolean isPaid = omiseService.checkChargeStatus(chargeId);
+    Long amountToStang = course.getPrice() * 100;
+    String transferAmount = amountToStang.toString();
+    Instructor instructor = course.getInstructor();
+    String recipientId = instructor.getRecipientId();
+    String transferId = omiseService.createTransferToRecipient(transferAmount, recipientId);
+    omiseService.markTransferAsSent(transferId);
+    omiseService.markTransferAsPaid(transferId);
     if (isPaid) {
-      log.info("If");
+      studentCourse.setTransferId(transferId);
       studentCourse.setPaySuccess(true);
       studentCourseRepo.save(studentCourse);
     } else {
-      log.info("try");
       studentCourseRepo.delete(studentCourse);
     }
     ChargeResponse chargeResponse = ChargeResponse.builder()
@@ -133,7 +146,7 @@ public class StudentCourseService {
       return courseCardResponses;
     }
 
-    int [] selectIndexes = new Random()
+    int[] selectIndexes = new Random()
         .ints(0, courseCardResponses.size())
         .distinct()
         .limit(4)
