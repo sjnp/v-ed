@@ -1,5 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
+
+// component
+import InstructorDownloadAnswer from './InstructorDownloadAnswer'
+import InstructorCommentAnswer from './InstructorCommentAnswer'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
@@ -17,16 +21,22 @@ const AnswerInstructor = ({ answer }) => {
 
     const { answerId, chapterIndex, noIndex, datetime, fileName, commentInstructor, studentName } = answer
 
+    const [ isApproveAnswer, setIsApproveAnswer ] = useState(commentInstructor ? true : false)
+
+    const handleInstructorCommentSuccess = () => {
+        setIsApproveAnswer(true)
+    }
+
     return (
         <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Grid container spacing={4}>
                     <Grid item>
                     {
-                        commentInstructor === null ?
-                        <AssignmentIcon color='action' />
-                        :
+                        isApproveAnswer ?
                         <AssignmentTurnedInIcon color='success' />
+                        :
+                        <AssignmentIcon color='action' />
                     }
                     </Grid>
                     <Grid item>
@@ -68,10 +78,14 @@ const AnswerInstructor = ({ answer }) => {
             <AccordionDetails>
                 <Grid container>
                     <Grid item xs={12}>
-                        Download
+                        <InstructorDownloadAnswer />
                     </Grid>
                     <Grid item xs={12}>
-                        instructor comment
+                        <InstructorCommentAnswer
+                            answerId={answerId}
+                            commentInstructor={commentInstructor}
+                            onCommentSuccess={handleInstructorCommentSuccess}
+                        />
                     </Grid>
                 </Grid>
             </AccordionDetails>
