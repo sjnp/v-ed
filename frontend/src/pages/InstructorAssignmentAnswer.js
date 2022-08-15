@@ -4,8 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import InstructorMenu from '../components/InstructorMenu'
-import AssignmentChapterInstructor from '../components/AssignmentChapterInstructor'
 import LoadingCircle from '../components/LoadingCircle'
+import TextNotAnyData from '../components/TextNotAnyData'
+import AnswerInstructor from '../components/AnswerInstructor'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -18,15 +19,32 @@ import Link from '@mui/material/Link'
 import useApiPrivate from '../hooks/useApiPrivate'
 
 // url
-import { URL_GET_ASSIGNMENTS_COURSE_INSTRUCTOR } from '../utils/url'
+import { URL_GET_ASSIGNMENTS_ANSWER_INSTRUCTOR } from '../utils/url'
 
 const InstructorAssignmentAnswer = () => {
 
-    const { courseId, chapterIndex } = useParams()
+    const { courseId, chapterIndex, noIndex } = useParams()
     const navigate = useNavigate()
     const apiPrivate = useApiPrivate()
 
     const chapterNo = Number(chapterIndex) + 1
+
+    const [ answers, setAnswers ] = useState([])
+    const [ loading, setLoading ] = useState(true)
+
+    useEffect(async () => {
+        const url = URL_GET_ASSIGNMENTS_ANSWER_INSTRUCTOR
+            .replace('{courseId}', courseId)
+            .replace('{chapterIndex}', chapterIndex)
+            .replace('{noIndex}', noIndex)
+        const response = await apiPrivate.get(url)
+        if (response.status === 200) {
+            setAnswers(response.data)
+        } else {
+            alert('Fail')
+        }
+        setLoading(false)
+    }, [])
 
     const handleClickLinkBreadcrumbsAssignment = () => {
         navigate(`/instructor/course/${courseId}/assignment`)
@@ -48,10 +66,20 @@ const InstructorAssignmentAnswer = () => {
                         <Grid item xs={1}></Grid>
                         <Grid item xs={11}>
                             <Breadcrumbs>
-                                <Link underline='hover' color='default' sx={{ cursor: 'pointer' }} onClick={handleClickLinkBreadcrumbsAssignment}>
+                                <Link
+                                    underline='hover'
+                                    color='default'
+                                    sx={{ cursor: 'pointer' }}
+                                    onClick={handleClickLinkBreadcrumbsAssignment}
+                                >
                                     Assignment
                                 </Link>
-                                <Link underline='hover' color='default' sx={{ cursor: 'pointer' }} onClick={handleClickLinkBreadcrumbsChapter}>
+                                <Link
+                                    underline='hover'
+                                    color='default'
+                                    sx={{ cursor: 'pointer' }}
+                                    onClick={handleClickLinkBreadcrumbsChapter}
+                                >
                                     Chapter {chapterNo}
                                 </Link>
                                 <Typography color='black'>Answer</Typography>
@@ -60,18 +88,20 @@ const InstructorAssignmentAnswer = () => {
                     </Grid>
                     <Grid container>
                         <Grid item xs={1}></Grid>
-                        <Grid item xs={10} pt={2}>
-                            {/* {
-                                assignments.map((assignment, index) => (
-                                    <AssignmentChapterInstructor
-                                        key={index}
-                                        noIndex={assignment.noIndex}
-                                        detail={assignment.detail}
-                                    />
-                                ))
-                            } */}
-                            {/* <LoadingCircle loading={loading} centerY={true} /> */}
+                        <Grid item xs={11} pt={2}>
+                        {
+                            loading ?
+                                <LoadingCircle loading={loading} centerY={true} />    
+                                :
+                                answers.length > 0 ?
+                                    answers.map((answer, index) => (
+                                        <AnswerInstructor key={index} answer={answer} />
+                                    ))
+                                    :
+                                    <TextNotAnyData text='Not any answer.' />
+                        }
                         </Grid>
+                        <Grid item xs={1}></Grid>
                     </Grid>
                 </Grid>
             </Grid>
