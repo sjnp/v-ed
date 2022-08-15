@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.AnswerNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Answer;
 import com.ved.backend.model.Course;
@@ -7,6 +8,7 @@ import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.CommentAnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
 import com.ved.backend.response.AssignmentChapterResponse;
@@ -143,6 +145,16 @@ public class AssignmentService {
     public List<AnswerInstructor> getAssignmentAnswer(Long courseId, int chapterIndex, int noIndex, String username) {
         authService.authorizedInstructor(username, courseId);
         return answerRepo.findByCourseIdAndChapterIndexAndNoindex(courseId, chapterIndex, noIndex);
+    }
+
+    ////////////////////////////////
+
+    public void updateCommentInstructor(CommentAnswerRequest commentAnswerRequest, String username) {
+        authService.authorizedInstructor(username, commentAnswerRequest.getCourseId());
+        Answer answer = answerRepo.findById(commentAnswerRequest.getAnswerId())
+            .orElseThrow(() -> new AnswerNotFoundException(commentAnswerRequest.getAnswerId()));
+        answer.setCommentInstructor(commentAnswerRequest.getComment());
+        answerRepo.save(answer);
     }
 
 }
