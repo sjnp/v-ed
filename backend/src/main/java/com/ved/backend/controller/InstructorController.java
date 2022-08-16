@@ -243,6 +243,12 @@ public class InstructorController {
     return ResponseEntity.ok().body(response);
   }
 
+  @GetMapping("/courses/{courseId}/assignment/answer/{answerId}")
+  public ResponseEntity<String> getAnswerUrl(@PathVariable Long courseId, @PathVariable Long answerId, Principal principal) {
+    String response = assignmentService.getAnswerUrl(courseId, answerId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   @PutMapping("/assignment/answer/comment")
   public ResponseEntity<?> commentAnswer(@RequestBody CommentAnswerRequest commentAnswerRequest, Principal principal) {
     assignmentService.updateCommentInstructor(commentAnswerRequest, principal.getName());

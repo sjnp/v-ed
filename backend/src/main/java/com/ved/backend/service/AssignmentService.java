@@ -157,4 +157,23 @@ public class AssignmentService {
         answerRepo.save(answer);
     }
 
+    public String getAnswerUrl(Long courseId, Long answerId, String username) {
+        authService.authorizedInstructor(username, courseId);
+        Answer answer = answerRepo.findById(answerId)
+            .orElseThrow(() -> new AnswerNotFoundException(answerId));
+        String fileName = new StringBuilder()
+            .append("answer_sid_")
+            .append(answer.getStudentCourse().getStudent().getId())
+            .append("_cid_")
+            .append(courseId)
+            .append("_c")
+            .append(answer.getChapterIndex())
+            .append("_no.")
+            .append(answer.getNoIndex())
+            .append("_")
+            .append(answer.getFileName())
+            .toString();
+        return privateObjectStorageService.readFile(fileName, username);
+    }
+
 }
