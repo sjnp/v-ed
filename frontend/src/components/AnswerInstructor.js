@@ -19,7 +19,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
 
 const AnswerInstructor = ({ answer }) => {
 
-    const { answerId, chapterIndex, noIndex, datetime, fileName, commentInstructor, studentName } = answer
+    const { answerId, datetime, fileName, commentInstructor, studentName } = answer
 
     const [ isApproveAnswer, setIsApproveAnswer ] = useState(commentInstructor ? true : false)
 
@@ -78,7 +78,10 @@ const AnswerInstructor = ({ answer }) => {
             <AccordionDetails>
                 <Grid container>
                     <Grid item xs={12}>
-                        <InstructorDownloadAnswer />
+                        <InstructorDownloadAnswer
+                            answerId={answerId}
+                            fileName={fileName}
+                        />
                     </Grid>
                     <Grid item xs={12}>
                         <InstructorCommentAnswer

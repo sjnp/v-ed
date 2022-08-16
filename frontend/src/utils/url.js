@@ -28,6 +28,7 @@ export const URL_GET_REVIEWS_COURSE = '/api/instructors/courses/{courseId}/revie
 export const URL_GET_ASSIGNMENTS_COURSE_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments'
 export const URL_GET_ASSIGNMENTS_CHAPTER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}'
 export const URL_GET_ASSIGNMENTS_ANSWER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}/answer/{noIndex}'
+export const URL_GET_DOWNLOAD_ANSWER = '/api/instructors/courses/{courseId}/assignment/answer/{answerId}'
 export const URL_UPDATE_ANSWER_COMMENT_INSTRUCTOR = '/api/instructors/assignment/answer/comment'
 
 // admin

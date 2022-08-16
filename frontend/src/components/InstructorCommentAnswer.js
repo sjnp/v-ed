@@ -69,10 +69,10 @@ const InstructorCommentAnswer = ({ answerId, commentInstructor, onCommentSuccess
     }
 
     return (
-        <Box>
+        <Box mt={2}>
         {
             isCommentInstructor ?
-            <Grid container bgcolor='#f0f0f0' p={2} mt={2}>
+            <Grid container bgcolor='#f0f0f0' p={2} borderRadius={2}>
                 <Grid item xs={12}>
                     <Typography variant='caption' color='#777777'>
                         Comment instructor:
