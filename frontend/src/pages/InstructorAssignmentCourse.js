@@ -63,6 +63,7 @@ const InstructorAssignmentCourse = () => {
                                         key={index}
                                         chapterIndex={assignment.chapterIndex}
                                         chapterNo={assignment.chapterNo}
+                                        countNoti={assignment.countNoti}
                                     />
                                 ))
                             }

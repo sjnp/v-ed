@@ -5,8 +5,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
+import Badge from '@mui/material/Badge'
 
-const AssignmentCourseInstructor = ({ chapterIndex, chapterNo }) => {
+// Material UI icon
+import AssignmentIcon from '@mui/icons-material/Assignment';
+
+const AssignmentCourseInstructor = ({ chapterIndex, chapterNo, isNoti, countNoti }) => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
@@ -18,14 +22,13 @@ const AssignmentCourseInstructor = ({ chapterIndex, chapterNo }) => {
     return (
         <Paper sx={{ p: 2, width: '80%', m: 2, cursor: 'pointer' }} onClick={handleClickAssignmentChapter}>
             <Grid container>
-                <Grid item xs={10} pl={1}>
+                <Grid item xs={11} pl={1}>
                     <Typography variant='subtitle1'>Assignment chapter {chapterNo}</Typography>
                 </Grid>
-                <Grid item xs={1} color='gray' textAlign='right'>
-                    {/* TODO */}
-                </Grid>
                 <Grid item xs={1} color='gray' pl={1}>
-                    {/* TODO */}
+                    <Badge badgeContent={countNoti} color='error'>
+                        <AssignmentIcon />
+                    </Badge>
                 </Grid>
             </Grid>
         </Paper>

@@ -9,6 +9,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface AnswerRepo extends JpaRepository<Answer, Long> {
+
+    interface AnswerNoti {
+        Long getAnswerId();
+    }
+    @Query(
+        value =
+        "SELECT " +
+        "   a.id AS answerId " +
+        "FROM " +
+        "   student_course sc " +
+        "   INNER JOIN student_course_answer sca ON sca.student_course_id = sc.id " +
+        "   INNER JOIN answer a ON a.id = sca.answer_id " +
+        "WHERE " +
+        "   sc.course_id = :courseId " +
+        "   AND a.chapter_index = :chapterIndex " ,
+        nativeQuery = true
+    )
+    List<AnswerNoti> findInstructorNotCommentAnswerByCourseIdAndChapterIndex(Long courseId, int chapterIndex);
  
     interface AnswerInstructor {
         Long getAnswerId();

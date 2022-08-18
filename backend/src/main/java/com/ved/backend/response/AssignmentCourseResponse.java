@@ -17,4 +17,6 @@ public class AssignmentCourseResponse {
 
     private int chapterNo;
 
+    private int countNoti;
+
 }

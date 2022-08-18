@@ -7,6 +7,7 @@ import com.ved.backend.model.Course;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
 import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
+import com.ved.backend.repo.AnswerRepo.AnswerNoti;
 import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.request.CommentAnswerRequest;
 import com.ved.backend.response.AnswerResponse;
@@ -116,9 +117,11 @@ public class AssignmentService {
         List<AssignmentCourseResponse> assignmentCourseResponses = new ArrayList<AssignmentCourseResponse>();
         int size = course.getChapters().size();
         for (int i = 0; i < size; ++i) {
+            List<AnswerNoti> answerNotis = answerRepo.findInstructorNotCommentAnswerByCourseIdAndChapterIndex(courseId, i);
             AssignmentCourseResponse assignmentCourseResponse = AssignmentCourseResponse.builder()
                 .chapterIndex(i)
                 .chapterNo(i + 1)
+                .countNoti(answerNotis.size())
                 .build();
             assignmentCourseResponses.add(assignmentCourseResponse);
         }
