@@ -35,6 +35,8 @@ public class OverviewResponse {
     private String biography;
     private String occupation;
 
+    private String stateOfCourse;
+
     public OverviewResponse(Course course) {
         this.courseId = course.getId();
         this.courseName = course.getName();

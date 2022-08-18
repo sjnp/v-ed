@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import ReactPlayer from 'react-player'
 
 // component
@@ -16,18 +17,33 @@ import Skeleton from '@mui/material/Skeleton';
 import overviewService from '../services/overview';
 
 // custom hook
+import useApiPrivate from '../hooks/useApiPrivate'
 import useReasonReport from '../hooks/useReasonReport'
+
+// url
+import { URL_GET_OVERVIEW_COURSE } from '../utils/url';
+
 
 const Overview = () => {
 
   const { courseId } = useParams()
+  const apiPrivate = useApiPrivate()
   const createReasonReportRedux = useReasonReport()
+
+  const username = useSelector((state) => state.auth.value.username);
 
   const [ overview, setOverview ] = useState({})
   const [ videoExampleURI, setVideoExampleURI ] = useState('')
 
   useEffect(async () => {
-    let response = await overviewService.getOverviewCourse(courseId)
+    let response;
+    if (username) {
+      const url = URL_GET_OVERVIEW_COURSE.replace('{courseId}', courseId)
+      response = await apiPrivate.get(url)
+    } else {
+      response = await overviewService.getOverviewCourse(courseId)
+    }
+
     if (response.status === 200) {
       setOverview(response.data)
       response = await overviewService.getExampleVideoCourse(courseId)
@@ -35,8 +51,9 @@ const Overview = () => {
         setVideoExampleURI(response.data)
       }
     }
+
     createReasonReportRedux()
-  }, [])
+  }, [username])
 
   return (
     <Container maxWidth="lg">
