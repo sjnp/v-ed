@@ -23,11 +23,29 @@ public interface AnswerRepo extends JpaRepository<Answer, Long> {
         "   INNER JOIN answer a ON a.id = sca.answer_id " +
         "WHERE " +
         "   sc.course_id = :courseId " +
-        "   AND a.chapter_index = :chapterIndex " ,
+        "   AND a.chapter_index = :chapterIndex " +
+        "   AND a.comment_instructor IS NULL " ,
         nativeQuery = true
     )
     List<AnswerNoti> findInstructorNotCommentAnswerByCourseIdAndChapterIndex(Long courseId, int chapterIndex);
  
+    @Query(
+        value =
+        "SELECT " +
+        "   a.id AS answerId " +
+        "FROM " +
+        "   student_course sc " +
+        "   INNER JOIN student_course_answer sca ON sca.student_course_id = sc.id " +
+        "   INNER JOIN answer a ON a.id = sca.answer_id " +
+        "WHERE " +
+        "   sc.course_id = :courseId " +
+        "   AND a.chapter_index = :chapterIndex " +
+        "   AND a.no_index = :noIndex " +
+        "   AND a.comment_instructor IS NULL " ,
+        nativeQuery = true
+    )
+    List<AnswerNoti> findInstructorNotCommentAnswerByCourseIdAndChapterIndexAndNoIndex(Long courseId, int chapterIndex, int noIndex);
+
     interface AnswerInstructor {
         Long getAnswerId();
         Integer getChapterIndex();

@@ -21,4 +21,6 @@ public class AssignmentChapterResponse {
 
     private String detail;
 
+    private Integer countNoti;
+
 }

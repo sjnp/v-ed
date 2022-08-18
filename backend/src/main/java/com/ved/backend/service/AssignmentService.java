@@ -110,8 +110,6 @@ public class AssignmentService {
         answerRepo.save(answer);
     }
 
-    //////////////////////////////////////////////////////////////////////////////////
-
     public List<AssignmentCourseResponse> getAssignmentCourse(Long courseId, String username) {
         Course course = authService.authorizedInstructor(username, courseId);
         List<AssignmentCourseResponse> assignmentCourseResponses = new ArrayList<AssignmentCourseResponse>();
@@ -135,11 +133,13 @@ public class AssignmentService {
             .get(chapterIndex)
             .getAssignments()
             .stream()
-            .map(asm -> new AssignmentChapterResponse(courseId, chapterIndex, null, asm.get("detail")))
+            .map(asm -> new AssignmentChapterResponse(courseId, chapterIndex, null, asm.get("detail"), null))
             .collect(Collectors.toList());
 
         for (int i = 0; i < assignments.size(); ++i) {
+            List<AnswerNoti> answerNotis = answerRepo.findInstructorNotCommentAnswerByCourseIdAndChapterIndexAndNoIndex(courseId, chapterIndex, i);
             assignments.get(i).setNoIndex(i);
+            assignments.get(i).setCountNoti(answerNotis.size());
         }
 
         return assignments;
@@ -149,8 +149,6 @@ public class AssignmentService {
         authService.authorizedInstructor(username, courseId);
         return answerRepo.findByCourseIdAndChapterIndexAndNoindex(courseId, chapterIndex, noIndex);
     }
-
-    ////////////////////////////////
 
     public void updateCommentInstructor(CommentAnswerRequest commentAnswerRequest, String username) {
         authService.authorizedInstructor(username, commentAnswerRequest.getCourseId());

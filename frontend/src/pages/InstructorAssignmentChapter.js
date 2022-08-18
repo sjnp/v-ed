@@ -76,6 +76,7 @@ const InstructorAssignmentChapter = () => {
                                         key={index}
                                         noIndex={assignment.noIndex}
                                         detail={assignment.detail}
+                                        countNoti={assignment.countNoti}
                                     />
                                 ))
                             }

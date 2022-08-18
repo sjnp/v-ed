@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid'
 import Badge from '@mui/material/Badge'
 
 // Material UI icon
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment'
 
 const AssignmentCourseInstructor = ({ chapterIndex, chapterNo, isNoti, countNoti }) => {
 
