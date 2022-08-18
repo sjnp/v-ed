@@ -59,6 +59,7 @@ const Home = () => {
 
     } else {
       setMyCourse([])
+      setLoadingMyCourse(false)
       // let response = await overviewService.getOverviewCategory('ACADEMIC')
       // handleSetStateCategory(setAcademic, response)
       // response = await overviewService.getOverviewCategory('ART')
