@@ -33,6 +33,7 @@ const Home = () => {
   const [design, setDesign] = useState([])
   const [programming, setProgramming] = useState([])
 
+  const [isFirstRender, setIsFirstRender] = useState(true)
   const [loadingMyCourse, setLoadingMyCourse] = useState(false)
   const [loadingCategories, setLoadingCategories] = useState(true)
 
@@ -44,6 +45,7 @@ const Home = () => {
       await axiosPrivate.get(URL_GET_COURSE_SAMPLES)
         .then(res => setMyCourse(res.data))
         .catch(err => err.response)
+      setLoadingMyCourse(false)
       let response = await getPrivateOverviewCategory('ACADEMIC')
       handleSetStateCategory(setAcademic, response)
       response = await getPrivateOverviewCategory('ART')
@@ -57,6 +59,26 @@ const Home = () => {
 
     } else {
       setMyCourse([])
+      // let response = await overviewService.getOverviewCategory('ACADEMIC')
+      // handleSetStateCategory(setAcademic, response)
+      // response = await overviewService.getOverviewCategory('ART')
+      // handleSetStateCategory(setArt, response)
+      // response = await overviewService.getOverviewCategory('BUSINESS')
+      // handleSetStateCategory(setBusiness, response)
+      // response = await overviewService.getOverviewCategory('DESIGN')
+      // handleSetStateCategory(setDesign, response)
+      // response = await overviewService.getOverviewCategory('PROGRAMMING')
+      // handleSetStateCategory(setProgramming, response)
+    }
+
+    if (loadingCategories) {
+      setLoadingCategories(false)
+    }
+  }, [usernameRedux])
+
+  useEffect(async () => {
+
+    if (isFirstRender) {
       let response = await overviewService.getOverviewCategory('ACADEMIC')
       handleSetStateCategory(setAcademic, response)
 
@@ -71,37 +93,15 @@ const Home = () => {
 
       response = await overviewService.getOverviewCategory('PROGRAMMING')
       handleSetStateCategory(setProgramming, response)
+
+      setIsFirstRender(false)
     }
-    setLoadingMyCourse(false)
+
     if (loadingCategories) {
       setLoadingCategories(false)
     }
-  }, [usernameRedux])
 
-  // useEffect(async () => {
-  //
-  //   if (usernameRedux === '') {
-  //     let response = await overviewService.getOverviewCategory('ACADEMIC')
-  //     handleSetStateCategory(setAcademic, response)
-  //
-  //     response = await overviewService.getOverviewCategory('ART')
-  //     handleSetStateCategory(setArt, response)
-  //
-  //     response = await overviewService.getOverviewCategory('BUSINESS')
-  //     handleSetStateCategory(setBusiness, response)
-  //
-  //     response = await overviewService.getOverviewCategory('DESIGN')
-  //     handleSetStateCategory(setDesign, response)
-  //
-  //     response = await overviewService.getOverviewCategory('PROGRAMMING')
-  //     handleSetStateCategory(setProgramming, response)
-  //   }
-  //
-  //   if (loadingCategories) {
-  //     setLoadingCategories(false)
-  //   }
-  //
-  // }, [])
+  }, [])
 
   const getPrivateOverviewCategory = async (category) => {
     const url = URL_GET_OVERVIEWS_FROM_CATEGORY.replace('{name}', category)
