@@ -66,7 +66,7 @@ public class GetOverviewCourseIT {
         resultActions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", is(notNullValue())))
-            .andExpect(jsonPath("$.*", hasSize(15)))
+            .andExpect(jsonPath("$.*", hasSize(16)))
             .andExpect(jsonPath("$.courseId").value(courseId));
     }
 
