@@ -165,11 +165,7 @@ public class StudentController {
     reportService.createReport(principal.getName(), reportRequest);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
-
-<<<<<<< HEAD
-=======
-  // ------------------------------------------------------------------------------------------------------
->>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
+  
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());

@@ -16,7 +16,6 @@ import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 
 import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.response.ChargeResponse;
@@ -33,43 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class StudentCourseService {
-
-<<<<<<< HEAD
-    private final UserService userService;
-
-    private final CourseRepo courseRepo;
-    private final StudentCourseRepo studentCourseRepo;
-
-    private static final Logger log = LoggerFactory.getLogger(StudentCourseService.class);
-
-    public void buyFreeCourse(String username, Long courseId) {
-        log.info("username: {} buy free course id: {}", username, courseId);
-        Student student = userService.getStudent(username);
-        Course course = courseRepo
-            .findByIdAndPrice(courseId, 0L)
-            .orElseThrow(() -> new BadRequestException("This course not free"));
-
-        if (course.getInstructor().getStudent().getAppUser().getUsername().equals(username)) {
-            throw new BadRequestException("You own this course");
-        }
-
-        boolean isExists = studentCourseRepo.existsByStudentAndCourse(student, course);
-        if (isExists) {
-            throw new ConflictException("You have this course already");
-        }
-        StudentCourse studentCourse = StudentCourse.builder()
-            .student(student)
-            .course(course)
-            .build();
-        studentCourseRepo.save(studentCourse);
-=======
+  
   private final UserService userService;
   private final CourseService courseService;
   private final OmiseService omiseService;
   private final CategoryService categoryService;
   private final CourseStateService courseStateService;
 
-  private final InstructorRepo instructorRepo;
   private final CourseRepo courseRepo;
   private final StudentCourseRepo studentCourseRepo;
   private final CourseStateProperties courseStateProperties;
@@ -82,6 +51,11 @@ public class StudentCourseService {
     Course course = courseRepo
         .findByIdAndPrice(courseId, 0L)
         .orElseThrow(() -> new BadRequestException("This course not free"));
+
+    if (course.getInstructor().getStudent().getAppUser().getUsername().equals(username)) {
+        throw new BadRequestException("You own this course");
+    }
+    
     boolean isExists = studentCourseRepo.existsByStudentAndCourse(student, course);
     if (isExists) {
       throw new ConflictException("You have this course already");
@@ -140,7 +114,6 @@ public class StudentCourseService {
       studentCourseRepo.save(studentCourse);
     } else {
       studentCourseRepo.delete(studentCourse);
->>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
     }
     ChargeResponse chargeResponse = ChargeResponse.builder()
         .payState(isPaid)

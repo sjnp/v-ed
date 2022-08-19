@@ -1,10 +1,6 @@
 package com.ved.backend.controller;
 
 import java.security.Principal;
-<<<<<<< HEAD
-=======
-import java.util.ArrayList;
->>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
 import java.util.List;
 import java.util.Objects;
 
@@ -27,11 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class OverviewController {
 
     private final PublicService publicService;
-<<<<<<< HEAD
     private final CourseService courseService;
-=======
     private final StudentCourseService studentCourseService;
->>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<List<CourseCardResponse>> getOverviewCategory(@PathVariable String categoryName,
