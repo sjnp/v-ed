@@ -8,6 +8,7 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.utility.FileExtensionStringHandler;
@@ -30,6 +31,7 @@ public class InstructorService {
   private final InstructorRepo instructorRepo;
 
   private final UserService userService;
+  private final OmiseService omiseService;
   private final CourseStateService courseStateService;
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
@@ -40,6 +42,21 @@ public class InstructorService {
   private final PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorService.class);
+
+  public String getOmiseAccountData(String username){
+    Instructor instructor = userService.getInstructor(username);
+    String recipientId = instructor.getRecipientId();
+    String response = omiseService.getRecipientData(recipientId);
+    return response;
+  }
+
+  public String updateFinanceAccount(FinanceDataRequest financeDataRequest, String username){
+    Instructor instructor = userService.getInstructor(username);
+    String recipientId = instructor.getRecipientId();
+    String response = omiseService.updateRecipient(financeDataRequest, recipientId);
+    omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
+    return response;
+  }
 
   public HashMap<String, Long> createCourse(Course course, String username) {
     Instructor instructor = userService.getInstructor(username);

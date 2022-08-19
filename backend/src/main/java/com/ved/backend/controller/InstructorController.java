@@ -1,12 +1,17 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.model.Course;
+<<<<<<< HEAD
 import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
 import com.ved.backend.request.CommentAnswerRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.response.AssignmentChapterResponse;
 import com.ved.backend.response.AssignmentCourseResponse;
 import com.ved.backend.response.CommentResponse;
+=======
+import com.ved.backend.request.FinanceDataRequest;
+>>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PostCardResponse;
 import com.ved.backend.response.PostCommentResponse;
@@ -39,6 +44,26 @@ public class InstructorController {
   private final ReviewService reviewService;
   private final PostService postService;
   private final AssignmentService assignmentService;
+
+  @GetMapping(path = "/finance/getAccount")
+  public ResponseEntity<?> getAccountData(Principal principal) {
+    try {
+      String response = instructorService.getOmiseAccountData(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
+
+  @PatchMapping(path = "/finance/updateAccount")
+  public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
+    try {
+      String response = instructorService.updateFinanceAccount(finance, principal.getName());
+      return ResponseEntity.ok().body(response);
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {

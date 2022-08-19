@@ -22,7 +22,7 @@ public class SearchController {
 
     @GetMapping
     public ResponseEntity<List<CourseCardResponse>> search(
-        @RequestParam(name = "name") String courseName,
+        @RequestParam(name = "name", required = false) String courseName,
         @RequestParam(name = "category", required = false) String categoryName,
         @RequestParam(name = "min_price", required = false) Long minPrice,
         @RequestParam(name = "max_price", required = false) Long maxPrice,

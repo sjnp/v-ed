@@ -1,6 +1,8 @@
 package com.ved.backend.service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import com.ved.backend.configuration.CourseStateProperties;
@@ -33,9 +35,23 @@ public class PublicService {
         Category category = categoryService.getByName(categoryName);
         CourseState courseState = courseStateService.getByName(courseStateProperties.getPublished());
         List<Course> courses = courseService.getByCategoryAndCourseState(category, courseState);
-        return courses
+        List<CourseCardResponse> courseCardResponseList = courses
             .stream()
             .map((c) -> new CourseCardResponse(c))
+            .collect(Collectors.toList());
+
+        if (courseCardResponseList.size() < 5) {
+            return courseCardResponseList;
+        }
+
+        int[] selectIndexes = new Random()
+            .ints(0, courseCardResponseList.size())
+            .distinct()
+            .limit(4)
+            .toArray();
+
+        return Arrays.stream(selectIndexes)
+            .mapToObj(courseCardResponseList::get)
             .collect(Collectors.toList());
     }
 

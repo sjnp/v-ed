@@ -1,13 +1,20 @@
-import axios from '../api/axios'
+import axios, {axiosPrivate} from '../api/axios'
 
 // url
 import { URL_GET_OVERVIEWS_FROM_CATEGORY } from "../utils/url";
 import { URL_GET_OVERVIEW_COURSE } from '../utils/url';
 import { URL_GET_VIDEO_EXAMPLE } from '../utils/url';
 
+
 const getOverviewCategory = async (category) => {
     const url = URL_GET_OVERVIEWS_FROM_CATEGORY.replace('{name}', category)
     return axios.get(url).then(res => res.data).catch(err => err.response)
+}
+
+const getPrivateOverviewCategory = async (category) => {
+
+    const url = URL_GET_OVERVIEWS_FROM_CATEGORY.replace('{name}', category)
+    return axiosPrivate.get(url).then(res => res.data).catch(err => err.response)
 }
 
 const getOverviewCourse = async (courseId) => {
@@ -22,6 +29,7 @@ const getExampleVideoCourse = async (courseId) => {
 
 const overviewService = {
     getOverviewCategory,
+    getPrivateOverviewCategory,
     getOverviewCourse,
     getExampleVideoCourse
 }

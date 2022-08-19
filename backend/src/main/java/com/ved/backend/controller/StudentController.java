@@ -1,12 +1,7 @@
 package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
-import com.ved.backend.request.AnswerRequest;
-import com.ved.backend.request.BuyCourseRequest;
-import com.ved.backend.request.CommentRequest;
-import com.ved.backend.request.PostRequest;
-import com.ved.backend.request.ReportRequest;
-import com.ved.backend.request.ReviewRequest;
+import com.ved.backend.request.*;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
 import lombok.AllArgsConstructor;
@@ -31,12 +26,31 @@ public class StudentController {
   private final PostService postService;
   private final ReportService reportService;
 
+
+  @PostMapping(path = "/finance/active-instrustor")
+  public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
+    String response = studentService.activeInstructor(finance, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
   @PostMapping("/course/free")
   public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
     studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @PostMapping(path = "/purchase/course")
+  public ResponseEntity<?> buyCourse(@RequestBody ChargeDataRequest chargeData, Principal principal) {
+    ChargeResponse chargeResponse = studentCourseService.buyCourse(chargeData, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
+  }
+
+  @PostMapping(path = "/purchase/check-purchase")
+  public ResponseEntity<?> checkBuyCourse(@RequestBody Long courseId, Principal principal) {
+    ChargeResponse chargeResponse = studentCourseService.checkBuyCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
+  }
+  
   // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
   public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
@@ -152,6 +166,10 @@ public class StudentController {
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+<<<<<<< HEAD
+=======
+  // ------------------------------------------------------------------------------------------------------
+>>>>>>> 95c085c39956930d803b9a31b9cbae511b40217b
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());

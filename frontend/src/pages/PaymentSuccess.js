@@ -1,5 +1,6 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom';
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 // Material Ui component
 import Container from '@mui/material/Container'
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
+import Skeleton from '@mui/material/Skeleton';
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
@@ -17,10 +19,30 @@ import AppBarSearchHeader from '../components/AppBarSearchHeader'
 
 const PaymentSuccess = () => {
 
-    // const { courseId } = useParams()
+    const { courseId } = useParams()
+    const [isPaid,setIsPaid] = useState(false);
+    const [isDataLoad,setIsDataLoad] = useState(false);
+    const [isNull,setIsNull] = useState(false);
+    const axiosPrivate = useAxiosPrivate();
 
     const navigate = useNavigate()
 
+    useEffect(async () => {
+        try {
+            const result = await axiosPrivate.post("/api/students/purchase/check-purchase", courseId ).catch()
+            console.log(result.data.payState);
+            console.log(result);
+            setIsPaid(result.data.payState)
+            setIsDataLoad(true);
+        }
+        catch(error){
+            console.log(error)
+            setIsNull(true)
+            setIsDataLoad(true);
+        }
+        
+      }, [])
+       
     // const handleClickGotoCourseLibrary = () => {
     //     navigate(`/student/course`)
     // }
@@ -39,18 +61,38 @@ const PaymentSuccess = () => {
                         Your payment has been processed successfully.
                     </Typography>
                 </Grid> */}
+                
                 <Grid item marginBottom={3}>
-                    <Alert severity="success">
-                        <AlertTitle>Success</AlertTitle>
-                        {/* This is a success alert — <strong>check it out!</strong> */}
-                        Your payment has been processed successfully
-                    </Alert>
+                {!isDataLoad ? 
+                    <Skeleton variant="rectangular" height={150} />
+                    : 
+                    isPaid ? 
+                        <Alert severity="success">
+                            <AlertTitle>Payment Success</AlertTitle>
+                            Your payment has been processed successfully.
+                        </Alert>
+                        :
+                        isNull ?
+                        <Alert severity="warning">
+                            <AlertTitle>Payment Failed</AlertTitle>
+                            Your payment has problem occur. 
+                        </Alert>
+                        :
+                        <Alert severity="error">
+                            <AlertTitle>Payment Failed</AlertTitle>
+                            Your payment has problem occur. 
+                        </Alert>
+                }
                 </Grid>
                 <Grid item>
+                {isDataLoad ? 
                     <Button variant='contained' onClick={() => navigate(`/student/course`)}>
                         Go to my course
                     </Button>
-                </Grid>   
+                    :
+                    <Skeleton variant="text" />
+                }
+                </Grid> 
             </Grid> 
 
             {/* <Box display='flex'  flexDirection='column' alignItems='center' alignContent='center'>
