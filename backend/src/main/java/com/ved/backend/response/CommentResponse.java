@@ -27,6 +27,8 @@ public class CommentResponse {
     
     private String commentState;
 
+    private String commentUsername;
+
     private String profilePictureUrl;
     
     private String firstname;
@@ -39,6 +41,7 @@ public class CommentResponse {
         this.commentDateTime = comment.getCommentDateTime();
         this.visible = comment.isVisible();
         this.commentState = comment.getCommentState().getName();
+        this.commentUsername = comment.getStudent().getAppUser().getUsername();
         this.profilePictureUrl = comment.getStudent().getProfilePicUri();
         this.firstname = comment.getStudent().getFirstName();
         this.lastname = comment.getStudent().getLastName();

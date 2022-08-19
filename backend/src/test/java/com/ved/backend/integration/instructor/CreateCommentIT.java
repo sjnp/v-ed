@@ -1,4 +1,4 @@
-package com.ved.backend.integration.student.post;
+package com.ved.backend.integration.instructor;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ import com.ved.backend.util.MockDatabase;
 @AutoConfigureMockMvc
 @TestMethodOrder(OrderAnnotation.class)
 public class CreateCommentIT {
-
+    
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,50 +57,23 @@ public class CreateCommentIT {
         mockDatabase.clear();
         mockDatabase.mock_app_role();
         mockDatabase.mock_register_student();
-        mockDatabase.mock_instructor();
+        mockDatabase.mock_register_instructor();
         mockDatabase.mock_category();
         mockDatabase.mock_course_state();
-        mockDatabase.mock_course(1000L, "PUBLISHED", "BUSINESS");
+        mockDatabase.mock_course(1000L, "PUBLISHED", "DESIGN");
 
         Student student = appUserRepo.findByUsername("student@test.com").getStudent();
         Course course = courseRepo.findAll().get(0);
         mockDatabase.mock_student_course(student, course);
-        mockDatabase.mock_comment_state();
         mockDatabase.mock_post(course.getId(), "Topic mock test", "Detail mock test");
+        mockDatabase.mock_comment_state();
     }
 
     @Test
     @Order(2)
-    public void givenPostId_whenNull_thenReturnBadRequestStatus() throws Exception {
-        // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
-        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
-
-        // given
-        Long courseId = courseRepo.findAll().get(0).getId();
-        Long postId = null;
-        CommentRequest commentRequest = CommentRequest.builder()
-            .comment("Test comment")
-            .build();
-        String payload = objectMapper.writeValueAsString(commentRequest);
-
-        // when
-        ResultActions resultActions = mockMvc.perform(
-            post("/api/students/courses/" + courseId + "/posts/" + postId + "/comment")
-                .header(HttpHeaders.AUTHORIZATION, accessToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(payload)
-        );
-
-        // then
-        resultActions.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    @Order(3)
     public void givenComment_whenNull_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -113,7 +86,7 @@ public class CreateCommentIT {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/courses/" + courseId + "/posts/" + postId + "/comment")
+            post("/api/instructors/courses/" + courseId +"/posts/" + postId + "/comment")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload)
@@ -126,10 +99,10 @@ public class CreateCommentIT {
     }
 
     @Test
-    @Order(4)
-    public void givenComment_whenLengthMoreThan1000_thenReturnBadRequestStatus() throws Exception {
+    @Order(3)
+    public void givenComment_whenMoreThan1000Characters_thenReturnBadRequestStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
@@ -142,7 +115,7 @@ public class CreateCommentIT {
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/courses/" + courseId + "/posts/" + postId + "/comment")
+            post("/api/instructors/courses/" + courseId +"/posts/" + postId + "/comment")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload)
@@ -155,23 +128,52 @@ public class CreateCommentIT {
     }
 
     @Test
+    @Order(4)
+    public void givenCourseId_whenNotOwner_thenReturnUnauthorizedStatus() throws Exception {
+        // login
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
+        String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
+
+        // given
+        Long courseId = 0L;
+        Long postId = postRepo.findAll().get(0).getId();
+        CommentRequest commentRequest = CommentRequest.builder()
+            .comment("Test comment by instructor")
+            .build();
+        String payload = objectMapper.writeValueAsString(commentRequest);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(
+            post("/api/instructors/courses/" + courseId +"/posts/" + postId + "/comment")
+                .header(HttpHeaders.AUTHORIZATION, accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload)
+        );
+
+        // then
+        resultActions
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason(containsString("You are not owner this course")));
+    }
+
+    @Test
     @Order(5)
     public void givenPostId_whenNotFound_thenReturnNotFoundStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
         Long courseId = courseRepo.findAll().get(0).getId();
         Long postId = 0L;
         CommentRequest commentRequest = CommentRequest.builder()
-            .comment("Test comment")
+            .comment("Test comment by instructor")
             .build();
         String payload = objectMapper.writeValueAsString(commentRequest);
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/courses/" + courseId + "/posts/" + postId + "/comment")
+            post("/api/instructors/courses/" + courseId +"/posts/" + postId + "/comment")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload)
@@ -185,23 +187,23 @@ public class CreateCommentIT {
 
     @Test
     @Order(6)
-    public void givenCommentRequest_whenSuccess_thenReturnOkStatusAndCommentResponse() throws Exception {
+    public void givenCommentRequest_whenSuccess_thenReturnCreatedStatus() throws Exception {
         // login
-        ResultActions logiActions = mockDatabase.mock_login_student();
+        ResultActions logiActions = mockDatabase.mock_login_instructor();
         String accessToken = "Bearer " + mockDatabase.getCredential(logiActions, "access_token");
 
         // given
         Long courseId = courseRepo.findAll().get(0).getId();
         Long postId = postRepo.findAll().get(0).getId();
+        String comment = "Test comment by instructor";
         CommentRequest commentRequest = CommentRequest.builder()
-            .postId(postId)
-            .comment("Test comment")
+            .comment(comment)
             .build();
         String payload = objectMapper.writeValueAsString(commentRequest);
 
         // when
         ResultActions resultActions = mockMvc.perform(
-            post("/api/students/courses/" + courseId + "/posts/" + postId + "/comment")
+            post("/api/instructors/courses/" + courseId +"/posts/" + postId + "/comment")
                 .header(HttpHeaders.AUTHORIZATION, accessToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(payload)

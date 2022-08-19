@@ -21,6 +21,8 @@ public interface CourseRepo extends JpaRepository<Course, Long> {
   Optional<Course> findByIdAndPrice(Long courseId, Long price);
 
   Optional<Course> findByIdAndCourseState(Long courseId, CourseState courseState);
+
+  Optional<Course> findCourseByIdAndInstructor(Long courseId, Instructor instructor);
         
   interface SearchCourse {
     Long getCourseId();

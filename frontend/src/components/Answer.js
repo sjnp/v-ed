@@ -30,7 +30,7 @@ import { URL_CREATE_ANSWER } from '../utils/url'
 // utils
 import { uploadUtility } from '../utils/uploadUtility'
 
-const Answer = ({ assignment, answer, noIndex, instructorComment }) => {
+const Answer = ({ assignment, answer, noIndex, commentInstructor }) => {
 
     const { courseId, chapterIndex } = useParams()
     const axiosPrivate = useAxiosPrivate()
@@ -96,7 +96,7 @@ const Answer = ({ assignment, answer, noIndex, instructorComment }) => {
     }
 
     return (
-        <Paper sx={{ width: '80%', m: 'auto' }}>
+        <Paper sx={{ width: '80%', m: 'auto', mb: 3 }}>
             <Grid container pt={2} pl={2} pr={2} pb={1}>
                 <Grid item xs={12}>
                     <Typography fontWeight='bold'>
@@ -169,8 +169,8 @@ const Answer = ({ assignment, answer, noIndex, instructorComment }) => {
                 </Grid>
                 <Grid item xs={12}>
                 {
-                    instructorComment ?
-                    <Box bgcolor='#f3f3f3' p={1} mb={1} borderRadius={1}>{instructorComment}</Box>
+                    commentInstructor ?
+                    <Box bgcolor='#f3f3f3' p={1} mb={1} borderRadius={1}>{commentInstructor}</Box>
                     :
                     null
                 }

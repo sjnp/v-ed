@@ -78,27 +78,49 @@ public class PostService {
             .build();
     }
 
-    public List<PostCardResponse> getPostsByCourseId(String username, Long courseId) {
-        log.info("Get post course id: {} by username: {}", courseId, username);
-        authService.authorized(username, courseId);
-        Course course = courseRepo.findById(courseId)
+    public List<PostCardResponse> getAllPostsCourse(Long courseId) {
+        Course course = courseRepo
+            .findById(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
         return course
             .getPosts()
             .stream()
+            .filter(post -> post.isVisible() == true)
             .map(post -> new PostCardResponse(post))
             .collect(Collectors.toList());
     }
 
-    public PostCommentResponse getPostById(String username, Long courseId, Long postId) {
-        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+    public List<PostCardResponse> getAllPostsCourseByStudent(Long courseId, String username) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
         authService.authorized(username, courseId);
+        return this.getAllPostsCourse(courseId);
+    }
+
+    public List<PostCardResponse> getAllPostsCourseByInstructor(Long courseId, String username) {
+        log.info("Get post course id: {} by username: {}", courseId, username);
+        authService.authorizedInstructor(username, courseId);
+        return this.getAllPostsCourse(courseId);
+    }
+
+    public PostCommentResponse getPost(Long postId) {
         Post post = postRepo.findById(postId)
             .orElseThrow(() -> new PostNotFoundException(postId));
         return new PostCommentResponse(post);
     }
 
-    public CommentResponse createComment(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+    public PostCommentResponse getPostByStudent(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+        authService.authorized(username, courseId);
+        return this.getPost(postId);
+    }
+
+    public PostCommentResponse getPostByInstructor(String username, Long courseId, Long postId) {
+        log.info("Get post id: {} in course id: {} by username: {}", postId, courseId, username);
+        authService.authorizedInstructor(username, courseId);
+        return this.getPost(postId);
+    }
+
+    public List<CommentResponse> createCommentByStudent(String username, Long courseId, Long postId, CommentRequest commentRequest) {
         log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
 
         if (Objects.isNull(postId)) {
@@ -120,8 +142,6 @@ public class PostService {
         String commentStateName;
         if (username.equals(post.getStudentCourse().getStudent().getAppUser().getUsername())) {
             commentStateName = commentStateProperties.getOwner();
-        } else if (username.equals(studentCourse.getCourse().getInstructor().getStudent().getAppUser().getUsername())) {
-            commentStateName = commentStateProperties.getInstructor();
         } else {
             commentStateName = commentStateProperties.getStudent();
         }
@@ -135,9 +155,53 @@ public class PostService {
             .student(studentCourse.getStudent())
             .build();
         post.getComments().add(comment);
-        postRepo.save(post);
+        Post postResponse = postRepo.save(post);
         
-        return new CommentResponse(comment);
+        return postResponse
+            .getComments()
+            .stream()
+            .filter(cm -> cm.isVisible() == true)
+            .map(cm -> new CommentResponse(cm))
+            .collect(Collectors.toList());
+    }
+
+    public List<CommentResponse> createCommentByInstructor(String username, Long courseId, Long postId, CommentRequest commentRequest) {
+        log.info("Create comment post id: {} in course id: {} by username: {}", postId, courseId, username);
+
+        if (Objects.isNull(postId)) {
+            throw new BadRequestException("Post id is required");
+        }
+
+        if (Objects.isNull(commentRequest.getComment())) {
+            throw new BadRequestException("Comment is required");
+        }
+
+        if (commentRequest.getComment().length() > 1000) {
+            throw new BadRequestException("Comments are more than 1000 characters");
+        }
+        
+        Course course = authService.authorizedInstructor(username, courseId);
+        Post post = postRepo.findById(postId)
+            .orElseThrow(() -> new PostNotFoundException(postId));
+        String commentStateName = commentStateProperties.getInstructor();
+        CommentState commentState = commentStateRepo.findByName(commentStateName);
+        Comment comment = Comment.builder()
+            .post(post)
+            .comment(commentRequest.getComment())
+            .commentDateTime(LocalDateTime.now())
+            .visible(true)
+            .commentState(commentState)
+            .student(course.getInstructor().getStudent())
+            .build();
+        post.getComments().add(comment);
+        Post postResponse = postRepo.save(post);
+        
+        return postResponse
+            .getComments()
+            .stream()
+            .filter(cm -> cm.isVisible() == true)
+            .map(cm -> new CommentResponse(cm))
+            .collect(Collectors.toList());
     }
 
 }

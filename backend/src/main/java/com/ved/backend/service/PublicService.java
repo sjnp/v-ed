@@ -58,7 +58,9 @@ public class PublicService {
     public OverviewResponse getOverviewCourse(Long courseId) {
         log.info("Get course id {}", courseId);
         Course course = courseService.getById(courseId);
-        return new OverviewResponse(course);
+        OverviewResponse overviewResponse = new OverviewResponse(course);
+        overviewResponse.setStateOfCourse("public");
+        return overviewResponse;
     }
 
     public String getVideoExampleUrl(Long courseId) {

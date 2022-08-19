@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
-import StudentMenu from '../components/StudentMenu'
+import InstructorMenu from '../components/InstructorMenu'
 import LoadingCircle from '../components/LoadingCircle'
 import PostTopic from '../components/PostTopic'
 import PostWriteComment from '../components/PostWriteComment'
@@ -21,31 +21,30 @@ import Box from '@mui/material/Box'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 
 // custom hook
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import useReasonReport from '../hooks/useReasonReport'
 
-// custom api
-import apiPrivate from '../api/apiPrivate'
+// custom hook
+import useApiPrivate from '../hooks/useApiPrivate'
 
 // url
-import { URL_GET_POST } from '../utils/url'
+import { URL_GET_POSTS_ID } from '../utils/url'
 
-const StudentPostComment = () => {
+const InstructorPostComment = () => {
 
     const { courseId, postId } = useParams()
-    const axiosPrivate = useAxiosPrivate()
     const navigate = useNavigate()
+    const apiPrivate = useApiPrivate()
     const createReasonReportRedux = useReasonReport()
 
     const [ posts, setPosts ] = useState(null)
     const [ topicName, setTopicName ] = useState('')
     const [ loading, setLoading ] = useState(true)
-
+    
     useEffect(async () => {
-        const url = URL_GET_POST
+        const url = URL_GET_POSTS_ID
             .replace('{courseId}', courseId)
             .replace('{postId}', postId)
-        const response = await apiPrivate.get(axiosPrivate, url)
+        const response = await apiPrivate.get(url)
 
         if (response.status === 200) {
             setPosts(response.data)
@@ -58,7 +57,7 @@ const StudentPostComment = () => {
     }, [])
 
     const handleCreateCommentSuucess = (newComments) => {
-        setPosts({
+        setPosts({ 
             ...posts,
             comments: newComments
         })
@@ -69,7 +68,7 @@ const StudentPostComment = () => {
             <AppBarSearchHeader />
             <Grid container mt={3} mb={5}>
                 <Grid item xs={3}>
-                    <StudentMenu active='post' />
+                    <InstructorMenu active='post' />
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container>
@@ -80,7 +79,7 @@ const StudentPostComment = () => {
                                     underline='hover' 
                                     color='default' 
                                     sx={{ cursor: 'pointer' }} 
-                                    onClick={() => navigate(`/student/course/${courseId}/post`)}
+                                    onClick={() => navigate(`/instructor/course/${courseId}/post`)}
                                 >
                                     Post
                                 </Link>
@@ -108,7 +107,7 @@ const StudentPostComment = () => {
                         <Grid item xs={1}>
                             <PostWriteComment
                                 onCreateCommentSuccess={handleCreateCommentSuucess}
-                                commentBy='student'    
+                                commentBy='instructor'
                             />
                         </Grid>
                     </Grid>
@@ -118,4 +117,4 @@ const StudentPostComment = () => {
     )
 }
 
-export default StudentPostComment
+export default InstructorPostComment

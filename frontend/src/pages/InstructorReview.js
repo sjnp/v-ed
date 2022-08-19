@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
-import StudentMenu from '../components/StudentMenu'
+import InstructorMenu from '../components/InstructorMenu'
 import LoadingCircle from '../components/LoadingCircle'
 import ReviewCard from '../components/ReviewCard'
 
@@ -11,62 +11,53 @@ import ReviewCard from '../components/ReviewCard'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
-import Fab from '@mui/material/Fab'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Rating from '@mui/material/Rating'
 import Box from '@mui/material/Box'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Skeleton from '@mui/material/Skeleton'
 
 // Material UI icon
-import AddIcon from '@mui/icons-material/Add'
-import EditIcon from '@mui/icons-material/Edit'
 import StarIcon from '@mui/icons-material/Star'
 
 // custom hook
-import useAxiosPrivate from '../hooks/useAxiosPrivate'
+import useApiPrivate from '../hooks/useApiPrivate'
 import useReasonReport from '../hooks/useReasonReport'
 
-// custom api
-import apiPrivate from '../api/apiPrivate'
-
 // url
-import { URL_GET_REVIEWS_BY_COURSE } from '../utils/url'
+import { URL_GET_REVIEWS_COURSE } from '../utils/url'
 
-const StudentReview = () => {
+const InstructorReview = () => {
 
+    const apiPrivate = useApiPrivate()
     const { courseId } = useParams()
-    const axiosPrivate = useAxiosPrivate()
-    const navigate = useNavigate()
     const createReasonReportRedux = useReasonReport()
 
     const [ stars, setStars ] = useState(null)
     const [ totalUserReview, setTotalUserReview ] = useState(null)
     const [ reviews, setReviews ] = useState([])
-    const [ myReviewId, setMyReviewId ] = useState(null)
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
-        const url = URL_GET_REVIEWS_BY_COURSE.replace('{courseId}', courseId)
-        const response = await apiPrivate.get(axiosPrivate, url)
+        const url = URL_GET_REVIEWS_COURSE.replace('{courseId}', courseId)
+        const response = await apiPrivate.get(url)
 
         if (response.status === 200) {
             setStars(response.data.summary.star)
             setTotalUserReview(response.data.summary.totalUser)
             setReviews(response.data.reviews)
-            setMyReviewId(response.data.myReviewId)
         } else {
-            alert(response.message)
+            alert('Error: ', response.message)
         }
         setLoading(false)
         createReasonReportRedux()
     }, [])
-
+    
     return (
         <Container>
             <AppBarSearchHeader />
             <Grid container mt={3} mb={5}>
                 <Grid item xs={3}>
-                    <StudentMenu active='review' />
+                    <InstructorMenu active='review' />
                 </Grid>
                 <Grid item xs={9}>
                     <Grid container>
@@ -94,37 +85,9 @@ const StudentReview = () => {
                                     <Typography variant='subtitle1' pl={1} pt={0.1}>({totalUserReview})</Typography>
                                 </Box>
                             </Box>
-                        }    
-                        </Grid>
-                        <Grid item xs={2}></Grid>
-                        <Grid item xs={2}>
-                        {
-                            loading === true ?
-                            null
-                            :
-                            myReviewId === null ?
-                                <Fab 
-                                    size='small' 
-                                    color='primary' 
-                                    onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
-                                    sx={{ position: 'fixed' }}
-                                >
-                                    <AddIcon titleAccess='Create review' />
-                                </Fab>
-                                :
-                                myReviewId === 0 ?
-                                    null
-                                    :
-                                    <Fab
-                                        size='small' 
-                                        color='primary' 
-                                        onClick={() => navigate(`/student/course/${courseId}/review/${myReviewId}`)} 
-                                        sx={{ position: 'fixed' }}
-                                    >
-                                        <EditIcon titleAccess='Edit review' />
-                                    </Fab>
                         }
                         </Grid>
+                        <Grid item xs={4}></Grid>
                     </Grid>
                     <Grid container>
                         <Grid item xs={1}></Grid>
@@ -156,4 +119,4 @@ const StudentReview = () => {
     )
 }
 
-export default StudentReview
+export default InstructorReview

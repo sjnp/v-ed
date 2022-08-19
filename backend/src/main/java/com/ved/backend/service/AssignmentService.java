@@ -1,16 +1,24 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.AnswerNotFoundException;
 import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.Answer;
+import com.ved.backend.model.Course;
 import com.ved.backend.model.StudentCourse;
 import com.ved.backend.repo.AnswerRepo;
+import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
+import com.ved.backend.repo.AnswerRepo.AnswerNoti;
 import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.CommentAnswerRequest;
 import com.ved.backend.response.AnswerResponse;
 import com.ved.backend.response.AssignmentAnswerResponse;
+import com.ved.backend.response.AssignmentChapterResponse;
+import com.ved.backend.response.AssignmentCourseResponse;
 
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -100,6 +108,73 @@ public class AssignmentService {
             .studentCourse(studentCourse)
             .build();
         answerRepo.save(answer);
+    }
+
+    public List<AssignmentCourseResponse> getAssignmentCourse(Long courseId, String username) {
+        Course course = authService.authorizedInstructor(username, courseId);
+        List<AssignmentCourseResponse> assignmentCourseResponses = new ArrayList<AssignmentCourseResponse>();
+        int size = course.getChapters().size();
+        for (int i = 0; i < size; ++i) {
+            List<AnswerNoti> answerNotis = answerRepo.findInstructorNotCommentAnswerByCourseIdAndChapterIndex(courseId, i);
+            AssignmentCourseResponse assignmentCourseResponse = AssignmentCourseResponse.builder()
+                .chapterIndex(i)
+                .chapterNo(i + 1)
+                .countNoti(answerNotis.size())
+                .build();
+            assignmentCourseResponses.add(assignmentCourseResponse);
+        }
+        return assignmentCourseResponses;
+    }
+
+    public List<AssignmentChapterResponse> getAssignmentChapter(Long courseId, int chapterIndex, String username) {
+        Course course = authService.authorizedInstructor(username, courseId);
+        List<AssignmentChapterResponse> assignments = course
+            .getChapters()
+            .get(chapterIndex)
+            .getAssignments()
+            .stream()
+            .map(asm -> new AssignmentChapterResponse(courseId, chapterIndex, null, asm.get("detail"), null))
+            .collect(Collectors.toList());
+
+        for (int i = 0; i < assignments.size(); ++i) {
+            List<AnswerNoti> answerNotis = answerRepo.findInstructorNotCommentAnswerByCourseIdAndChapterIndexAndNoIndex(courseId, chapterIndex, i);
+            assignments.get(i).setNoIndex(i);
+            assignments.get(i).setCountNoti(answerNotis.size());
+        }
+
+        return assignments;
+    }
+
+    public List<AnswerInstructor> getAssignmentAnswer(Long courseId, int chapterIndex, int noIndex, String username) {
+        authService.authorizedInstructor(username, courseId);
+        return answerRepo.findByCourseIdAndChapterIndexAndNoindex(courseId, chapterIndex, noIndex);
+    }
+
+    public void updateCommentInstructor(CommentAnswerRequest commentAnswerRequest, String username) {
+        authService.authorizedInstructor(username, commentAnswerRequest.getCourseId());
+        Answer answer = answerRepo.findById(commentAnswerRequest.getAnswerId())
+            .orElseThrow(() -> new AnswerNotFoundException(commentAnswerRequest.getAnswerId()));
+        answer.setCommentInstructor(commentAnswerRequest.getComment());
+        answerRepo.save(answer);
+    }
+
+    public String getAnswerUrl(Long courseId, Long answerId, String username) {
+        authService.authorizedInstructor(username, courseId);
+        Answer answer = answerRepo.findById(answerId)
+            .orElseThrow(() -> new AnswerNotFoundException(answerId));
+        String fileName = new StringBuilder()
+            .append("answer_sid_")
+            .append(answer.getStudentCourse().getStudent().getId())
+            .append("_cid_")
+            .append(courseId)
+            .append("_c")
+            .append(answer.getChapterIndex())
+            .append("_no.")
+            .append(answer.getNoIndex())
+            .append("_")
+            .append(answer.getFileName())
+            .toString();
+        return privateObjectStorageService.readFile(fileName, username);
     }
 
 }

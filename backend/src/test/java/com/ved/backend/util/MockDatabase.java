@@ -283,6 +283,7 @@ public class MockDatabase {
         StudentCourse studentCourse = StudentCourse.builder()
             .student(student)
             .course(course)
+            .paySuccess(true)
             .build();
         studentCourseRepo.save(studentCourse);
     }

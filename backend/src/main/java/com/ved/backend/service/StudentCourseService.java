@@ -16,7 +16,6 @@ import com.ved.backend.model.Student;
 import com.ved.backend.model.StudentCourse;
 
 import com.ved.backend.repo.CourseRepo;
-import com.ved.backend.repo.InstructorRepo;
 import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.response.ChargeResponse;
@@ -33,14 +32,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class StudentCourseService {
-
+  
   private final UserService userService;
   private final CourseService courseService;
   private final OmiseService omiseService;
   private final CategoryService categoryService;
   private final CourseStateService courseStateService;
 
-  private final InstructorRepo instructorRepo;
   private final CourseRepo courseRepo;
   private final StudentCourseRepo studentCourseRepo;
   private final CourseStateProperties courseStateProperties;
@@ -53,6 +51,11 @@ public class StudentCourseService {
     Course course = courseRepo
         .findByIdAndPrice(courseId, 0L)
         .orElseThrow(() -> new BadRequestException("This course not free"));
+
+    if (course.getInstructor().getStudent().getAppUser().getUsername().equals(username)) {
+        throw new BadRequestException("You own this course");
+    }
+    
     boolean isExists = studentCourseRepo.existsByStudentAndCourse(student, course);
     if (isExists) {
       throw new ConflictException("You have this course already");
@@ -60,6 +63,7 @@ public class StudentCourseService {
     StudentCourse studentCourse = StudentCourse.builder()
         .student(student)
         .course(course)
+        .paySuccess(true)
         .build();
     studentCourseRepo.save(studentCourse);
   }

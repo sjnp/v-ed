@@ -13,12 +13,15 @@ import CourseCardWide from '../components/CourseCardWide'
 // Material UI component
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+
 
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
 
 // url
 import { URL_SEARCH } from '../utils/url'
+import { Typography } from '@mui/material'
 
 const Search = () => {
 
@@ -82,7 +85,9 @@ const Search = () => {
             <LoadingCircle loading={loading} centerY={true} />
             :
             searches?.length === 0 ?
-            <div>Search not match</div>
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight={window.innerHeight / 8 + 'vh'}>
+              <Typography variant='subtitle1' color='gray'>"{nameRedex}" not any match.</Typography>
+            </Box>
             :
             searches?.map((search, index) => (
               <CourseCardWide

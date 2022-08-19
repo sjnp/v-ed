@@ -113,21 +113,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/approved-courses",
             "/api/instructors/rejected-courses",
             "/api/instructors/published-courses",
-            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**")
+            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**",
+            "/api/instructors/courses/{\\d+}/reviews",
+            "/api/instructors/courses/{\\d+}/posts",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(POST, "/api/instructors/course",
             "/api/instructors/incomplete-courses/{\\d+}/picture/pre-authenticated-request",
             "/api/instructors/incomplete-courses/{\\d+}/video/pre-authenticated-request",
-            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request")
+            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}/comment"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/{\\d+}/picture/**",
             "/api/instructors/incomplete-courses/{\\d+}/chapters",
             "/api/instructors/incomplete-courses/{\\d+}/state",
-            "/api/instructors/approved-courses/{\\d+}")
+            "/api/instructors/approved-courses/{\\d+}",
+            "/api/instructors/assignment/answer/comment"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()

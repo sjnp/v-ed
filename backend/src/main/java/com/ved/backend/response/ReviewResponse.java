@@ -22,6 +22,10 @@ public class ReviewResponse {
     private double rating;
     
     private String comment;
+
+    private String reviewUsername;
+
+    private String displayUrl;
     
     private String firstname;
     
@@ -35,6 +39,8 @@ public class ReviewResponse {
         this.id = review.getId();
         this.rating = review.getRating();
         this.comment = review.getComment();
+        this.reviewUsername = review.getStudent().getAppUser().getUsername();
+        this.displayUrl = review.getStudent().getProfilePicUri();
         this.firstname = review.getStudent().getFirstName();
         this.lastname= review.getStudent().getLastName();
         this.reviewDateTime = review.getReviewDateTime();

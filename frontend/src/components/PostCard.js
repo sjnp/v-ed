@@ -11,13 +11,17 @@ import Typography from '@mui/material/Typography'
 // Material UI icon
 import CommentIcon from '@mui/icons-material/Comment'
 
-const PostCard = ({ postId, topic, datetime, commentCount }) => {
+const PostCard = ({ postId, topic, datetime, commentCount, type }) => {
 
     const { courseId } = useParams()
     const navigate = useNavigate()
 
     const handleClickPost = () => {
-        navigate(`/student/course/${courseId}/post/${postId}`)
+        if (type === 'student') {
+            navigate(`/student/course/${courseId}/post/${postId}`)
+        } else if (type === 'instructor') {
+            navigate(`/instructor/course/${courseId}/post/${postId}`)
+        }
     }
     
     return (
