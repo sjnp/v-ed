@@ -33,7 +33,7 @@ public class AuthService {
             .findById(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
         return studentCourseRepo
-            .findByStudentAndCourse(student, course)
+            .findByStudentAndCourseAndPaySuccess(student, course, true)
             .orElseThrow(() -> new UnauthorizedException("You are not authorized in this course"));
     }
 
