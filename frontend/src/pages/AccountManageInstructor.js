@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import AccountManageMenu from '../components/AccountManageMenu'
 import ActiveInstructor from '../components/ActiveInstructor'
+import FinanceInstructor from '../components/FinanceInstructor'
 
 // Material UI component
 import Container from '@mui/material/Container'
@@ -27,7 +28,7 @@ const AccountManageInstructor = () => {
                     <Grid item xs={10} container>
                     {
                         roles?.includes('INSTRUCTOR') ?
-                        <Typography>Instructor already</Typography>
+                        <FinanceInstructor />
                         :
                         <ActiveInstructor />
                     }

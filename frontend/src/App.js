@@ -19,6 +19,7 @@ import AccountManageNewPassword from './pages/AccountManageNewPassword';
 import AccountManageInstructor from './pages/AccountManageInstructor';
 import AccountManageActiveInstructor from './pages/AccountManageActiveInstructor';
 import AccountManageBankInfo from './pages/AccountManageBankInfo';
+import AccountManageInstructorTransaction from './pages/AccountManageInstructorTransaction';
 import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
@@ -111,6 +112,7 @@ const App = () => {
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
 
           <Route path='account-manage/instructor/bank' element={ <AccountManageBankInfo/> } />
+          <Route path='account-manage/instructor/transaction' element={ <AccountManageInstructorTransaction/> } />
         </Route>
 
         {/* admin role */}
