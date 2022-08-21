@@ -18,6 +18,7 @@ import AccountManageVerifyPassword from './pages/AccountManageVerifyPassword';
 import AccountManageNewPassword from './pages/AccountManageNewPassword';
 import AccountManageInstructor from './pages/AccountManageInstructor';
 import AccountManageActiveInstructor from './pages/AccountManageActiveInstructor';
+import AccountManageBankInfo from './pages/AccountManageBankInfo';
 import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
@@ -65,6 +66,7 @@ const App = () => {
           
           <Route path='account-manage/instructor' element={ <AccountManageInstructor/> } />
           <Route path='account-manage/instructor/active' element={ <AccountManageActiveInstructor/> } />
+          <Route path='account-manage/instructor/bank' element={ <AccountManageBankInfo/> } />
 
           {/* payment */}
           <Route path='payment/course/:courseId' element={ <Payment /> } />

@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import AccountManageMenu from '../components/AccountManageMenu'
-import LoadingCircle from '../components/LoadingCircle'
 import ActiveInstructor from '../components/ActiveInstructor'
 
 // Material UI component
@@ -15,13 +14,6 @@ import Typography from '@mui/material/Typography'
 const AccountManageInstructor = () => {
 
     const roles = useSelector(state => state.auth.value.roles)
-
-    const [ myRole, setMyRole ] = useState(roles.length === 1 ? roles[0] : roles[1])
-    const [ loading, setLoading ] = useState(false)
-
-    useEffect(async () => {
-        setTimeout(() => setLoading(false), 2000)
-    }, [])
 
     return (
         <Container>
@@ -34,15 +26,10 @@ const AccountManageInstructor = () => {
                     <Grid item xs={1}></Grid>
                     <Grid item xs={10} container>
                     {
-                        loading ?
-                        <Grid item xs={12}>
-                            <LoadingCircle loading={loading} centerY={true} />
-                        </Grid>
-                        :
-                        myRole === 'STUDENT' ?
-                        <ActiveInstructor />
-                        :
+                        roles?.includes('INSTRUCTOR') ?
                         <Typography>Instructor already</Typography>
+                        :
+                        <ActiveInstructor />
                     }
                     </Grid>
                     <Grid item xs={1}></Grid>
