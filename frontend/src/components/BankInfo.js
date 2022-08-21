@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import moment from 'moment'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
@@ -49,7 +50,7 @@ const BankInfo = ({ bankBand, accountName, accountNumber, activateDatetime }) =>
                     <Typography>Activate datetime</Typography>
                 </Grid>
                 <Grid item xs={7}>
-                    <Typography color='gray'>{activateDatetime}</Typography>
+                    <Typography color='gray'>{moment(activateDatetime).format("DD/MM/YYYY | kk:mm:ss")}</Typography>
                 </Grid>
             </Grid>
             <Grid item xs={12}><Divider /></Grid>
