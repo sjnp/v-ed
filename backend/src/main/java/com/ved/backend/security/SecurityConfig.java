@@ -89,7 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/review",
             "/api/students/report",
             "/api/users/display",
-            "/api/users/verify-password"
+            "/api/users/verify-password",
+            "/api/students/active-instrustor"
         )
         .hasAnyAuthority("STUDENT");
 
