@@ -66,7 +66,6 @@ const App = () => {
           
           <Route path='account-manage/instructor' element={ <AccountManageInstructor/> } />
           <Route path='account-manage/instructor/active' element={ <AccountManageActiveInstructor/> } />
-          <Route path='account-manage/instructor/bank' element={ <AccountManageBankInfo/> } />
 
           {/* payment */}
           <Route path='payment/course/:courseId' element={ <Payment /> } />
@@ -110,6 +109,8 @@ const App = () => {
           <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
           <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
+
+          <Route path='account-manage/instructor/bank' element={ <AccountManageBankInfo/> } />
         </Route>
 
         {/* admin role */}

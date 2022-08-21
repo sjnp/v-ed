@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import AccountManageMenu from '../components/AccountManageMenu'
-import LoadingCircle from '../components/LoadingCircle'
-import BankForm from '../components/BankForm'
+import BankAddForm from '../components/BankAddForm'
 
 // Material UI component
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
 
 const AccountManageActiveInstructor = () => {
 
@@ -35,7 +33,7 @@ const AccountManageActiveInstructor = () => {
                 <Grid item xs={9} container>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8} container>
-                        <BankForm />
+                        <BankAddForm />
                     </Grid>
                     <Grid item xs={2}></Grid>
                 </Grid>
