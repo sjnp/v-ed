@@ -14,7 +14,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
 
-const BankForm = () => {
+const BankAddForm = () => {
 
     const apiPrivate = useApiPrivate()
     const navigate = useNavigate()
@@ -206,4 +206,4 @@ const BankForm = () => {
     )
 }
 
-export default BankForm
+export default BankAddForm
