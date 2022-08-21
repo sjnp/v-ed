@@ -10,6 +10,7 @@ import com.ved.backend.model.*;
 import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.repo.InstructorRepo;
+import com.ved.backend.repo.StudentCourseRepo;
 import com.ved.backend.response.CourseResponse;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
@@ -42,6 +43,9 @@ class InstructorServiceTest {
 
   @Mock
   private InstructorRepo instructorRepo;
+
+  @Mock
+  private StudentCourseRepo studentCourseRepo;
 
   @Mock
   private UserService userService;
@@ -77,6 +81,7 @@ class InstructorServiceTest {
     underTest = new InstructorService(
         courseRepo,
         instructorRepo,
+        studentCourseRepo,
         userService,
         omiseService,
         courseStateService,
