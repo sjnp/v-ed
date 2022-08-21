@@ -11,7 +11,7 @@ import BankAddForm from '../components/BankAddForm'
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 
-const AccountManageActiveInstructor = () => {
+const AccountManageInstructorActiveBank = () => {
 
     const navigate = useNavigate()
 
@@ -42,4 +42,4 @@ const AccountManageActiveInstructor = () => {
     )
 }
 
-export default AccountManageActiveInstructor
+export default AccountManageInstructorActiveBank

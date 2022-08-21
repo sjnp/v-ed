@@ -13,13 +13,16 @@ import LoadingButton from '@mui/lab/LoadingButton'
 
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
+import useRefreshToken from "../hooks/useRefreshToken"
 
 const BankAddForm = () => {
 
     const apiPrivate = useApiPrivate()
     const navigate = useNavigate()
+    const refresh = useRefreshToken()
 
     const username = useSelector(state => state.auth.value.username)
+    // const roles = useSelector(state => state.auth.value.roles)
 
     // select bank account    
     const [ accountSelect, setAccountSelect ] = useState('')
@@ -130,11 +133,12 @@ const BankAddForm = () => {
         }
         const response = await apiPrivate.post(url, payload)
         if (response.status === 201) {
-            // alert('success')
-            navigate(`/account-manage/instructor/bank`)
+            await refresh()
+            navigate(`/account-manage/instructor`)
         } else {
-            // alert('Fail')
+            alert('Fail')
         }
+        setSaving(false)
     }
 
     return (
