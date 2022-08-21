@@ -56,7 +56,6 @@ public class OmiseService {
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             ResponseEntity<?> response = restTemplate.postForEntity(url, request, Map.class);
             HashMap<String, Object> responseHash = (HashMap<String, Object>) response.getBody();
-            log.info(responseHash.toString());
             return responseHash.get("id").toString();
         }
         catch (Exception error) {
