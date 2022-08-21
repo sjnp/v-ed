@@ -15,6 +15,8 @@ public interface StudentCourseRepo extends JpaRepository<StudentCourse, Long> {
 
     Optional<StudentCourse> findByStudentAndCourseAndPaySuccess(Student student, Course course, Boolean paySuccess);
 
+    StudentCourse findByTransferId(String transferId);
+
     List<StudentCourse> findByStudent(Student student);
 
     Boolean existsByStudentAndCourse(Student student, Course course);
