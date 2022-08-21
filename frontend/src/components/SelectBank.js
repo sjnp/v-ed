@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
 // Material UI component
 import Box from '@mui/material/Box'
@@ -8,22 +8,12 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 
+// custom hook
+import useBanks from '../hooks/useBanks'
+
 const SelectBank = ({ select, onChange, error, onSaving }) => {
 
-    const [bankJson, setBankJson] = useState([]);
-
-    const bankLogoUrl = "https://raw.githubusercontent.com/omise/banks-logo/master/th/";
-
-    useEffect(async () => {
-        const bankData = await fetch('https://raw.githubusercontent.com/omise/banks-logo/master/banks.json');
-        const bankDataJson = await bankData.json();
-        const codeArray = ['bbl','kbank','ktb','tmb','scb','citi','cimb','uob','bay','gsb','tbank','kk'];
-        const bankBrandMerge = codeArray.map(brand => { 
-            bankDataJson.th[brand]['brand'] = brand 
-            return bankDataJson.th[brand]
-        })
-        setBankJson(bankBrandMerge)
-    }, [])
+    const banks = useBanks()
 
     return (
         <FormControl fullWidth >
@@ -37,27 +27,20 @@ const SelectBank = ({ select, onChange, error, onSaving }) => {
                 error={error}
             >
             {
-                bankJson.map((item, index) => (
-                    <MenuItem value={item.brand} key={index}>
+                banks.map((bank, index) => (
+                    <MenuItem value={bank.name} key={index}>
                         <Box display='flex' alignItems='center'>
                             <Stack
-                                alignItems='center' 
-                                justifyContent='center' 
-                                sx={{
-                                        backgroundColor: item.color, 
-                                        width: 24,
-                                        height: 24,
-                                        borderRadius: '3px'
-                                    }}
-                                >
-                                <img
-                                    src={`${bankLogoUrl}${item.brand}.svg`}
-                                    style={{ width: 20, height: 20 }}
-                                />
+                                alignItems='center'
+                                justifyContent='center'
+                                bgcolor={bank.color}
+                                width={24}
+                                height={24}
+                                borderRadius={1}
+                            >
+                                <img src={bank.imageUrl} style={{ width: 20, height: 20 }} />
                             </Stack>
-                            <Box ml={2}>
-                                {item.nice_name}
-                            </Box>
+                            <Box ml={2}>{bank.nice_name}</Box>
                         </Box>
                     </MenuItem>
                 ))
