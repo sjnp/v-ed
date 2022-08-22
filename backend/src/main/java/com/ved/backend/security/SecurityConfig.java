@@ -135,7 +135,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/incomplete-courses/{\\d+}/chapters",
             "/api/instructors/incomplete-courses/{\\d+}/state",
             "/api/instructors/approved-courses/{\\d+}",
-            "/api/instructors/assignment/answer/comment"
+            "/api/instructors/assignment/answer/comment",
+            "/api/instructors/finance/updateAccount"
         )
         .hasAnyAuthority("INSTRUCTOR");
 

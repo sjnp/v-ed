@@ -15,29 +15,32 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import useApiPrivate from '../hooks/useApiPrivate'
 import useRefreshToken from "../hooks/useRefreshToken"
 
-const BankForm = () => {
+// url
+import { URL_CREATE_BANK_ACCOUNT_INSTRUCTOR } from '../utils/url'
+import { URL_UPDATE_BANK_ACCOUNT_INSTRUCTOR } from '../utils/url'
+
+const BankForm = ({ type, dataSelect, dataFirstname, dataLastname, dataAccountNumber }) => {
 
     const apiPrivate = useApiPrivate()
     const navigate = useNavigate()
     const refresh = useRefreshToken()
 
     const username = useSelector(state => state.auth.value.username)
-    // const roles = useSelector(state => state.auth.value.roles)
 
     // select bank account    
-    const [ accountSelect, setAccountSelect ] = useState('')
+    const [ accountSelect, setAccountSelect ] = useState(dataSelect || '')
     const [ errorAccountSelect, setErrorAccountSelect ] = useState(false)
     const [ messageAccountSelect, setMessageAccountSelect ] = useState('')
     // account firstname
-    const [ accountFirstname, setAccountFirstname ] = useState('')
+    const [ accountFirstname, setAccountFirstname ] = useState(dataFirstname || '')
     const [ errorAccountFirstname, setErrorAccountFirstname ] = useState(false)
     const [ messageAccountFirstname, setMessageAccountFirstname ] = useState('')
     // account lastname
-    const [ accountLastname, setAccountLastname ] = useState('')
+    const [ accountLastname, setAccountLastname ] = useState(dataLastname || '')
     const [ errorAccountLastname, setErrorAccountLastname ] = useState(false)
     const [ messageAccountLastname, setMessageAccountLastname ] = useState('')
     // account number
-    const [ accountNumber, setAccountNumber ] = useState('')
+    const [ accountNumber, setAccountNumber ] = useState(dataAccountNumber || '')
     const [ errorAccountNumber, setErrorAccountNumber ] = useState(false)
     const [ messageAccountNumber, setMessageAccountNumber ] = useState('')
     // saving state
@@ -123,7 +126,6 @@ const BankForm = () => {
         if (isInvalid) return
 
         setSaving(true)
-        const url = '/api/students/active-instrustor'
         const payload = {
             bankBrand: accountSelect,
             bankAccountName: `${accountFirstname} ${accountLastname}`,
@@ -131,13 +133,26 @@ const BankForm = () => {
             recipientName: username,
             type: 'individual'
         }
-        const response = await apiPrivate.post(url, payload)
 
-        if (response.status === 201) {
-            await refresh()
-            navigate(`/account-manage/instructor`)
-        } else {
-            alert('Fail')
+        if (type === 'edit') {
+
+            const response = await apiPrivate.put(URL_UPDATE_BANK_ACCOUNT_INSTRUCTOR, payload)
+            if (response.status === 200) {
+                await refresh()
+                navigate(`/account-manage/instructor`)
+            } else {
+                alert('Fail')
+            }
+
+        } else if (type === 'add') {
+
+            const response = await apiPrivate.post(URL_CREATE_BANK_ACCOUNT_INSTRUCTOR, payload)
+            if (response.status === 201) {
+                await refresh()
+                navigate(`/account-manage/instructor`)
+            } else {
+                alert('Fail')
+            }
         }
         setSaving(false)
     }
@@ -145,9 +160,12 @@ const BankForm = () => {
     return (
         <Grid container border='solid 1px #d3d3d3' borderRadius={3} mt={3} p={2} pr={4} pb={4} spacing={2}>
             <Grid item xs={12}>
-                <Typography variant='h6'>
-                    Add bank account
-                </Typography>
+            {
+                type === 'edit' ?
+                <Typography variant='h6'>Change bank account</Typography>
+                :
+                <Typography variant='h6'>Add bank account</Typography>
+            }
             </Grid>
             <Grid item xs={12}>
                 <SelectBank
@@ -202,9 +220,16 @@ const BankForm = () => {
             </Grid>
             <Grid item xs={12} container direction='row' alignItems='center' justifyContent='center' mt={2}>
                 <Grid item>
+                {
+                    type === 'edit' ?
+                    <LoadingButton variant='contained' onClick={handleClickVerify} loading={saving}>
+                        Update
+                    </LoadingButton>
+                    :
                     <LoadingButton variant='contained' onClick={handleClickVerify} loading={saving}>
                         Verify and Activate Instructor
                     </LoadingButton>
+                }
                 </Grid>
             </Grid>
         </Grid>

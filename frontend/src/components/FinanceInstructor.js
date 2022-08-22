@@ -17,6 +17,9 @@ import EditIcon from '@mui/icons-material/Edit'
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
 
+// url
+import { URL_GET_BANK_ACCOUNT_INSTRUCTOR } from '../utils/url'
+
 const FinanceInstructor = () => {
 
     const navigate = useNavigate()
@@ -29,8 +32,7 @@ const FinanceInstructor = () => {
     const [ loading, setLoading ] = useState(true)
 
     useEffect(async () => {
-        const url = '/api/instructors/finance/getAccount'
-        const response = await apiPrivate.get(url)
+        const response = await apiPrivate.get(URL_GET_BANK_ACCOUNT_INSTRUCTOR)
         if (response.status === 200) {
             setBankBand(response.data.brand)
             setAccountName(response.data.name)

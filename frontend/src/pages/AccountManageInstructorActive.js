@@ -59,7 +59,7 @@ const AccountManageInstructorActive = () => {
                     <Grid item xs={12} container>
                         <Grid item xs={2}></Grid>
                         <Grid item xs={8}>
-                            <BankForm />
+                            <BankForm type='add' />
                         </Grid>
                         <Grid item xs={2}></Grid>
                     </Grid>

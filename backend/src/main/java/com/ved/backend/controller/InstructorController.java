@@ -48,7 +48,7 @@ public class InstructorController {
     return ResponseEntity.ok(response);
   }
 
-  @PatchMapping(path = "/finance/updateAccount")
+  @PutMapping(path = "/finance/updateAccount")
   public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
     try {
       String response = instructorService.updateFinanceAccount(finance, principal.getName());

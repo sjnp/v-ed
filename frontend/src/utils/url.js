@@ -88,6 +88,9 @@ export const URL_UPDATE_DISPLAY = '/api/users/display'
 export const URL_UPDATE_PROFILE = '/api/users/profile'
 export const URL_VERIFY_PASSWORD = '/api/users/verify-password'
 export const URL_UPDATE_NEW_PASSWORD = '/api/users/change-password'
+export const URL_CREATE_BANK_ACCOUNT_INSTRUCTOR = '/api/students/active-instrustor'
+export const URL_GET_BANK_ACCOUNT_INSTRUCTOR = '/api/instructors/finance/getAccount'
+export const URL_UPDATE_BANK_ACCOUNT_INSTRUCTOR = '/api/instructors/finance/updateAccount'
 
 
 // student - incomplete
