@@ -16,8 +16,8 @@ const SelectBank = ({ select, onChange, error, onSaving }) => {
     const banks = useBanks()
 
     return (
-        <FormControl fullWidth >
-            <InputLabel >Banking </InputLabel>
+        <FormControl fullWidth>
+            <InputLabel>Banking </InputLabel>
             <Select
                 label='Banking'
                 fullWidth

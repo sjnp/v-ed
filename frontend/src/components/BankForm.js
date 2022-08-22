@@ -15,7 +15,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import useApiPrivate from '../hooks/useApiPrivate'
 import useRefreshToken from "../hooks/useRefreshToken"
 
-const BankAddForm = () => {
+const BankForm = () => {
 
     const apiPrivate = useApiPrivate()
     const navigate = useNavigate()
@@ -132,6 +132,7 @@ const BankAddForm = () => {
             type: 'individual'
         }
         const response = await apiPrivate.post(url, payload)
+
         if (response.status === 201) {
             await refresh()
             navigate(`/account-manage/instructor`)
@@ -142,7 +143,7 @@ const BankAddForm = () => {
     }
 
     return (
-        <Grid container border='solid 1px #d3d3d3' borderRadius={3} mt={3} p={2} pb={4} spacing={2}>
+        <Grid container border='solid 1px #d3d3d3' borderRadius={3} mt={3} p={2} pr={4} pb={4} spacing={2}>
             <Grid item xs={12}>
                 <Typography variant='h6'>
                     Add bank account
@@ -210,4 +211,4 @@ const BankAddForm = () => {
     )
 }
 
-export default BankAddForm
+export default BankForm
