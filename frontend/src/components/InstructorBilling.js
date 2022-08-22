@@ -18,6 +18,10 @@ import {visuallyHidden} from "@mui/utils";
 import {Box} from "@mui/system";
 import {URL_GET_ALL_TRANSACTIONS} from "../utils/url";
 
+// component
+import LoadingCircle from '../components/LoadingCircle'
+
+
 const InstructorBilling = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [order, setOrder] = useState('desc');
@@ -87,72 +91,77 @@ const InstructorBilling = () => {
       alignLeft: true,
       label: 'Amount(THB)'
     },
-
-
   ]
 
   return (
-    <Paper variant='outlined'>
-      <Stack
-        spacing={2}
-        sx={{padding: 2}}
-      >
-        <Stack direction='row' justifyContent='space-between' alignItems='center'>
-          <Typography variant='h5'>Billing</Typography>
-        </Stack>
-        <Divider/>
-        {isLoading
-          ? <Stack alignItems='center' sx={{mt: 5, padding: 5}}>
-            <CircularProgress/>
-          </Stack>
-          : <TableContainer component={Paper} variant='outlined'>
-            <Table
-              style={{tableLayout: 'fixed'}}
-            >
-              <TableHead>
-                <TableRow>
-                  {headCells.map((headCell) => (
-                    <TableCell
-                      key={headCell.id}
-                      align={headCell.alignLeft ? 'left' : 'right'}
-                      sortDirection={orderBy === headCell.id ? order : false}
-                    >
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : 'asc'}
-                        onClick={() => handleRequestSort(headCell.id)}
-                      >
-                        {headCell.label}
-                        {orderBy === headCell.id ? (
-                          <Box component="span" sx={visuallyHidden}>
-                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                          </Box>
-                        ) : null}
-                      </TableSortLabel>
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {stableSort(dataRows, getComparator(order, orderBy))
-                  .map((row, index) => (
-                    <TableRow
-                      key={index}
-                      hover
-                    >
-                      <TableCell component='th'>{row.date}</TableCell>
-                      <TableCell align='left'>{row.courseName}</TableCell>
-                      <TableCell align='left'>{row.studentName}</TableCell>
-                      <TableCell align='left'>{(row.amount/100.0).toFixed(2)}</TableCell>
+    <React.Fragment>
+      {
+        isLoading ?
+        <LoadingCircle loading={isLoading} centerY={true} />
+        :
+        <Paper variant='outlined'>
+          <Stack
+            spacing={2}
+            sx={{padding: 2}}
+          >
+            <Stack direction='row' justifyContent='space-between' alignItems='center'>
+              <Typography variant='h5'>Billing</Typography>
+            </Stack>
+            <Divider/>
+            {isLoading
+              ? <Stack alignItems='center' sx={{mt: 5, padding: 5}}>
+                <CircularProgress/>
+              </Stack>
+              : <TableContainer component={Paper} variant='outlined'>
+                <Table
+                  style={{tableLayout: 'fixed'}}
+                >
+                  <TableHead>
+                    <TableRow>
+                      {headCells.map((headCell) => (
+                        <TableCell
+                          key={headCell.id}
+                          align={headCell.alignLeft ? 'left' : 'right'}
+                          sortDirection={orderBy === headCell.id ? order : false}
+                        >
+                          <TableSortLabel
+                            active={orderBy === headCell.id}
+                            direction={orderBy === headCell.id ? order : 'asc'}
+                            onClick={() => handleRequestSort(headCell.id)}
+                          >
+                            {headCell.label}
+                            {orderBy === headCell.id ? (
+                              <Box component="span" sx={visuallyHidden}>
+                                {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                              </Box>
+                            ) : null}
+                          </TableSortLabel>
+                        </TableCell>
+                      ))}
                     </TableRow>
-                  ))}
+                  </TableHead>
+                  <TableBody>
+                    {stableSort(dataRows, getComparator(order, orderBy))
+                      .map((row, index) => (
+                        <TableRow
+                          key={index}
+                          hover
+                        >
+                          <TableCell component='th'>{row.date}</TableCell>
+                          <TableCell align='left'>{row.courseName}</TableCell>
+                          <TableCell align='left'>{row.studentName}</TableCell>
+                          <TableCell align='left'>{(row.amount/100.0).toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
 
-              < /TableBody>
-            </Table>
-          </TableContainer>
-        }
-      </Stack>
-    </Paper>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            }
+          </Stack>
+        </Paper>
+      }
+    </React.Fragment>
   );
 }
 
