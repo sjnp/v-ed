@@ -18,7 +18,7 @@ const ActiveInstructor = () => {
     }
 
     const handleClickActiveToInstructor = () => {
-        navigate('/account-manage/instructor/active/bank')
+        navigate('/account-manage/instructor/active')
     }
 
     return (

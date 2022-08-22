@@ -10,6 +10,7 @@ import FinanceInstructor from '../components/FinanceInstructor'
 // Material UI component
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Typography from '@mui/material/Typography'
 
 const AccountManageInstructor = () => {
@@ -26,12 +27,21 @@ const AccountManageInstructor = () => {
                 <Grid item xs={9} container>
                     <Grid item xs={1}></Grid>
                     <Grid item xs={10} container>
-                    {
-                        roles?.includes('INSTRUCTOR') ?
-                        <FinanceInstructor />
-                        :
-                        <ActiveInstructor />
-                    }
+                        <Grid item xs={12}>
+                            <Breadcrumbs>
+                                <Typography color='text.primary'>Instructor</Typography>
+                            </Breadcrumbs>
+                        </Grid>
+                        {
+                            roles?.includes('INSTRUCTOR') ?
+                            <Grid item xs={12}>
+                                <FinanceInstructor />
+                            </Grid>
+                            :
+                            <Grid item xs={12}>
+                                <ActiveInstructor />
+                            </Grid>
+                        }
                     </Grid>
                     <Grid item xs={1}></Grid>
                 </Grid>
