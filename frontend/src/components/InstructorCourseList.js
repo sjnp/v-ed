@@ -5,6 +5,7 @@ import InstructorPendingCourseList from "./InstructorPendingCourseList";
 import InstructorApprovedCourseList from "./InstructorApprovedCourseList";
 import InstructorRejectedCourseList from "./InstructorRejectedCourseList";
 import InstructorPublishedCourseList from "./InstructorPublishedCourseList";
+import InstructorBilling from "./InstructorBilling";
 
 const InstructorCourseList = () => {
 
@@ -75,6 +76,7 @@ const InstructorCourseList = () => {
           <InstructorPublishedCourseList/>
         </Stack>
       </Paper>
+      <InstructorBilling/>
     </Stack>
 
   )

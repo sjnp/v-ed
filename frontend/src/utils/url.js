@@ -30,6 +30,7 @@ export const URL_GET_ASSIGNMENTS_CHAPTER_INSTRUCTOR = '/api/instructors/courses/
 export const URL_GET_ASSIGNMENTS_ANSWER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}/answer/{noIndex}'
 export const URL_GET_DOWNLOAD_ANSWER = '/api/instructors/courses/{courseId}/assignment/answer/{answerId}'
 export const URL_UPDATE_ANSWER_COMMENT_INSTRUCTOR = '/api/instructors/assignment/answer/comment'
+export const URL_GET_ALL_TRANSACTIONS = '/api/instructors/finance/getTransaction'
 
 // admin
 export const URL_GET_PENDING_COURSE = '/api/admins/pending-courses/{courseId}'
