@@ -3,6 +3,7 @@ package com.ved.backend.controller;
 import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.model.Course;
 import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
+import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.request.CommentAnswerRequest;
 import com.ved.backend.request.CommentRequest;
 import com.ved.backend.response.AssignmentChapterResponse;
@@ -59,6 +60,16 @@ public class InstructorController {
       return ResponseEntity.ok().body(response);
     } catch (Exception exception) {
       return ResponseEntity.notFound().build();
+    }
+  }
+
+  @GetMapping(path = "/finance/getTransaction")
+  public ResponseEntity<?> getTransaction(Principal principal) {
+    try {
+      List<HashMap <String, Object>> response = instructorService.getOmiseAllTransaction(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
     }
   }
 

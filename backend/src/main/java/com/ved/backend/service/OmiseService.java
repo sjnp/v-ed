@@ -1,15 +1,15 @@
 package com.ved.backend.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.OmiseConfigProperties;
+import com.ved.backend.request.AnswerRequest;
 import com.ved.backend.request.ChargeDataRequest;
 import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.ChargeResponse;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @AllArgsConstructor
@@ -128,6 +128,40 @@ public class OmiseService {
         catch (Exception error) {
             System.out.println(error.getMessage());
             return error.getMessage();
+        }
+    }
+
+    public List<HashMap <String, Object>> getAllTransactionDataFromRecipient(String recipientId){
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = omiseKey.getTransferUrl();
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("Authorization", "Basic " + base64Creds);
+            HttpEntity<?> request = new HttpEntity<Object>(headers);
+            ResponseEntity<HashMap> response = restTemplate.exchange(url, HttpMethod.GET, request, HashMap.class);
+            Object responseObject = response.getBody().get("data");
+            List<?> responseList = new ArrayList<>();
+            if (responseObject.getClass().isArray()) {
+                responseList = Arrays.asList((Object[])responseObject);
+            } else if (responseObject instanceof Collection) {
+                responseList = new ArrayList<>((Collection<?>)responseObject);
+            }
+            List<HashMap <String, Object>> matchList = responseList.stream()
+                .map(item -> {
+                    ObjectMapper mapObject = new ObjectMapper();
+                    HashMap <String, Object> mapObj = mapObject.convertValue(item, HashMap.class);
+                    return mapObj;
+                })
+                .filter(item -> item.get("recipient").equals(recipientId))
+                .collect(Collectors.toList());
+            return matchList;
+        }
+        catch (Exception error) {
+            System.out.println("@@@" + error.getMessage());
+            return null;
         }
     }
 
