@@ -27,10 +27,10 @@ public class StudentController {
   private final ReportService reportService;
 
 
-  @PostMapping(path = "/finance/active-instrustor")
+  @PostMapping(path = "/active-instrustor")
   public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
-    String response = studentService.activeInstructor(finance, principal.getName());
-    return ResponseEntity.ok().body(response);
+    studentService.activeInstructor(finance, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
   @PostMapping("/course/free")

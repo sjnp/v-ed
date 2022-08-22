@@ -85,26 +85,17 @@ public class OmiseService {
     }
 
 
-    public String getRecipientData(String recipientId){
-        try {
-            String base64Creds = getBase64SecretKey();
-            String url = omiseKey.getRecipientUrl() + '/' + recipientId;
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-            headers.add("Authorization", "Basic " + base64Creds);
-            HttpEntity<?> request = new HttpEntity<Object>(headers);
-            HashMap<String, Object> response = restTemplate.patchForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String bankAccountData = responseJson.get("bank_account").toString();
-            log.info(bankAccountData);
-            return bankAccountData;
-        }
-        catch (Exception error) {
-            System.out.println(error.getMessage());
-            return error.getMessage();
-        }
+    public Object getRecipientData(String recipientId){
+        String base64Creds = getBase64SecretKey();
+        String url = omiseKey.getRecipientUrl() + '/' + recipientId;
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.add("Authorization", "Basic " + base64Creds);
+        HttpEntity<?> request = new HttpEntity<Object>(headers);
+        HashMap<String, Object> response = restTemplate.patchForObject(url, request, HashMap.class);
+        return response.get("bank_account");
     }
 
     public String updateRecipient(FinanceDataRequest finance, String recipientId){

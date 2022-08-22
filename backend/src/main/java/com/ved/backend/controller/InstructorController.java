@@ -45,15 +45,11 @@ public class InstructorController {
 
   @GetMapping(path = "/finance/getAccount")
   public ResponseEntity<?> getAccountData(Principal principal) {
-    try {
-      String response = instructorService.getOmiseAccountData(principal.getName());
-      return ResponseEntity.ok(response);
-    } catch (Exception exception) {
-      return ResponseEntity.badRequest().body(exception.getMessage());
-    }
+    Object response = instructorService.getOmiseAccountData(principal.getName());
+    return ResponseEntity.ok(response);
   }
 
-  @PatchMapping(path = "/finance/updateAccount")
+  @PutMapping(path = "/finance/updateAccount")
   public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
     try {
       String response = instructorService.updateFinanceAccount(finance, principal.getName());

@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.model.AppRole;
 import com.ved.backend.model.AppUser;
 import com.ved.backend.model.Instructor;
@@ -51,37 +52,28 @@ public class StudentService {
     }
   }
 
-  public String activeInstructor(FinanceDataRequest finance, String username) {
-    try {
-      AppUser appUser = appUserRepo.findByUsername(username);
-      log.info(username);
-      List<String> appUserRoles = appUser.getAppRoles().stream()
-              .map(AppRole::getName)
-              .collect(Collectors.toList());
-      if (appUserRoles.contains("INSTRUCTOR")) {
-        log.info("Fail, user: {} already is an instructor", username);
-        return "Fail, user: {} already is an instructor" + username;
-      } else if (appUserRoles.contains("STUDENT")) {
+  public void activeInstructor(FinanceDataRequest finance, String username) {
+    AppUser appUser = appUserRepo.findByUsername(username);
+    log.info(username);
+    List<String> appUserRoles = appUser.getAppRoles().stream()
+            .map(AppRole::getName)
+            .collect(Collectors.toList());
+    if (appUserRoles.contains("INSTRUCTOR")) {
+      throw new BadRequestException("Fail, user: " + username + " already is an instructor");
+    } else if (appUserRoles.contains("STUDENT")) {
 
-        String recipientId = omiseService.createRecipient(finance); // Add a recipient with a bank account
-        omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
+      String recipientId = omiseService.createRecipient(finance); // Add a recipient with a bank account
+      omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
 
-        // Add INSTRUCTOR role to User
-        AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
-        appUser.getAppRoles().add(instructorRole);
-        Student student = appUser.getStudent();
-        Instructor instructor = new Instructor();
-        instructor.setRecipientId(recipientId);
-        student.setInstructor(instructor);
-        studentRepo.save(student);
-        log.info("Success, user: {} is now an instructor", username);
-     }
-
-      return String.valueOf("OK");
-    }
-    catch (Exception error) {
-      System.out.println(error.getMessage());
-      return error.getMessage();
+      // Add INSTRUCTOR role to User
+      AppRole instructorRole = appRoleRepo.findByName("INSTRUCTOR");
+      appUser.getAppRoles().add(instructorRole);
+      Student student = appUser.getStudent();
+      Instructor instructor = new Instructor();
+      instructor.setRecipientId(recipientId);
+      student.setInstructor(instructor);
+      studentRepo.save(student);
+      log.info("Success, user: {} is now an instructor", username);
     }
   }
 

@@ -42,10 +42,10 @@ public class InstructorService {
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorService.class);
 
-  public String getOmiseAccountData(String username){
+  public Object getOmiseAccountData(String username){
     Instructor instructor = userService.getInstructor(username);
     String recipientId = instructor.getRecipientId();
-    String response = omiseService.getRecipientData(recipientId);
+    Object response = omiseService.getRecipientData(recipientId);
     return response;
   }
 
