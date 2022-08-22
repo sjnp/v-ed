@@ -83,7 +83,7 @@ const StudentAnswer = () => {
                                             assignment={assignmentAnswer.assignment}
                                             answer={assignmentAnswer.answer}
                                             noIndex={index}
-                                            commentInstructor={assignmentAnswer.answer.commentInstructor}
+                                            commentInstructor={assignmentAnswer.answer?.commentInstructor || null}
                                         />
                                     )
                                 })
