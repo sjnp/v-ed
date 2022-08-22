@@ -1,20 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import moment from 'moment'
+
+// component
+import LoadingCircle from './LoadingCircle'
 
 // Material UI component
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
-import Divider from '@mui/material/Divider'
 
 // Material UI icon
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import EditIcon from '@mui/icons-material/Edit'
+
+// custom hook
+import useApiPrivate from '../hooks/useApiPrivate'
 
 const FinanceInstructor = () => {
 
     const navigate = useNavigate()
+    const apiPrivate = useApiPrivate()
 
-    const handleClickBankInfo = () => {
+    const [ bankBand, setBankBand ] = useState('')
+    const [ accountName, setAccountName ] = useState('')
+    const [ accountNumber, setAccountNumber ] = useState('')
+    const [ activateDatetime, setActivateDatetime ] = useState('')
+    const [ loading, setLoading ] = useState(true)
+
+    useEffect(async () => {
+        const url = '/api/instructors/finance/getAccount'
+        const response = await apiPrivate.get(url)
+        if (response.status === 200) {
+            setBankBand(response.data.brand)
+            setAccountName(response.data.name)
+            setAccountNumber(`${'*'.repeat(12)}${response.data.last_digits}`  )
+            setActivateDatetime(response.data.created_at)
+        } else {
+            alert('Fail')
+        }
+        setLoading(false)
+    }, [])
+
+    const handleClickEditBank = () => {
         navigate('/account-manage/instructor/bank')
     }
 
@@ -23,41 +51,66 @@ const FinanceInstructor = () => {
     }
 
     return (
-        <Grid container border='solid 1px #d3d3d3' borderRadius={3} mt={3}>
-            <Grid item xs={12} container direction='row' alignItems='center'>
-                <Grid item xs={3} p={3}>
-                    <Typography>Bank info</Typography>
+        <React.Fragment>
+        {
+            loading ?
+            <LoadingCircle loading={loading} centerY={true} />
+            :
+            <Grid container mt={5}>
+                <Grid item xs={12} container border='solid 1px #d3d3d3' borderRadius={3} pl={3} pb={3}>
+                    <Grid item xs={11} pt={3}>
+                        <Typography variant='h6'>Bank information</Typography>
+                    </Grid>
+                    <Grid item xs={1} pt={3}>
+                        <IconButton color='primary' onClick={handleClickEditBank} title='Change receipt account'>
+                            <EditIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={5} pt={2}>
+                        <Typography>Bank band</Typography>
+                    </Grid>
+                    <Grid item xs={7} pt={2}>
+                        <Typography color='gray'>{bankBand}</Typography>
+                    </Grid>
+                    <Grid item xs={5} pt={2}>
+                        <Typography>Account name</Typography>
+                    </Grid>
+                    <Grid item xs={7} pt={2}>
+                        <Typography color='gray'>{accountName}</Typography>
+                    </Grid>
+                    <Grid item xs={5} pt={2}>
+                        <Typography>Account number</Typography>
+                    </Grid>
+                    <Grid item xs={7} pt={2}>
+                        <Typography color='gray'>{accountNumber}</Typography>
+                    </Grid>
+                    <Grid item xs={5} pt={2}>
+                        <Typography>Activate datetime</Typography>
+                    </Grid>
+                    <Grid item xs={7} pt={2}>
+                        <Typography color='gray'>
+                            {moment(activateDatetime).format("DD/MM/YYYY | kk:mm:ss")}
+                        </Typography>
+                    </Grid>
                 </Grid>
-                <Grid item xs={2} p={3}>
-                    <Typography color='gray'>Logo</Typography>
-                </Grid>
-                <Grid item xs={4} p={3}>
-                    <Typography color='gray'>Account name</Typography>
-                </Grid>
-                <Grid item xs={2} container justifyContent='right' p={3}>
-                    <Typography color='gray'>Edit</Typography>
-                </Grid>
-                <Grid item xs={1} container justifyContent='right' p={3}>
-                    <IconButton size='small' color='primary' onClick={handleClickBankInfo}>
-                        <ArrowForwardIosIcon />
-                    </IconButton>
+                <Grid item xs={12} container border='solid 1px #d3d3d3' borderRadius={3} mt={3} pt={3} pb={3}>
+                    <Grid item container direction='row' alignItems='center' justifyContent='center' pl={3} pr={1}>
+                        <Grid item xs={4}>
+                            Transaction
+                        </Grid>
+                        <Grid item xs={7} container direction='row' justifyContent='right'>
+                            <Typography color='gray'>View transaction</Typography>
+                        </Grid>
+                        <Grid item xs={1} container direction='row' justifyContent='right'>
+                            <IconButton color='primary' size='small' onClick={handleClickTransaction}>
+                                <ArrowForwardIosIcon />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid item xs={12}><Divider /></Grid>
-            <Grid item xs={12} container direction='row' alignItems='center'>
-                <Grid item xs={6} p={3}>
-                    <Typography>Transaction</Typography>
-                </Grid>
-                <Grid item xs={5} container justifyContent='right' p={3}>
-                    <Typography color='gray'>View transaction</Typography>
-                </Grid>
-                <Grid item xs={1} container justifyContent='right' p={3}>
-                    <IconButton size='small' color='primary' onClick={handleClickTransaction}>
-                        <ArrowForwardIosIcon />
-                    </IconButton>
-                </Grid>
-            </Grid>
-        </Grid>
+        }
+        </React.Fragment>
     )
 }
 

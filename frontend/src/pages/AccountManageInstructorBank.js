@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 // component
 import AppBarSearchHeader from '../components/AppBarSearchHeader'
 import AccountManageMenu from '../components/AccountManageMenu'
-import BankInfo from '../components/BankInfo'
 import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI component
@@ -51,12 +50,7 @@ const AccountManageInstructorBank = () => {
                         loading ?
                         <LoadingCircle loading={loading} centerY={true} />
                         :
-                        <BankInfo
-                            bankBand={bankBand}
-                            accountName={accountName}
-                            accountNumber={accountNumber}
-                            activateDatetime={activateDatetime}
-                        />
+                        null
                     }
                     </Grid>
                     <Grid item xs={2}></Grid>

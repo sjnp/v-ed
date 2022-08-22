@@ -32,16 +32,22 @@ const AccountManageInstructor = () => {
                                 <Typography color='text.primary'>Instructor</Typography>
                             </Breadcrumbs>
                         </Grid>
-                        {
-                            roles?.includes('INSTRUCTOR') ?
-                            <Grid item xs={12}>
-                                <FinanceInstructor />
+                        <Grid item xs={12} container>
+                            <Grid item xs={1}></Grid>
+                            <Grid item xs={10}>
+                            {
+                                roles?.includes('INSTRUCTOR') ?
+                                <Grid item xs={12}>
+                                    <FinanceInstructor />
+                                </Grid>
+                                :
+                                <Grid item xs={12}>
+                                    <ActiveInstructor />
+                                </Grid>
+                            }
                             </Grid>
-                            :
-                            <Grid item xs={12}>
-                                <ActiveInstructor />
-                            </Grid>
-                        }
+                            <Grid item xs={1}></Grid>
+                        </Grid>
                     </Grid>
                     <Grid item xs={1}></Grid>
                 </Grid>
