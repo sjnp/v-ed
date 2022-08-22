@@ -85,12 +85,17 @@ const PaymentSuccess = () => {
                 }
                 </Grid>
                 <Grid item>
-                {isDataLoad ? 
-                    <Button variant='contained' onClick={() => navigate(`/student/course`)}>
-                        Go to my course
-                    </Button>
-                    :
+                {!isDataLoad ? 
                     <Skeleton variant="text" />
+                    :
+                    isPaid ? 
+                        <Button variant='contained' onClick={() => navigate(`/student/course`)}>
+                            Go to my course
+                        </Button>
+                        :
+                        <Button variant='contained' onClick={() => navigate(`/overview/course/${courseId}`)}>
+                            Back to overview course
+                        </Button>
                 }
                 </Grid> 
             </Grid> 
