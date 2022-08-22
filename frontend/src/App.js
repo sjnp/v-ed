@@ -17,8 +17,8 @@ import AccountManageProfile from './pages/AccountManageProfile';
 import AccountManageVerifyPassword from './pages/AccountManageVerifyPassword';
 import AccountManageNewPassword from './pages/AccountManageNewPassword';
 import AccountManageInstructor from './pages/AccountManageInstructor';
-import AccountManageInstructorActiveBank from './pages/AccountManageInstructorActiveBank';
-import AccountManageBankInfo from './pages/AccountManageBankInfo';
+import AccountManageInstructorActive from './pages/AccountManageInstructorActive';
+import AccountManageInstructorBank from './pages/AccountManageInstructorBank';
 import AccountManageInstructorTransaction from './pages/AccountManageInstructorTransaction';
 import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
@@ -66,7 +66,7 @@ const App = () => {
           <Route path='account-manage/profile/new-password' element={ <AccountManageNewPassword/> } />
           
           <Route path='account-manage/instructor' element={ <AccountManageInstructor/> } />
-          <Route path='account-manage/instructor/active/bank' element={ <AccountManageInstructorActiveBank/> } />
+          <Route path='account-manage/instructor/active' element={ <AccountManageInstructorActive/> } />
 
           {/* payment */}
           <Route path='payment/course/:courseId' element={ <Payment /> } />
@@ -111,7 +111,7 @@ const App = () => {
           <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
           <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
 
-          <Route path='account-manage/instructor/bank' element={ <AccountManageBankInfo/> } />
+          <Route path='account-manage/instructor/bank' element={ <AccountManageInstructorBank/> } />
           <Route path='account-manage/instructor/transaction' element={ <AccountManageInstructorTransaction/> } />
         </Route>
 

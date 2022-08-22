@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid'
 // custom hook
 import useApiPrivate from '../hooks/useApiPrivate'
 
-const AccountManageBankInfo = () => {
+const AccountManageInstructorBank = () => {
 
     const apiPrivate = useApiPrivate()
 
@@ -66,4 +66,4 @@ const AccountManageBankInfo = () => {
     )
 }
 
-export default AccountManageBankInfo
+export default AccountManageInstructorBank
