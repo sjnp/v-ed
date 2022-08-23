@@ -171,9 +171,7 @@ public class OmiseService {
             body.add("type", chargeData.getType());
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String sourceId = responseJson.get("id").toString();
-            log.info(sourceId);
+            String sourceId = response.get("id").toString();
             return sourceId;
         }
         catch (Exception error) {
@@ -204,9 +202,8 @@ public class OmiseService {
             body.add("source", source );
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String authorizeUri = responseJson.get("authorize_uri").toString();
-            String chargeId = responseJson.get("id").toString();
+            String authorizeUri = response.get("authorize_uri").toString();
+            String chargeId = response.get("id").toString();
             ChargeResponse chargeResponse = ChargeResponse.builder()
                     .id(chargeId)
                     .authorizeUri(authorizeUri)
@@ -237,8 +234,7 @@ public class OmiseService {
             headers.add("Authorization", "Basic " + base64Creds);
             HttpEntity<?> request = new HttpEntity<Object>(headers);
             HashMap<String, Object> response = restTemplate.patchForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String paid = responseJson.get("paid").toString();
+            String paid = response.get("paid").toString();
             boolean status = Boolean.parseBoolean(paid);
             return status;
         }
@@ -262,8 +258,7 @@ public class OmiseService {
             body.add("recipient", recipientId);
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String transferId = responseJson.get("id").toString();
+            String transferId = response.get("id").toString();
             log.info(transferId);
             return transferId;
         }
@@ -284,8 +279,7 @@ public class OmiseService {
             headers.add("Authorization", "Basic " + base64Creds);
             HttpEntity<?> request = new HttpEntity<Object>(headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String sent = responseJson.get("sent").toString();
+            String sent = response.get("sent").toString();
             boolean status = Boolean.parseBoolean(sent);
             return status;
         }
@@ -306,8 +300,7 @@ public class OmiseService {
             headers.add("Authorization", "Basic " + base64Creds);
             HttpEntity<?> request = new HttpEntity<Object>(headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
-            JSONObject responseJson = new JSONObject(response);
-            String paid = responseJson.get("paid").toString();
+            String paid = response.get("paid").toString();
             boolean status = Boolean.parseBoolean(paid);
             return status;
         }

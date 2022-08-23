@@ -76,6 +76,9 @@ public class StudentCourseService {
         .orElseThrow(() -> new BadRequestException("This course not free"));
     Student student = userService.getStudent(username);
     // studentCourseService.verifyCanBuyCourse(student, course); // เช็คซื้อคอสได้ไหม ถ้ามีแล้วเออเร่อ
+    if (course.getInstructor().getStudent().getAppUser().getUsername().equals(username)) {
+      throw new BadRequestException("You own this course");
+    }
     boolean isExists = studentCourseRepo.existsByStudentAndCourse(student, course);
     if (isExists) {
       throw new ConflictException("You have this course already");
