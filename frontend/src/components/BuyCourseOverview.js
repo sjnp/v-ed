@@ -113,9 +113,9 @@ const BuyCourseOverview = ({ data }) => {
       <Grid container p={3}>
         <Grid item xs={2}>
           <Avatar
-            alt={instructorFirstname}
+            alt={username}
             src={instructorPictureURI || "/static/images/avatar/1.jpg"} 
-            sx={{ bgcolor: stringToColor(instructorFirstname), mt: 0.3 }}
+            sx={{ bgcolor: stringToColor(username), mt: 0.3 }}
           /> 
         </Grid>
         <Grid item xs={10}>
