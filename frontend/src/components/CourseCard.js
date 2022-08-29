@@ -48,14 +48,14 @@ const CourseCard = ({ image, courseName, instructorName, rating, reviewCount, pa
                     rating === 0 && reviewCount === 0 ?
                     <Typography variant="caption" color='gray'>{'No review now'}</Typography>
                     :
-                    <Box>
+                    <Box display='flex' alignItems='center' justifyContent='center'>
                         <Rating
                             value={rating}
                             size="small"
                             readOnly
                             emptyIcon={<StarIcon fontSize="inherit" />}
                         />
-                        <Typography variant="caption" textAlign='center'>{rating} ({reviewCount})</Typography>
+                        <Typography variant="caption" textAlign='center' pl={1} pt={0.5}>{rating} ({reviewCount})</Typography>
                     </Box>
                 }    
                 </Box>

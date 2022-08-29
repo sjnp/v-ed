@@ -19,7 +19,7 @@ const InstructorCommentAnswer = ({ answerId, commentInstructor, onCommentSuccess
     const { courseId } = useParams()
     const apiPrivate = useApiPrivate()
 
-    const maxLength = 1024
+    const maxLength = 1000
 
     const [ isCommentInstructor, setIsCommentInstructor ] = useState(commentInstructor === null ? false : true)
     const [ comment, setComment ] = useState(commentInstructor || '')
