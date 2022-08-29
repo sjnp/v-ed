@@ -85,8 +85,8 @@ const Search = () => {
             <LoadingCircle loading={loading} centerY={true} />
             :
             searches?.length === 0 ?
-            <Box display="flex" justifyContent="center" alignItems="center" minHeight={window.innerHeight / 8 + 'vh'}>
-              <Typography variant='subtitle1' color='gray'>"{nameRedex}" not any match.</Typography>
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight={window.innerHeight / 16 + 'vh'}>
+              <Typography variant='subtitle1' color='gray'>Result not found.</Typography>
             </Box>
             :
             searches?.map((search, index) => (
