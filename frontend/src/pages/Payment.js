@@ -8,6 +8,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import AppBarSearchHeader from '../components/AppBarSearchHeader';
 import CourseCardWide from '../components/CourseCardWide'
 import BankingPaymentSelect from '../components/BankingPaymentSelect'
+import LoadingCircle from '../components/LoadingCircle'
 
 // Material UI
 import { Container, Box, Button, Typography } from '@mui/material'
@@ -22,6 +23,8 @@ const Payment = () => {
   const navigate = useNavigate()
 
   const axiosPrivate = useAxiosPrivate()
+
+  const [ isLoading, setIsLoading ] = useState(true)
 
   const [ courseCard, setCourseCard ] = useState({
       courseName: null,
@@ -52,6 +55,7 @@ const Payment = () => {
       // returnUrl: result.pictureURL
       returnUrl: `payment/course/${courseId}/success`
     })
+    setIsLoading(false)
   }, [])
 
   const handlePayment = async () => {
@@ -75,44 +79,62 @@ const Payment = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          minWidth: 870,
+          // backgroundColor: 'green'
         }}
       >
         <Typography variant='h3' sx={{ alignSelf: 'flex-start', marginLeft: 10, marginBottom: 2 }}>
           Checkout
         </Typography>
-        <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2 }}>
-          Course Select :
-        </Typography>
-        <CourseCardWide
-          image={courseCard.pictureURL}
-          courseName={courseCard.courseName}
-          instructorName={courseCard.instructorName}
-          rating={courseCard.rating}
-          reviewCount={courseCard.reviewCount}
-          pathOnClick={`/overview/course/${courseCard.courseId}`}
-          price={courseCard.price}
-        />
-        <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2, marginTop: 10 }}>
-          Internet Banking :
-        </Typography>
-        <BankingPaymentSelect setChargeData={setChargeData} chargeData={chargeData}/>
-        <Button
-          type='submit'
-          variant='contained'
-          size='large'
-          sx={{
-            marginTop: 6,
-            marginBottom: 2,
-            width: 300
-          }}
-          onClick={handlePayment}
-        >
-          Payment
-        </Button>
 
-        <Button variant='contained' onClick={() => navigate(`/payment/course/${courseId}/success`)}>
+        { isLoading ?
+        <LoadingCircle loading = {isLoading} centerY = {true}/>
+        :
+        <Box 
+        sx={{
+          marginTop: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          // backgroundColor: 'blue',
+          width: '100%'
+        }}
+        >
+          <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2 }}>
+            Course Select :
+          </Typography>
+          
+          <CourseCardWide
+            image={courseCard.pictureURL}
+            courseName={courseCard.courseName}
+            instructorName={courseCard.instructorName}
+            rating={courseCard.rating}
+            reviewCount={courseCard.reviewCount}
+            pathOnClick={`/overview/course/${courseCard.courseId}`}
+            price={courseCard.price}
+          />
+          <Typography variant='h5' sx={{ alignSelf: 'flex-start', marginLeft: 10.5, marginBottom: 2, marginTop: 6 }}>
+            Internet Banking :
+          </Typography>
+          <BankingPaymentSelect setChargeData={setChargeData} chargeData={chargeData}/>
+          <Button
+            type='submit'
+            variant='contained'
+            size='large'
+            sx={{
+              marginTop: 6,
+              marginBottom: 2,
+              width: 300
+            }}
+            onClick={handlePayment}
+          >
+            Payment
+          </Button>
+        </Box>
+        }
+        {/* <Button variant='contained' onClick={() => navigate(`/payment/course/${courseId}/success`)}>
           Go to payment success page
-        </Button>
+        </Button> */}
 
       </Box>
     </Container>
