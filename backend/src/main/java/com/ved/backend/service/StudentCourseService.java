@@ -129,7 +129,7 @@ public class StudentCourseService {
     log.info("Get my courses of username: {}", username);
     Student student = userService.getStudent(username);
     return studentCourseRepo
-        .findByStudent(student)
+        .findByStudentAndPaySuccess(student, true)
         .stream()
         .map((myCourse) -> new CourseCardResponse(myCourse.getCourse()))
         .collect(Collectors.toList());

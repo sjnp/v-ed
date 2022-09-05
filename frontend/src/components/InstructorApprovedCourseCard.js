@@ -12,7 +12,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import {URL_PUBLISH_INSTRUCTOR_COURSE} from "../utils/url";
 
-const InstructorApprovedCourseCard = ({id, pictureUrl, courseName, price}) => {
+const InstructorApprovedCourseCard = ({id, pictureUrl, courseName, price, handlePublish}) => {
 
   const [shadow, setShadow] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ const InstructorApprovedCourseCard = ({id, pictureUrl, courseName, price}) => {
   const handlePublishCourse = () => {
     setIsLoading(true);
     axiosPrivate.put(URL_PUBLISH_INSTRUCTOR_COURSE.replace('{courseId}', id))
-      .then(() => navigate('/instructor'))
+      .then(() => handlePublish())
       .catch(err => console.error(err));
   }
 
