@@ -60,7 +60,7 @@ public class InstructorService {
   public List<HashMap <String, Object>> getOmiseAllTransaction(String username){
     Instructor instructor = userService.getInstructor(username);
     String recipientId = instructor.getRecipientId();
-    List<HashMap <String, Object>> responseMatchList = omiseService.getAllTransactionDataFromRecipient(recipientId);
+    List<HashMap <String, Object>> responseMatchList = omiseService.getAllTransferDataFromRecipient(recipientId);
     List<HashMap <String, Object>> response = responseMatchList.stream()
       .map(item -> {
         ObjectMapper mapObject = new ObjectMapper();
