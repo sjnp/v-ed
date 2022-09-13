@@ -21,6 +21,7 @@ import Grid from '@mui/material/Grid'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Container from '@mui/material/Container'
 import Modal from '@mui/material/Modal'
+import Skeleton from '@mui/material/Skeleton'
 
 // custom hook
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
@@ -38,8 +39,17 @@ const BuyCourseOverview = ({ data }) => {
 
   const axiosPrivate = useAxiosPrivate()
 
-  const { instructorPictureURI, courseName, instructorFirstname, instructorLastname} = data
-  const { price, ratingCourse, totalReview, courseId } = data
+  const {
+    instructorPictureURI,
+    courseName,
+    instructorFirstname,
+    instructorLastname,
+    price,
+    ratingCourse,
+    totalReview,
+    courseId,
+    stateOfCourse
+  } = data
 
   const [ loadingGetFreeCourse, setLoadingGetFreeCourse ] = useState(false)
 
@@ -85,6 +95,14 @@ const BuyCourseOverview = ({ data }) => {
       setRequiredLogin(true)
     }
   }
+
+  const handleClickManageCourse = () => {
+    navigate(`/instructor/course/${courseId}/assignment`)
+  }
+
+  const handleClickGotoThisCourse = () => {
+    navigate(`/student/course/${courseId}/content`)
+  }
   
   return (
     <Paper>
@@ -95,9 +113,9 @@ const BuyCourseOverview = ({ data }) => {
       <Grid container p={3}>
         <Grid item xs={2}>
           <Avatar
-            alt={instructorFirstname}
+            alt={username}
             src={instructorPictureURI || "/static/images/avatar/1.jpg"} 
-            sx={{ bgcolor: stringToColor(instructorFirstname), mt: 0.3 }}
+            sx={{ bgcolor: stringToColor(username), mt: 0.3 }}
           /> 
         </Grid>
         <Grid item xs={10}>
@@ -127,14 +145,27 @@ const BuyCourseOverview = ({ data }) => {
               {price === 0 ? 'FREE' : `${price} THB`}
             </Typography>
             {
-              price === 0 ?
-              <LoadingButton variant='contained' loading={loadingGetFreeCourse} onClick={handleClickGetFreeCourse}>
-                GET COURSE NOW
-              </LoadingButton>
+              stateOfCourse === 'instructor own' ?
+                <Button variant="contained" onClick={handleClickManageCourse}>
+                  MANAGE COURSE
+                </Button>
               :
-              <Button variant="contained" onClick={handleClickBuyNow}>
-                BUY NOW
-              </Button>
+              stateOfCourse === 'student own' ?
+                <Button variant="contained" onClick={handleClickGotoThisCourse}>
+                  GO TO THIS COURSE
+                </Button>
+              :
+              stateOfCourse === 'student' || stateOfCourse === 'public' ?
+                price === 0 ?
+                  <LoadingButton variant='contained' loading={loadingGetFreeCourse} onClick={handleClickGetFreeCourse}>
+                    GET COURSE NOW
+                  </LoadingButton>
+                :
+                  <Button variant="contained" onClick={handleClickBuyNow}>
+                    BUY NOW
+                  </Button>
+              :
+                <Skeleton variant='rectangular' width={100} height={30} />
             }
           </Grid>
         </Grid>

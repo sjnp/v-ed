@@ -17,6 +17,9 @@ import AccountManageProfile from './pages/AccountManageProfile';
 import AccountManageVerifyPassword from './pages/AccountManageVerifyPassword';
 import AccountManageNewPassword from './pages/AccountManageNewPassword';
 import AccountManageInstructor from './pages/AccountManageInstructor';
+import AccountManageInstructorActive from './pages/AccountManageInstructorActive';
+import AccountManageInstructorBank from './pages/AccountManageInstructorBank';
+import AccountManageInstructorTransaction from './pages/AccountManageInstructorTransaction';
 import StudentVideoCourse from './pages/StudentVideoCourse';
 import CreateCourse from './pages/CreateCourse';
 import UploadCourseMaterials from "./pages/UploadCourseMaterials";
@@ -32,6 +35,12 @@ import StudentPostComment from './pages/StudentPostComment';
 import StudentCreateReview from './pages/StudentCreateReview';
 import StudentEditReview from './pages/StudentEditReview';
 import PaymentSuccess from './pages/PaymentSuccess';
+import InstructorAssignmentCourse from './pages/InstructorAssignmentCourse';
+import InstructorAssignmentChapter from './pages/InstructorAssignmentChapter';
+import InstructorAssignmentAnswer from './pages/InstructorAssignmentAnswer';
+import InstructorPost from './pages/InstructorPost';
+import InstructorPostComment from './pages/InstructorPostComment';
+import InstructorReview from './pages/InstructorReview';
 
 const App = () => {
   return (
@@ -57,6 +66,7 @@ const App = () => {
           <Route path='account-manage/profile/new-password' element={ <AccountManageNewPassword/> } />
           
           <Route path='account-manage/instructor' element={ <AccountManageInstructor/> } />
+          <Route path='account-manage/instructor/active' element={ <AccountManageInstructorActive/> } />
 
           {/* payment */}
           <Route path='payment/course/:courseId' element={ <Payment /> } />
@@ -94,6 +104,15 @@ const App = () => {
           <Route path='instructor' element={ <Instructor /> } />
           <Route path='instructor/create-course' element={ <CreateCourse/> } />
           <Route path='instructor/create-course/:id' element={ <UploadCourseMaterials/> } />
+          <Route path='instructor/course/:courseId/assignment' element={ <InstructorAssignmentCourse /> } />
+          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex' element={ <InstructorAssignmentChapter /> } />
+          <Route path='instructor/course/:courseId/assignment/chapter/:chapterIndex/answer/:noIndex' element={ <InstructorAssignmentAnswer /> } />
+          <Route path='instructor/course/:courseId/post' element={ <InstructorPost /> } />
+          <Route path='instructor/course/:courseId/post/:postId' element={ <InstructorPostComment /> } />
+          <Route path='instructor/course/:courseId/review' element={ <InstructorReview /> } />
+
+          <Route path='account-manage/instructor/bank' element={ <AccountManageInstructorBank/> } />
+          <Route path='account-manage/instructor/transaction' element={ <AccountManageInstructorTransaction/> } />
         </Route>
 
         {/* admin role */}

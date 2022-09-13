@@ -103,23 +103,26 @@ const StudentReview = () => {
                             null
                             :
                             myReviewId === null ?
-                            <Fab 
-                                size='small' 
-                                color='primary' 
-                                onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
-                                sx={{ position: 'fixed' }}
-                            >
-                                <AddIcon titleAccess='Create review' />
-                            </Fab>
-                            :
-                            <Fab
-                                size='small' 
-                                color='primary' 
-                                onClick={() => navigate(`/student/course/${courseId}/review/${myReviewId}`)} 
-                                sx={{ position: 'fixed' }}
-                            >
-                                <EditIcon titleAccess='Edit review' />
-                            </Fab>
+                                <Fab 
+                                    size='small' 
+                                    color='primary' 
+                                    onClick={() => navigate(`/student/course/${courseId}/review/create`)} 
+                                    sx={{ position: 'fixed' }}
+                                >
+                                    <AddIcon titleAccess='Create review' />
+                                </Fab>
+                                :
+                                myReviewId === 0 ?
+                                    null
+                                    :
+                                    <Fab
+                                        size='small' 
+                                        color='primary' 
+                                        onClick={() => navigate(`/student/course/${courseId}/review/${myReviewId}`)} 
+                                        sx={{ position: 'fixed' }}
+                                    >
+                                        <EditIcon titleAccess='Edit review' />
+                                    </Fab>
                         }
                         </Grid>
                     </Grid>
@@ -136,6 +139,8 @@ const StudentReview = () => {
                                     reviewId={review.id}
                                     rating={review.rating}
                                     comment={review.comment}
+                                    displayUrl={review.displayUrl}
+                                    reviewUsername={review.reviewUsername}
                                     firstname={review.firstname}
                                     lastname={review.lastname} 
                                     datetime={review.reviewDateTime}

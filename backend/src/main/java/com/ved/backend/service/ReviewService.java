@@ -77,27 +77,40 @@ public class ReviewService {
         reviewRepo.save(review);
     }
 
-    public ReviewCourseResponse getReviewsByCourseId(Long courseId, String username) {
-        log.info("Get reviews course id: {} by username: {}", courseId, username);
-        StudentCourse studentCourse = authService.authorized(username, courseId);
+    public ReviewCourseResponse getReviewsCourse(Long courseId, String username) {
         PublishedCourse publishedCourse = publishedCourseRepo.findByCourseId(courseId)
             .orElseThrow(() -> new CourseNotFoundException(courseId));
         PublishedCourseResponse publishedCourseResponse = new PublishedCourseResponse(publishedCourse);
-
         Long myReviewId = null;
         List<ReviewResponse> reviewResponses = new ArrayList<ReviewResponse>();
         for (Review review : publishedCourse.getReviews()) {
-            if (review.getStudent().equals(studentCourse.getStudent())) {
-                myReviewId = review.getId();
-            }
-            reviewResponses.add(new ReviewResponse(review));
-        }
 
+            if (review.getStudent().getAppUser().getUsername().equals(username)) {
+                myReviewId = review.isVisible() == true ? review.getId() : 0L;
+            }
+
+            if (review.isVisible()) {
+                reviewResponses.add(new ReviewResponse(review));
+            }
+        }     
+        
         return ReviewCourseResponse.builder()
             .summary(publishedCourseResponse)
             .reviews(reviewResponses)
             .myReviewId(myReviewId)
             .build();
+    }
+
+    public ReviewCourseResponse getReviewsCourseByStudent(Long courseId, String username) {
+        log.info("Get reviews course id: {} by username: {}", courseId, username);
+        authService.authorized(username, courseId);
+        return this.getReviewsCourse(courseId, username);
+    }
+
+    public ReviewCourseResponse getReviewsCourseByInstructor(Long courseId, String username) {
+        log.info("Get reviews course id: {} by username: {}", courseId, username);
+        authService.authorizedInstructor(username, courseId);
+        return this.getReviewsCourse(courseId, username);
     }
 
     public ReviewResponse getReview(Long courseId, Long reviewId, String username) {

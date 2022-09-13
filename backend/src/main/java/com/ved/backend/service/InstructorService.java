@@ -1,5 +1,6 @@
 package com.ved.backend.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ved.backend.configuration.CourseStateProperties;
 import com.ved.backend.configuration.PrivateObjectStorageConfigProperties;
 import com.ved.backend.configuration.PublicObjectStorageConfigProperties;
@@ -8,6 +9,7 @@ import com.ved.backend.exception.baseException.BadRequestException;
 import com.ved.backend.exception.baseException.NotFoundException;
 import com.ved.backend.model.*;
 import com.ved.backend.repo.*;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.IncompleteCourseResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
 import com.ved.backend.utility.FileExtensionStringHandler;
@@ -15,10 +17,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -28,8 +27,10 @@ public class InstructorService {
 
   private final CourseRepo courseRepo;
   private final InstructorRepo instructorRepo;
+  private final StudentCourseRepo studentCourseRepo;
 
   private final UserService userService;
+  private final OmiseService omiseService;
   private final CourseStateService courseStateService;
   private final PublicObjectStorageService publicObjectStorageService;
   private final PrivateObjectStorageService privateObjectStorageService;
@@ -40,6 +41,43 @@ public class InstructorService {
   private final PrivateObjectStorageConfigProperties privateObjectStorageConfigProperties;
 
   private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorService.class);
+
+  public Object getOmiseAccountData(String username){
+    Instructor instructor = userService.getInstructor(username);
+    String recipientId = instructor.getRecipientId();
+    Object response = omiseService.getRecipientData(recipientId);
+    return response;
+  }
+
+  public String updateFinanceAccount(FinanceDataRequest financeDataRequest, String username){
+    Instructor instructor = userService.getInstructor(username);
+    String recipientId = instructor.getRecipientId();
+    String response = omiseService.updateRecipient(financeDataRequest, recipientId);
+    omiseService.verifyRecipient(recipientId); // Mark a recipient as verified
+    return response;
+  }
+
+  public List<HashMap <String, Object>> getOmiseAllTransaction(String username){
+    Instructor instructor = userService.getInstructor(username);
+    String recipientId = instructor.getRecipientId();
+    List<HashMap <String, Object>> responseMatchList = omiseService.getAllTransferDataFromRecipient(recipientId);
+    List<HashMap <String, Object>> response = responseMatchList.stream()
+      .map(item -> {
+        ObjectMapper mapObject = new ObjectMapper();
+        HashMap <String, Object> mapObj = mapObject.convertValue(item, HashMap.class);
+        StudentCourse studentCourse = studentCourseRepo.findByTransferId(mapObj.get("id").toString());
+        String courseName = studentCourse.getCourse().getName();
+        String studentName = studentCourse.getStudent().getFullName();
+        HashMap <String, Object> filterObj = new HashMap<>();
+        filterObj.put("courseName",courseName);
+        filterObj.put("studentName",studentName);
+        filterObj.put("amount",mapObj.get("amount"));
+        filterObj.put("date",mapObj.get("paid_at"));
+        return filterObj;
+      })
+      .collect(Collectors.toList());
+    return response;
+  }
 
   public HashMap<String, Long> createCourse(Course course, String username) {
     Instructor instructor = userService.getInstructor(username);

@@ -28,10 +28,12 @@ export const profileSlice = createSlice({
     updatePicture : ( state , action ) => {
       state.value.uriPicture = action.payload.uriPicture;
     },
-    
+    resetProfile : ( state ) => {
+      state.value = initialState;
+    }
   }
 });
 
-export const { setProfile, updateProfile, updatePicture } = profileSlice.actions;
+export const { setProfile, updateProfile, updatePicture, resetProfile } = profileSlice.actions;
 
 export default profileSlice.reducer;

@@ -28,6 +28,9 @@ public class StudentCourse {
 
   private String transferId;
 
+  //  @Column(nullable = false)
+  private Boolean paySuccess;
+
   @ManyToOne
   @JoinColumn(name = "student_id")
   private Student student;

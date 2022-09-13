@@ -10,6 +10,7 @@ import com.ved.backend.repo.CourseRepo;
 import com.ved.backend.repo.CourseStateRepo;
 import com.ved.backend.response.AboutCourseResponse;
 import com.ved.backend.response.CourseResponse;
+import com.ved.backend.response.OverviewResponse;
 import com.ved.backend.response.VideoResponse;
 
 import lombok.AllArgsConstructor;
@@ -101,6 +102,28 @@ public class CourseService {
     public Collection<CategoryRepo.IdAndNameOnly> getAllCategories() {
         // log.info("Getting all categories");
         return categoryRepo.findAllBy();
+    }
+
+    public OverviewResponse getOverviewCourse(Long courseId, String username) {
+        Course course = courseRepo
+            .findById(courseId)
+            .orElseThrow(() -> new CourseNotFoundException(courseId));
+        String thisCourseOf;
+        if (course.getInstructor().getStudent().getAppUser().getUsername().equals(username)) {
+            thisCourseOf = "instructor own";
+        } else {
+            boolean isStudentCourse;
+            try {
+                authService.authorized(username, courseId);
+                isStudentCourse = true;
+            } catch (Exception ex) {
+                isStudentCourse = false;
+            }
+            thisCourseOf = isStudentCourse == true ? "student own" : "student";
+        }
+        OverviewResponse overviewResponse = new OverviewResponse(course);
+        overviewResponse.setStateOfCourse(thisCourseOf);
+        return overviewResponse;
     }
 
 }

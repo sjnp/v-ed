@@ -83,16 +83,14 @@ const StudentPost = () => {
                         }
                         {
                             posts?.map((post, index) => (
-                                post.visible ?
                                 <PostCard 
                                     key={index}
                                     postId={post.id}
                                     topic={post.topic}
                                     datetime={post.createDateTime} 
                                     commentCount={post.commentCount}
+                                    type='student'
                                 />
-                                :
-                                null
                             ))
                         }
                         </Grid>

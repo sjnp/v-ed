@@ -20,6 +20,17 @@ export const URL_UPDATE_COURSE_MATERIAL = '/api/instructors/incomplete-courses/{
 export const URL_SUBMIT_INCOMPLETE_COURSE = '/api/instructors/incomplete-courses/{courseId}/state'
 export const URL_PUBLISH_INSTRUCTOR_COURSE = '/api/instructors/approved-courses/{courseId}'
 export const URL_DELETE_COURSE_PICTURE = '/api/instructors/incomplete-courses/{courseId}/picture'
+export const URL_GET_ASSIGNMENTS_COURSE = '/api/instructors/courses/{courseId}/assignments'
+export const URL_GET_POSTS_COURSE = '/api/instructors/courses/{courseId}/posts'
+export const URL_GET_POSTS_ID = '/api/instructors/courses/{courseId}/posts/{postId}'
+export const URL_CREATE_COMMENT_INSTRUCTOR = '/api/instructors/courses/{courseId}/posts/{postId}/comment'
+export const URL_GET_REVIEWS_COURSE = '/api/instructors/courses/{courseId}/reviews'
+export const URL_GET_ASSIGNMENTS_COURSE_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments'
+export const URL_GET_ASSIGNMENTS_CHAPTER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}'
+export const URL_GET_ASSIGNMENTS_ANSWER_INSTRUCTOR = '/api/instructors/courses/{courseId}/assignments/chapters/{chapterIndex}/answer/{noIndex}'
+export const URL_GET_DOWNLOAD_ANSWER = '/api/instructors/courses/{courseId}/assignment/answer/{answerId}'
+export const URL_UPDATE_ANSWER_COMMENT_INSTRUCTOR = '/api/instructors/assignment/answer/comment'
+export const URL_GET_ALL_TRANSACTIONS = '/api/instructors/finance/getTransaction'
 
 // admin
 export const URL_GET_PENDING_COURSE = '/api/admins/pending-courses/{courseId}'
@@ -31,8 +42,8 @@ export const URL_GET_ALL_PENDING_REVIEW_REPORTS = '/api/admins/pending-reports/r
 export const URL_PUT_PENDING_REVIEW_REPORT = '/api/admins/pending-reports/reviews/{reviewReportId}'
 export const URL_GET_ALL_PENDING_POST_REPORTS = '/api/admins/pending-reports/posts'
 export const URL_PUT_PENDING_POST_REPORT = '/api/admins/pending-reports/posts/{postReportId}'
-export const URL_GET_ALL_PENDING_POST_COMMENTS = '/api/admins/pending-reports/comments'
-export const URL_GET_PENDING_POST_WITH_REPORTED_COMMENTS = '/api/admins/pending-reports/comments/{commentReportId}'
+export const URL_GET_ALL_PENDING_COMMENT_REPORTS = '/api/admins/pending-reports/comments'
+export const URL_PUT_PENDING_COMMENT_REPORT = '/api/admins/pending-reports/comments/{commentReportId}'
 
 // overview
 export const URL_GET_OVERVIEWS_FROM_CATEGORY = '/api/overviews/category/{name}'
@@ -56,7 +67,7 @@ export const URL_GET_ASSIGNMENT_ANSWER = '/api/students/courses/{courseId}/chapt
 export const URL_GET_ALL_POSTS_BY_COURSE = '/api/students/courses/{courseId}/posts'
 export const URL_CREATE_POST = '/api/students/courses/post'
 export const URL_GET_POST = '/api/students/courses/{courseId}/posts/{postId}'
-export const URL_CREATE_COMMENT = '/api/students/courses/{courseId}/posts/{postId}/comment'
+export const URL_CREATE_COMMENT_STUDENT = '/api/students/courses/{courseId}/posts/{postId}/comment'
 
 export const URL_CREATE_REVIEW = '/api/students/courses/review'
 export const URL_GET_REVIEWS_BY_COURSE = '/api/students/courses/{courseId}/reviews'
@@ -78,6 +89,9 @@ export const URL_UPDATE_DISPLAY = '/api/users/display'
 export const URL_UPDATE_PROFILE = '/api/users/profile'
 export const URL_VERIFY_PASSWORD = '/api/users/verify-password'
 export const URL_UPDATE_NEW_PASSWORD = '/api/users/change-password'
+export const URL_CREATE_BANK_ACCOUNT_INSTRUCTOR = '/api/students/active-instrustor'
+export const URL_GET_BANK_ACCOUNT_INSTRUCTOR = '/api/instructors/finance/getAccount'
+export const URL_UPDATE_BANK_ACCOUNT_INSTRUCTOR = '/api/instructors/finance/updateAccount'
 
 
 // student - incomplete

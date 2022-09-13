@@ -1,12 +1,28 @@
 package com.ved.backend.controller;
 
+import com.ved.backend.configuration.OmiseConfigProperties;
 import com.ved.backend.model.Course;
+import com.ved.backend.repo.AnswerRepo.AnswerInstructor;
+import com.ved.backend.request.AnswerRequest;
+import com.ved.backend.request.CommentAnswerRequest;
+import com.ved.backend.request.CommentRequest;
+import com.ved.backend.response.AssignmentChapterResponse;
+import com.ved.backend.response.AssignmentCourseResponse;
+import com.ved.backend.response.CommentResponse;
+import com.ved.backend.request.FinanceDataRequest;
 import com.ved.backend.response.IncompleteCourseResponse;
+import com.ved.backend.response.PostCardResponse;
+import com.ved.backend.response.PostCommentResponse;
 import com.ved.backend.response.PublishedCourseInfoResponse;
+import com.ved.backend.response.ReviewCourseResponse;
+import com.ved.backend.service.AssignmentService;
 import com.ved.backend.service.InstructorService;
-import com.ved.backend.service.PrivateObjectStorageService;
-import com.ved.backend.service.PublicObjectStorageService;
+import com.ved.backend.service.PostService;
+import com.ved.backend.service.ReviewService;
+
 import lombok.AllArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,9 +37,37 @@ import java.util.Map;
 @RestController
 @RequestMapping(path = "/api/instructors")
 public class InstructorController {
-  private final InstructorService instructorService;
 
-  private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstructorController.class);
+  private final InstructorService instructorService;
+  private final ReviewService reviewService;
+  private final PostService postService;
+  private final AssignmentService assignmentService;
+
+  @GetMapping(path = "/finance/getAccount")
+  public ResponseEntity<?> getAccountData(Principal principal) {
+    Object response = instructorService.getOmiseAccountData(principal.getName());
+    return ResponseEntity.ok(response);
+  }
+
+  @PutMapping(path = "/finance/updateAccount")
+  public ResponseEntity<?> updateAccount(@RequestBody FinanceDataRequest finance, Principal principal) {
+    try {
+      String response = instructorService.updateFinanceAccount(finance, principal.getName());
+      return ResponseEntity.ok().body(response);
+    } catch (Exception exception) {
+      return ResponseEntity.notFound().build();
+    }
+  }
+
+  @GetMapping(path = "/finance/getTransaction")
+  public ResponseEntity<?> getTransaction(Principal principal) {
+    try {
+      List<HashMap <String, Object>> response = instructorService.getOmiseAllTransaction(principal.getName());
+      return ResponseEntity.ok(response);
+    } catch (Exception exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+  }
 
   @GetMapping(path = "/incomplete-courses/{courseId}")
   public ResponseEntity<?> getIncompleteCourse(@PathVariable Long courseId, Principal principal) {
@@ -182,6 +226,62 @@ public class InstructorController {
                                                   Principal principal) {
     instructorService.deleteCoursePictureUrl(courseId, principal.getName());
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/courses/{courseId}/reviews")
+  public ResponseEntity<ReviewCourseResponse> getAllReviewsCourse(@PathVariable Long courseId, Principal principal) {
+    ReviewCourseResponse response = reviewService.getReviewsCourseByInstructor(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts")
+  public ResponseEntity<List<PostCardResponse>> getAllPostsCourse(@PathVariable Long courseId, Principal principal) {
+    List<PostCardResponse> response = postService.getAllPostsCourseByInstructor(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/posts/{postId}")
+  public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
+    PostCommentResponse response = postService.getPostByInstructor(principal.getName(), courseId, postId);
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/courses/{courseId}/posts/{postId}/comment")
+  public ResponseEntity<List<CommentResponse>> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    List<CommentResponse> response = postService.createCommentByInstructor(principal.getName(), courseId, postId, commentRequest);
+    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+  }
+
+  /////////////////////////////////////////////////////////////
+
+  @GetMapping("/courses/{courseId}/assignments")
+  public ResponseEntity<List<AssignmentCourseResponse>> getAssignmentsCourse(@PathVariable Long courseId, Principal principal) {
+    List<AssignmentCourseResponse> response = assignmentService.getAssignmentCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/assignments/chapters/{chapterIndex}")
+  public ResponseEntity<List<AssignmentChapterResponse>> getAssignmentChapter(@PathVariable Long courseId, @PathVariable int chapterIndex, Principal principal) {
+    List<AssignmentChapterResponse> response = assignmentService.getAssignmentChapter(courseId, chapterIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/assignments/chapters/{chapterIndex}/answer/{noIndex}")
+  public ResponseEntity<List<AnswerInstructor>> getAssignmentAnswer(@PathVariable Long courseId, @PathVariable int chapterIndex, @PathVariable int noIndex, Principal principal) {
+    List<AnswerInstructor> response = assignmentService.getAssignmentAnswer(courseId, chapterIndex, noIndex, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @GetMapping("/courses/{courseId}/assignment/answer/{answerId}")
+  public ResponseEntity<String> getAnswerUrl(@PathVariable Long courseId, @PathVariable Long answerId, Principal principal) {
+    String response = assignmentService.getAnswerUrl(courseId, answerId, principal.getName());
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PutMapping("/assignment/answer/comment")
+  public ResponseEntity<?> commentAnswer(@RequestBody CommentAnswerRequest commentAnswerRequest, Principal principal) {
+    assignmentService.updateCommentInstructor(commentAnswerRequest, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
 }

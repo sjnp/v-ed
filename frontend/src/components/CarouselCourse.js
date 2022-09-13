@@ -10,16 +10,21 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
+import {useDispatch} from "react-redux";
+
+import {reset} from '../features/searchSlice';
 
 const CaroueselCourse = ({ data, label }) => {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleClickReadMore = () => {
         if (label === 'My Course') {
             navigate('/student/course')
         } else {
-            navigate('/search')
+            dispatch(reset());
+            navigate(`/search?category=${label}`)
         }
     }
 

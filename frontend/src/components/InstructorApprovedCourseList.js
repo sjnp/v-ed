@@ -18,6 +18,7 @@ const InstructorApprovedCourseList = () => {
           courseCard['courseName'] = course.name;
           courseCard['pictureUrl'] = course.pictureUrl;
           courseCard['price'] = course.price;
+          courseCard['handlePublish'] = handleCoursesChange;
           return courseCard;
         });
         console.log(newApprovedCourses);
@@ -26,6 +27,26 @@ const InstructorApprovedCourseList = () => {
       .then(() => setIsLoading(false))
       .catch(err => console.error(err));
   }, [axiosPrivate]);
+
+  const handleCoursesChange = () => {
+    setIsLoading(true)
+    axiosPrivate.get(URL_GET_ALL_INSTRUCTOR_APPROVED_COURSES)
+      .then(res => {
+        const newApprovedCourses = res.data.courses.map(course => {
+          const courseCard = {};
+          courseCard['id'] = course.id;
+          courseCard['courseName'] = course.name;
+          courseCard['pictureUrl'] = course.pictureUrl;
+          courseCard['price'] = course.price;
+          courseCard['handlePublish'] = handleCoursesChange;
+          return courseCard;
+        });
+        console.log(newApprovedCourses);
+        setApprovedCourses(newApprovedCourses);
+      })
+      .then(() => setIsLoading(false))
+      .catch(err => console.error(err));
+  }
 
   if (isLoading) {
     return (

@@ -35,6 +35,8 @@ public class OverviewResponse {
     private String biography;
     private String occupation;
 
+    private String stateOfCourse;
+
     public OverviewResponse(Course course) {
         this.courseId = course.getId();
         this.courseName = course.getName();
@@ -47,6 +49,7 @@ public class OverviewResponse {
         this.requirement = course.getRequirement();
         this.reviewList = course.getPublishedCourse().getReviews()
             .stream()
+            .filter(review -> review.isVisible() == true)
             .map(review -> new ReviewResponse(review))
             .collect(Collectors.toList());
         this.instructorFirstname = course.getInstructor().getStudent().getFirstName();

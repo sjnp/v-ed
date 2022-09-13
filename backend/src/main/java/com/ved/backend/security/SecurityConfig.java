@@ -89,7 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/students/courses/review",
             "/api/students/report",
             "/api/users/display",
-            "/api/users/verify-password"
+            "/api/users/verify-password",
+            "/api/students/active-instrustor"
         )
         .hasAnyAuthority("STUDENT");
 
@@ -113,21 +114,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/instructors/approved-courses",
             "/api/instructors/rejected-courses",
             "/api/instructors/published-courses",
-            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**")
+            "/api/instructors/incomplete-courses/{\\d+}/chapter/{\\d+}/section/{\\d+}/video/**",
+            "/api/instructors/courses/{\\d+}/reviews",
+            "/api/instructors/courses/{\\d+}/posts",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(POST, "/api/instructors/course",
             "/api/instructors/incomplete-courses/{\\d+}/picture/pre-authenticated-request",
             "/api/instructors/incomplete-courses/{\\d+}/video/pre-authenticated-request",
-            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request")
+            "/api/instructors/incomplete-courses/{\\d+}/handout/pre-authenticated-request",
+            "/api/instructors/courses/{\\d+}/posts/{\\d+}/comment"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/instructors/incomplete-courses/{\\d+}/picture/**",
             "/api/instructors/incomplete-courses/{\\d+}/chapters",
             "/api/instructors/incomplete-courses/{\\d+}/state",
-            "/api/instructors/approved-courses/{\\d+}")
+            "/api/instructors/approved-courses/{\\d+}",
+            "/api/instructors/assignment/answer/comment",
+            "/api/instructors/finance/updateAccount"
+        )
         .hasAnyAuthority("INSTRUCTOR");
 
     http.authorizeRequests()
@@ -144,14 +154,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/admins/pending-reports/reviews",
             "/api/admins/pending-reports/posts",
             "/api/admins/pending-reports/comments",
-            "/api/admins/pending-reports/comments/{\\d+}",
             "/api/admins/report-reasons")
         .hasAnyAuthority("ADMIN");
 
     http.authorizeRequests()
         .antMatchers(PUT, "/api/admins/pending-courses/{\\d+}",
             "/api/admins/pending-reports/reviews/{\\d+}",
-            "/api/admins/pending-reports/posts/{\\d+}")
+            "/api/admins/pending-reports/posts/{\\d+}",
+            "/api/admins/pending-reports/comments/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
     // http.authorizeRequests().anyRequest().authenticated();

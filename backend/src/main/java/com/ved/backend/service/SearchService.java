@@ -26,6 +26,9 @@ public class SearchService {
         minPrice = this.getMinPriceParam(minPrice);
         maxPrice = this.getMaxPriceParam(maxPrice);
         Double stars = this.getRatingParam(rating);
+        if (Objects.isNull(courseName)) {
+            courseName = "";
+        }
         return courseRepo.search(courseName, categories, minPrice, maxPrice, stars)
             .stream()
             .map(searchCourse -> new CourseCardResponse(searchCourse))
@@ -34,7 +37,7 @@ public class SearchService {
 
     private List<String> getCategoriesParam(String categoryName) {
         List<String> categories = new ArrayList<>();
-        if (Objects.isNull(categoryName)) {
+        if (Objects.isNull(categoryName) || categoryName.equals("all")) {
             categories.add(categoryProperties.getAcademic());
             categories.add(categoryProperties.getArt());
             categories.add(categoryProperties.getBusiness());

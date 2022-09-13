@@ -38,7 +38,7 @@ public class Answer {
   @Column(nullable = false)
   private String fileName;
 
-  @Column(nullable = true)
+  @Column(nullable = true, length = 1024)
   private String commentInstructor;
 
   @ManyToOne(fetch = LAZY)

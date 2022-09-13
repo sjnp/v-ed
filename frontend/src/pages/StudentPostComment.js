@@ -37,7 +37,6 @@ const StudentPostComment = () => {
     const navigate = useNavigate()
     const createReasonReportRedux = useReasonReport()
 
-
     const [ posts, setPosts ] = useState(null)
     const [ topicName, setTopicName ] = useState('')
     const [ loading, setLoading ] = useState(true)
@@ -58,9 +57,11 @@ const StudentPostComment = () => {
         createReasonReportRedux()
     }, [])
 
-    const handleCreateCommentSuucess = (newComment) => {
-        posts.comments.push(newComment)
-        setPosts({ ...posts })
+    const handleCreateCommentSuucess = (newComments) => {
+        setPosts({
+            ...posts,
+            comments: newComments
+        })
     }
 
     return (
@@ -105,7 +106,10 @@ const StudentPostComment = () => {
                         }
                         </Grid>
                         <Grid item xs={1}>
-                            <PostWriteComment onCreateCommentSuccess={handleCreateCommentSuucess}/>
+                            <PostWriteComment
+                                onCreateCommentSuccess={handleCreateCommentSuucess}
+                                commentBy='student'    
+                            />
                         </Grid>
                     </Grid>
                 </Grid>

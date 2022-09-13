@@ -5,6 +5,7 @@ import InstructorPendingCourseList from "./InstructorPendingCourseList";
 import InstructorApprovedCourseList from "./InstructorApprovedCourseList";
 import InstructorRejectedCourseList from "./InstructorRejectedCourseList";
 import InstructorPublishedCourseList from "./InstructorPublishedCourseList";
+import InstructorBilling from "./InstructorBilling";
 
 const InstructorCourseList = () => {
 

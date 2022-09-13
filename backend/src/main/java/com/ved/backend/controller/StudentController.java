@@ -1,12 +1,7 @@
 package com.ved.backend.controller;
 
 import com.ved.backend.model.Instructor;
-import com.ved.backend.request.AnswerRequest;
-import com.ved.backend.request.BuyCourseRequest;
-import com.ved.backend.request.CommentRequest;
-import com.ved.backend.request.PostRequest;
-import com.ved.backend.request.ReportRequest;
-import com.ved.backend.request.ReviewRequest;
+import com.ved.backend.request.*;
 import com.ved.backend.response.*;
 import com.ved.backend.service.*;
 import lombok.AllArgsConstructor;
@@ -31,12 +26,31 @@ public class StudentController {
   private final PostService postService;
   private final ReportService reportService;
 
+
+  @PostMapping(path = "/active-instrustor")
+  public ResponseEntity<?> activeInstructor(@RequestBody FinanceDataRequest finance, Principal principal) {
+    studentService.activeInstructor(finance, principal.getName());
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
+
   @PostMapping("/course/free")
   public ResponseEntity<?> buyFreeCourse(@RequestBody BuyCourseRequest buyCourseRequest, Principal principal) {
     studentCourseService.buyFreeCourse(principal.getName(), buyCourseRequest.getCourseId());
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
+  @PostMapping(path = "/purchase/course")
+  public ResponseEntity<?> buyCourse(@RequestBody ChargeDataRequest chargeData, Principal principal) {
+    ChargeResponse chargeResponse = studentCourseService.buyCourse(chargeData, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
+  }
+
+  @PostMapping(path = "/purchase/check-purchase")
+  public ResponseEntity<?> checkBuyCourse(@RequestBody Long courseId, Principal principal) {
+    ChargeResponse chargeResponse = studentCourseService.checkBuyCourse(courseId, principal.getName());
+    return ResponseEntity.ok().body(chargeResponse);
+  }
+  
   // TODO: Add logic for show overview my course 4 course card response 
   @GetMapping("/course-samples")
   public ResponseEntity<List<CourseCardResponse>> getCourseSamples(Principal principal) {
@@ -93,20 +107,20 @@ public class StudentController {
   }
 
   @GetMapping("/courses/{courseId}/posts")
-  public ResponseEntity<List<PostCardResponse>> getAllPosts(@PathVariable Long courseId, Principal principal) {
-    List<PostCardResponse> response = postService.getPostsByCourseId(principal.getName(), courseId);
+  public ResponseEntity<List<PostCardResponse>> getAllPostsCourse(@PathVariable Long courseId, Principal principal) {
+    List<PostCardResponse> response = postService.getAllPostsCourseByStudent(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
   @GetMapping("/courses/{courseId}/posts/{postId}")
   public ResponseEntity<PostCommentResponse> getPostById(@PathVariable Long courseId, @PathVariable Long postId, Principal principal) {
-    PostCommentResponse response = postService.getPostById(principal.getName(), courseId, postId);
+    PostCommentResponse response = postService.getPostByStudent(principal.getName(), courseId, postId);
     return ResponseEntity.ok().body(response);
   }
 
   @PostMapping("/courses/{courseId}/posts/{postId}/comment")
-  public ResponseEntity<CommentResponse> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
-    CommentResponse response = postService.createComment(principal.getName(), courseId, postId, commentRequest);
+  public ResponseEntity<List<CommentResponse>> createComment(@PathVariable Long courseId, @PathVariable Long postId, @RequestBody CommentRequest commentRequest, Principal principal) {
+    List<CommentResponse> response = postService.createCommentByStudent(principal.getName(), courseId, postId, commentRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -118,7 +132,7 @@ public class StudentController {
 
   @GetMapping("/courses/{courseId}/reviews")
   public ResponseEntity<ReviewCourseResponse> getReviewsByCourseId(@PathVariable Long courseId, Principal principal) {
-    ReviewCourseResponse response = reviewService.getReviewsByCourseId(courseId, principal.getName());
+    ReviewCourseResponse response = reviewService.getReviewsCourseByStudent(courseId, principal.getName());
     return ResponseEntity.ok().body(response);
   }
 
@@ -140,8 +154,6 @@ public class StudentController {
     return ResponseEntity.ok().body(response);
   }
 
-  /* *************************************************************************************************** */
-
   @GetMapping("/reason-reports")
   public ResponseEntity<List<ReasonReportResponse>> getReasonReports() {
     List<ReasonReportResponse> response = reportService.getReasonReports();
@@ -153,9 +165,7 @@ public class StudentController {
     reportService.createReport(principal.getName(), reportRequest);
     return ResponseEntity.status(HttpStatus.CREATED).build();
   }
-
-  // ------------------------------------------------------------------------------------------------------
-
+  
   @PutMapping(path = "/instructor-feature")
   public ResponseEntity<?> changeStudentIntoInstructor(@RequestBody Instructor instructor, Principal principal) {
     studentService.changeRoleFromStudentIntoInstructor(instructor, principal.getName());
