@@ -24,14 +24,14 @@ const ActiveInstructor = () => {
     return (
         <Grid container border='solid 1px #d3d3d3' borderRadius={3} mt={3} p={2}>
             <Grid item xs={12} p={2} bgcolor='#f3f3f3' borderRadius={2}>
-                <Typography>Detail condition</Typography>
+                <Typography>V-ED จะปกป้องข้อมูลทางการเงินของคุณ เราจะเก็บข้อมูลบริการเพื่อนำไปใช้ประโยชน์กับ Platform นี้เท่านั้น หากคุณต้องการยกเลิกขอรับบริการสามารถติดต่อเราได้โดยตรงผ่านอีเมลล์: customer@v-ed.xyz</Typography>
             </Grid>
             <Grid item xs={12} container direction='row' alignItems='center' pt={1}>
                 <Grid item>
                     <Checkbox checked={isAccept} onChange={handleChangeCheckbox} />
                 </Grid>
                 <Grid item>
-                    <Typography>I accept this Detail condition</Typography>
+                    <Typography>I accept this condition</Typography>
                 </Grid>
             </Grid>
             <Grid item xs={12} container direction='row' justifyContent='center' pt={2}>
