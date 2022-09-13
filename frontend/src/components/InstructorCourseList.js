@@ -76,7 +76,6 @@ const InstructorCourseList = () => {
           <InstructorPublishedCourseList/>
         </Stack>
       </Paper>
-      <InstructorBilling/>
     </Stack>
 
   )

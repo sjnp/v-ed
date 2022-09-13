@@ -18,7 +18,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -147,6 +151,47 @@ public class OmiseService {
                     return mapObj;
                 })
                 .filter(item -> item.get("recipient").equals(recipientId))
+                .collect(Collectors.toList());
+            return matchList;
+        }
+        catch (Exception error) {
+            System.out.println("@@@" + error.getMessage());
+            return null;
+        }
+    }
+
+    public List<HashMap <String, Object>> getAllTransferDataFromRecipient(String recipientId){
+        try {
+            String base64Creds = getBase64SecretKey();
+            String url = "https://api.omise.co/search";
+
+            WebClient client = WebClient.builder()
+                .baseUrl(url)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .defaultHeader("Authorization", "Basic " + base64Creds)
+                .build();
+
+            WebClient.ResponseSpec responseSpec = client.method(HttpMethod.GET)
+                .uri(url)
+                .body(BodyInserters.fromFormData("scope", "transfer")
+                    .with("query", recipientId))
+                .retrieve();
+
+            HashMap responseBody = responseSpec.bodyToMono(HashMap.class).block();
+
+            Object responseObject = responseBody.get("data");
+            List<?> responseList = new ArrayList<>();
+            if (responseObject.getClass().isArray()) {
+                responseList = Arrays.asList((Object[])responseObject);
+            } else if (responseObject instanceof Collection) {
+                responseList = new ArrayList<>((Collection<?>)responseObject);
+            }
+            List<HashMap <String, Object>> matchList = responseList.stream()
+                .map(item -> {
+                    ObjectMapper mapObject = new ObjectMapper();
+                    HashMap <String, Object> mapObj = mapObject.convertValue(item, HashMap.class);
+                    return mapObj;
+                })
                 .collect(Collectors.toList());
             return matchList;
         }

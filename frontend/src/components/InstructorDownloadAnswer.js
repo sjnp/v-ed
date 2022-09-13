@@ -31,6 +31,7 @@ const InstructorDownloadAnswer = ({ answerId, fileName }) => {
             .replace('{answerId}', answerId)
         const response = await apiPrivate.get(url)
         if (response.status === 200) {
+            console.log(response.data)
             saveAs(response.data, fileName)
         } else {
             alert('fail')
