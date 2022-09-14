@@ -36,7 +36,7 @@ const FinanceInstructor = () => {
         if (response.status === 200) {
             setBankBand(response.data.brand)
             setAccountName(response.data.name)
-            setAccountNumber(`${'*'.repeat(12)}${response.data.last_digits}`  )
+            setAccountNumber(`${'*'.repeat(response.data.account_number.length - 4)}${response.data.last_digits}`)
             setActivateDatetime(response.data.created_at)
         } else {
             alert('Fail')

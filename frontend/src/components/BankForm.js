@@ -117,10 +117,6 @@ const BankForm = ({ type, dataSelect, dataFirstname, dataLastname, dataAccountNu
             setErrorAccountNumber(true)
             setMessageAccountNumber('Account number is required')
             isInvalid = true
-        } else if (accountNumber.trim().length !== 16) {
-            setErrorAccountNumber(true)
-            setMessageAccountNumber('Account number must 16 character only')
-            isInvalid = true
         }
 
         if (isInvalid) return
