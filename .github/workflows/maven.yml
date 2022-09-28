@@ -120,7 +120,7 @@ jobs:
           # DATABASE_URL: ${{ secrets.DATABASE_URL }}
           # DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
           # DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-          DATABASE_URL: "jdbc:postgresql://localhost:5432/postgres"
+          DATABASE_URL: "jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified"
           DATABASE_USERNAME: postgres
           DATABASE_PASSWORD: postgres
         run: |
