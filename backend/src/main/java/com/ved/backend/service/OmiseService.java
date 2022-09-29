@@ -299,7 +299,8 @@ public class OmiseService {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.add("Authorization", "Basic " + base64Creds);
             MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
-            body.add("amount", amount);
+            Double instructorAmount = Double.parseDouble(amount) * 0.60;
+            body.add("amount", String.valueOf(instructorAmount));
             body.add("recipient", recipientId);
             HttpEntity<?> request = new HttpEntity<Object>(body, headers);
             HashMap<String, Object> response = restTemplate.postForObject(url, request, HashMap.class);
