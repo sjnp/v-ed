@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/api/login",
             "/api/token/refresh/**",
             "/api/token/clear/**",
-            "/api/users/new-student",
+//            "/api/users/new-student",
             "/api/course-states/**",
             "/api/categories/**",
             "/api/overviews/category/**",
@@ -164,7 +164,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/admins/pending-reports/comments/{\\d+}")
         .hasAnyAuthority("ADMIN");
 
-    // http.authorizeRequests().anyRequest().authenticated();
+    http.authorizeRequests().anyRequest().authenticated();
 
     http.addFilter(customAuthenticationFilter);
     http.addFilterBefore(new CustomAuthorizationFilter(tokenUtil), UsernamePasswordAuthenticationFilter.class);
