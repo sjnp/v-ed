@@ -1,5 +1,6 @@
 package com.ved.backend.security;
 
+import com.ved.backend.configuration.LoginProperties;
 import com.ved.backend.filter.CustomAuthenticationFilter;
 import com.ved.backend.filter.CustomAuthorizationFilter;
 import com.ved.backend.utility.TokenUtil;
@@ -32,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
   private final TokenUtil tokenUtil;
+  private final LoginProperties loginProperties;
 
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,14 +43,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     CustomAuthenticationFilter customAuthenticationFilter =
-        new CustomAuthenticationFilter(authenticationManagerBean(), tokenUtil);
+        new CustomAuthenticationFilter(authenticationManagerBean(), tokenUtil, loginProperties);
     customAuthenticationFilter.setFilterProcessesUrl("/api/login");
     http.cors();
     http.csrf().disable();
     http.sessionManagement().sessionCreationPolicy(STATELESS);
 
     http.authorizeRequests()
-        .antMatchers("/api/login",
+        .antMatchers(
+//            "/api/login",
             "/api/token/refresh/**",
             "/api/token/clear/**",
 //            "/api/users/new-student",
