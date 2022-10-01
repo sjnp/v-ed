@@ -1,6 +1,6 @@
 ### Terraform ###
-*.lock.hcl
 *.tfstate.*
 *.tfstate
 *.tfvars
+*.conf
 **/.terraform/*
