@@ -109,6 +109,8 @@ resource "aws_instance" "prod_ec2" {
     network_interface_id = aws_network_interface.prod_nic.id
   }
 
+  user_data = templatefile("userdata.tpl", {})
+
   tags = {
     Name = "ved_prod"
   }
