@@ -54,6 +54,7 @@ jobs:
         echo force_path_style = true >> backend.conf
 
         mkdir ~/.oci
+        cd ~/.oci
         touch $TF_BACKEND_SHARED_CRED 
         # echo \[default\] >> $TF_BACKEND_SHARED_CRED
         # echo aws_access_key_id=$TF_BACKEND_AWS_ACCESS_KEY_ID >> $TF_BACKEND_SHARED_CRED
