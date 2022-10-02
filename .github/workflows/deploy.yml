@@ -8,102 +8,116 @@ on:
     branches: [ prod ]
 
 jobs:
-  deploy:
-      runs-on: ubuntu-latest
+  provision:
+    runs-on: ubuntu-latest
 
-      defaults:
-        run:
-          working-directory: ./
+    defaults:
+      run:
+        working-directory: ./terraform
+    
+    steps:
+    - uses: actions/checkout@v3
 
-      steps:
-      - uses: actions/checkout@v3
+    - name: Verify Terraform version
+      run: terraform --version
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: maven
+  build:
+    needs: provision
+    runs-on: ubuntu-latest
 
-      - name: Create main resource directory
-        run: mkdir backend/src/main/resources
+    defaults:
+      run:
+        working-directory: ./
 
-      - name: Create application.properties
-        env:
-          PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
-          PUB_OS_BUCKET_NAME: ${{ secrets.PUB_OS_BUCKET_NAME }}
-          PUB_OS_TIMER: ${{ secrets.PUB_OS_TIMER }}
-          PUB_OS_IMAGE_EXT: ${{ secrets.PUB_OS_TIMER }}
-          PUB_OS_URL: ${{ secrets.PUB_OS_TIMER }}
-          PRIV_OS_NAMESPACE: ${{ secrets.PRIV_OS_NAMESPACE }}
-          PRIV_OS_BUCKET_NAME: ${{ secrets.PRIV_OS_BUCKET_NAME }}
-          PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
-          PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
-          PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          JWT_ACCESS_EXPIRE: ${{ secrets.JWT_ACCESS_EXPIRE }}
-          JWT_REFRESH_EXPIRE: ${{ secrets.JWT_REFRESH_EXPIRE }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
 
-        run: |
-          touch backend/src/main/resources/application.properties
-          echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
-          echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-          echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
-          echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
-          >> backend/src/main/resources/application.properties
-          echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
-          >> backend/src/main/resources/application.properties
-          echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
-          echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-          echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
-          echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
-          >> backend/src/main/resources/application.properties
-          echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
-          >> backend/src/main/resources/application.properties
-          echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
-          echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
-          echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
-          echo "
-          role.student=STUDENT
-          role.instructor=INSTRUCTOR
-          role.admin=ADMIN
-          category.academic=ACADEMIC
-          category.art=ART
-          category.business=BUSINESS
-          category.design=DESIGN
-          category.programming=PROGRAMMING
-          comment-state.owner=OWNER
-          comment-state.instructor=INSTRUCTOR
-          comment-state.student=STUDENT
-          course-state.incomplete=INCOMPLETE
-          course-state.pending=PENDING
-          course-state.approved=APPROVED
-          course-state.rejected=REJECTED
-          course-state.published=PUBLISHED
-          report-state.pending=PENDING
-          report-state.approved=APPROVED
-          report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
-          echo spring.datasource.driver-class-name=org.postgresql.Driver \
-          >> backend/src/main/resources/application.properties
-          echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
-          echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
-          echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
-          echo "
-          spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-          spring.jpa.hibernate.ddl-auto=update
-          spring.jpa.properties.hibernate.check_nullability=true
-          spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
 
-      - name: Build backend application
-        run: |
-          cd ./backend
-          mvn package -Dmaven.test.skip
-          ls -la ./target
+    - name: Create main resource directory
+      run: mkdir backend/src/main/resources
 
-      - name: Run jar file
-        run: |
-          cd ./backend/target
-          java -jar backend-0.0.1-SNAPSHOT.jar
+    - name: Create application.properties
+      env:
+        PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
+        PUB_OS_BUCKET_NAME: ${{ secrets.PUB_OS_BUCKET_NAME }}
+        PUB_OS_TIMER: ${{ secrets.PUB_OS_TIMER }}
+        PUB_OS_IMAGE_EXT: ${{ secrets.PUB_OS_TIMER }}
+        PUB_OS_URL: ${{ secrets.PUB_OS_TIMER }}
+        PRIV_OS_NAMESPACE: ${{ secrets.PRIV_OS_NAMESPACE }}
+        PRIV_OS_BUCKET_NAME: ${{ secrets.PRIV_OS_BUCKET_NAME }}
+        PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
+        PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
+        PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
+        JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        JWT_ACCESS_EXPIRE: ${{ secrets.JWT_ACCESS_EXPIRE }}
+        JWT_REFRESH_EXPIRE: ${{ secrets.JWT_REFRESH_EXPIRE }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+
+      run: |
+        touch backend/src/main/resources/application.properties
+        echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
+        echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
+        echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
+        echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
+        >> backend/src/main/resources/application.properties
+        echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
+        >> backend/src/main/resources/application.properties
+        echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
+        echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
+        echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
+        echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
+        >> backend/src/main/resources/application.properties
+        echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
+        >> backend/src/main/resources/application.properties
+        echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
+        echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
+        echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
+        echo "
+        role.student=STUDENT
+        role.instructor=INSTRUCTOR
+        role.admin=ADMIN
+        category.academic=ACADEMIC
+        category.art=ART
+        category.business=BUSINESS
+        category.design=DESIGN
+        category.programming=PROGRAMMING
+        comment-state.owner=OWNER
+        comment-state.instructor=INSTRUCTOR
+        comment-state.student=STUDENT
+        course-state.incomplete=INCOMPLETE
+        course-state.pending=PENDING
+        course-state.approved=APPROVED
+        course-state.rejected=REJECTED
+        course-state.published=PUBLISHED
+        report-state.pending=PENDING
+        report-state.approved=APPROVED
+        report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
+        echo spring.datasource.driver-class-name=org.postgresql.Driver \
+        >> backend/src/main/resources/application.properties
+        echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
+        echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
+        echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
+        echo "
+        spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+        spring.jpa.hibernate.ddl-auto=update
+        spring.jpa.properties.hibernate.check_nullability=true
+        spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
+
+    - name: Build backend application
+      run: |
+        cd ./backend
+        mvn package -Dmaven.test.skip
+        ls -la ./target
+
+    - name: Run jar file
+      run: |
+        cd ./backend/target
+        java -jar backend-0.0.1-SNAPSHOT.jar
