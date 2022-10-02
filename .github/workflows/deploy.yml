@@ -108,9 +108,27 @@ jobs:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
         DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        OMISE_PUBLIC_KEY: ${{ secrets.$OMISE_PUBLIC_KEY }}
+        OMISE_SECRET_KEY: ${{ secrets.$OMISE_SECRET_KEY }}
+        OMISE_RETURN_URL: ${{ secrets.$OMISE_RETURN_URL }}
+        LOGIN_USERNAME: ${{ secrets.$LOGIN_USERNAME }}
 
       run: |
         touch backend/src/main/resources/application.properties
+
+        echo spring.datasource.driver-class-name=org.postgresql.Driver \
+        >> backend/src/main/resources/application.properties
+
+        echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
+        echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
+        echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
+
+        echo "
+        spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+        spring.jpa.hibernate.ddl-auto=update
+        spring.jpa.properties.hibernate.check_nullability=true
+        spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
+
         echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
         echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
         echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
@@ -118,6 +136,7 @@ jobs:
         >> backend/src/main/resources/application.properties
         echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
         >> backend/src/main/resources/application.properties
+
         echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
         echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
         echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
@@ -125,9 +144,15 @@ jobs:
         >> backend/src/main/resources/application.properties
         echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
         >> backend/src/main/resources/application.properties
-        echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
-        echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
-        echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
+
+        echo omise-key.public-key=$OMISE_PUBLIC_KEY >> backend/src/main/resources/application.properties
+        echo omise-key.secret-key=$OMISE_SECRET_KEY >> backend/src/main/resources/application.properties
+        echo omise-key.recipient-url=https://api.omise.co/recipients >> backend/src/main/resources/application.properties
+        echo omise-key.transfer-url=https://api.omise.co/transfers >> backend/src/main/resources/application.properties
+        echo omise-key.source-url=https://api.omise.co/sources >> backend/src/main/resources/application.properties
+        echo omise-key.charge-url=https://api.omise.co/charges >> backend/src/main/resources/application.properties
+        echo omise-key.return-url=$OMISE_RETURN_URL >> backend/src/main/resources/application.properties
+
         echo "
         role.student=STUDENT
         role.instructor=INSTRUCTOR
@@ -148,17 +173,14 @@ jobs:
         report-state.pending=PENDING
         report-state.approved=APPROVED
         report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
-        echo spring.datasource.driver-class-name=org.postgresql.Driver \
-        >> backend/src/main/resources/application.properties
-        echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
-        echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
-        echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
-        echo "
-        spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-        spring.jpa.hibernate.ddl-auto=update
-        spring.jpa.properties.hibernate.check_nullability=true
-        spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
 
+        echo login.username=$LOGIN_USERNAME >> backend/src/main/resources/application.properties
+
+        echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
+        echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
+        echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
+        
+        
     - name: Build backend application
       run: |
         cd ./backend
