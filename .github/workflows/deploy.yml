@@ -100,5 +100,10 @@ jobs:
       - name: Build backend application
         run: |
           cd ./backend
-          mvn package
-          ls -la ./
+          mvn package -Dmaven.test.skip
+          ls -la ./target
+
+      - name: Run jar file
+        run: |
+          cd ./backend/target
+          java -jar backend-0.0.1-SNAPSHOT.jar
