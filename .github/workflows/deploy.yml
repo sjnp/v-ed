@@ -101,4 +101,4 @@ jobs:
         run: |
           cd ./backend
           mvn package
-          ls -la ./backend
+          ls -la ./
