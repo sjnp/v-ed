@@ -62,6 +62,10 @@ jobs:
 
     - name: Init 
       run: terraform init -backend-config=backend.conf
+
+    - name: Plan
+      run: terraform plan
+    
   build:
     needs: provision
     runs-on: ubuntu-latest
