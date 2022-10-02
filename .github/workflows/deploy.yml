@@ -52,11 +52,12 @@ jobs:
         echo skip_credentials_validation = true >> backend.conf
         echo skip_metadata_api_check = true >> backend.conf
         echo force_path_style = true >> backend.conf
-        mkdir ~/.oci
-        touch $TF_BACKEND_SHARED_CRED 
-        echo \[default\] >> $TF_BACKEND_SHARED_CRED
-        echo aws_access_key_id=$TF_BACKEND_AWS_ACCESS_KEY_ID >> $TF_BACKEND_SHARED_CRED
-        echo aws_secret_access_key=$TF_BACKEND_AWS_SECRET_ACCESS_KEY >> $TF_BACKEND_SHARED_CRED
+
+        # mkdir ~/.oci
+        # touch $TF_BACKEND_SHARED_CRED 
+        # echo \[default\] >> $TF_BACKEND_SHARED_CRED
+        # echo aws_access_key_id=$TF_BACKEND_AWS_ACCESS_KEY_ID >> $TF_BACKEND_SHARED_CRED
+        # echo aws_secret_access_key=$TF_BACKEND_AWS_SECRET_ACCESS_KEY >> $TF_BACKEND_SHARED_CRED
 
     - name: Init 
       run: terraform init -backend-config=backend.conf
