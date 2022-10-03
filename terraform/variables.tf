@@ -43,7 +43,7 @@ variable "aws_ports" {
   type = map(number)
   default = {
     HTTPS = 443
-    HTTP = 81
+    HTTP = 80
     SSH = 22
   }
 }
