@@ -101,6 +101,8 @@ jobs:
         OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
         OMISE_RETURN_URL: ${{ secrets.OMISE_RETURN_URL }}
         LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        KEY_STORE_PW: ${{ secrets.KEY_STORE_PW }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
@@ -126,7 +128,9 @@ jobs:
           OMISE_PUBLIC_KEY,
           OMISE_SECRET_KEY,
           OMISE_RETURN_URL,
-          LOGIN_USERNAME
+          LOGIN_USERNAME,
+          DOMAIN_NAME,
+          KEY_STORE_PW
         script: |
           if cd v-ed; \
           then \
@@ -200,109 +204,34 @@ jobs:
           echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
           echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
           echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
+
+          if cd certbot; \
+          then \
+            cd ..; \
+            docker compose down --rmi all \
+            docker compose run --rm certbot renew; \
+          else \
+            docker compose run -rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d $DOMAIN_NAME; \
+            docker compose run -rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d $DOMAIN_NAME; \
+          fi
+
+          sed -i 's/DOMAIN/$DOMAIN_NAME/g' ./nginx/nginx.conf
+          cd ./certbot/conf/live/$DOMAIN_NAME
+          openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
+          cd ../../../../../
+          echo server.port: 8443 >> backend/src/main/resources/application.properties
+          echo security.require-ssl=true >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store:/home/ubuntu/v-ed/certbot/conf/live/$DOMAIN_NAME/keystore.p12 >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store-password: $KEY_STORE_PW >> backend/src/main/resources/application.properties
+          echo server.ssl.keyStoreType: PKCS12 >> backend/src/main/resources/application.properties
+          echo server.ssl.keyAlias: tomcat >> backend/src/main/resources/application.properties
+
           cd ./backend
           mvn package -Dmaven.test.skip
-          ls -la ./target 
-
-    # - name: Create main resource directory
-    #   run: mkdir backend/src/main/resources
-
-    # - name: Create application.properties
-    #   env:
-    #     PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
-    #     PUB_OS_BUCKET_NAME: ${{ secrets.PUB_OS_BUCKET_NAME }}
-    #     PUB_OS_TIMER: ${{ secrets.PUB_OS_TIMER }}
-    #     PUB_OS_IMAGE_EXT: ${{ secrets.PUB_OS_TIMER }}
-    #     PUB_OS_URL: ${{ secrets.PUB_OS_TIMER }}
-    #     PRIV_OS_NAMESPACE: ${{ secrets.PRIV_OS_NAMESPACE }}
-    #     PRIV_OS_BUCKET_NAME: ${{ secrets.PRIV_OS_BUCKET_NAME }}
-    #     PRIV_OS_TIMER: ${{ secrets.PRIV_OS_TIMER }}
-    #     PRIV_OS_VID_EXT: ${{ secrets.PRIV_OS_VID_EXT }}
-    #     PRIV_OS_URL: ${{ secrets.PRIV_OS_URL }}
-    #     JWT_SECRET: ${{ secrets.JWT_SECRET }}
-    #     JWT_ACCESS_EXPIRE: ${{ secrets.JWT_ACCESS_EXPIRE }}
-    #     JWT_REFRESH_EXPIRE: ${{ secrets.JWT_REFRESH_EXPIRE }}
-    #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    #     DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-    #     DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-    #     OMISE_PUBLIC_KEY: ${{ secrets.OMISE_PUBLIC_KEY }}
-    #     OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
-    #     OMISE_RETURN_URL: ${{ secrets.OMISE_RETURN_URL }}
-    #     LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
-
-    #   run: |
-    #     touch backend/src/main/resources/application.properties
-
-    #     echo spring.datasource.driver-class-name=org.postgresql.Driver \
-    #     >> backend/src/main/resources/application.properties
-
-    #     echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
-    #     echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
-    #     echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
-
-    #     echo "
-    #     spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-    #     spring.jpa.hibernate.ddl-auto=update
-    #     spring.jpa.properties.hibernate.check_nullability=true
-    #     spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
-
-    #     echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
-    #     echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-    #     echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
-    #     echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
-    #     >> backend/src/main/resources/application.properties
-    #     echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
-    #     >> backend/src/main/resources/application.properties
-
-    #     echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
-    #     echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-    #     echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
-    #     echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
-    #     >> backend/src/main/resources/application.properties
-    #     echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
-    #     >> backend/src/main/resources/application.properties
-
-    #     echo omise-key.public-key=$OMISE_PUBLIC_KEY >> backend/src/main/resources/application.properties
-    #     echo omise-key.secret-key=$OMISE_SECRET_KEY >> backend/src/main/resources/application.properties
-    #     echo omise-key.recipient-url=https://api.omise.co/recipients >> backend/src/main/resources/application.properties
-    #     echo omise-key.transfer-url=https://api.omise.co/transfers >> backend/src/main/resources/application.properties
-    #     echo omise-key.source-url=https://api.omise.co/sources >> backend/src/main/resources/application.properties
-    #     echo omise-key.charge-url=https://api.omise.co/charges >> backend/src/main/resources/application.properties
-    #     echo omise-key.return-url=$OMISE_RETURN_URL >> backend/src/main/resources/application.properties
-
-    #     echo "
-    #     role.student=STUDENT
-    #     role.instructor=INSTRUCTOR
-    #     role.admin=ADMIN
-    #     category.academic=ACADEMIC
-    #     category.art=ART
-    #     category.business=BUSINESS
-    #     category.design=DESIGN
-    #     category.programming=PROGRAMMING
-    #     comment-state.owner=OWNER
-    #     comment-state.instructor=INSTRUCTOR
-    #     comment-state.student=STUDENT
-    #     course-state.incomplete=INCOMPLETE
-    #     course-state.pending=PENDING
-    #     course-state.approved=APPROVED
-    #     course-state.rejected=REJECTED
-    #     course-state.published=PUBLISHED
-    #     report-state.pending=PENDING
-    #     report-state.approved=APPROVED
-    #     report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
-
-    #     echo login.username=$LOGIN_USERNAME >> backend/src/main/resources/application.properties
-
-    #     echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
-    #     echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
-    #     echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
-        
-        
-    # - name: Build backend application
-    #   run: |
-    #     cd ./backend
-    #     mvn package -Dmaven.test.skip
-    #     ls -la ./target
+          cd ..
+          docker-compose up -d backend
+          docker-compose up -d nginx
+            
 
     # - name: Run jar file
     #   run: |
