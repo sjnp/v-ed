@@ -226,6 +226,7 @@ jobs:
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/privkey.pem ./keys/privkey.pem
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/chain.pem ./keys/chain.pem
           cd keys
+          sudo chmod +44 privkey.pem
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
           cd ../
           echo server.port: 8443 >> backend/src/main/resources/application.properties
@@ -238,7 +239,7 @@ jobs:
           cd ./backend
           mvn package -Dmaven.test.skip
           cd ..
-          docker-compose up -d backend
+          docker compose up -d backend
             
 
     # - name: Run jar file
