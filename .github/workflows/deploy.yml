@@ -151,6 +151,7 @@ jobs:
             mkdir backend/src/main/resources; \
           fi
 
+          docker compose down
           cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose up -d nginx
@@ -220,12 +221,16 @@ jobs:
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose restart
 
-          cd ./certbot/conf/live/$DOMAIN_NAME
+          mkdir keys
+          sudo cp ./certbot/conf/live/$DOMAIN_NAME/fullchain.pem ./keys/fullchain.pem
+          sudo cp ./certbot/conf/live/$DOMAIN_NAME/privkey.pem ./keys/privkey.pem
+          sudo cp ./certbot/conf/live/$DOMAIN_NAME/chain.pem ./keys/chain.pem
+          cd keys
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
-          cd ../../../../../
+          cd ../
           echo server.port: 8443 >> backend/src/main/resources/application.properties
           echo security.require-ssl=true >> backend/src/main/resources/application.properties
-          echo server.ssl.key-store:/home/ubuntu/v-ed/certbot/conf/live/$DOMAIN_NAME/keystore.p12 >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store:/home/ubuntu/v-ed/keys/keystore.p12 >> backend/src/main/resources/application.properties
           echo server.ssl.key-store-password: $KEY_STORE_PW >> backend/src/main/resources/application.properties
           echo server.ssl.keyStoreType: PKCS12 >> backend/src/main/resources/application.properties
           echo server.ssl.keyAlias: tomcat >> backend/src/main/resources/application.properties
