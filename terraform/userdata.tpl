@@ -7,7 +7,7 @@ sudo apt-get install -y \
   ca-certificates \
   curl \
   gnupg \
-  lsb-release &&
+  lsb-release
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
 sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -22,3 +22,9 @@ sudo apt-get install -y \
   containerd.io \
   docker-compose-plugin
 sudo usermod -aG docker ubuntu
+
+# install jdk & mvn
+sudo apt-get update -y
+sudo apt-get install -y \
+  openjdk-11-jdk \
+  maven
