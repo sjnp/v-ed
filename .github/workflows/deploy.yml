@@ -211,11 +211,11 @@ jobs:
             docker compose down --rmi all; \
             docker compose run --rm certbot renew; \
           else \
-            docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d $DOMAIN_NAME; \
-            docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d $DOMAIN_NAME; \
+            docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
+            docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
           fi
 
-          sed -i 's/DOMAIN/$DOMAIN_NAME/g' ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           cd ./certbot/conf/live/$DOMAIN_NAME
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
           cd ../../../../../
