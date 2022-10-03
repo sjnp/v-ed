@@ -207,6 +207,7 @@ jobs:
           echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
           echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
 
+          docker-compose up -d nginx
           if cd certbot; \
           then \
             cd ..; \
@@ -214,6 +215,7 @@ jobs:
             docker compose run --rm certbot renew; \
           else \
             docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
+            docker compose restart
             docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
           fi
 
@@ -231,8 +233,8 @@ jobs:
           cd ./backend
           mvn package -Dmaven.test.skip
           cd ..
-          docker-compose up -d backend
           docker-compose up -d nginx
+          docker-compose up -d backend
             
 
     # - name: Run jar file
