@@ -86,7 +86,14 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          if cd v-ed; then git pull origin disabled-features; else git clone -b disabled-features https://github.com/sjnp/v-ed.git; fi
+          if cd v-ed; \
+          then \
+            git pull origin disabled-features; \
+          else \
+            git clone -b disabled-features https://github.com/sjnp/v-ed.git; \
+            cd v-ed; \
+          fi
+          git status
 
 
     # - name: Create main resource directory
