@@ -103,6 +103,7 @@ jobs:
         LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
         DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         KEY_STORE_PW: ${{ secrets.KEY_STORE_PW }}
+        EMAIL: ${{ secrets.EMAIL }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
@@ -130,7 +131,8 @@ jobs:
           OMISE_RETURN_URL,
           LOGIN_USERNAME,
           DOMAIN_NAME,
-          KEY_STORE_PW
+          KEY_STORE_PW,
+          EMAIL
         script: |
           if cd v-ed; \
           then \
