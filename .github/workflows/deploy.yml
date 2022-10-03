@@ -229,12 +229,13 @@ jobs:
           sudo chmod +44 privkey.pem
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
           cd ../
+          cp ./keys/keystore.p12 ./backend/src/main/resources/keystore.p12
           echo server.port: 8443 >> backend/src/main/resources/application.properties
           echo security.require-ssl=true >> backend/src/main/resources/application.properties
-          echo server.ssl.key-store:/home/ubuntu/v-ed/keys/keystore.p12 >> backend/src/main/resources/application.properties
-          echo server.ssl.key-store-password: $KEY_STORE_PW >> backend/src/main/resources/application.properties
-          echo server.ssl.keyStoreType: PKCS12 >> backend/src/main/resources/application.properties
-          echo server.ssl.keyAlias: tomcat >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store=classpath:keystore.p12 >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store-password=$KEY_STORE_PW >> backend/src/main/resources/application.properties
+          echo server.ssl.key-store-type=PKCS12 >> backend/src/main/resources/application.properties
+          echo server.ssl.key-alias=tomcat >> backend/src/main/resources/application.properties
 
           cd ./backend
           mvn package -Dmaven.test.skip
