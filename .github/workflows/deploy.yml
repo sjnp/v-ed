@@ -151,6 +151,7 @@ jobs:
             mkdir backend/src/main/resources; \
           fi
 
+          cp ./nginx/conf/nginx_init.conf ./nginx/conf/nginx.conf
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose up -d nginx
 
@@ -215,6 +216,10 @@ jobs:
           docker compose restart
           docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
 
+          cp ./nginx/conf/nginx_last.conf ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
+          docker compose restart
+
           cd ./certbot/conf/live/$DOMAIN_NAME
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
           cd ../../../../../
@@ -228,7 +233,6 @@ jobs:
           cd ./backend
           mvn package -Dmaven.test.skip
           cd ..
-          docker-compose up -d nginx
           docker-compose up -d backend
             
 
