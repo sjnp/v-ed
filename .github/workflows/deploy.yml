@@ -151,7 +151,7 @@ jobs:
             mkdir backend/src/main/resources; \
           fi
 
-          docker compose down
+          docker compose down --rmi all
           cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose up -d nginx
@@ -221,13 +221,14 @@ jobs:
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose restart
 
+          sudo rm -rf ./keys
           mkdir keys
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/fullchain.pem ./keys/fullchain.pem
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/privkey.pem ./keys/privkey.pem
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/chain.pem ./keys/chain.pem
           cd keys
           sudo chmod +44 privkey.pem
-          openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:$KEY_STORE_PW
+          openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:${{ secrets.KEY_STORE_PW }}
           cd ../
           cp ./keys/keystore.p12 ./backend/src/main/resources/keystore.p12
           echo server.port: 8443 >> backend/src/main/resources/application.properties

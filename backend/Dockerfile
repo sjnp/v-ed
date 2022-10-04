@@ -1,9 +1,7 @@
 # Base Image
-FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jre-slim
 
 VOLUME /tmp
-
-EXPOSE 8443
 
 ARG JAR_FILE=target/backend-0.0.1-SNAPSHOT.jar
 
