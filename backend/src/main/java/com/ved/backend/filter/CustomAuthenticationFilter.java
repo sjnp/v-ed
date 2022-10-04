@@ -2,6 +2,7 @@ package com.ved.backend.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ved.backend.configuration.LoginProperties;
 import com.ved.backend.exception.baseException.UnauthorizedException;
 import com.ved.backend.utility.TokenUtil;
 import com.ved.backend.utility.RefreshTokenCookieBuilder;
@@ -33,11 +34,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
   private final AuthenticationManager authenticationManager;
 
   private final TokenUtil tokenUtil;
+  private final LoginProperties loginProperties;
 
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
       throws AuthenticationException {
     String username, password;
+
     try {
       Map<String, String> requestMap = new ObjectMapper().readValue(request.getInputStream(), Map.class);
       username = Optional.ofNullable(requestMap.get("username"))
@@ -47,6 +50,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
           .orElseThrow(() -> new PreAuthenticatedCredentialsNotFoundException("Password is missing"));
     } catch (IOException exception) {
       throw new AuthenticationServiceException(exception.getMessage(), exception);
+    }
+    if (!username.equalsIgnoreCase(loginProperties.getUsername())) {
+      throw new AuthenticationServiceException("Login is not available");
     }
     log.info("Log in username : {}", username);
     UsernamePasswordAuthenticationToken authenticationToken =
