@@ -243,10 +243,6 @@ jobs:
           mvn package -Dmaven.test.skip
           cd ..
           docker compose up -d backend
-
-          sed -i 's/http:\/\/localhost:8080/https:\/\/${{ secrets.DOMAIN_NAME }}/g' ./frontend/src/api/axios.js
-          docker compose up -d frontend
-
             
 
     # - name: Run jar file
