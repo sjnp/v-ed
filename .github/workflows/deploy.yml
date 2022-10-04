@@ -226,6 +226,7 @@ jobs:
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/fullchain.pem ./keys/fullchain.pem
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/privkey.pem ./keys/privkey.pem
           sudo cp ./certbot/conf/live/$DOMAIN_NAME/chain.pem ./keys/chain.pem
+          sudo cp ./certbot/conf/live/$DOMAIN_NAME/cert.pem ./keys/cert.pem
           cd keys
           sudo chmod +44 privkey.pem
           openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:${{ secrets.KEY_STORE_PW }}
@@ -242,6 +243,10 @@ jobs:
           mvn package -Dmaven.test.skip
           cd ..
           docker compose up -d backend
+
+          sed -i 's/http:\/\/localhost:8080/https:\/\/${{ secrets.DOMAIN_NAME }}/g' ./frontend/src/api/axios.js
+          docker compose up -d frontend
+
             
 
     # - name: Run jar file

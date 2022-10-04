@@ -21,6 +21,11 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile
-    expose:
-      - "8443"
+    ports:
+      - 8443:8443
     restart: always
+  frontend:
+    image: frontend
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
