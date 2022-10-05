@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# add swapfile
+sudo dd if=/dev/zero of=/swapfile bs=128M count=32
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo bash -c 'echo "/swapfile swap swap defaults 0 0" >> /etc/fstab'
+
+# install jdk & mvn
+sudo apt-get update -y
+sudo apt-get install -y \
+  openjdk-11-jdk \
+  maven
+
 # install docker
 sudo apt-get update -y
 sudo apt-get install -y \
@@ -22,9 +35,3 @@ sudo apt-get install -y \
   containerd.io \
   docker-compose-plugin
 sudo usermod -aG docker ubuntu
-
-# install jdk & mvn
-sudo apt-get update -y
-sudo apt-get install -y \
-  openjdk-11-jdk \
-  maven
