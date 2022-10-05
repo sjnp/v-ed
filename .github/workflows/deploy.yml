@@ -192,7 +192,7 @@ jobs:
           EMAIL
         script: |
           cd v-ed;
-          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME;
           docker compose restart
     
     - name: Run Certbot container
@@ -210,7 +210,7 @@ jobs:
           EMAIL
         script: |
           cd v-ed;
-          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME;
 
     - name: Re-config Nginx container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
