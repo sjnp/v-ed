@@ -82,19 +82,16 @@ jobs:
     - name: Check User Data
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
       env:
-        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         envs:
-          SSH_HOST
+          SSH_USERNAME
         script: |
-          touch test
-          echo 1id $SSH_HOST >> test 
-          echo 2id ${{ secrets.SSH_HOST }} >> test
-          while ! id ${{ secrets.SSH_HOST }} | grep -ow "docker"; \
+          while ! id $SSH_USERNAME | grep -ow "docker"; \
             do \
               echo "Waiting for docker installation..."; \
               sleep 10; \
