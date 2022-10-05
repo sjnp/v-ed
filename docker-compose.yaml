@@ -25,3 +25,8 @@ services:
     ports:
       - 8080:8080
     restart: always
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
