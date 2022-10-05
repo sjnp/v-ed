@@ -78,7 +78,22 @@ jobs:
         working-directory: ./
 
     steps:
-    - name: SSH
+    - name: Check User Data
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+      script: |
+        while ! id ubuntu | grep docker; \
+          do \
+            echo "Waiting for docker installation..."; \
+            sleep 10; \
+          done
+        echo "Complete: EC2 Initialization"
+
+    - name: Deploy
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
       env:
         PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
@@ -134,12 +149,6 @@ jobs:
           KEY_STORE_PW,
           EMAIL
         script: |
-          while ! docker -v; \
-          do \
-            echo "Waiting for docker installation"; \
-            sleep 10; \
-          done
-
           if cd v-ed; \
           then \
             git pull origin disabled-features; \
