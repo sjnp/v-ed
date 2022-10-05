@@ -112,10 +112,10 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         envs:
-          OCI_PRIV_API_KEY
-          OCI_USER
-          OCI_FINGERPRINT
-          OCI_TENANCY
+          OCI_PRIV_API_KEY,
+          OCI_USER,
+          OCI_FINGERPRINT,
+          OCI_TENANCY,
           OCI_REGION
         script: |
           rm -rf ~/.oci
