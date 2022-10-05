@@ -91,7 +91,10 @@ jobs:
         envs:
           SSH_HOST
         script: |
-          while ! id $SSH_HOST | grep -ow "docker"; \
+          touch test
+          echo 1id $SSH_HOST >> test 
+          echo 2id ${{ secrets.SSH_HOST }} >> test
+          while ! id ${{ secrets.SSH_HOST }} | grep -ow "docker"; \
             do \
               echo "Waiting for docker installation..."; \
               sleep 10; \
