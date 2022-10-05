@@ -195,7 +195,7 @@ jobs:
           docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME;
           docker compose restart
     
-    - name: Run Certbot container
+    - name: Get Letsencrypt certificate & Re-config Nginx container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
       env:
         DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
@@ -211,20 +211,6 @@ jobs:
         script: |
           cd v-ed;
           docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME;
-
-    - name: Re-config Nginx container
-      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
-      env:
-        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        envs:
-          DOMAIN_NAME,
-        script: |
-          cd v-ed;
           cp ./nginx/my_conf/nginx_last.conf ./nginx/conf/nginx.conf
           sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
           docker compose restart
