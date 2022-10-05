@@ -134,7 +134,7 @@ jobs:
           KEY_STORE_PW,
           EMAIL
         script: |
-          while ! docker version; \
+          while ! docker -v; \
           do \
             echo "Waiting for docker installation"; \
             sleep 10; \
