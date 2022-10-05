@@ -60,16 +60,7 @@ jobs:
         echo \[default\] >> $TF_BACKEND_SHARED_CRED
         echo aws_access_key_id=$TF_BACKEND_AWS_ACCESS_KEY_ID >> $TF_BACKEND_SHARED_CRED
         echo aws_secret_access_key=$TF_BACKEND_AWS_SECRET_ACCESS_KEY >> $TF_BACKEND_SHARED_CRED
-        touch key.pem
-        echo $OCI_PRIV_API_KEY >> key.pem
-        touch config
-        echo \[DEFAULT\] >> config
-        echo user=$OCI_USER >> config
-        echo fingerprint=$OCI_FINGERPRINT >> config
-        echo tenancy=$OCI_TENANCY >> config
-        echo region=$OCI_REGION >> config
-        echo key_file=~/.oci/key.pem >> config
-
+        
     - name: Init 
       run: terraform init -backend-config=backend.conf
 
@@ -143,15 +134,15 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-      script: |
-        if cd v-ed; \
-        then \
-          git pull origin disabled-features; \
-        else \
-          git clone -b disabled-features https://github.com/sjnp/v-ed.git; \
-          cd v-ed; \
-        fi
-        git status
+        script: |
+          if cd v-ed; \
+          then \
+            git pull origin disabled-features; \
+          else \
+            git clone -b disabled-features https://github.com/sjnp/v-ed.git; \
+            cd v-ed; \
+          fi
+          git status
       
     - name: Remove old docker images
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -160,9 +151,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-      script: |
-        cd v-ed;
-        docker compose down --rmi all
+        script: |
+          cd v-ed;
+          docker compose down --rmi all
 
     - name: Setup initial Nginx container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -175,12 +166,12 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs:
           DOMAIN_NAME
-      script: |
-        cd v-ed;
-        mkdir ./nginx/conf
-        cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
-        sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
-        docker compose up -d nginx
+        script: |
+          cd v-ed;
+          mkdir ./nginx/conf
+          cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
+          docker compose up -d nginx
 
     - name: Dry-run Certbot container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -195,10 +186,10 @@ jobs:
         envs:
           DOMAIN_NAME,
           EMAIL
-      script: |
-        cd v-ed;
-        docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
-        docker compose restart
+        script: |
+          cd v-ed;
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
+          docker compose restart
     
     - name: Run Certbot container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -213,9 +204,9 @@ jobs:
         envs:
           DOMAIN_NAME,
           EMAIL
-      script: |
-        cd v-ed;
-        docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
+        script: |
+          cd v-ed;
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
 
     - name: Re-config Nginx container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -228,11 +219,11 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs:
           DOMAIN_NAME,
-      script: |
-        cd v-ed;
-        cp ./nginx/my_conf/nginx_last.conf ./nginx/conf/nginx.conf
-        sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
-        docker compose restart
+        script: |
+          cd v-ed;
+          cp ./nginx/my_conf/nginx_last.conf ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
+          docker compose restart
 
     - name: Deploy Spring container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -283,76 +274,76 @@ jobs:
           OMISE_SECRET_KEY,
           OMISE_RETURN_URL,
           LOGIN_USERNAME,
-      script: |
-        cd v-ed;
-        if cd backend/src/main/resources; \
-        then \
-          rm application.properties; \
-          cd ../../../../; \
-          pwd; \
-        else \
-          mkdir backend/src/main/resources; \
-        fi
-        touch backend/src/main/resources/application.properties
-        echo spring.datasource.driver-class-name=org.postgresql.Driver \
-        >> backend/src/main/resources/application.properties
-        echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
-        echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
-        echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
-        echo "
-        spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
-        spring.jpa.hibernate.ddl-auto=update
-        spring.jpa.properties.hibernate.check_nullability=true
-        spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
-        echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
-        echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-        echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
-        echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
-        >> backend/src/main/resources/application.properties
-        echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
-        >> backend/src/main/resources/application.properties
-        echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
-        echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
-        echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
-        echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
-        >> backend/src/main/resources/application.properties
-        echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
-        >> backend/src/main/resources/application.properties
-        echo omise-key.public-key=$OMISE_PUBLIC_KEY >> backend/src/main/resources/application.properties
-        echo omise-key.secret-key=$OMISE_SECRET_KEY >> backend/src/main/resources/application.properties
-        echo omise-key.recipient-url=https://api.omise.co/recipients >> backend/src/main/resources/application.properties
-        echo omise-key.transfer-url=https://api.omise.co/transfers >> backend/src/main/resources/application.properties
-        echo omise-key.source-url=https://api.omise.co/sources >> backend/src/main/resources/application.properties
-        echo omise-key.charge-url=https://api.omise.co/charges >> backend/src/main/resources/application.properties
-        echo omise-key.return-url=$OMISE_RETURN_URL >> backend/src/main/resources/application.properties
-        echo "
-        role.student=STUDENT
-        role.instructor=INSTRUCTOR
-        role.admin=ADMIN
-        category.academic=ACADEMIC
-        category.art=ART
-        category.business=BUSINESS
-        category.design=DESIGN
-        category.programming=PROGRAMMING
-        comment-state.owner=OWNER
-        comment-state.instructor=INSTRUCTOR
-        comment-state.student=STUDENT
-        course-state.incomplete=INCOMPLETE
-        course-state.pending=PENDING
-        course-state.approved=APPROVED
-        course-state.rejected=REJECTED
-        course-state.published=PUBLISHED
-        report-state.pending=PENDING
-        report-state.approved=APPROVED
-        report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
-        echo login.username=$LOGIN_USERNAME >> backend/src/main/resources/application.properties
-        echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
-        echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
-        echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
-        cd ./backend
-        mvn package -Dmaven.test.skip
-        cd ..
-        docker compose up -d backend 
+        script: |
+          cd v-ed;
+          if cd backend/src/main/resources; \
+          then \
+            rm application.properties; \
+            cd ../../../../; \
+            pwd; \
+          else \
+            mkdir backend/src/main/resources; \
+          fi
+          touch backend/src/main/resources/application.properties
+          echo spring.datasource.driver-class-name=org.postgresql.Driver \
+          >> backend/src/main/resources/application.properties
+          echo spring.datasource.url=$DATABASE_URL >> backend/src/main/resources/application.properties
+          echo spring.datasource.username=$DATABASE_USERNAME >> backend/src/main/resources/application.properties
+          echo spring.datasource.password=$DATABASE_PASSWORD >> backend/src/main/resources/application.properties
+          echo "
+          spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+          spring.jpa.hibernate.ddl-auto=update
+          spring.jpa.properties.hibernate.check_nullability=true
+          spring.jpa.properties.hibernate.format_sql=true" >> backend/src/main/resources/application.properties
+          echo public-object-storage.namespace=$PUB_OS_NAMESPACE >> backend/src/main/resources/application.properties
+          echo public-object-storage.bucket-name=$PUB_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
+          echo public-object-storage.expiry-timer=$PUB_OS_TIMER >> backend/src/main/resources/application.properties
+          echo public-object-storage.viable-image-extensions=$PUB_OS_IMAGE_EXT \
+          >> backend/src/main/resources/application.properties
+          echo public-object-storage.regional-object-storage-uri=$PUB_OS_URL \
+          >> backend/src/main/resources/application.properties
+          echo private-object-storage.namespace=$PRIV_OS_NAMESPACE >> backend/src/main/resources/application.properties
+          echo private-object-storage.bucket-name=$PRIV_OS_BUCKET_NAME >> backend/src/main/resources/application.properties
+          echo private-object-storage.expiry-timer=$PRIV_OS_TIMER >> backend/src/main/resources/application.properties
+          echo private-object-storage.viable-video-extensions=$PRIV_OS_VID_EXT \
+          >> backend/src/main/resources/application.properties
+          echo private-object-storage.regional-object-storage-uri=$PRIV_OS_URL \
+          >> backend/src/main/resources/application.properties
+          echo omise-key.public-key=$OMISE_PUBLIC_KEY >> backend/src/main/resources/application.properties
+          echo omise-key.secret-key=$OMISE_SECRET_KEY >> backend/src/main/resources/application.properties
+          echo omise-key.recipient-url=https://api.omise.co/recipients >> backend/src/main/resources/application.properties
+          echo omise-key.transfer-url=https://api.omise.co/transfers >> backend/src/main/resources/application.properties
+          echo omise-key.source-url=https://api.omise.co/sources >> backend/src/main/resources/application.properties
+          echo omise-key.charge-url=https://api.omise.co/charges >> backend/src/main/resources/application.properties
+          echo omise-key.return-url=$OMISE_RETURN_URL >> backend/src/main/resources/application.properties
+          echo "
+          role.student=STUDENT
+          role.instructor=INSTRUCTOR
+          role.admin=ADMIN
+          category.academic=ACADEMIC
+          category.art=ART
+          category.business=BUSINESS
+          category.design=DESIGN
+          category.programming=PROGRAMMING
+          comment-state.owner=OWNER
+          comment-state.instructor=INSTRUCTOR
+          comment-state.student=STUDENT
+          course-state.incomplete=INCOMPLETE
+          course-state.pending=PENDING
+          course-state.approved=APPROVED
+          course-state.rejected=REJECTED
+          course-state.published=PUBLISHED
+          report-state.pending=PENDING
+          report-state.approved=APPROVED
+          report-state.rejected=REJECTED" >> backend/src/main/resources/application.properties
+          echo login.username=$LOGIN_USERNAME >> backend/src/main/resources/application.properties
+          echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
+          echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
+          echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
+          cd ./backend
+          mvn package -Dmaven.test.skip
+          cd ..
+          docker compose up -d backend 
 
     - name: Deploy React container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
@@ -365,7 +356,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         envs:
           DOMAIN_NAME,
-      script: |
-        cd v-ed;
-        sed -i 's/http:\/\/localhost:8080/https:\/\/${{ secrets.DOMAIN_NAME }}/g' ./frontend/src/api/axios.js
-        docker compose up -d frontend
+        script: |
+          cd v-ed;
+          sed -i 's/http:\/\/localhost:8080/https:\/\/${{ secrets.DOMAIN_NAME }}/g' ./frontend/src/api/axios.js
+          docker compose up -d frontend
