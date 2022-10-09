@@ -129,7 +129,7 @@ jobs:
           echo fingerprint=$OCI_FINGERPRINT >> config
           echo tenancy=$OCI_TENANCY >> config
           echo region=$OCI_REGION >> config
-          echo key_file=~/.oci/oci_api_key.pem >> config
+          echo "key_file=~/.oci/oci_api_key.pem" >> config
           openssl pkey -inform PEM -in ~/.oci/key.pem -outform PEM -out ~/.oci/oci_api_key.pem
           chmod 600 ./*
     
