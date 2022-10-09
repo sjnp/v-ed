@@ -26,6 +26,27 @@ jobs:
       run: mvn clean install -DskipTests
   test:
       runs-on: ubuntu-latest
+
+      services:
+      # Label used to access the service container
+        postgres:
+          # Docker Hub image
+          image: postgres:12.12
+          # Provide the password for postgres
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: postgres
+          # Set health checks to wait until postgres has started
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+
       defaults:
         run:
           working-directory: ./backend
@@ -96,9 +117,12 @@ jobs:
           report-state.rejected=REJECTED" >> src/test/resources/application.properties
       - name: Create secrets for integration tests
         env: 
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          # DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+          # DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_URL: "jdbc:postgresql://localhost:5432/postgres?stringtype=unspecified"
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
         run: |
           cp src/test/resources/application.properties src/test/resources/application-it.properties
           echo spring.datasource.driver-class-name=org.postgresql.Driver \

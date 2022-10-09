@@ -7,7 +7,7 @@ public class RefreshTokenCookieBuilder {
   public RefreshTokenCookieBuilder(String value) {
     this.cookie = new Cookie("refresh_token", value);
     this.cookie.setHttpOnly(true);
-    this.cookie.setSecure(false);
+    this.cookie.setSecure(true);
     this.cookie.setPath("/");
   }
 

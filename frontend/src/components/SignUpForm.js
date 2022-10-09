@@ -21,6 +21,8 @@ import { validation } from '../utils/validation'
 
 // service
 import service from '../services/service'
+import Alert from "@mui/material/Alert";
+import {AlertTitle} from "@mui/lab";
 
 const SignUpForm = ({ onSuccess, onClose }) => {
 
@@ -244,15 +246,20 @@ const SignUpForm = ({ onSuccess, onClose }) => {
               )
             }}
           />
+
           <Button 
             type='submit' 
             fullWidth 
-            variant='contained' 
-            sx={{ mt: 6, mb: 2 }} 
+            variant='contained'
+            sx={{ mt: 6, mb: 2 }}
             endIcon={<ArrowForwardIcon />}
           >
             Sign Up
           </Button>
+          <Alert sx={{ mb: 2 }} severity="error">
+            <AlertTitle>Error</AlertTitle>
+            Registration is <strong>not available</strong>
+          </Alert>
         </Box>
       </Box>
     </Paper>
