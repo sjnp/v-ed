@@ -122,14 +122,16 @@ jobs:
           mkdir ~/.oci
           cd ~/.oci
           touch key.pem
-          echo $OCI_PRIV_API_KEY >> key.pem
+          echo "${{ secrets.OCI_PRIV_API_KEY }}" >> key.pem
           touch config
           echo \[DEFAULT\] >> config
           echo user=$OCI_USER >> config
           echo fingerprint=$OCI_FINGERPRINT >> config
           echo tenancy=$OCI_TENANCY >> config
           echo region=$OCI_REGION >> config
-          echo key_file=~/.oci/key.pem >> config
+          echo key_file=~/.oci/oci_api_key.pem >> config
+          openssl pkey -inform PEM -in ~/.oci/key.pem -outform PEM -out ~/.oci/oci_api_key.pem
+          chmod 600 ./*
     
     - name: Pull this branch
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
