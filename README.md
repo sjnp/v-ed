@@ -9,7 +9,7 @@
 - PostgreSQL
 - Oracle Object Storage
 
-## CICD Tools
+## CI/CD Tools
 
 - GitHub Actions
 - Terraform
