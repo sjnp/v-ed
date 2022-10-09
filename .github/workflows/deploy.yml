@@ -8,7 +8,25 @@ on:
     branches: [ prod ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: maven
+      - name: Run unit tests
+        run: mvn test
+
   provision:
+    needs: test
     runs-on: ubuntu-latest
 
     defaults:
