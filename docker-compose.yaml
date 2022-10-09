@@ -22,6 +22,8 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile
+    volumes:
+      - ~/.oci/:/home/spring/.oci/:ro
     ports:
       - 8080:8080
     restart: always
