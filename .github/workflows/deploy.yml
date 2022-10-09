@@ -41,6 +41,7 @@ jobs:
         TF_BACKEND_ENDPOINT: ${{ secrets.TF_BACKEND_ENDPOINT }}
         TF_BACKEND_AWS_ACCESS_KEY_ID: ${{ secrets.TF_BACKEND_AWS_ACCESS_KEY_ID }}
         TF_BACKEND_AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_BACKEND_AWS_SECRET_ACCESS_KEY }}
+        
       run: |
         touch ./backend.conf
         echo bucket = \"$TF_BACKEND_BUCKET\" >> backend.conf
@@ -59,7 +60,7 @@ jobs:
         echo \[default\] >> $TF_BACKEND_SHARED_CRED
         echo aws_access_key_id=$TF_BACKEND_AWS_ACCESS_KEY_ID >> $TF_BACKEND_SHARED_CRED
         echo aws_secret_access_key=$TF_BACKEND_AWS_SECRET_ACCESS_KEY >> $TF_BACKEND_SHARED_CRED
-
+        
     - name: Init 
       run: terraform init -backend-config=backend.conf
 
@@ -78,7 +79,145 @@ jobs:
         working-directory: ./
 
     steps:
-    - name: SSH
+    - name: Check User Data
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          SSH_USERNAME
+        script: |
+          while ! id $SSH_USERNAME | grep -ow "docker"; \
+            do \
+              echo "Waiting for docker installation..."; \
+              sleep 10; \
+            done
+          echo "Complete: EC2 Initialization"
+
+    - name: Create OCI Object Storage Config
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        OCI_PRIV_API_KEY: ${{ secrets.OCI_PRIV_API_KEY }}
+        OCI_USER: ${{ secrets.OCI_USER }}
+        OCI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+        OCI_TENANCY: ${{ secrets.OCI_TENANCY }}
+        OCI_REGION: ${{ secrets.OCI_REGION }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          OCI_PRIV_API_KEY,
+          OCI_USER,
+          OCI_FINGERPRINT,
+          OCI_TENANCY,
+          OCI_REGION
+        script: |
+          rm -rf ~/.oci
+          mkdir ~/.oci
+          cd ~/.oci
+          touch key.pem
+          echo "${{ secrets.OCI_PRIV_API_KEY }}" >> key.pem
+          touch config
+          echo \[DEFAULT\] >> config
+          echo user=$OCI_USER >> config
+          echo fingerprint=$OCI_FINGERPRINT >> config
+          echo tenancy=$OCI_TENANCY >> config
+          echo region=$OCI_REGION >> config
+          echo "key_file=~/.oci/oci_api_key.pem" >> config
+          openssl pkey -inform PEM -in ~/.oci/key.pem -outform PEM -out ~/.oci/oci_api_key.pem
+          chmod 600 ./*
+    
+    - name: Pull this branch
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          if cd v-ed; \
+          then \
+            git pull origin disabled-features; \
+          else \
+            git clone -b disabled-features https://github.com/sjnp/v-ed.git; \
+            cd v-ed; \
+          fi
+          git status
+      
+    - name: Remove old docker images
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd v-ed;
+          docker compose down --rmi all
+
+    - name: Setup initial Nginx container
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          DOMAIN_NAME
+        script: |
+          cd v-ed;
+          mkdir ./nginx/conf
+          cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
+          docker compose up -d nginx
+
+    - name: Dry-run Certbot container
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        EMAIL: ${{ secrets.EMAIL }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          DOMAIN_NAME,
+          EMAIL
+        script: |
+          cd v-ed;
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME;
+          docker compose restart
+    
+    - name: Get Letsencrypt certificate & Re-config Nginx container
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        EMAIL: ${{ secrets.EMAIL }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          DOMAIN_NAME,
+          EMAIL
+        script: |
+          cd v-ed;
+          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME;
+          cp ./nginx/my_conf/nginx_last.conf ./nginx/conf/nginx.conf
+          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
+          docker compose restart
+
+    - name: Deploy Spring container
       uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
       env:
         PUB_OS_NAMESPACE: ${{ secrets.PUB_OS_NAMESPACE }}
@@ -101,15 +240,12 @@ jobs:
         OMISE_SECRET_KEY: ${{ secrets.OMISE_SECRET_KEY }}
         OMISE_RETURN_URL: ${{ secrets.OMISE_RETURN_URL }}
         LOGIN_USERNAME: ${{ secrets.LOGIN_USERNAME }}
-        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
-        KEY_STORE_PW: ${{ secrets.KEY_STORE_PW }}
-        EMAIL: ${{ secrets.EMAIL }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        envs: 
+        envs:
           PUB_OS_NAMESPACE,
           PUB_OS_BUCKET_NAME,
           PUB_OS_TIMER,
@@ -130,18 +266,8 @@ jobs:
           OMISE_SECRET_KEY,
           OMISE_RETURN_URL,
           LOGIN_USERNAME,
-          DOMAIN_NAME,
-          KEY_STORE_PW,
-          EMAIL
         script: |
-          if cd v-ed; \
-          then \
-            git pull origin disabled-features; \
-          else \
-            git clone -b disabled-features https://github.com/sjnp/v-ed.git; \
-            cd v-ed; \
-          fi
-          git status
+          cd v-ed;
           if cd backend/src/main/resources; \
           then \
             rm application.properties; \
@@ -150,12 +276,6 @@ jobs:
           else \
             mkdir backend/src/main/resources; \
           fi
-
-          docker compose down --rmi all
-          cp ./nginx/my_conf/nginx_init.conf ./nginx/conf/nginx.conf
-          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
-          docker compose up -d nginx
-
           touch backend/src/main/resources/application.properties
           echo spring.datasource.driver-class-name=org.postgresql.Driver \
           >> backend/src/main/resources/application.properties
@@ -212,34 +332,23 @@ jobs:
           echo json-web-token.secret=$JWT_SECRET >> backend/src/main/resources/application.properties
           echo json-web-token.access-token-expires-at=$JWT_ACCESS_EXPIRE >> backend/src/main/resources/application.properties 
           echo json-web-token.refresh-token-expires-at=$JWT_REFRESH_EXPIRE >> backend/src/main/resources/application.properties
-          
-          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email --dry-run -d $DOMAIN_NAME; \
-          docker compose restart
-          docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --email $EMAIL --agree-tos --no-eff-email -d $DOMAIN_NAME; \
-
-          cp ./nginx/my_conf/nginx_last.conf ./nginx/conf/nginx.conf
-          sed -i 's/DOMAIN/${{ secrets.DOMAIN_NAME }}/g' ./nginx/conf/nginx.conf
-          docker compose restart
-
-          sudo rm -rf ./keys
-          mkdir keys
-          sudo cp ./certbot/conf/live/$DOMAIN_NAME/fullchain.pem ./keys/fullchain.pem
-          sudo cp ./certbot/conf/live/$DOMAIN_NAME/privkey.pem ./keys/privkey.pem
-          sudo cp ./certbot/conf/live/$DOMAIN_NAME/chain.pem ./keys/chain.pem
-          sudo cp ./certbot/conf/live/$DOMAIN_NAME/cert.pem ./keys/cert.pem
-          cd keys
-          sudo chmod +44 privkey.pem
-          openssl pkcs12 -export -in fullchain.pem -inkey privkey.pem -out keystore.p12 -name tomcat -CAfile chain.pem -caname root -password pass:${{ secrets.KEY_STORE_PW }}
-          cd ../
-          cp ./keys/keystore.p12 ./backend/src/main/resources/keystore.p12
-
           cd ./backend
           mvn package -Dmaven.test.skip
           cd ..
-          docker compose up -d backend
-            
+          docker compose up -d backend 
 
-    # - name: Run jar file
-    #   run: |
-    #     cd ./backend/target
-    #     java -jar backend-0.0.1-SNAPSHOT.jar
+    - name: Deploy React container
+      uses: appleboy/ssh-action@dce9d565de8d876c11d93fa4fe677c0285a66d78
+      env:
+        DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        envs:
+          DOMAIN_NAME,
+        script: |
+          cd v-ed;
+          sed -i 's/http:\/\/localhost:8080/https:\/\/${{ secrets.DOMAIN_NAME }}/g' ./frontend/src/api/axios.js
+          docker compose up -d frontend

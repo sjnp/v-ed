@@ -1,5 +1,7 @@
 # Base Image
 FROM openjdk:11-jre-slim
+RUN useradd -m spring
+USER spring
 
 VOLUME /tmp
 
