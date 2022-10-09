@@ -17,7 +17,7 @@ public class ObjectStorageClientConfig {
       AuthenticationDetailsProvider provider = new ConfigFileAuthenticationDetailsProvider(configFile);
       return new ObjectStorageClient(provider);
     } catch (Exception e) {
-      throw new RuntimeException("Invalid object storage config");
+      throw new RuntimeException(e.getMessage());
     }
   }
 }
